@@ -1,0 +1,156 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@font-face {
+  font-family: 'Noto Sans CJK SC';
+  src: url('/fonts/NotoSansSC.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF;
+}
+
+@font-face {
+  font-family: 'Zed Plex Mono';
+  src: url('/fonts/ZedPlexMono.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --font-sans:
+    /* System fonts (instant rendering, native feel) */
+    -apple-system, BlinkMacSystemFont,
+    /* Chinese system fonts (excellent CJK support) */
+    'PingFang SC', 'PingFang TC', 'Hiragino Sans GB', 'Hiragino Kaku Gothic Pro',
+    /* Windows system fonts */
+    'Microsoft YaHei', 'Segoe UI',
+    'Noto Sans CJK SC', ui-sans-serif, system-ui, sans-serif,
+    /* Emoji fonts */
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji';
+
+  --font-mono:
+    'Zed Plex Mono',
+    /* System monospace fonts */
+    'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono',
+    /* Generic fallbacks */
+    ui-monospace, 'Menlo', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+
+  /* Breakpoints */
+  --breakpoint-md: 768px;
+  /* max-w-3xl equivalent */
+
+  /* Core Design System Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --background: oklch(0.9578 0.0058 264.53);
+  --foreground: oklch(0.4363 0.0428 281.03);
+  --primary: oklch(0.539 0.246 262.1);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.94 0.003 264.53);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.92 0.002 264.53);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.7988 0.1061 49.64);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.55 0.216 19.8);
+  --border: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+
+  /* Complete Catppuccin Palette */
+  --rosewater: oklch(0.714 0.105 33.1);
+  --flamingo: oklch(0.686 0.126 20.9);
+  --pink: oklch(0.726 0.174 338.4);
+  --mauve: oklch(0.555 0.25 297);
+  --red: oklch(0.55 0.216 19.8);
+  --maroon: oklch(0.625 0.197 20.3);
+  --peach: oklch(0.692 0.204 42.4);
+  --yellow: oklch(0.714 0.149 67.8);
+  --green: oklch(0.625 0.177 140.4);
+  --teal: oklch(0.602 0.098 201.1);
+  --sky: oklch(0.682 0.145 235.4);
+  --sapphire: oklch(0.648 0.107 212.9);
+  --blue: oklch(0.559 0.226 262.1);
+  --lavender: oklch(0.664 0.175 273.1);
+}
+
+/* Catppuccin Macchiato + Lemon Chiffon accent */
+[data-theme='dark'] {
+  --background: oklch(0.2007 0.0199 284.46);
+  --foreground: oklch(0.8708 0.0481 273.67);
+  --primary: oklch(0.760 0.130 263.8);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.9778 0.0582 102.16);
+  --accent-foreground: oklch(0.145 0 0);
+  --destructive: oklch(0.737 0.125 11.2);
+  --border: oklch(1 0 0 / 10%);
+  --ring: oklch(0.556 0 0);
+  /* Complete Catppuccin Palette */
+  --rosewater: oklch(0.911 0.029 31.1);
+  --flamingo: oklch(0.863 0.048 18.1);
+  --pink: oklch(0.861 0.083 336.2);
+  --mauve: oklch(0.772 0.126 303.9);
+  --red: oklch(0.737 0.125 11.2);
+  --maroon: oklch(0.77 0.102 14.4);
+  --peach: oklch(0.799 0.106 49.6);
+  --yellow: oklch(0.879 0.074 84.8);
+  --green: oklch(0.835 0.108 138.2);
+  --teal: oklch(0.821 0.076 184.1);
+  --sky: oklch(0.837 0.072 209.4);
+  --sapphire: oklch(0.785 0.085 228.4);
+  --blue: oklch(0.75 0.11 263.8);
+  --lavender: oklch(0.814 0.083 279.9);
+}
+
+@layer base {
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    @apply border-border outline-ring/50;
+  }
+
+  /* Prevent flex display on SVG elements */
+  svg {
+    display: inline !important;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+}

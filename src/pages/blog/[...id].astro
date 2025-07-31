@@ -1,15 +1,8 @@
 ---
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import Link from '@/components/Link.astro'
-import PostHead from '@/components/PostHead.astro'
-import PostNavigation from '@/components/PostNavigation.astro'
-import SubpostsHeader from '@/components/SubpostsHeader.astro'
-import SubpostsSidebar from '@/components/SubpostsSidebar.astro'
-import TOCHeader from '@/components/TOCHeader.astro'
-import TOCSidebar from '@/components/TOCSidebar.astro'
-import { badgeVariants } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import Layout from '@/layouts/Layout.astro'
+import { Image } from "astro:assets"
+import { render } from "astro:content"
+import { Icon } from "astro-icon/components"
+
 import {
   getAdjacentPosts,
   getAllPostsAndSubposts,
@@ -21,18 +14,27 @@ import {
   getTOCSections,
   hasSubposts,
   isSubpost,
-  parseAuthors,
-} from '@/lib/data-utils'
-import { formatDate } from '@/lib/utils'
-import { Icon } from 'astro-icon/components'
-import { Image } from 'astro:assets'
-import { render } from 'astro:content'
+  parseAuthors
+} from "@/lib/data-utils"
+import { formatDate } from "@/lib/utils"
+import Layout from "@/layouts/Layout.astro"
+import Badge from "@/components/base/Badge.astro"
+import Button from "@/components/base/Button.astro"
+import Link from "@/components/base/Link.astro"
+import PostHead from "@/components/blog/PostHead.astro"
+import PostNavigation from "@/components/blog/PostNavigation.astro"
+import SubpostsHeader from "@/components/blog/SubpostsHeader.astro"
+import SubpostsSidebar from "@/components/blog/SubpostsSidebar.astro"
+import TOCHeader from "@/components/blog/TOCHeader.astro"
+import TOCSidebar from "@/components/blog/TOCSidebar.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import AvatarComponent from "@/components/ui/avatar"
 
 export async function getStaticPaths() {
   const posts = await getAllPostsAndSubposts()
   return posts.map((post) => ({
     params: { id: post.id },
-    props: post,
+    props: post
   }))
 }
 
@@ -42,20 +44,20 @@ const { Content, headings } = await render(post)
 const authors = await parseAuthors(post.data.authors ?? [])
 
 const isCurrentSubpost = isSubpost(currentPostId)
-const navigation = await getAdjacentPosts(currentPostId)
-const parentPost = isCurrentSubpost ? await getParentPost(currentPostId) : null
 
-const hasChildPosts = await hasSubposts(currentPostId)
-const subpostCount = !isCurrentSubpost
-  ? await getSubpostCount(currentPostId)
-  : 0
-const postReadingTime = await getPostReadingTime(currentPostId)
+// Batch data fetching
+const [navigation, parentPost, hasChildPosts, subpostCount, postReadingTime, tocSections] =
+  await Promise.all([
+    getAdjacentPosts(currentPostId),
+    isCurrentSubpost ? getParentPost(currentPostId) : Promise.resolve(null),
+    hasSubposts(currentPostId),
+    !isCurrentSubpost ? getSubpostCount(currentPostId) : Promise.resolve(0),
+    getPostReadingTime(currentPostId),
+    getTOCSections(currentPostId)
+  ])
+
 const combinedReadingTime =
-  hasChildPosts && !isCurrentSubpost
-    ? await getCombinedReadingTime(currentPostId)
-    : null
-
-const tocSections = await getTOCSections(currentPostId)
+  hasChildPosts && !isCurrentSubpost ? await getCombinedReadingTime(currentPostId) : null
 ---
 
 <Layout>
@@ -70,11 +72,9 @@ const tocSections = await getTOCSections(currentPostId)
   }
   {
     headings?.length > 0 &&
-      !(
-        isCurrentSubpost &&
-        headings.length === 1 &&
-        headings[0].text === post.data.title
-      ) && <TOCHeader slot="table-of-contents" headings={headings} />
+      !(isCurrentSubpost && headings.length === 1 && headings[0].text === post.data.title) && (
+        <TOCHeader slot="table-of-contents" headings={headings} />
+      )
   }
 
   <section
@@ -83,27 +83,27 @@ const tocSections = await getTOCSections(currentPostId)
     <div class="col-start-2">
       <Breadcrumbs
         items={[
-          { href: '/blog', label: 'Blog', icon: 'lucide:library-big' },
+          { href: "/blog", label: "Blog", icon: "lucide:library-big" },
           ...(isCurrentSubpost && parentPost
             ? [
                 {
                   href: `/blog/${parentPost.id}`,
                   label: parentPost.data.title,
-                  icon: 'lucide:book-open',
+                  icon: "lucide:book-open"
                 },
                 {
                   href: `/blog/${currentPostId}`,
                   label: post.data.title,
-                  icon: 'lucide:file-text',
-                },
+                  icon: "lucide:file-text"
+                }
               ]
             : [
                 {
                   href: `/blog/${currentPostId}`,
                   label: post.data.title,
-                  icon: 'lucide:book-open-text',
-                },
-              ]),
+                  icon: "lucide:book-open-text"
+                }
+              ])
         ]}
       />
     </div>
@@ -137,19 +137,15 @@ const tocSections = await getTOCSections(currentPostId)
               <div class="flex w-full items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0">
                 {authors.map((author) => (
                   <div class="flex items-center gap-x-1.5">
-                    <Image
+                    <AvatarComponent
+                      client:load
                       src={author.avatar}
                       alt={author.name}
-                      width={20}
-                      height={20}
-                      class="rounded-full"
+                      fallback={author.name[0]}
+                      className="size-5 rounded-full"
                     />
                     {author.isRegistered ? (
-                      <Link
-                        href={`/authors/${author.id}`}
-                        underline
-                        class="text-foreground"
-                      >
+                      <Link href={`/authors/${author.id}`} underline class="text-foreground">
                         <span>{author.name}</span>
                       </Link>
                     ) : (
@@ -164,7 +160,7 @@ const tocSections = await getTOCSections(currentPostId)
           <div
             class="flex w-full items-center justify-center gap-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0"
           >
-            <span>{formatDate(post.data.date)}</span>
+            <span>{formatDate(post.data.publishDate)}</span>
           </div>
 
           <div
@@ -173,13 +169,9 @@ const tocSections = await getTOCSections(currentPostId)
             <span>
               {postReadingTime}
               {
-                combinedReadingTime &&
-                  combinedReadingTime !== postReadingTime && (
-                    <span class="text-muted-foreground">
-                      {' '}
-                      ({combinedReadingTime} total)
-                    </span>
-                  )
+                combinedReadingTime && combinedReadingTime !== postReadingTime && (
+                  <span class="text-muted-foreground"> ({combinedReadingTime} total)</span>
+                )
               }
             </span>
           </div>
@@ -188,7 +180,7 @@ const tocSections = await getTOCSections(currentPostId)
             subpostCount > 0 && (
               <div class="flex w-full items-center justify-center gap-1 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0">
                 <Icon name="lucide:file-text" class="size-3" />
-                {subpostCount} subpost{subpostCount === 1 ? '' : 's'}
+                {subpostCount} subpost{subpostCount === 1 ? "" : "s"}
               </div>
             )
           }
@@ -198,13 +190,10 @@ const tocSections = await getTOCSections(currentPostId)
             post.data.tags &&
               post.data.tags.length > 0 &&
               post.data.tags.map((tag) => (
-                <a
-                  href={`/tags/${tag}`}
-                  class={badgeVariants({ variant: 'secondary' })}
-                >
+                <Badge href={`/tags/${tag}`} variant="secondary">
                   <Icon name="lucide:hash" class="size-3" />
                   {tag}
-                </a>
+                </Badge>
               ))
           }
         </div>
@@ -217,11 +206,7 @@ const tocSections = await getTOCSections(currentPostId)
       />
     </section>
 
-    {
-      tocSections.length > 0 && (
-        <TOCSidebar sections={tocSections} currentPostId={currentPostId} />
-      )
-    }
+    {tocSections.length > 0 && <TOCSidebar sections={tocSections} currentPostId={currentPostId} />}
 
     <article class="prose col-start-2 max-w-none">
       <Content />
@@ -230,9 +215,7 @@ const tocSections = await getTOCSections(currentPostId)
     {
       (hasChildPosts || isCurrentSubpost) && (
         <SubpostsSidebar
-          parentId={
-            isCurrentSubpost ? getParentId(currentPostId) : currentPostId
-          }
+          parentId={isCurrentSubpost ? getParentId(currentPostId) : currentPostId}
           className="w-64"
         />
       )
@@ -247,8 +230,7 @@ const tocSections = await getTOCSections(currentPostId)
 
   <Button
     variant="outline"
-    size="icon"
-    className="group fixed right-8 bottom-8 z-50 hidden"
+    class="group fixed right-8 bottom-8 z-50 hidden"
     id="scroll-to-top"
     title="Scroll to top"
     aria-label="Scroll to top"
@@ -260,23 +242,20 @@ const tocSections = await getTOCSections(currentPostId)
   </Button>
 
   <script>
-    document.addEventListener('astro:page-load', () => {
-      const scrollToTopButton = document.getElementById('scroll-to-top')
-      const footer = document.querySelector('footer')
+    document.addEventListener("astro:page-load", () => {
+      const scrollToTopButton = document.getElementById("scroll-to-top")
+      const footer = document.querySelector("footer")
 
       if (scrollToTopButton && footer) {
-        scrollToTopButton.addEventListener('click', () => {
-          window.scrollTo({ top: 0, behavior: 'smooth' })
+        scrollToTopButton.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" })
         })
 
-        window.addEventListener('scroll', () => {
+        window.addEventListener("scroll", () => {
           const footerRect = footer.getBoundingClientRect()
           const isFooterVisible = footerRect.top <= window.innerHeight
 
-          scrollToTopButton.classList.toggle(
-            'hidden',
-            window.scrollY <= 300 || isFooterVisible,
-          )
+          scrollToTopButton.classList.toggle("hidden", window.scrollY <= 300 || isFooterVisible)
         })
       }
     })

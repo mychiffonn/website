@@ -1,0 +1,43 @@
+---
+import { Image } from "astro:assets"
+
+import { PROFILE } from "@/config"
+import { Link, Section } from "@/components"
+
+interface Props {
+  class?: string
+  username?: string
+}
+
+// Get GitHub username from profile links
+const githubUrl =
+  typeof PROFILE.links.github === "string"
+    ? PROFILE.links.github
+    : PROFILE.links.github?.href || "https://github.com"
+const ghUser = githubUrl?.split("/").pop() || ""
+
+const { class: className, username = ghUser } = Astro.props
+---
+
+{
+  username && (
+    <Section title="GitHub Activity" class:list={["flex flex-col gap-4", className]}>
+      <p class="text-muted-foreground">
+        My{" "}
+        <Link href={githubUrl} external class="text-primary">
+          GitHub ↗
+        </Link>{" "}
+        contributions over the past year. Colored squares represent days with commits.
+      </p>
+      <div class="bg-card mb-4 flex justify-center rounded-lg border">
+        <Image
+          src={`https://ghchart.rshah.org/659eb9/${username}`}
+          alt="GitHub contribution chart"
+          inferSize
+          loading="lazy"
+          class="w-full p-4"
+        />
+      </div>
+    </Section>
+  )
+}

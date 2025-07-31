@@ -1,0 +1,44 @@
+---
+import { Icon } from "astro-icon/components"
+
+import Link from "@/components/base/Link.astro"
+
+import { getProcessedProfileLinks, type ProfileLinkConfig } from "./helper"
+
+interface Props {
+  links?: ProfileLinkConfig | Record<string, string>
+  class?: string
+  includeLabel?: boolean
+  includeRss?: boolean
+}
+
+const { links, class: className = "", includeLabel = false, includeRss = false } = Astro.props
+
+const processedLinks = getProcessedProfileLinks(links, includeRss)
+---
+
+<nav class={`flex flex-wrap gap-3 ${className}`} role="list">
+  {
+    processedLinks.map(({ href, label, iconName }) => {
+      const isExternal = !href.startsWith("/")
+
+      return (
+        <Link
+          href={href}
+          aria-label={label}
+          title={label}
+          class:list={[
+            "text-muted-foreground flex items-center gap-x-0.5 text-xs",
+            includeLabel
+              ? ""
+              : "hover:bg-accent hover:text-accent-foreground rounded-md border p-2 transition-colors"
+          ]}
+          external={isExternal}
+        >
+          <Icon name={iconName} class="size-4" />
+          {includeLabel && <span set:html={label} />}
+        </Link>
+      )
+    })
+  }
+</nav>

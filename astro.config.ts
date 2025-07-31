@@ -20,21 +20,21 @@ import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  site: 'https://astro-erudite.vercel.app',
+  site: 'https://mychiffonn.com',
+  trailingSlash: "never",
   integrations: [
     expressiveCode({
-      themes: ['github-light', 'github-dark'],
+      themes: ['catppuccin-macchiato', 'catppuccin-latte'],
       plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
-      useDarkModeMediaQuery: false,
-      themeCssSelector: (theme) => `[data-theme="${theme.name.split('-')[1]}"]`,
+      themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
       defaultProps: {
         wrap: true,
         collapseStyle: 'collapsible-auto',
         overridesByLang: {
           'ansi,bat,bash,batch,cmd,console,powershell,ps,ps1,psd1,psm1,sh,shell,shellscript,shellsession,text,zsh':
-            {
-              showLineNumbers: false,
-            },
+          {
+            showLineNumbers: false,
+          },
         },
       },
       styleOverrides: {
@@ -42,11 +42,11 @@ export default defineConfig({
         borderColor: 'var(--border)',
         codeFontFamily: 'var(--font-mono)',
         codeBackground:
-          'color-mix(in oklab, var(--secondary) 25%, transparent)',
+          'color-mix(in oklab, var(--muted) 25%, transparent)',
         frames: {
           editorActiveTabForeground: 'var(--muted-foreground)',
           editorActiveTabBackground:
-            'color-mix(in oklab, var(--secondary) 25%, transparent)',
+            'color-mix(in oklab, var(--muted) 25%, transparent)',
           editorActiveTabIndicatorBottomColor: 'transparent',
           editorActiveTabIndicatorTopColor: 'transparent',
           editorTabBorderRadius: '0',
@@ -68,13 +68,15 @@ export default defineConfig({
     mdx(),
     react(),
     sitemap(),
-    icon(),
+    icon({
+      iconDir: "src/assets/icons/"
+    }),
   ],
   vite: {
     plugins: [tailwindcss()],
   },
   server: {
-    port: 1234,
+    port: 4321,
     host: true,
   },
   devToolbar: {
@@ -94,6 +96,7 @@ export default defineConfig({
         {
           target: '_blank',
           rel: ['nofollow', 'noreferrer', 'noopener'],
+          content: { type: 'text', value: '↗' },
         },
       ],
       rehypeHeadingIds,
@@ -102,12 +105,16 @@ export default defineConfig({
         rehypePrettyCode,
         {
           theme: {
-            light: 'github-light',
-            dark: 'github-dark',
+            light: 'catppuccin-latte',
+            dark: 'catppuccin-macchiato',
           },
         },
       ],
     ],
     remarkPlugins: [remarkMath, remarkEmoji],
   },
+  experimental: {
+    contentIntellisense: true,
+    headingIdCompat: true
+  }
 })

@@ -1,16 +1,16 @@
 ---
-import AuthorCard from '@/components/AuthorCard.astro'
-import BlogCard from '@/components/BlogCard.astro'
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import PageHead from '@/components/PageHead.astro'
-import Layout from '@/layouts/Layout.astro'
-import { getAllAuthors, getPostsByAuthor } from '@/lib/data-utils'
+import { getAllAuthors, getPostsByAuthor } from "@/lib/data-utils"
+import Layout from "@/layouts/Layout.astro"
+import AuthorCard from "@/components/blog/AuthorCard.astro"
+import BlogCard from "@/components/blog/BlogCard.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import PageHead from "@/components/layout/PageHead.astro"
 
 export async function getStaticPaths() {
   const authors = await getAllAuthors()
   return authors.map((author) => ({
     params: { id: author.id },
-    props: { author },
+    props: { author }
   }))
 }
 
@@ -27,8 +27,8 @@ const authorPosts = await getPostsByAuthor(author.id)
   />
   <Breadcrumbs
     items={[
-      { href: '/authors', label: 'Authors', icon: 'lucide:users' },
-      { label: author.data.name, icon: 'lucide:user' },
+      { href: "/authors", label: "Authors", icon: "lucide:users" },
+      { label: author.data.name, icon: "lucide:user" }
     ]}
   />
 
@@ -49,9 +49,7 @@ const authorPosts = await getPostsByAuthor(author.id)
             ))}
         </ul>
       ) : (
-        <p class="text-muted-foreground">
-          No posts available from this author.
-        </p>
+        <p class="text-muted-foreground">No posts available from this author.</p>
       )
     }
   </section>

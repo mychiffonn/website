@@ -1,0 +1,55 @@
+---
+import { Icon } from "astro-icon/components"
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb"
+
+export interface BreadcrumbItem {
+  href?: string
+  label: string
+  icon?: string
+}
+
+interface Props {
+  items: BreadcrumbItem[]
+}
+
+const { items } = Astro.props
+---
+
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/" className="flex items-center">
+        <Icon name="lucide:home" class="size-4 shrink-0" />
+      </BreadcrumbLink>
+    </BreadcrumbItem>
+
+    {
+      items.map((item, index) => (
+        <>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            {index === items.length - 1 ? (
+              <BreadcrumbPage className="flex items-center">
+                {item.icon && <Icon name={item.icon} class="mr-2 size-4 shrink-0" />}
+                {item.label}
+              </BreadcrumbPage>
+            ) : (
+              <BreadcrumbLink href={item.href} className="flex items-center">
+                {item.icon && <Icon name={item.icon} class="mr-2 size-4 shrink-0" />}
+                <span class="leading-none">{item.label}</span>
+              </BreadcrumbLink>
+            )}
+          </BreadcrumbItem>
+        </>
+      ))
+    }
+  </BreadcrumbList>
+</Breadcrumb>

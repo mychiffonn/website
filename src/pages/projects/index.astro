@@ -1,0 +1,76 @@
+---
+import { getAllProjects } from "@/lib/data-utils"
+import Layout from "@/layouts/Layout.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import PageHead from "@/components/layout/PageHead.astro"
+import { GithubActivity, ProjectCard } from "@/components/projects"
+
+const allProjects = await getAllProjects()
+
+// Sort by date (toDate, then fromDate, then by highlighted status)
+const sortedProjects = allProjects.sort((a, b) => {
+  const dateA = a.data.toDate || a.data.fromDate || new Date(0)
+  const dateB = b.data.toDate || b.data.fromDate || new Date(0)
+
+  // First sort by date (most recent first)
+  const dateDiff = dateB.getTime() - dateA.getTime()
+  if (dateDiff !== 0) return dateDiff
+
+  // Then by highlighted status
+  if (a.data.isHighlighted && !b.data.isHighlighted) return -1
+  if (!a.data.isHighlighted && b.data.isHighlighted) return 1
+
+  return 0
+})
+
+const featuredProjects = sortedProjects.filter((project) => project.data.isHighlighted)
+const otherProjects = sortedProjects.filter((project) => !project.data.isHighlighted)
+---
+
+<Layout class="max-w-3xl">
+  <PageHead slot="head" title="Projects" />
+
+  <Breadcrumbs items={[{ label: "Projects", icon: "lucide:folder" }]} />
+
+  <section class="mb-8">
+    <h1 class="mb-4 text-3xl font-bold">Projects</h1>
+    <p class="text-muted-foreground">
+      A collection of projects I've worked on, ranging from academic research to personal
+      explorations. If you think it would be useful or interesting to collaborate on a project,
+      please contact me to discuss.
+    </p>
+  </section>
+
+  <div class="flex flex-col gap-8">
+    {/* Featured Projects */}
+    {
+      featuredProjects.length > 0 && (
+        <section>
+          <h2 class="mb-4 text-2xl font-semibold">Featured Projects</h2>
+          <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+            {featuredProjects.map((project) => (
+              <ProjectCard {project} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {/* Other Projects */}
+    {
+      otherProjects.length > 0 && (
+        <section>
+          <h2 class="mb-4 text-2xl font-semibold">Other Projects</h2>
+          <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+            {otherProjects.map((project) => (
+              <ProjectCard {project} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {/* GitHub Activity */}
+    <GithubActivity />
+  </div>
+</Layout>

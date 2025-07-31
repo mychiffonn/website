@@ -1,0 +1,114 @@
+---
+import type { CollectionEntry } from "astro:content"
+import { Icon } from "astro-icon/components"
+
+import { createDateRange } from "@/lib/utils"
+import Badge from "@/components/base/Badge.astro"
+import Link from "@/components/base/Link.astro"
+
+import { getContextVariant, getProjectDescription, getProjectLinks } from "./helper"
+
+interface Props {
+  project: CollectionEntry<"projects">
+}
+
+const { project } = Astro.props
+const { title, isHighlighted, fromDate, toDate, repo, doc, url, release, context, tags } =
+  project.data
+
+const dateRange = createDateRange(fromDate, toDate)
+const links = getProjectLinks(repo, doc, url, release)
+const contextVariant = getContextVariant(context)
+
+const descriptionData = getProjectDescription(project)
+const hasDetailPage = project.body && project.body.trim().length > 0
+---
+
+<article
+  class:list={[
+    "group relative block h-full overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg",
+    isHighlighted
+      ? "ring-primary from-primary/5 via-background to-background hover:ring-primary/70 bg-gradient-to-br ring-2"
+      : "bg-card hover:bg-secondary/50 hover:border-primary/20"
+  ]}
+>
+  <div class="flex h-full flex-col gap-3">
+    <div class="flex items-center gap-x-2">
+      {
+        isHighlighted && (
+          <>
+            <Icon name="lucide:star" class="text-primary size-4" />
+            <span class="sr-only">Featured</span>
+          </>
+        )
+      }
+      {
+        hasDetailPage ? (
+          <Link href={`/projects/${project.id}`} class="hover:text-primary">
+            <h3 class="text-foreground text-lg leading-tight font-semibold hover:underline">
+              {title}
+            </h3>
+          </Link>
+        ) : (
+          <h3 class="text-muted-foreground text-lg leading-tight font-semibold">{title}</h3>
+        )
+      }
+    </div>
+
+    {/* Context and Date */}
+    <div class="flex flex-wrap items-center gap-2 text-sm">
+      {
+        context && (
+          <Badge variant={contextVariant}>
+            {context.charAt(0).toUpperCase() + context.slice(1)}
+          </Badge>
+        )
+      }
+      {dateRange && <time class="text-muted-foreground text-xs">{dateRange}</time>}
+    </div>
+
+    {
+      descriptionData && (
+        <p class="text-muted-foreground flex-grow text-sm leading-relaxed">
+          {descriptionData.text}
+          {descriptionData.needsReadMore && (
+            <Link href={`/projects/${project.id}`} class="text-primary ml-1 hover:underline">
+              Read more →
+            </Link>
+          )}
+        </p>
+      )
+    }
+
+    {/* Tags */}
+    {
+      tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-1">
+          {tags.map((tag: string) => (
+            <Badge variant="muted" class="text-xs">
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      )
+    }
+
+    {/* Links */}
+    {
+      links.length > 0 && (
+        <div class="mt-auto flex flex-wrap gap-x-2 pt-2">
+          {links.map(({ href, icon, label }) => (
+            <Link
+              href={href}
+              external
+              class="border-border hover:bg-primary hover:text-primary-foreground hover:border-primary inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 px-2 py-1.5 text-xs font-medium no-underline transition-all duration-200"
+            >
+              <Icon name={icon} class="size-3" />
+              <span>{label} ↗</span>
+            </Link>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</article>

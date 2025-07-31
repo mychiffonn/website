@@ -1,0 +1,92 @@
+---
+import { Icon } from "astro-icon/components"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "@/lib/utils"
+
+const collapseVariants = cva("rounded-lg border transition-colors", {
+  variants: {
+    variant: {
+      default: "bg-background border-border",
+      secondary: "bg-secondary/30 border-secondary",
+      muted: "bg-muted/30 border-muted"
+    }
+  },
+  defaultVariants: {
+    variant: "default"
+  }
+})
+
+interface Props extends VariantProps<typeof collapseVariants> {
+  title: string
+  class?: string
+  defaultOpen?: boolean
+}
+
+const { title, variant = "default", defaultOpen = false, ...rest } = Astro.props
+---
+
+<details
+  class={cn(collapseVariants({ variant }), rest.class, "[&[open]>summary_svg]:rotate-90")}
+  {...rest}
+  open={defaultOpen}
+>
+  <summary
+    class="hover:bg-muted flex cursor-pointer items-center p-3 font-medium transition-colors [&::-webkit-details-marker]:hidden"
+  >
+    <Icon
+      name="lucide:chevron-right"
+      class="h-4 w-4 transition-transform duration-300 ease-in-out"
+    />
+    <span class="text-sm font-medium">{title}</span>
+  </summary>
+  <div class="overflow-hidden transition-all duration-300 ease-in-out">
+    <div class="px-3 pb-3">
+      <slot />
+    </div>
+  </div>
+</details>
+
+<style>
+  details {
+    transition: all 0.3s ease-in-out;
+  }
+
+  details[open] summary ~ div {
+    animation: slideDown 0.3s ease-in-out;
+  }
+
+  details:not([open]) summary ~ div {
+    animation: slideUp 0.3s ease-in-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    to {
+      opacity: 1;
+      max-height: 200px;
+      padding-top: 0;
+      padding-bottom: 0.75rem;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 1;
+      max-height: 200px;
+      padding-top: 0;
+      padding-bottom: 0.75rem;
+    }
+    to {
+      opacity: 0;
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+</style>

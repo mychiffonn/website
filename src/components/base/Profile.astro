@@ -1,0 +1,72 @@
+---
+import { Image } from "astro:assets"
+import { Icon } from "astro-icon/components"
+
+import { PROFILE } from "@/config"
+import Badge from "@/components/base/Badge.astro"
+import Collapse from "@/components/base/Collapse.astro"
+import { ProfileLinks } from "@/components/profile"
+import avatar from "@/assets/avatar.jpg"
+
+import { Content as AboutContent } from "@/content/about.md"
+---
+
+<article class="rounded-lg border">
+  <header class="flex flex-col gap-4 p-6 sm:flex-row sm:items-start">
+    <div class="relative aspect-square w-64 flex-shrink-0">
+      <Image
+        src={avatar}
+        alt={PROFILE.name}
+        class="h-full w-full rounded-full object-cover object-center"
+        loading="eager"
+      />
+    </div>
+
+    <div class="flex flex-1 flex-col space-y-3">
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="text-3xl leading-none font-bold">{PROFILE.name}</h1>
+        {
+          PROFILE.pronouns && (
+            <Badge variant="outline" class="text-xs">
+              {PROFILE.pronouns}
+            </Badge>
+          )
+        }
+      </div>
+
+      <p class="text-foreground">{PROFILE.tagline}</p>
+
+      {
+        PROFILE.location && (
+          <p class="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
+            <Icon name="lucide:map-pin" class="size-4" />
+            {PROFILE.location}
+          </p>
+        )
+      }
+
+      {
+        PROFILE.phone && (
+          <p class="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
+            <Icon name="lucide:phone" class="size-4" />
+            {PROFILE.phone}
+          </p>
+        )
+      }
+
+      <ProfileLinks includeLabel={true} class="gap-2" />
+
+      {
+        PROFILE.pronunciation && (
+          <Collapse title="Pronunciation" variant="muted">
+            <p class="text-muted-foreground text-xs">{PROFILE.pronunciation}</p>
+          </Collapse>
+        )
+      }
+    </div>
+  </header>
+
+  <section class="prose max-w-none p-6 pt-0">
+    <AboutContent />
+  </section>
+</article>

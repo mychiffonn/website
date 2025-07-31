@@ -1,16 +1,16 @@
 ---
-import AuthorCard from '@/components/AuthorCard.astro'
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import PageHead from '@/components/PageHead.astro'
-import Layout from '@/layouts/Layout.astro'
-import { getAllAuthors } from '@/lib/data-utils'
+import { getAllAuthors } from "@/lib/data-utils"
+import Layout from "@/layouts/Layout.astro"
+import AuthorCard from "@/components/blog/AuthorCard.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import PageHead from "@/components/layout/PageHead.astro"
 
 const authors = await getAllAuthors()
 ---
 
 <Layout class="max-w-3xl">
   <PageHead slot="head" title="Authors" />
-  <Breadcrumbs items={[{ label: 'Authors', icon: 'lucide:users' }]} />
+  <Breadcrumbs items={[{ label: "Authors", icon: "lucide:users" }]} />
   {
     authors.length > 0 ? (
       <ul class="flex flex-col gap-4">

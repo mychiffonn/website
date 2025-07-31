@@ -1,0 +1,50 @@
+---
+import { getFormattedDate } from "@/lib/utils"
+import Layout from "@/layouts/Layout.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import PageHead from "@/components/layout/PageHead.astro"
+
+interface Props {
+  title: string
+  description?: string
+  lastModified?: Date
+  class?: string
+  breadcrumbs?: Array<{
+    href?: string
+    label: string
+    icon?: string
+  }>
+}
+
+const {
+  title,
+  description,
+  lastModified,
+  class: className = "max-w-3xl",
+  breadcrumbs
+} = Astro.props
+---
+
+<Layout class={className}>
+  <PageHead slot="head" title={title} description={description} />
+
+  {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+
+  <hgroup>
+    <h1 class="text-3xl font-bold">{title}</h1>
+    {
+      lastModified && (
+        <time class="text-muted-foreground text-sm italic">
+          Last updated: {getFormattedDate(lastModified)}
+        </time>
+      )
+    }
+    {description && <p class="text-muted-foreground my-6">{description}</p>}
+  </hgroup>
+
+  <main>
+    <div class="prose dark:prose-invert max-w-none">
+      <slot />
+    </div>
+  </main>
+</Layout>

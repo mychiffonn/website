@@ -1,9 +1,9 @@
 ---
-import BlogCard from '@/components/BlogCard.astro'
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import PageHead from '@/components/PageHead.astro'
-import Layout from '@/layouts/Layout.astro'
-import { getAllTags, getPostsByTag } from '@/lib/data-utils'
+import { getAllTags, getPostsByTag } from "@/lib/data-utils"
+import Layout from "@/layouts/Layout.astro"
+import BlogCard from "@/components/blog/BlogCard.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import PageHead from "@/components/layout/PageHead.astro"
 
 export async function getStaticPaths() {
   const tagMap = await getAllTags()
@@ -16,10 +16,10 @@ export async function getStaticPaths() {
         params: { id: tag },
         props: {
           tag,
-          posts,
-        },
+          posts
+        }
       }
-    }),
+    })
   )
 }
 
@@ -35,8 +35,8 @@ const { tag, posts } = Astro.props
   />
   <Breadcrumbs
     items={[
-      { href: '/tags', label: 'Tags', icon: 'lucide:tags' },
-      { label: tag, icon: 'lucide:tag' },
+      { href: "/tags", label: "Tags", icon: "lucide:tags" },
+      { label: tag, icon: "lucide:tag" }
     ]}
   />
 

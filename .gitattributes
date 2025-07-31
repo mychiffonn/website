@@ -1,1 +1,10 @@
-*.mdx linguist-vendored
+# Merge strategies for merge conflicts (git merge, git pull)
+public/** merge=ours
+src/assets/** merge=ours
+src/content/** merge=ours
+src/pages/index.astro merge=ours
+src/pages/*.{md,mdx} merge=ours
+src/pages/**/*.{md,mdx} merge=ours
+# Ignore files in linguist
+*.xsl -linguist-detectable
+src/content/** linguist-documentation

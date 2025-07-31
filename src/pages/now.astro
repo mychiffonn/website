@@ -1,0 +1,26 @@
+---
+import CommonLayout from "@/layouts/CommonLayout.astro"
+import Link from "@/components/base/Link.astro"
+
+import { frontmatter, Content as NowContent } from "src/content/now.md"
+
+const nowDescription =
+  "This is a now page, a page that tells you what I am focusing on at this point in my life."
+
+const lastModified = frontmatter.lastUpdated ? new Date(frontmatter.lastUpdated) : undefined
+---
+
+<CommonLayout
+  title="What I'm doing now"
+  description={nowDescription}
+  lastModified={lastModified}
+  breadcrumbs={[{ label: "Now", icon: "lucide:clock" }]}
+>
+  <NowContent />
+  <p class="text-muted-foreground text-sm">
+    Learn more about now pages and browse others at
+    <Link href="https://nownownow.com" class="text-foreground hover:text-primary" external underline
+      >nownownow.com</Link
+    >
+  </p>
+</CommonLayout>

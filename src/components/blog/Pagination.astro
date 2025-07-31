@@ -1,0 +1,132 @@
+---
+import { Icon } from "astro-icon/components"
+
+import { cn } from "@/lib/utils"
+import Button from "@/components/base/Button.astro"
+
+interface Props {
+  currentPage: number
+  totalPages: number
+  baseUrl: string
+  class?: string
+}
+
+const { currentPage, totalPages, baseUrl, class: className } = Astro.props
+
+const getPageUrl = (page: number) => {
+  if (page === 1) return baseUrl
+  return `${baseUrl}/${page}`
+}
+
+/** @function Generate page numbers with ellipsis logic */
+const generatePages = () => {
+  const pages: (number | "ellipsis")[] = []
+
+  if (totalPages <= 7) {
+    // Show all pages if 7 or fewer
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i)
+    }
+  } else {
+    // Always show first page
+    pages.push(1)
+
+    if (currentPage <= 4) {
+      // Current page is near the beginning
+      for (let i = 2; i <= 5; i++) {
+        pages.push(i)
+      }
+      pages.push("ellipsis")
+      pages.push(totalPages)
+    } else if (currentPage >= totalPages - 3) {
+      // Current page is near the end
+      pages.push("ellipsis")
+      for (let i = totalPages - 4; i <= totalPages; i++) {
+        pages.push(i)
+      }
+    } else {
+      // Current page is in the middle
+      pages.push("ellipsis")
+      for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+        pages.push(i)
+      }
+      pages.push("ellipsis")
+      pages.push(totalPages)
+    }
+  }
+
+  return pages
+}
+
+const pages = generatePages()
+---
+
+<nav
+  role="navigation"
+  aria-label="pagination"
+  data-slot="pagination"
+  class={cn("mx-auto flex w-full justify-center", className)}
+>
+  <ul data-slot="pagination-content" class="flex flex-row flex-wrap items-center gap-1">
+    <li data-slot="pagination-item">
+      <Button
+        href={currentPage > 1 ? getPageUrl(currentPage - 1) : undefined}
+        variant="ghost"
+        size="default"
+        class={cn("gap-1 px-2.5 sm:pl-2.5", currentPage === 1 && "pointer-events-none opacity-50")}
+        aria-label="Go to previous page"
+        aria-disabled={currentPage === 1}
+      >
+        <Icon name="lucide:chevron-left" class="size-4" />
+        <span class="hidden sm:block">Previous</span>
+      </Button>
+    </li>
+
+    {/** Page Numbers  */}
+    {
+      pages.map((page) => (
+        <li data-slot="pagination-item">
+          {page === "ellipsis" ? (
+            <span
+              aria-hidden="true"
+              data-slot="pagination-ellipsis"
+              class="flex size-9 items-center justify-center"
+            >
+              <Icon name="lucide:more-horizontal" class="size-4" />
+              <span class="sr-only">More pages</span>
+            </span>
+          ) : (
+            <Button
+              href={getPageUrl(page)}
+              variant={page === currentPage ? "outline" : "ghost"}
+              size="default"
+              class="size-9"
+              aria-current={page === currentPage ? "page" : undefined}
+              data-active={page === currentPage}
+            >
+              {page}
+            </Button>
+          )}
+        </li>
+      ))
+    }
+
+    {/** Next */}
+    <li data-slot="pagination-item">
+      <Button
+        href={currentPage < totalPages ? getPageUrl(currentPage + 1) : undefined}
+        variant="ghost"
+        size="default"
+        class={cn(
+          "gap-1 px-2.5 sm:pr-2.5",
+          currentPage === totalPages && "pointer-events-none opacity-50"
+        )}
+        aria-label="Go to next page"
+        aria-disabled={currentPage === totalPages}
+      >
+        <span class="hidden sm:block">Next</span>
+        <Icon name="lucide:chevron-right" class="size-4" />
+      </Button>
+    </li>
+  </ul>
+</nav>

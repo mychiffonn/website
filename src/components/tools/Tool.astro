@@ -1,0 +1,53 @@
+---
+import { Icon } from "astro-icon/components"
+
+import Badge from "@/components/base/Badge.astro"
+
+import { getTagVariant, ToolTag } from "./tags"
+
+export interface Props {
+  name: string
+  description: string
+  href: string
+  icon: string
+  tags?: ToolTag[]
+}
+
+const { name, description, href, icon, tags } = Astro.props
+
+const getSafeIcon = (icon: string): string => {
+  return icon && icon.trim() !== "" ? icon : "lucide:box"
+}
+const safeIcon = getSafeIcon(icon)
+---
+
+<a
+  class="group relative text-sm leading-normal no-underline"
+  href={href}
+  id={name}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <div
+    class="hover:border-border hover:bg-muted flex items-center gap-x-3 rounded-lg border border-transparent px-3 py-2 transition-colors"
+  >
+    <Icon name={safeIcon} class="size-5 shrink-0" />
+    <div class="flex flex-grow flex-col">
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="text-foreground font-medium">{name}</div>
+        {
+          tags && tags.length > 0 && (
+            <div class="flex flex-wrap gap-1">
+              {tags.map((tag: import("./tags").ToolTag) => (
+                <Badge variant={getTagVariant(tag)} class="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )
+        }
+      </div>
+      <div class="text-muted-foreground text-sm">{description}</div>
+    </div>
+  </div>
+</a>

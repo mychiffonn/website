@@ -1,0 +1,148 @@
+---
+import { Image } from "astro:assets"
+import type { CollectionEntry } from "astro:content"
+import { Icon } from "astro-icon/components"
+
+import { getCombinedReadingTime, getSubpostCount, isSubpost, parseAuthors } from "@/lib/data-utils"
+import { formatDate } from "@/lib/utils"
+import Badge from "@/components/base/Badge.astro"
+import Link from "@/components/base/Link.astro"
+import AvatarComponent from "@/components/ui/avatar"
+
+interface Props {
+  entry: CollectionEntry<"blog">
+}
+
+const { entry } = Astro.props
+const publishDate = entry.data.publishDate
+const modifiedDate = entry.data.modifiedDate
+const formattedDate = formatDate(publishDate)
+const readTime = await getCombinedReadingTime(entry.id)
+const authors = await parseAuthors(entry.data.authors ?? [])
+const subpostCount = !isSubpost(entry.id) ? await getSubpostCount(entry.id) : 0
+const tags = entry.data.tags
+---
+
+<div
+  class:list={[
+    "blog-card group relative overflow-hidden rounded-xl border transition-all duration-300 ease-in-out",
+    !entry.data.image && "hover:bg-secondary/50"
+  ]}
+  style={entry.data.image &&
+    `--card-highlight: hsl(var(--primary));
+     --card-highlight-bg: hsl(var(--secondary) / 50%);`}
+>
+  {
+    entry.data.image && (
+      <Image
+        src={entry.data.image}
+        alt={entry.data.title}
+        width={1200}
+        height={630}
+        class="cover-image absolute end-0 top-0 z-0 h-full w-3/5 object-cover opacity-30 transition-all duration-300 group-hover:opacity-50 max-md:h-2/3 max-md:w-full"
+      />
+    )
+  }
+
+  <Link
+    href={`/${entry.collection}/${entry.id}`}
+    class:list={[
+      "relative z-10 block p-4 transition-all duration-300",
+      entry.data.image && "max-md:pt-24"
+    ]}
+  >
+    <article class:list={["flex flex-col gap-3", entry.data.image && "md:max-w-[80%]"]}>
+      {/** Row 1: Title  */}
+      <h3 class="group-hover:text-primary text-lg font-medium transition-colors duration-300">
+        {entry.data.title}
+      </h3>
+
+      {/** Row 2: Desc  */}
+      <p class="text-foreground">
+        {entry.data.description}
+      </p>
+
+      {/** Row 3: Meta information  */}
+      <div class="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+        {
+          authors.length > 0 &&
+            authors.map((author) => (
+              <div class="flex items-center gap-x-1.5">
+                <AvatarComponent
+                  client:load
+                  src={author.avatar}
+                  alt={author.name}
+                  fallback={author.name[0]}
+                  className="size-4 rounded-full"
+                />
+                <span>{author.name}</span>
+              </div>
+            ))
+        }
+        <div class="flex items-center gap-x-1">
+          <Icon name="lucide:calendar" class="size-3" />
+          <span>
+            {formattedDate}
+            {
+              modifiedDate && modifiedDate > publishDate && (
+                <span class="opacity-75"> (updated {formatDate(modifiedDate)})</span>
+              )
+            }
+          </span>
+        </div>
+        <div class="flex items-center gap-x-1">
+          <Icon name="lucide:clock" class="size-3" />
+          <span>{readTime}</span>
+        </div>
+        {
+          subpostCount > 0 && (
+            <div class="flex items-center gap-x-1">
+              <Icon name="lucide:boxes" class="size-3" />
+              <span>
+                {subpostCount} subpost{subpostCount === 1 ? "" : "s"}
+              </span>
+            </div>
+          )
+        }
+      </div>
+
+      {/** Row 4: Tags */}
+      {
+        tags && (
+          <div class="flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <Badge variant={"secondary"} class="tag-badge transition-all duration-300">
+                <Icon name="lucide:hash" class="size-3" />
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )
+      }
+    </article>
+  </Link>
+</div>
+
+<style>
+  .blog-card {
+    --card-bg-hover: var(--card-highlight-bg, hsl(var(--secondary) / 50%));
+  }
+
+  .blog-card:hover {
+    background-color: var(--card-bg-hover);
+
+    & .tag-badge {
+      background-color: var(--card-bg-hover);
+    }
+  }
+
+  .cover-image {
+    mask: linear-gradient(to right, transparent 0%, black 100%);
+  }
+
+  @media (max-width: 768px) {
+    .cover-image {
+      mask: linear-gradient(to top, transparent 0%, black 100%);
+    }
+  }
+</style>

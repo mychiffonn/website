@@ -1,18 +1,18 @@
 ---
-import BlogCard from '@/components/BlogCard.astro'
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import PageHead from '@/components/PageHead.astro'
-import PaginationComponent from '@/components/ui/pagination'
-import { SITE } from '@/consts'
-import Layout from '@/layouts/Layout.astro'
-import { getAllPosts, groupPostsByYear } from '@/lib/data-utils'
-import type { PaginateFunction } from 'astro'
+import type { PaginateFunction } from "astro"
+import { Icon } from "astro-icon/components"
 
-export async function getStaticPaths({
-  paginate,
-}: {
-  paginate: PaginateFunction
-}) {
+import { SITE } from "@/config"
+import { getAllPosts, getSortedTags, groupPostsByYear } from "@/lib/data-utils"
+import Layout from "@/layouts/Layout.astro"
+import Badge from "@/components/base/Badge.astro"
+import Button from "@/components/base/Button.astro"
+import BlogCard from "@/components/blog/BlogCard.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import PageHead from "@/components/layout/PageHead.astro"
+import Pagination from "@/components/blog/Pagination.astro"
+
+export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
   const allPosts = await getAllPosts()
   return paginate(allPosts, { pageSize: SITE.postsPerPage })
 }
@@ -21,16 +21,49 @@ const { page } = Astro.props
 
 const postsByYear = groupPostsByYear(page.data)
 const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
+const sortedTags = await getSortedTags()
+const displayTags = sortedTags.slice(0, 15)
 ---
 
 <Layout class="max-w-3xl">
   <PageHead slot="head" title="Blog" />
   <Breadcrumbs
     items={[
-      { label: 'Blog', href: '/blog', icon: 'lucide:library-big' },
-      { label: `Page ${page.currentPage}`, icon: 'lucide:book-copy' },
+      { label: "Blog", href: "/blog", icon: "lucide:library-big" },
+      { label: `Page ${page.currentPage}`, icon: "lucide:book-copy" }
     ]}
   />
+
+  {
+    displayTags.length > 0 && (
+      <section class="mb-8">
+        <h2 class="mb-4 text-lg font-medium">Browse by Tags</h2>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-wrap gap-2">
+            {displayTags.map(({ tag, count }) => (
+              <Badge href={`/tags/${tag}`} variant="secondary">
+                <Icon name="lucide:hash" class="size-3" />
+                {tag}
+                <span class="text-muted-foreground ml-1">({count})</span>
+              </Badge>
+            ))}
+          </div>
+          <div class="flex justify-end">
+            <Button href="/tags" variant={"default"} class="group">
+              <span>View all {sortedTags.length} tags</span>
+              <Icon
+                name="lucide:arrow-right"
+                class="size-4 transition-transform group-hover:translate-x-0.5"
+              />
+            </Button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+  <p class="text-muted-foreground text-sm">
+    Showing {page.start + 1}-{page.end + 1} of {page.total} posts
+  </p>
 
   <div class="flex min-h-[calc(100vh-18rem)] flex-col gap-y-8">
     {
@@ -49,10 +82,9 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
     }
   </div>
 
-  <PaginationComponent
+  <Pagination
     currentPage={page.currentPage}
     totalPages={page.lastPage}
-    baseUrl="/blog/"
-    client:load
+    baseUrl="/blog"
   />
 </Layout>

@@ -9,7 +9,7 @@ export async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
   const posts = await getCollection('blog')
   return posts
     .filter((post) => !post.data.draft && !isSubpost(post.id))
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
 }
 
 export async function getAllPostsAndSubposts(): Promise<
@@ -18,14 +18,14 @@ export async function getAllPostsAndSubposts(): Promise<
   const posts = await getCollection('blog')
   return posts
     .filter((post) => !post.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
 }
 
 export async function getAllProjects(): Promise<CollectionEntry<'projects'>[]> {
   const projects = await getCollection('projects')
   return projects.sort((a, b) => {
-    const dateA = a.data.startDate?.getTime() || 0
-    const dateB = b.data.startDate?.getTime() || 0
+    const dateA = a.data.toDate?.getTime() || 0
+    const dateB = b.data.toDate?.getTime() || 0
     return dateB - dateA
   })
 }
@@ -61,7 +61,7 @@ export async function getAdjacentPosts(currentId: string): Promise<{
           !post.data.draft,
       )
       .sort((a, b) => {
-        const dateDiff = a.data.date.valueOf() - b.data.date.valueOf()
+        const dateDiff = a.data.publishDate.valueOf() - b.data.publishDate.valueOf()
         if (dateDiff !== 0) return dateDiff
 
         const orderA = a.data.order ?? 0
@@ -103,7 +103,13 @@ export async function getPostsByAuthor(
   authorId: string,
 ): Promise<CollectionEntry<'blog'>[]> {
   const posts = await getAllPosts()
-  return posts.filter((post) => post.data.authors?.includes(authorId))
+  return posts.filter((post) => {
+    if (!post.data.authors) return false
+    // Handle both reference objects and strings for backward compatibility
+    return post.data.authors.some(author =>
+      typeof author === 'string' ? author === authorId : author.id === authorId
+    )
+  })
 }
 
 export async function getPostsByTag(
@@ -148,7 +154,7 @@ export async function getSubpostsForParent(
         getParentId(post.id) === parentId,
     )
     .sort((a, b) => {
-      const dateDiff = a.data.date.valueOf() - b.data.date.valueOf()
+      const dateDiff = a.data.publishDate.valueOf() - b.data.publishDate.valueOf()
       if (dateDiff !== 0) return dateDiff
 
       const orderA = a.data.order ?? 0
@@ -162,8 +168,8 @@ export function groupPostsByYear(
 ): Record<string, CollectionEntry<'blog'>[]> {
   return posts.reduce(
     (acc: Record<string, CollectionEntry<'blog'>[]>, post) => {
-      const year = post.data.date.getFullYear().toString()
-      ;(acc[year] ??= []).push(post)
+      const year = post.data.publishDate.getFullYear().toString()
+        ; (acc[year] ??= []).push(post)
       return acc
     },
     {},
@@ -191,18 +197,21 @@ export async function getParentPost(
   return allPosts.find((post) => post.id === parentId) || null
 }
 
-export async function parseAuthors(authorIds: string[] = []) {
-  if (!authorIds.length) return []
+export async function parseAuthors(authors: any[] = []) {
+  if (!authors.length) return []
 
   const allAuthors = await getAllAuthors()
   const authorMap = new Map(allAuthors.map((author) => [author.id, author]))
+
+  // Handle both reference objects and strings
+  const authorIds = authors.map(author => typeof author === 'string' ? author : author.id || author)
 
   return authorIds.map((id) => {
     const author = authorMap.get(id)
     return {
       id,
       name: author?.data?.name || id,
-      avatar: author?.data?.avatar || '/static/logo.png',
+      avatar: author?.data?.avatar,
       isRegistered: !!author,
     }
   })

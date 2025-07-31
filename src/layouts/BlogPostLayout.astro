@@ -1,0 +1,208 @@
+---
+import { Image } from "astro:assets"
+import type { CollectionEntry } from "astro:content"
+import { Icon } from "astro-icon/components"
+
+import { formatDate } from "@/lib/utils"
+import Layout from "@/layouts/Layout.astro"
+import Link from "@/components/base/Link.astro"
+import PostHead from "@/components/blog/PostHead.astro"
+import PostNavigation from "@/components/blog/PostNavigation.astro"
+import SubpostsHeader from "@/components/blog/SubpostsHeader.astro"
+import SubpostsSidebar from "@/components/blog/SubpostsSidebar.astro"
+import TOCHeader from "@/components/blog/TOCHeader.astro"
+import TOCSidebar from "@/components/blog/TOCSidebar.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+
+interface Props {
+  post: CollectionEntry<"blog">
+  headings: any[]
+  authors: any[]
+  isCurrentSubpost: boolean
+  navigation: any
+  parentPost: CollectionEntry<"blog"> | null
+  hasChildPosts: boolean
+  subpostCount: number
+  postReadingTime: string
+  combinedReadingTime: string | null
+  tocSections: any[]
+  currentPostId: string
+}
+
+const {
+  post,
+  headings,
+  authors,
+  isCurrentSubpost,
+  navigation,
+  parentPost,
+  hasChildPosts,
+  subpostCount: _subpostCount,
+  postReadingTime,
+  combinedReadingTime,
+  tocSections,
+  currentPostId
+} = Astro.props
+
+const publishDate = post.data.publishDate
+const modifiedDate = post.data.modifiedDate
+---
+
+<Layout>
+  <PostHead slot="head" post={post} />
+  {
+    (hasChildPosts || isCurrentSubpost) && (
+      <SubpostsHeader
+        slot="subposts-navigation"
+        parentId={isCurrentSubpost ? currentPostId.split("/")[0] : currentPostId}
+      />
+    )
+  }
+  {
+    headings?.length > 0 &&
+      !(isCurrentSubpost && headings.length === 1 && headings[0].text === post.data.title) && (
+        <TOCHeader slot="table-of-contents" headings={headings} />
+      )
+  }
+
+  <section
+    class="grid grid-cols-[minmax(0px,1fr)_min(calc(var(--breakpoint-md)-2rem),100%)_minmax(0px,1fr)] gap-y-6"
+  >
+    <div class="col-start-2">
+      <Breadcrumbs
+        items={[
+          { href: "/blog", label: "Blog", icon: "lucide:library-big" },
+          ...(isCurrentSubpost && parentPost
+            ? [
+                {
+                  href: `/blog/${parentPost.id}`,
+                  label: parentPost.data.title,
+                  icon: "lucide:book-open"
+                },
+                {
+                  href: `/blog/${currentPostId}`,
+                  label: post.data.title,
+                  icon: "lucide:file-text"
+                }
+              ]
+            : [
+                {
+                  href: `/blog/${currentPostId}`,
+                  label: post.data.title,
+                  icon: "lucide:book-open-text"
+                }
+              ])
+        ]}
+      />
+    </div>
+
+    {
+      post.data.image && (
+        <Image
+          src={post.data.image}
+          alt={post.data.title}
+          width={1200}
+          height={630}
+          class="col-span-full mx-auto w-full max-w-5xl object-cover"
+        />
+      )
+    }
+
+    <section class="col-start-2 flex flex-col gap-y-6 text-center">
+      <div class="flex flex-col">
+        <h1
+          class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl"
+          id="post-title"
+        >
+          {post.data.title}
+        </h1>
+
+        <div
+          class="text-muted-foreground divide-border mb-4 flex flex-col items-center justify-center divide-y text-xs sm:flex-row sm:flex-wrap sm:divide-x sm:divide-y-0 sm:text-sm"
+        >
+          {
+            authors.length > 0 && (
+              <div class="flex w-full items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0">
+                {authors.map((author) => (
+                  <div class="flex items-center gap-x-1.5">
+                    <Image
+                      src={author.avatar}
+                      alt={author.name}
+                      width={20}
+                      height={20}
+                      class="rounded-full"
+                    />
+                    {author.isRegistered ? (
+                      <Link href={`/authors/${author.id}`} underline class="text-foreground">
+                        <span>{author.name}</span>
+                      </Link>
+                    ) : (
+                      <span>{author.name}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )
+          }
+
+          <div
+            class="flex w-full items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0"
+          >
+            <Icon name="lucide:calendar" class="size-3" />
+            <time datetime={publishDate.toISOString().split("T")[0]}>
+              {formatDate(publishDate)}
+              {
+                modifiedDate && (
+                  <span class="block text-xs opacity-75">(updated {formatDate(modifiedDate)})</span>
+                )
+              }
+            </time>
+          </div>
+
+          <div
+            class="flex w-full items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0"
+          >
+            <Icon name="lucide:clock" class="size-3" />
+            <span>{postReadingTime}</span>
+            {combinedReadingTime && <span>({combinedReadingTime} combined)</span>}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="col-start-2">
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        <slot />
+      </div>
+    </article>
+
+    {
+      (navigation.newer || navigation.older) && (
+        <div class="col-start-2">
+          <PostNavigation navigation={navigation} />
+        </div>
+      )
+    }
+  </section>
+
+  {
+    tocSections.length > 0 && (
+      <SubpostsSidebar
+        slot="subposts-sidebar"
+        sections={tocSections}
+        currentPostId={currentPostId}
+      />
+    )
+  }
+
+  {
+    headings?.length > 0 &&
+      !(isCurrentSubpost && headings.length === 1 && headings[0].text === post.data.title) && (
+        <TOCSidebar
+          slot="table-of-contents-sidebar"
+          sections={tocSections}
+          currentPostId={currentPostId}
+        />
+      )
+  }
+</Layout>

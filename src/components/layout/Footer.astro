@@ -1,0 +1,64 @@
+---
+import { FOOTER, PROFILE } from "@/config"
+import { Link } from "@/components"
+import { ProfileLinks } from "@/components/profile"
+
+// Create array of available source links
+const sourceLinks = [
+  FOOTER.sourceCode ? { href: FOOTER.sourceCode, label: "Source Code" } : null,
+  FOOTER.sourceContent ? { href: FOOTER.sourceContent, label: "Source Content" } : null,
+  ...FOOTER.footerLinks
+].filter(Boolean) as { href: string; label: string }[]
+---
+
+<footer class="border-t py-6">
+  <div class="mx-auto max-w-3xl px-4">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      {/** Left: Copyright & Credits */}
+      <div class="flex flex-col gap-y-2">
+        <span class="text-muted-foreground text-sm">
+          &copy; <span id="current-year"></span>
+          {PROFILE.name}
+        </span>
+        {
+          FOOTER.credits && (
+            <div class="text-muted-foreground text-xs">
+              Built with{" "}
+              <Link href="https://astro.build/" class="text-foreground hover:text-accent" external>
+                Astro
+              </Link>{" "}
+              &{" "}
+              <Link href="https://ui.shadcn.com" class="text-foreground hover:text-accent" external>
+                shadcn/ui
+              </Link>
+            </div>
+          )
+        }
+      </div>
+
+      {/** Right: Social Icons + Source Links */}
+      <div class="flex flex-col items-start gap-y-3 sm:items-end">
+        <ProfileLinks links={PROFILE.links} includeRss={true} includeLabel={false} />
+        {
+          sourceLinks.length > 0 && (
+            <div class="flex flex-wrap gap-x-2 text-xs">
+              {sourceLinks.map((link, index) => [
+                <Link href={link.href} class="text-muted-foreground" external>
+                  {link.label}
+                </Link>,
+                index < sourceLinks.length - 1 && <span class="text-muted-foreground/60">/</span>
+              ])}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const yearElement = document.getElementById("current-year")
+    if (yearElement) {
+      yearElement.textContent = new Date().getFullYear().toString()
+    }
+  </script>
+</footer>

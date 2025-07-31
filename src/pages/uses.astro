@@ -1,0 +1,201 @@
+---
+import CommonLayout from "@/layouts/CommonLayout.astro"
+import Link from "@/components/base/Link.astro"
+import { ToolSection, ToolTag } from "@/components/tools"
+
+const usesDescription =
+  "A collection of tools that I use on a frequent basis. It is a work in progress and will be updated as I update my setup. Except for the hardware, I use free versions of most tools"
+---
+
+<CommonLayout
+  title="Uses"
+  description={usesDescription}
+  lastModified={new Date()}
+  breadcrumbs={[{ label: "Uses", icon: "lucide:folder-code" }]}
+>
+  <ToolSection
+    title="Workstation (+Operating System)"
+    tools={[
+      {
+        name: 'MacBook M1 Pro 14"',
+        description: "MacOS Sequoia 15",
+        href: "https://www.apple.com/mac/",
+        icon: "apple"
+      },
+      {
+        name: "Linux (Virtual Machine)",
+        description: "Ubuntu 24.04 LTS",
+        href: "https://ubuntu.com/",
+        icon: "ubuntu",
+        tags: [ToolTag.OpenSource]
+      },
+      {
+        name: "Logitech Lift for Mac",
+        description: "Vertical Ergonomic Mouse",
+        href: "https://www.logitech.com/en-us/shop/p/lift-vertical-ergonomic-mouse-mac.910-006471",
+        icon: "logitech"
+      },
+      {
+        name: "Logitech Wave Keys for Mac",
+        description: "Wireless Ergonomic Keyboard",
+        href: "https://www.logitech.com/en-us/shop/p/wave-keys-mac.920-012402",
+        icon: "logitech"
+      }
+    ]}
+  />
+  <ToolSection
+    title="Development"
+    tools={[
+      {
+        name: "Cursor",
+        description: "AI IDE (Vim mode)",
+        href: "https://www.cursor.com/",
+        icon: "cursor",
+        tags: [ToolTag.Gifted]
+      },
+      {
+        name: "Zed",
+        description: "IDE (Vim mode)",
+        href: "https://zed.dev/",
+        icon: "zed",
+        tags: [ToolTag.Free, ToolTag.OpenSource, ToolTag.Favorite]
+      },
+      {
+        name: "iTerm2",
+        description: "Terminal",
+        href: "https://iterm2.com/",
+        icon: "iterm2",
+        tags: [ToolTag.OpenSource]
+      },
+      {
+        name: "Claude CLI (Sonnet 4.0)",
+        description: "AI-powered Code Assistant",
+        href: "https://www.anthropic.com/claude",
+        icon: "claude",
+        tags: [ToolTag.Subscription]
+      },
+      {
+        name: "Linear",
+        description: "Software Development Tracking",
+        href: "https://linear.app/",
+        icon: "linear",
+        tags: [ToolTag.Free, ToolTag.Favorite]
+      }
+    ]}
+  />
+  <ToolSection
+    title="Research & Knowledge Management"
+    tools={[
+      {
+        name: "Zotero",
+        description: "Citation Management",
+        href: "https://www.zotero.org/",
+        icon: "lucide:book-open",
+        tags: [ToolTag.Free]
+      },
+      {
+        name: "Obsidian",
+        description: "Knowledge Management",
+        href: "https://obsidian.md/",
+        icon: "obsidian",
+        tags: [ToolTag.Free, ToolTag.Favorite]
+      },
+      {
+        name: "LaTeX Workshop",
+        description: "VSCode Extension for LaTex Typesetting",
+        href: "https://github.com/James-Yu/LaTeX-Workshop",
+        icon: "latex",
+        tags: [ToolTag.OpenSource, ToolTag.Free]
+      },
+      {
+        name: "Overleaf",
+        description: "Online LaTeX Editor",
+        href: "https://www.overleaf.com/",
+        icon: "lucide:file-text",
+        tags: [ToolTag.Free]
+      }
+    ]}
+  />
+  <ToolSection
+    title="Productivity"
+    tools={[
+      {
+        name: "Zen Browser",
+        description: "Browser (Firefox-based)",
+        href: "https://zen-browser.app/",
+        icon: "zen",
+        tags: [ToolTag.OpenSource, ToolTag.Free, ToolTag.Favorite]
+      },
+      {
+        name: "Arc Browser",
+        description: "Browser (Chrominium-based)",
+        href: "https://arc.net/",
+        icon: "lucide:globe"
+      },
+      {
+        name: "Raycast",
+        description: "Launcher / Spotlight alternative",
+        href: "https://www.raycast.com/",
+        icon: "raycast",
+        tags: [ToolTag.Free]
+      },
+
+      {
+        name: "Notion",
+        description: "Project Management & Calendar",
+        href: "https://www.notion.so/",
+        icon: "notion",
+        tags: [ToolTag.Free]
+      },
+      {
+        name: "Reclaim.ai",
+        description: "AI Calendar",
+        href: "https://reclaim.ai/",
+        icon: "reclaim",
+        tags: [ToolTag.Subscription, ToolTag.Favorite]
+      }
+    ]}
+  />
+  <ToolSection
+    title="Setapp Subscription Bundle"
+    tools={[
+      {
+        name: "Spark Mail",
+        description: "Email",
+        href: "https://sparkmailapp.com/",
+        icon: "lucide:mail",
+        tags: [ToolTag.Bundle]
+      },
+      {
+        name: "Timing Tracker",
+        description: "Time Tracking",
+        href: "https://timingapp.com/",
+        icon: "timingapp",
+        tags: [ToolTag.Bundle]
+      }
+    ]}
+  />
+  <ToolSection
+    title="Language Learning"
+    tools={[
+      {
+        name: "Learning Using Texts (LUTE)",
+        description: "Immersive Reading",
+        href: "https://github.com/LuteOrg/lute-v3",
+        icon: "lucide:book-open",
+        tags: [ToolTag.SelfHosted]
+      },
+      {
+        name: "SuperChinese",
+        description: "Chinese Learning",
+        href: "https://superchinese.com/",
+        icon: "superchinese",
+        tags: [ToolTag.Subscription]
+      }
+    ]}
+  />
+  <p class="text-muted-foreground text-sm">
+    Discover other developers' setups at
+    <Link href="https://uses.tech/" external underline>uses.tech</Link>.
+  </p>
+</CommonLayout>
