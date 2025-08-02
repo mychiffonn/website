@@ -2,7 +2,7 @@ import type { CollectionEntry } from "astro:content"
 
 const projectLinkDefinitions = {
   repo: { label: 'Repository', iconName: 'mingcute:github-line' },
-  doc: { label: 'Documentation', iconName: 'mingcute:book-line' },
+  doc: { label: 'Documentation', iconName: 'mingcute:document-line' },
   url: { label: 'Website', iconName: 'mingcute:external-link-line' },
   release: { label: 'Release', iconName: 'mingcute:download-line' }
 } as const
@@ -37,19 +37,19 @@ export const getProjectDescription = (project: CollectionEntry<'projects'>) => {
       needsReadMore: false
     }
   }
-  
+
   // Fall back to first 150 characters of body content
   if (project.body && project.body.trim().length > 0) {
     const bodyText = project.body.trim()
     const needsTruncation = bodyText.length > 150
     const text = needsTruncation ? bodyText.substring(0, 150) + '...' : bodyText
-    
+
     return {
       text,
       needsReadMore: needsTruncation
     }
   }
-  
+
   return null
 }
 

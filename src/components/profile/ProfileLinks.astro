@@ -17,7 +17,7 @@ const { links, class: className = "", includeLabel = false, includeRss = false }
 const processedLinks = getProcessedProfileLinks(links, includeRss)
 ---
 
-<nav class={`flex flex-wrap gap-3 ${className}`} role="list">
+<nav class={`flex flex-wrap gap-2 ${className}`} role="list">
   {
     processedLinks.map(({ href, label, iconName }) => {
       const isExternal = !href.startsWith("/")
@@ -28,14 +28,14 @@ const processedLinks = getProcessedProfileLinks(links, includeRss)
           aria-label={label}
           title={label}
           class:list={[
-            "text-muted-foreground flex items-center gap-x-0.5 text-xs",
+            "text-muted-foreground flex items-center gap-x-1 text-sm",
             includeLabel
               ? ""
-              : "hover:bg-accent hover:text-accent-foreground rounded-md border p-2 transition-colors"
+              : "hover:bg-accent hover:text-accent-foreground size-10 touch-manipulation justify-center rounded-md border p-1 transition-colors"
           ]}
           external={isExternal}
         >
-          <Icon name={iconName} class="size-4" />
+          <Icon name={iconName} class="size-5" />
           {includeLabel && <span set:html={label} />}
         </Link>
       )
