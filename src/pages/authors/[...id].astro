@@ -2,7 +2,7 @@
 import { getAllAuthors, getPostsByAuthor } from "@/lib/data-utils"
 import Layout from "@/layouts/Layout.astro"
 import AuthorCard from "@/components/blog/AuthorCard.astro"
-import BlogCard from "@/components/blog/BlogCard.astro"
+import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
 
@@ -44,7 +44,7 @@ const authorPosts = await getPostsByAuthor(author.id)
             .filter((post) => !post.data.draft)
             .map((post) => (
               <li>
-                <BlogCard entry={post} />
+                <PreviewCard entry={post} />
               </li>
             ))}
         </ul>

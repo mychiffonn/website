@@ -7,10 +7,10 @@ import { getAllPosts, getSortedTags, groupPostsByYear } from "@/lib/data-utils"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
-import BlogCard from "@/components/blog/BlogCard.astro"
+import Pagination from "@/components/blog/Pagination.astro"
+import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
-import Pagination from "@/components/blog/Pagination.astro"
 
 export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
   const allPosts = await getAllPosts()
@@ -73,7 +73,7 @@ const displayTags = sortedTags.slice(0, 15)
           <ul class="flex flex-col gap-4">
             {postsByYear[year].map((post) => (
               <li>
-                <BlogCard entry={post} />
+                <PreviewCard entry={post} />
               </li>
             ))}
           </ul>
@@ -82,9 +82,5 @@ const displayTags = sortedTags.slice(0, 15)
     }
   </div>
 
-  <Pagination
-    currentPage={page.currentPage}
-    totalPages={page.lastPage}
-    baseUrl="/blog"
-  />
+  <Pagination currentPage={page.currentPage} totalPages={page.lastPage} baseUrl="/blog" />
 </Layout>

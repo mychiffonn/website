@@ -1,7 +1,7 @@
 ---
 import { getAllTags, getPostsByTag } from "@/lib/data-utils"
 import Layout from "@/layouts/Layout.astro"
-import BlogCard from "@/components/blog/BlogCard.astro"
+import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
 
@@ -44,7 +44,7 @@ const { tag, posts } = Astro.props
     {
       posts.map((post) => (
         <li>
-          <BlogCard entry={post} />
+          <PreviewCard entry={post} />
         </li>
       ))
     }
