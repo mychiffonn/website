@@ -29,8 +29,8 @@ const displayTags = sortedTags.slice(0, 15)
   <PageHead slot="head" title="Blog" />
   <Breadcrumbs
     items={[
-      { label: "Blog", href: "/blog", icon: "lucide:library-big" },
-      { label: `Page ${page.currentPage}`, icon: "lucide:book-copy" }
+      { label: "Blog", href: "/blog", icon: "mingcute:book-2-line" },
+      { label: `Page ${page.currentPage}`, icon: "mingcute:copy-line" }
     ]}
   />
 
@@ -42,7 +42,7 @@ const displayTags = sortedTags.slice(0, 15)
           <div class="flex flex-wrap gap-2">
             {displayTags.map(({ tag, count }) => (
               <Badge href={`/tags/${tag}`} variant="secondary">
-                <Icon name="lucide:hash" class="size-3" />
+                <Icon name="mingcute:hashtag-line" class="size-3" />
                 {tag}
                 <span class="text-muted-foreground ml-1">({count})</span>
               </Badge>
@@ -52,7 +52,7 @@ const displayTags = sortedTags.slice(0, 15)
             <Button href="/tags" variant={"default"} class="group">
               <span>View all {sortedTags.length} tags</span>
               <Icon
-                name="lucide:arrow-right"
+                name="mingcute:arrow-right-line"
                 class="size-4 transition-transform group-hover:translate-x-0.5"
               />
             </Button>

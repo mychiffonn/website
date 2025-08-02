@@ -3,30 +3,33 @@ import { PROFILE } from '@/config'
 // Official platform icon mapping with camelCase keys and object values
 export const PROFILE_ICON_MAP = {
   // Email & Communication
-  email: { label: 'Email', iconName: 'lucide:mail' },
-  skype: { label: 'Skype', iconName: 'lucide:phone' },
-  telegram: { label: 'Telegram', iconName: 'lucide:send' },
-  whatsapp: { label: 'WhatsApp', iconName: 'lucide:message-circle' },
-  discord: { label: 'Discord', iconName: 'lucide:message-square' },
-  slack: { label: 'Slack', iconName: 'lucide:slack' },
+  email: { label: 'Email', iconName: 'mingcute:mail-line' },
+  skype: { label: 'Skype', iconName: 'mingcute:phone-line' },
+  telegram: { label: 'Telegram', iconName: 'mingcute:send-line' },
+  whatsapp: { label: 'WhatsApp', iconName: 'mingcute:message-circle-line' },
+  discord: { label: 'Discord', iconName: 'mingcute:message-square-line' },
+  slack: { label: 'Slack', iconName: 'mingcute:slack-line' },
+  wechat: { label: 'Wechat', iconName: 'mingcute:wechat-line' },
+  kakaotalk: { label: 'Kakao Talk', iconName: 'mingcute:kakao-talk-line' },
+  line: { label: 'Line', iconName: 'mingcute:line-app-line' },
 
-  // Social Media - using official names
-  github: { label: 'GitHub', iconName: 'lucide:github' },
-  x: { label: 'X', iconName: 'lucide:twitter' },
-  twitter: { label: 'Twitter', iconName: 'lucide:twitter' },
-  linkedin: { label: 'LinkedIn', iconName: 'lucide:linkedin' },
-  facebook: { label: 'Facebook', iconName: 'lucide:facebook' },
-  instagram: { label: 'Instagram', iconName: 'lucide:instagram' },
-  bluesky: { label: 'Bluesky', iconName: 'lucide:cloud' },
-  mastodon: { label: 'Mastodon', iconName: 'lucide:message-circle' },
-  threads: { label: 'Threads', iconName: 'lucide:at-sign' },
-  youtube: { label: 'YouTube', iconName: 'lucide:youtube' },
-  twitch: { label: 'Twitch', iconName: 'lucide:twitch' },
-  tiktok: { label: 'TikTok', iconName: 'lucide:music' },
-  snapchat: { label: 'Snapchat', iconName: 'lucide:camera' },
-  pinterest: { label: 'Pinterest', iconName: 'lucide:image' },
-  reddit: { label: 'Reddit', iconName: 'lucide:message-square' },
-  medium: { label: 'Medium', iconName: 'lucide:pen-tool' },
+  // Social Media
+  x: { label: 'X', iconName: 'mingcute:social-x-line' },
+  twitter: { label: 'Twitter', iconName: 'mingcute:twitter-line' },
+  linkedin: { label: 'LinkedIn', iconName: 'mingcute:linkedin-line' },
+  facebook: { label: 'Facebook', iconName: 'mingcute:facebook-line' },
+  instagram: { label: 'Instagram', iconName: 'mingcute:instagram-line' },
+  bluesky: { label: 'Bluesky', iconName: 'mingcute:bluesky-social-line' },
+  mastodon: { label: 'Mastodon', iconName: 'mingcute:mastodon-line' },
+  threads: { label: 'Threads', iconName: 'mingcute:threads-line' },
+  youtube: { label: 'YouTube', iconName: 'mingcute:youtube-line' },
+  twitch: { label: 'Twitch', iconName: 'mingcute:twitch-line' },
+  tiktok: { label: 'TikTok', iconName: 'mingcute:tiktok-line' },
+  snapchat: { label: 'Snapchat', iconName: 'mingcute:snapchat-line' },
+  pinterest: { label: 'Pinterest', iconName: 'mingcute:pinterest-line' },
+  reddit: { label: 'Reddit', iconName: 'mingcute:reddit-line' },
+  medium: { label: 'Medium', iconName: 'mingcute:medium-line' },
+  weibo: { label: 'Weibo', iconName: 'mingcute:weibo-line' },
 
   // Academic & Research
   googleScholar: { label: 'Google Scholar', iconName: 'academicons:google-scholar' },
@@ -35,46 +38,39 @@ export const PROFILE_ICON_MAP = {
   academia: { label: 'Academia.edu', iconName: 'academicons:academia' },
   pubmed: { label: 'PubMed', iconName: 'academicons:pubmed' },
   arXiv: { label: 'arXiv', iconName: 'academicons:arxiv' },
-  ssrn: { label: 'SSRN', iconName: 'lucide:file-text' },
+  ssrn: { label: 'SSRN', iconName: 'academicons:ssrn' },
   scopus: { label: 'Scopus', iconName: 'academicons:scopus' },
   mendeley: { label: 'Mendeley', iconName: 'academicons:mendeley' },
   zotero: { label: 'Zotero', iconName: 'academicons:zotero' },
   figshare: { label: 'Figshare', iconName: 'academicons:figshare' },
-  dblp: { label: 'DBLP', iconName: 'lucide:database' },
-  semanticScholar: { label: 'Semantic Scholar', iconName: 'lucide:brain' },
+  dblp: { label: 'DBLP', iconName: 'mingcute:database-line' },
+  semanticScholar: { label: 'Semantic Scholar', iconName: 'mingcute:brain-line' },
 
   // Developer Platforms
-  gitlab: { label: 'GitLab', iconName: 'lucide:gitlab' },
-  bitbucket: { label: 'Bitbucket', iconName: 'lucide:git-branch' },
-  codepen: { label: 'CodePen', iconName: 'lucide:code' },
-  codesandbox: { label: 'CodeSandbox', iconName: 'lucide:sandbox' },
-  stackoverflow: { label: 'Stack Overflow', iconName: 'lucide:layers' },
-  hackerrank: { label: 'HackerRank', iconName: 'lucide:terminal' },
-  leetcode: { label: 'LeetCode', iconName: 'lucide:code-2' },
-  npm: { label: 'npm', iconName: 'lucide:package' },
-  pypi: { label: 'PyPI', iconName: 'lucide:python' },
-  dockerhub: { label: 'Docker Hub', iconName: 'lucide:container' },
-  devcommunity: { label: 'Dev Community', iconName: 'lucide:dev' },
-  hashnode: { label: 'Hashnode', iconName: 'lucide:hash' },
-  kaggle: { label: 'Kaggle', iconName: 'lucide:bar-chart' },
-  huggingface: { label: 'Hugging Face', iconName: 'lucide:smile' },
+  github: { label: 'GitHub', iconName: 'mingcute:github-line' },
+  gitlab: { label: 'GitLab', iconName: 'mingcute:git-lab-line' },
+  bitbucket: { label: 'Bitbucket', iconName: 'mingcute:git-branch-line' },
+  codepen: { label: 'CodePen', iconName: 'mingcute:code-line' },
+  codesandbox: { label: 'CodeSandbox', iconName: 'mingcute:code-line' },
+  stackoverflow: { label: 'Stack Overflow', iconName: 'academicons:stackoverflow' },
+  figma: { label: 'Stack Overflow', iconName: 'mingcute:figma-line' },
 
   // Professional & Portfolio
-  website: { label: 'Website', iconName: 'lucide:globe' },
-  portfolio: { label: 'Portfolio', iconName: 'lucide:briefcase' },
-  blog: { label: 'Blog', iconName: 'lucide:pen-tool' },
+  website: { label: 'Website', iconName: 'mingcute:world-line' },
+  portfolio: { label: 'Portfolio', iconName: 'mingcute:briefcase-line' },
+  blog: { label: 'Blog', iconName: 'mingcute:pen-line' },
   cv: { label: 'CV', iconName: 'academicons:cv' },
-  resume: { label: 'Resume', iconName: 'lucide:file-user' },
-  calendar: { label: 'Calendar', iconName: 'lucide:calendar' },
+  resume: { label: 'Resume', iconName: 'mingcute:file-line' },
+  calendar: { label: 'Calendar', iconName: 'mingcute:calendar-line' },
 
   // Other
-  rss: { label: 'RSS', iconName: 'lucide:rss' },
-  patreon: { label: 'Patreon', iconName: 'lucide:heart-plus' },
-  koFi: { label: 'Ko-fi', iconName: 'lucide:coffee' },
-  buymeacoffee: { label: 'Buy me a coffee', iconName: 'lucide:coffee' },
-  paypal: { label: 'PayPal', iconName: 'lucide:credit-card' },
-  venmo: { label: 'Venmo', iconName: 'lucide:wallet-sign' },
-  cashapp: { label: 'Cash App', iconName: 'lucide:dollar-sign' }
+  rss: { label: 'RSS', iconName: 'mingcute:rss-line' },
+  patreon: { label: 'Patreon', iconName: 'mingcute:heart-line' },
+  kofi: { label: 'Ko-fi', iconName: 'mingcute:coffee-line' },
+  buymeacoffee: { label: 'Buy me a coffee', iconName: 'mingcute:coffee-line' },
+  paypal: { label: 'PayPal', iconName: 'mingcute:paypal-line' },
+  venmo: { label: 'Venmo', iconName: 'mingcute:wallet-4-line' },
+  cashapp: { label: 'Cash App', iconName: 'mingcute:currency-dollar-line' }
 } as const
 
 export type ProfileLinkType = keyof typeof PROFILE_ICON_MAP
@@ -172,7 +168,7 @@ export const getProcessedProfileLinks = (
 
 export const getIconForPlatform = (platform: string): string => {
   const iconConfig = PROFILE_ICON_MAP[platform as ProfileLinkType]
-  return iconConfig?.iconName || 'lucide:external-link'
+  return iconConfig?.iconName || 'mingcute:external-link-line'
 }
 
 // Email protection utilities

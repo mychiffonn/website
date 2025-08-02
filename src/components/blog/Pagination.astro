@@ -77,7 +77,7 @@ const pages = generatePages()
         aria-label="Go to previous page"
         aria-disabled={currentPage === 1}
       >
-        <Icon name="lucide:chevron-left" class="size-4" />
+        <Icon name="mingcute:left-line" class="size-5" />
         <span class="hidden sm:block">Previous</span>
       </Button>
     </li>
@@ -92,7 +92,7 @@ const pages = generatePages()
               data-slot="pagination-ellipsis"
               class="flex size-9 items-center justify-center"
             >
-              <Icon name="lucide:more-horizontal" class="size-4" />
+              <Icon name="mingcute:more-horizontal-line" class="size-5" />
               <span class="sr-only">More pages</span>
             </span>
           ) : (
@@ -125,7 +125,7 @@ const pages = generatePages()
         aria-disabled={currentPage === totalPages}
       >
         <span class="hidden sm:block">Next</span>
-        <Icon name="lucide:chevron-right" class="size-4" />
+        <Icon name="mingcute:right-line" class="size-4" />
       </Button>
     </li>
   </ul>

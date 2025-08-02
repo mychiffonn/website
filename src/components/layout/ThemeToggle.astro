@@ -4,15 +4,9 @@ import { Icon } from "astro-icon/components"
 import Button from "@/components/base/Button.astro"
 ---
 
-<Button id="theme-toggle" variant="ghost" title="Toggle theme" class="-me-2 size-8">
-  <Icon
-    name="lucide:sun"
-    class="size-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"
-  />
-  <Icon
-    name="lucide:moon"
-    class="absolute size-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
-  />
+<Button id="theme-toggle" variant="ghost" size="square" title="Toggle theme" class="-me-2">
+  <Icon name="mingcute:sun-line" class="size-5 scale-100 transition-all dark:scale-0" />
+  <Icon name="mingcute:moon-line" class="absolute size-5 scale-0 transition-all dark:scale-100" />
   <span class="sr-only">Toggle theme</span>
 </Button>
 

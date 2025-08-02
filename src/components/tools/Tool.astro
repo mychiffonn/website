@@ -16,7 +16,7 @@ export interface Props {
 const { name, description, href, icon, tags } = Astro.props
 
 const getSafeIcon = (icon: string): string => {
-  return icon && icon.trim() !== "" ? icon : "lucide:box"
+  return icon && icon.trim() !== "" ? icon : "mingcute:box-line"
 }
 const safeIcon = getSafeIcon(icon)
 ---

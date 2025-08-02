@@ -1,10 +1,10 @@
 import type { CollectionEntry } from "astro:content"
 
 const projectLinkDefinitions = {
-  repo: { label: 'Repository', iconName: 'lucide:github' },
-  doc: { label: 'Documentation', iconName: 'lucide:book-open' },
-  url: { label: 'Website', iconName: 'lucide:external-link' },
-  release: { label: 'Release', iconName: 'lucide:download' }
+  repo: { label: 'Repository', iconName: 'mingcute:github-line' },
+  doc: { label: 'Documentation', iconName: 'mingcute:book-line' },
+  url: { label: 'Website', iconName: 'mingcute:external-link-line' },
+  release: { label: 'Release', iconName: 'mingcute:download-line' }
 } as const
 
 export const getProjectLinks = (repo?: string, doc?: string, url?: string, release?: string) => {
