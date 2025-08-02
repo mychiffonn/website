@@ -14,7 +14,7 @@ const { class: className, title, tools, ...props } = Astro.props
   class:list={["not-prose mb-6 flex flex-col gap-y-4 rounded-xl border p-2", className]}
   {...props}
 >
-  <h3 class="m-0 text-lg font-semibold">{title}</h3>
+  <h3 class="mx-2 my-1 text-lg font-semibold">{title}</h3>
   <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
     {tools.map((tool) => <ToolComponent {...tool} />)}
   </div>
