@@ -50,10 +50,10 @@ const currentSubpostDetails = isCurrentSubpost
                 <Icon
                   name={
                     currentSubpostDetails
-                      ? "mingcute:file-line"
+                      ? "var(--icon-subpost)"
                       : isActivePost
-                        ? "mingcute:book-line"
-                        : "mingcute:book-2-line"
+                        ? "var(--icon-post-active)"
+                        : "var(--icon-post)"
                   }
                   class="size-4"
                   aria-hidden="true"
@@ -78,7 +78,7 @@ const currentSubpostDetails = isCurrentSubpost
                   {isActivePost ? (
                     <div class="text-foreground bg-muted mobile-subposts-active-item flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium">
                       <Icon
-                        name="mingcute:book-line"
+                        name="var(--icon-post-active)"
                         class="size-4 flex-shrink-0"
                         aria-hidden="true"
                       />
@@ -101,7 +101,7 @@ const currentSubpostDetails = isCurrentSubpost
                       class="mobile-subposts-link hover:text-foreground text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
                     >
                       <Icon
-                        name="mingcute:book-line"
+                        name="var(--icon-post-active)"
                         class="size-4 flex-shrink-0"
                         aria-hidden="true"
                       />
@@ -128,7 +128,7 @@ const currentSubpostDetails = isCurrentSubpost
                     currentPostId === subpost.id ? (
                       <div class="text-foreground bg-muted mobile-subposts-active-item flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium">
                         <Icon
-                          name="mingcute:file-line"
+                          name="var(--icon-subpost)"
                           class="size-4 flex-shrink-0"
                           aria-hidden="true"
                         />
@@ -145,7 +145,7 @@ const currentSubpostDetails = isCurrentSubpost
                         class="mobile-subposts-link hover:text-foreground text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
                       >
                         <Icon
-                          name="mingcute:file-line"
+                          name="var(--icon-subpost)"
                           class="size-4 flex-shrink-0"
                           aria-hidden="true"
                         />

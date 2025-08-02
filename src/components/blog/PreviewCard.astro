@@ -90,7 +90,7 @@ const tags = entry.data.tags
             ))
         }
         <div class="flex items-center gap-x-1">
-          <Icon name="mingcute:calendar-line" class="size-3" />
+          <Icon name="var(--icon-publish)" class="size-3" />
           <span>
             {formattedDate}
             {
@@ -101,13 +101,13 @@ const tags = entry.data.tags
           </span>
         </div>
         <div class="flex items-center gap-x-1">
-          <Icon name="mingcute:time-line" class="size-3" />
+          <Icon name="var(--icon-reading-time)" class="size-3" />
           <span>{readTime}</span>
         </div>
         {
           subpostCount > 0 && (
             <div class="flex items-center gap-x-1">
-              <Icon name="mingcute:documents-line" class="size-3" />
+              <Icon name="var(--icon-subposts)" class="size-3" />
               <span>
                 {subpostCount} subpost{subpostCount === 1 ? "" : "s"}
               </span>
@@ -122,7 +122,7 @@ const tags = entry.data.tags
           <div class="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <Badge variant={"secondary"} class="tag-badge transition-all duration-300">
-                <Icon name="mingcute:hashtag-line" class="size-3" />
+                <Icon name="var(--icon-hashtag)" class="size-3" />
                 {tag}
               </Badge>
             ))}

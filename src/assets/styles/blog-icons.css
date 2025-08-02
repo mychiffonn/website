@@ -1,0 +1,20 @@
+/**
+ * Blog-specific icon variables
+ * Change these values to update icons across all blog components
+ */
+:root {
+  /* Navigation & Breadcrumbs */
+  --icon-blog: "mingcute:book-5-line";
+  /* Used for both active parent posts and active subposts */
+  --icon-post-active: "mingcute:book-line";
+  --icon-post: "mingcute:book-2-line";
+  --icon-parent-post: "mingcute:documents-line";
+  --icon-subpost: "mingcute:document-line";
+
+  /* Meta information */
+  --icon-hashtag: "mingcute:hashtag-line";
+  --icon-publish: "mingcute:calendar-line";
+  --icon-reading-time: "mingcute:time-duration-line";
+  --icon-update: "mingcute:edit-line";
+  --icon-subposts: "mingcute:documents-line";
+}

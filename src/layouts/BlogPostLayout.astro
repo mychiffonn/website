@@ -71,25 +71,25 @@ const modifiedDate = post.data.modifiedDate
     <div class="col-start-2">
       <Breadcrumbs
         items={[
-          { href: "/blog", label: "Blog", icon: "mingcute:book-5-line" },
+          { href: "/blog", label: "Blog", icon: "var(--icon-blog)" },
           ...(isCurrentSubpost && parentPost
             ? [
                 {
                   href: `/blog/${parentPost.id}`,
                   label: parentPost.data.title,
-                  icon: "mingcute:layers-line"
+                  icon: "var(--icon-parent-post)"
                 },
                 {
                   href: `/blog/${currentPostId}`,
                   label: post.data.title,
-                  icon: "mingcute:book-line"
+                  icon: "var(--icon-post-active)"
                 }
               ]
             : [
                 {
                   href: `/blog/${currentPostId}`,
                   label: post.data.title,
-                  icon: "mingcute:book-line"
+                  icon: "var(--icon-post-active)"
                 }
               ])
         ]}
@@ -148,7 +148,7 @@ const modifiedDate = post.data.modifiedDate
           <div
             class="flex w-full items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0"
           >
-            <Icon name="mingcute:calendar-line" class="size-3" />
+            <Icon name="var(--icon-publish)" class="size-3" />
             <time datetime={publishDate.toISOString().split("T")[0]}>
               {formatDate(publishDate)}
               {
@@ -162,7 +162,7 @@ const modifiedDate = post.data.modifiedDate
           <div
             class="flex w-full items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0"
           >
-            <Icon name="mingcute:time-line" class="size-3" />
+            <Icon name="var(--icon-reading-time)" class="size-3" />
             <span>{postReadingTime}</span>
             {combinedReadingTime && <span>({combinedReadingTime} combined)</span>}
           </div>
