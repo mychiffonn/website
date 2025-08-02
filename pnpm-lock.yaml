@@ -35,6 +35,9 @@ importers:
       '@iconify-json/academicons':
         specifier: ^1.2.2
         version: 1.2.2
+      '@iconify-json/lucide':
+        specifier: ^1.2.60
+        version: 1.2.60
       '@iconify-json/mingcute':
         specifier: ^1.2.3
         version: 1.2.3
@@ -509,6 +512,9 @@ packages:
 
   '@iconify-json/academicons@1.2.2':
     resolution: {integrity: sha512-rOcj3ESbwXlT2pKQisnohQ9quXopb0/XdHfjTAY9vHEIR4c1hX9itKl0wPAqg/gKTvWJZr218Fgd4oKvJPZ+uQ==}
+
+  '@iconify-json/lucide@1.2.60':
+    resolution: {integrity: sha512-iVhpjcJkrR65jaJCJAFr02FkL73Qth039MgDJOcuKYOl32183qgAeHmo44DI2SzkYURGpc0GMwnhRPpQPOaChg==}
 
   '@iconify-json/mingcute@1.2.3':
     resolution: {integrity: sha512-yiEQfLBF5iwyOdxuY0kEU06+8Mp6Mrp14KVXTb+5jjSVuD71C9EQrzM/mm1Efd8Nu2amJalTPisl3loC8pHBqQ==}
@@ -4636,6 +4642,10 @@ snapshots:
       - supports-color
 
   '@iconify-json/academicons@1.2.2':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/lucide@1.2.60':
     dependencies:
       '@iconify/types': 2.0.0
 

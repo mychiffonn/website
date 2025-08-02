@@ -4,7 +4,12 @@ import { Image } from "astro:assets"
 import type { CollectionEntry } from "astro:content"
 import { Icon } from "astro-icon/components"
 
-import { BlogDataManager } from "@/lib/post-manager"
+import {
+  getCombinedReadingTime,
+  getPostReadingTime,
+  getSubpostCount,
+  parseAuthors
+} from "@/lib/data-utils"
 import { formatDate } from "@/lib/utils"
 import Badge from "@/components/base/Badge.astro"
 import Link from "@/components/base/Link.astro"
@@ -16,18 +21,15 @@ interface Props {
 
 const { entry } = Astro.props
 
-// Get all metadata with single optimized call
-const postManager = BlogDataManager.getInstance()
-const [metadata, authors] = await Promise.all([
-  postManager.getMetadata(entry.id),
-  postManager.parseAuthors(entry.data.authors ?? [])
-])
+const authors = await parseAuthors(entry.data.authors ?? [])
+const subpostCount = await getSubpostCount(entry.id)
+const combinedReadingTime = await getCombinedReadingTime(entry.id)
+const readingTime = await getPostReadingTime(entry.id)
 
 const publishDate = entry.data.publishDate
 const modifiedDate = entry.data.modifiedDate
 const formattedDate = formatDate(publishDate)
-const readTime = metadata.combinedReadingTime || metadata.readingTime
-const subpostCount = metadata.subpostCount
+const readTime = subpostCount > 0 ? combinedReadingTime : readingTime
 const tags = entry.data.tags
 ---
 
