@@ -34,7 +34,6 @@
     "astro-icon": "^1.1.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.469.0",
     "patch-package": "^8.0.0",
     "radix-ui": "^1.4.2",
     "react": "19.0.0",
