@@ -21,10 +21,10 @@ import MobileMenu from "@/components/ui/mobile-menu"
               <Link
                 href={item.href}
                 class:list={[
-                  "relative capitalize transition-colors duration-300 ease-in-out",
+                  "relative px-2 py-1 capitalize transition-colors duration-300 ease-in-out",
                   isActive
-                    ? "text-foreground after:bg-accent font-medium after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:rounded-full"
-                    : "text-foreground/60 hover:text-accent hover:bg-accent/10 px-2 py-1 hover:rounded-md"
+                    ? "text-foreground after:bg-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:rounded-full"
+                    : "text-foreground/60 hover:text-accent hover:bg-accent/10 hover:rounded-md"
                 ]}
               >
                 {item.label}

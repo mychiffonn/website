@@ -1,6 +1,6 @@
 ---
 import { render, type CollectionEntry } from "astro:content"
-import { Icon } from "astro-icon/components"
+import Icon from "@/components/base/Icon.astro"
 
 import { getAllProjects } from "@/lib/data-utils"
 import { createDateRange } from "@/lib/utils"
@@ -44,8 +44,8 @@ const contextVariant = getContextVariant(context)
 
   <Breadcrumbs
     items={[
-      { href: "/projects", label: "Projects", icon: "lucide:folder" },
-      { label: title, icon: "lucide:file-text" }
+      { href: "/projects", label: "Projects", icon: "mingcute:folder-line" },
+      { label: title, icon: "mingcute:file-line" }
     ]}
   />
 
@@ -59,7 +59,7 @@ const contextVariant = getContextVariant(context)
             {
               isHighlighted && (
                 <Badge variant="default" class="shrink-0">
-                  <Icon name="lucide:star" class="mr-1 size-3" />
+                  <Icon name="mingcute:star-line" class="mr-1 size-3" />
                   Featured
                 </Badge>
               )
@@ -78,7 +78,7 @@ const contextVariant = getContextVariant(context)
             {
               dateRange && (
                 <span class="text-muted-foreground flex items-center gap-1">
-                  <Icon name="lucide:calendar" class="size-3" />
+                  <Icon name="mingcute:calendar-line" class="size-3" />
                   {dateRange}
                 </span>
               )

@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components"
+import Icon from "@/components/base/Icon.astro"
 
 import { cn } from "@/lib/utils"
 import Button from "@/components/base/Button.astro"
@@ -21,7 +21,7 @@ const isSubpost = !!parentPost
     aria-disabled={!olderPost}
   >
     <Icon
-      name="lucide:arrow-left"
+      name="mingcute:arrow-left-line"
       class="mr-2 size-4 transition-transform group-hover:-translate-x-1"
     />
     <div class="flex flex-col items-start overflow-hidden text-wrap">
@@ -45,8 +45,8 @@ const isSubpost = !!parentPost
         )}
       >
         <Icon
-          name="lucide:corner-left-up"
-          class="mr-2 size-4 transition-transform group-hover:-translate-y-1"
+          name="mingcute:arrow-left-up-line"
+          class="mr-1 size-4 transition-transform group-hover:-translate-1"
         />
         <div class="flex flex-col items-center overflow-hidden text-wrap">
           <span class="text-muted-foreground text-center text-xs">Parent Post</span>
@@ -76,8 +76,8 @@ const isSubpost = !!parentPost
       </span>
     </div>
     <Icon
-      name="lucide:arrow-right"
-      class="ml-2 size-4 transition-transform group-hover:translate-x-1"
+      name="mingcute:arrow-right-line"
+      class="ml-1 size-4 transition-transform group-hover:translate-x-1"
     />
   </Button>
 </nav>

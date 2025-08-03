@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets"
 import { render } from "astro:content"
-import { Icon } from "astro-icon/components"
+import Icon from "@/components/base/Icon.astro"
 
 import {
   getAdjacentPosts,
@@ -83,25 +83,25 @@ const combinedReadingTime =
     <div class="col-start-2">
       <Breadcrumbs
         items={[
-          { href: "/blog", label: "Blog", icon: "lucide:library-big" },
+          { href: "/blog", label: "Blog", icon: "mingcute:book-5-line" },
           ...(isCurrentSubpost && parentPost
             ? [
                 {
                   href: `/blog/${parentPost.id}`,
                   label: parentPost.data.title,
-                  icon: "lucide:book-open"
+                  icon: "mingcute:documents-line"
                 },
                 {
                   href: `/blog/${currentPostId}`,
                   label: post.data.title,
-                  icon: "lucide:file-text"
+                  icon: "mingcute:document-line"
                 }
               ]
             : [
                 {
                   href: `/blog/${currentPostId}`,
                   label: post.data.title,
-                  icon: "lucide:book-open-text"
+                  icon: "mingcute:book-line"
                 }
               ])
         ]}
@@ -179,7 +179,7 @@ const combinedReadingTime =
           {
             subpostCount > 0 && (
               <div class="flex w-full items-center justify-center gap-1 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0">
-                <Icon name="lucide:file-text" class="size-3" />
+                <Icon name="subposts" class="size-3" />
                 {subpostCount} subpost{subpostCount === 1 ? "" : "s"}
               </div>
             )
@@ -191,7 +191,7 @@ const combinedReadingTime =
               post.data.tags.length > 0 &&
               post.data.tags.map((tag) => (
                 <Badge href={`/tags/${tag}`} variant="secondary">
-                  <Icon name="lucide:hash" class="size-3" />
+                  <Icon name="hashtag" class="size-3" />
                   {tag}
                 </Badge>
               ))
@@ -236,7 +236,7 @@ const combinedReadingTime =
     aria-label="Scroll to top"
   >
     <Icon
-      name="lucide:arrow-up"
+      name="mingcute:up-line"
       class="mx-auto size-4 transition-all group-hover:-translate-y-0.5"
     />
   </Button>

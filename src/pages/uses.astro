@@ -4,14 +4,16 @@ import Link from "@/components/base/Link.astro"
 import { ToolSection, ToolTag } from "@/components/tools"
 
 const usesDescription =
-  "A collection of tools that I use on a frequent basis. It is a work in progress and will be updated as I update my setup. Except for the hardware, I use free versions of most tools"
+  "A collection of tools that I use on a frequent basis. \
+  It is a work in progress and will be updated as I update my setup.\
+  Except for the hardware, I use free versions of most tools."
 ---
 
 <CommonLayout
   title="Uses"
   description={usesDescription}
   lastModified={new Date()}
-  breadcrumbs={[{ label: "Uses", icon: "lucide:folder-code" }]}
+  breadcrumbs={[{ label: "Uses", icon: "mingcute:tool-line" }]}
 >
   <ToolSection
     title="Workstation (+Operating System)"
@@ -20,7 +22,7 @@ const usesDescription =
         name: 'MacBook M1 Pro 14"',
         description: "MacOS Sequoia 15",
         href: "https://www.apple.com/mac/",
-        icon: "apple"
+        icon: "mingcute:apple-line"
       },
       {
         name: "Linux (Virtual Machine)",
@@ -47,25 +49,11 @@ const usesDescription =
     title="Development"
     tools={[
       {
-        name: "Cursor",
-        description: "AI IDE (Vim mode)",
-        href: "https://www.cursor.com/",
-        icon: "cursor",
-        tags: [ToolTag.Gifted]
-      },
-      {
         name: "Zed",
         description: "IDE (Vim mode)",
         href: "https://zed.dev/",
         icon: "zed",
         tags: [ToolTag.Free, ToolTag.OpenSource, ToolTag.Favorite]
-      },
-      {
-        name: "iTerm2",
-        description: "Terminal",
-        href: "https://iterm2.com/",
-        icon: "iterm2",
-        tags: [ToolTag.OpenSource]
       },
       {
         name: "Claude CLI (Sonnet 4.0)",
@@ -75,10 +63,24 @@ const usesDescription =
         tags: [ToolTag.Subscription]
       },
       {
+        name: "Cursor",
+        description: "AI IDE (Vim mode)",
+        href: "https://www.cursor.com/",
+        icon: "cursor",
+        tags: [ToolTag.Gifted]
+      },
+      {
+        name: "iTerm2",
+        description: "Terminal",
+        href: "https://iterm2.com/",
+        icon: "iterm2",
+        tags: [ToolTag.OpenSource]
+      },
+      {
         name: "Linear",
         description: "Software Development Tracking",
         href: "https://linear.app/",
-        icon: "linear",
+        icon: "mingcute:linear-line",
         tags: [ToolTag.Free, ToolTag.Favorite]
       }
     ]}
@@ -90,7 +92,7 @@ const usesDescription =
         name: "Zotero",
         description: "Citation Management",
         href: "https://www.zotero.org/",
-        icon: "lucide:book-open",
+        icon: "academicons:zotero",
         tags: [ToolTag.Free]
       },
       {
@@ -101,18 +103,18 @@ const usesDescription =
         tags: [ToolTag.Free, ToolTag.Favorite]
       },
       {
-        name: "LaTeX Workshop",
-        description: "VSCode Extension for LaTex Typesetting",
-        href: "https://github.com/James-Yu/LaTeX-Workshop",
-        icon: "latex",
-        tags: [ToolTag.OpenSource, ToolTag.Free]
-      },
-      {
         name: "Overleaf",
         description: "Online LaTeX Editor",
         href: "https://www.overleaf.com/",
-        icon: "lucide:file-text",
+        icon: "academicons:overleaf",
         tags: [ToolTag.Free]
+      },
+      {
+        name: "Typst",
+        description: "Typesetting, LaTeX successor",
+        href: "https://typst.app/",
+        icon: "typst",
+        tags: [ToolTag.OpenSource, ToolTag.Free]
       }
     ]}
   />
@@ -124,13 +126,13 @@ const usesDescription =
         description: "Browser (Firefox-based)",
         href: "https://zen-browser.app/",
         icon: "zen",
-        tags: [ToolTag.OpenSource, ToolTag.Free, ToolTag.Favorite]
+        tags: [ToolTag.OpenSource, ToolTag.Favorite]
       },
       {
         name: "Arc Browser",
         description: "Browser (Chrominium-based)",
         href: "https://arc.net/",
-        icon: "lucide:globe"
+        icon: "mingcute:arc-browser-line"
       },
       {
         name: "Raycast",
@@ -144,7 +146,7 @@ const usesDescription =
         name: "Notion",
         description: "Project Management & Calendar",
         href: "https://www.notion.so/",
-        icon: "notion",
+        icon: "mingcute:notion-line",
         tags: [ToolTag.Free]
       },
       {
@@ -153,6 +155,13 @@ const usesDescription =
         href: "https://reclaim.ai/",
         icon: "reclaim",
         tags: [ToolTag.Subscription, ToolTag.Favorite]
+      },
+      {
+        name: "Logseq",
+        description: "Journaling & Writing",
+        href: "https://reclaim.ai/",
+        icon: "logseq",
+        tags: [ToolTag.OpenSource, ToolTag.Favorite]
       }
     ]}
   />
@@ -163,7 +172,7 @@ const usesDescription =
         name: "Spark Mail",
         description: "Email",
         href: "https://sparkmailapp.com/",
-        icon: "lucide:mail",
+        icon: "mingcute:mail-ai-line",
         tags: [ToolTag.Bundle]
       },
       {
@@ -179,11 +188,11 @@ const usesDescription =
     title="Language Learning"
     tools={[
       {
-        name: "Learning Using Texts (LUTE)",
-        description: "Immersive Reading",
-        href: "https://github.com/LuteOrg/lute-v3",
-        icon: "lucide:book-open",
-        tags: [ToolTag.SelfHosted]
+        name: "Anki",
+        description: "Spaced Repetition System",
+        href: "https://apps.ankiweb.net/",
+        icon: "anki",
+        tags: [ToolTag.Paid]
       },
       {
         name: "SuperChinese",

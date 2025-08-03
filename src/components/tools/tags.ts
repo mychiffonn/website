@@ -1,3 +1,5 @@
+import type { BadgeVariant } from "@/components/base/Badge.astro"
+
 /**
  * Tag system for tools. Organized by category for better maintainability
  */
@@ -27,26 +29,36 @@ export enum ToolTag {
 /**
  * @constant Badge variant mapping for consistent styling
  */
-export const getTagVariant = (tag: ToolTag): 'default' | 'secondary' | 'destructive' | 'outline' => {
+export const getTagVariant = (tag: ToolTag): BadgeVariant => {
   switch (tag) {
-    case ToolTag.OpenSource:
-    case ToolTag.Free:
-      return 'secondary'
     case ToolTag.Favorite:
       return 'default'
+
+    // High priority - FOSS and self-hosted tools
+    case ToolTag.OpenSource:
+      return 'success'
+    case ToolTag.SelfHosted:
+      return 'accent'
+
+    // Medium priority - free tools
+    case ToolTag.Free:
+    case ToolTag.Gifted:
+      return 'secondary'
+
+    // Lower priority - paid tools
     case ToolTag.Subscription:
     case ToolTag.Bundle:
     case ToolTag.Paid:
-      return 'destructive'
-    case ToolTag.SelfHosted:
-    case ToolTag.Gifted:
+      return 'outline'
+
     case ToolTag.Organization:
     case ToolTag.SecondHand:
     case ToolTag.Web:
     case ToolTag.Mobile:
     case ToolTag.Desktop:
-      return 'outline'
+      return 'muted'
+
     default:
-      return 'outline'
+      return 'muted'
   }
 }

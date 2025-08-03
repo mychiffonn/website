@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components"
+import Icon from "@/components/base/Icon.astro"
 
 import { getSortedTags } from "@/lib/data-utils"
 import Layout from "@/layouts/Layout.astro"
@@ -12,14 +12,14 @@ const sortedTags = await getSortedTags()
 
 <Layout class="max-w-3xl">
   <PageHead slot="head" title="Tags" />
-  <Breadcrumbs items={[{ label: "Tags", icon: "lucide:tags" }]} />
+  <Breadcrumbs items={[{ label: "Tags", icon: "mingcute:tag-2-line" }]} />
 
   <div class="flex flex-col gap-4">
     <div class="flex flex-wrap gap-2">
       {
         sortedTags.map(({ tag, count }) => (
           <Badge href={`/tags/${tag}`} variant="secondary">
-            <Icon name="lucide:hash" class="size-3" />
+            <Icon name="mingcute:hashtag-line" class="size-3" />
             {tag}
             <span class="text-muted-foreground ml-1.5">({count})</span>
           </Badge>

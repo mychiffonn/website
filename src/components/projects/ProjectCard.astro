@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content"
-import { Icon } from "astro-icon/components"
+import Icon from "@/components/base/Icon.astro"
 
 import { createDateRange } from "@/lib/utils"
 import Badge from "@/components/base/Badge.astro"
@@ -37,7 +37,7 @@ const hasDetailPage = project.body && project.body.trim().length > 0
       {
         isHighlighted && (
           <>
-            <Icon name="lucide:star" class="text-primary size-4" />
+            <Icon name="mingcute:star-line" class="text-primary size-4" />
             <span class="sr-only">Featured</span>
           </>
         )
