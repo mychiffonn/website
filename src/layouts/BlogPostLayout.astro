@@ -43,8 +43,8 @@ const subpostContext = await PostManager.getInstance().getSubpostContext(current
 <Layout>
   <PostHead slot="head" post={post} />
   {
-    (hasSubposts || isCurrentSubpost) && (
-      <SubpostsHeader slot="subposts-navigation" subpostContext={subpostContext!} />
+    subpostContext && (hasSubposts || isCurrentSubpost) && (
+      <SubpostsHeader slot="subposts-navigation" subpostContext={subpostContext} />
     )
   }
   {
@@ -136,8 +136,8 @@ const subpostContext = await PostManager.getInstance().getSubpostContext(current
 
     {/** Subposts sidebar */}
     {
-      (hasSubposts || isCurrentSubpost) && (
-        <SubpostsSidebar subpostContext={subpostContext!} className="w-64" />
+      subpostContext && (hasSubposts || isCurrentSubpost) && (
+        <SubpostsSidebar subpostContext={subpostContext} class="w-64" />
       )
     }
 
