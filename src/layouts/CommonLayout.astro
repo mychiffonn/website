@@ -1,8 +1,8 @@
 ---
-import { getFormattedDate } from "@/lib/utils"
 import Layout from "@/layouts/Layout.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
+import FormattedDate from "@/components/base/FormattedDate.astro"
 
 interface Props {
   title: string
@@ -34,9 +34,10 @@ const {
     <h1 class="text-3xl font-bold">{title}</h1>
     {
       lastModified && (
-        <time class="text-muted-foreground text-sm italic">
-          Last updated: {getFormattedDate(lastModified)}
-        </time>
+        <FormattedDate 
+          date={lastModified} 
+          class="text-muted-foreground text-sm italic before:content-['Last_updated:_']"
+        />
       )
     }
     {description && <p class="text-muted-foreground my-6">{description}</p>}

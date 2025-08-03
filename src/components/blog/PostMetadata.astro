@@ -1,0 +1,146 @@
+---
+import type { PostMetadata } from "@/lib/post-manager"
+import FormattedDate from "@/components/base/FormattedDate.astro"
+import Icon from "@/components/base/Icon.astro"
+import Link from "@/components/base/Link.astro"
+import ReadingTime from "@/components/blog/ReadingTime.astro"
+import AvatarComponent from "@/components/ui/avatar"
+
+interface Props {
+  /** Post metadata containing all post data */
+  metadata: PostMetadata
+  /** Display variant - affects layout and linking behavior */
+  variant: "card" | "full"
+  /** Custom container class */
+  containerClass?: string
+  /** Show specific metadata items */
+  showItems?: {
+    authors?: boolean
+    publishDate?: boolean
+    modifiedDate?: boolean
+    readingTime?: boolean
+    subpostCount?: boolean
+  }
+}
+
+const {
+  metadata,
+  variant = "full",
+  containerClass,
+  showItems = {
+    authors: true,
+    publishDate: true,
+    modifiedDate: true,
+    readingTime: true,
+    subpostCount: true
+  }
+} = Astro.props
+
+// Determine word count for reading time calculation
+const wordCount =
+  metadata.hasSubposts && metadata.combinedWordCount
+    ? metadata.combinedWordCount
+    : metadata.wordCount
+
+// Layout configurations for different variants
+const isCard = variant === "card"
+const isFull = variant === "full"
+
+// Container classes based on variant
+const containerClasses = {
+  card: "text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-sm",
+  full: "text-muted-foreground divide-border flex flex-col items-center justify-center divide-y text-xs sm:flex-row sm:flex-wrap sm:divide-x sm:divide-y-0 sm:text-sm"
+}
+
+// Item classes based on variant
+const itemClasses = {
+  card: "flex items-center gap-x-1",
+  full: "flex items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0"
+}
+
+// Avatar sizes
+const avatarSize = isCard ? "size-4" : "size-5"
+const iconSize = "size-3"
+---
+
+<div class:list={[containerClasses[variant], containerClass]}>
+  {/** Authors */}
+  {
+    showItems.authors && metadata.authors.length > 0 && (
+      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
+        {metadata.authors.map((author) => (
+          <div class="flex items-center gap-x-1.5">
+            <AvatarComponent
+              client:load
+              src={author.avatar}
+              alt={author.name}
+              fallback={author.name[0]}
+              className={`${avatarSize} rounded-full`}
+            />
+            {isCard || !author.isRegistered ? (
+              <span>{author.name}</span>
+            ) : (
+              <Link href={`/authors/${author.id}`} underline class="text-foreground">
+                {author.name}
+              </Link>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  {/** Publish date */}
+  {
+    showItems.publishDate && (
+      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
+        <Icon name="publish" class={iconSize} />
+        <span>
+          <FormattedDate date={metadata.publishDate} />
+          {metadata.modifiedDate &&
+            metadata.modifiedDate > metadata.publishDate &&
+            showItems.modifiedDate && (
+              <span class="opacity-75">
+                {" "}
+                (updated <FormattedDate date={metadata.modifiedDate} />)
+              </span>
+            )}
+        </span>
+      </div>
+    )
+  }
+
+  {/** Reading time */}
+  {
+    showItems.readingTime && wordCount > 0 && (
+      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
+        <Icon name="reading-time" class={iconSize} />
+        {isFull ? (
+          <span>
+            <ReadingTime wordCount={metadata.wordCount} />
+            {metadata.combinedWordCount && metadata.combinedWordCount !== metadata.wordCount && (
+              <span class="opacity-75">
+                (<ReadingTime wordCount={metadata.combinedWordCount} showReadSuffix={false} />{" "}
+                total)
+              </span>
+            )}
+          </span>
+        ) : (
+          <ReadingTime wordCount={wordCount} />
+        )}
+      </div>
+    )
+  }
+
+  {/** Subpost count */}
+  {
+    showItems.subpostCount && metadata.hasSubposts && (
+      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
+        <Icon name="subposts" class={iconSize} />
+        <span>
+          {metadata.subpostCount} subpost{metadata.subpostCount === 1 ? "" : "s"}
+        </span>
+      </div>
+    )
+  }
+</div>

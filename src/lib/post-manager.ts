@@ -12,16 +12,11 @@ export function calculateWordCountFromHtml(
   return textOnly.split(/\s+/).filter(Boolean).length
 }
 
-export function readingTime(wordCount: number): string {
-  const readingTimeMinutes = Math.max(1, Math.round(wordCount / 220))
-  return `${readingTimeMinutes} min read`
-}
-
 // ========================================
 // TypeScript Interfaces
 // ========================================
 
-export interface Post extends CollectionEntry<'blog'> {}
+export interface Post extends CollectionEntry<'blog'> { }
 
 export interface ParsedAuthor {
   id: string
@@ -37,9 +32,8 @@ export interface PostNavigation {
 }
 
 export interface PostMetadata {
-  readingTime: string
-  combinedReadingTime: string | null
   wordCount: number
+  combinedWordCount: number | null
   subpostCount: number
   hasSubposts: boolean
   publishDate: Date
@@ -93,7 +87,7 @@ export class PostManager {
   private renderedContentCache: Map<string, { headings: any[]; html: string }> = new Map()
   private authorsCache: Map<string, CollectionEntry<'authors'>> = new Map()
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): PostManager {
     if (!PostManager.instance) {
@@ -163,12 +157,12 @@ export class PostManager {
       .sort((a, b) => {
         const dateDiff = a.data.publishDate.valueOf() - b.data.publishDate.valueOf()
         if (dateDiff !== 0) return dateDiff
-        
+
         const orderA = a.data.order ?? 0
         const orderB = b.data.order ?? 0
         return orderA - orderB
       })
-    
+
     return subposts
   }
 
@@ -190,7 +184,7 @@ export class PostManager {
     const authorMap = await this.getAuthorMap()
 
     // Handle both reference objects and strings
-    const authorIds = authors.map(author => 
+    const authorIds = authors.map(author =>
       typeof author === 'string' ? author : author.id || author
     )
 
@@ -220,7 +214,7 @@ export class PostManager {
         this.getPostById(parentId),
         this.getSubpostsForParent(parentId)
       ])
-      
+
       const currentIndex = subposts.findIndex((post) => post.id === currentId)
       if (currentIndex === -1) {
         return { newer: null, older: null, parent }
@@ -257,7 +251,7 @@ export class PostManager {
 
     const { headings } = await render(post)
     const result = { headings, html: post.body || '' }
-    
+
     this.renderedContentCache.set(post.id, result)
     return result
   }
@@ -273,9 +267,8 @@ export class PostManager {
     const post = await this.getPostById(postId)
     if (!post) {
       const defaultMetadata: PostMetadata = {
-        readingTime: readingTime(0),
-        combinedReadingTime: null,
         wordCount: 0,
+        combinedWordCount: null,
         subpostCount: 0,
         hasSubposts: false,
         publishDate: new Date(),
@@ -287,9 +280,8 @@ export class PostManager {
     }
 
     const wordCount = calculateWordCountFromHtml(post.body)
-    const postReadingTime = readingTime(wordCount)
-    
-    let combinedReadingTime: string | null = null
+
+    let combinedWordCount: number | null = null
     let subpostCount = 0
     let hasSubposts = false
 
@@ -299,10 +291,9 @@ export class PostManager {
       hasSubposts = subpostCount > 0
 
       if (hasSubposts) {
-        const totalWords = subposts.reduce((acc, subpost) => 
+        combinedWordCount = subposts.reduce((acc, subpost) =>
           acc + calculateWordCountFromHtml(subpost.body), wordCount
         )
-        combinedReadingTime = readingTime(totalWords)
       }
     }
 
@@ -310,9 +301,8 @@ export class PostManager {
     const authors = await this.parseAuthors(post.data.authors || [])
 
     const metadata: PostMetadata = {
-      readingTime: postReadingTime,
-      combinedReadingTime,
       wordCount,
+      combinedWordCount,
       subpostCount,
       hasSubposts,
       publishDate: post.data.publishDate,
@@ -392,7 +382,7 @@ export class PostManager {
 
     const isCurrentSubpost = this.isSubpost(currentPostId)
     const parentId = isCurrentSubpost ? this.getParentId(currentPostId) : currentPostId
-    
+
     const [parentPost, subposts] = await Promise.all([
       isCurrentSubpost ? this.getPostById(parentId) : Promise.resolve(null),
       this.getSubpostsForParent(parentId)
@@ -443,7 +433,7 @@ export class PostManager {
     return posts.reduce(
       (acc: Record<string, Post[]>, post) => {
         const year = post.data.publishDate.getFullYear().toString()
-        ;(acc[year] ??= []).push(post)
+          ; (acc[year] ??= []).push(post)
         return acc
       },
       {},
@@ -459,11 +449,11 @@ export class PostManager {
     if (!post) return null
 
     const isSubpost = this.isSubpost(postId)
-    
+
     // Fetch all required data in parallel
     const [
       metadata,
-      navigation, 
+      navigation,
       authors,
       tocSections,
       renderedContent,
