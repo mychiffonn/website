@@ -1,6 +1,6 @@
 ---
 import type { PaginateFunction } from "astro"
-import { Icon } from "astro-icon/components"
+import Icon from "@/components/base/Icon.astro"
 
 import { SITE } from "@/config"
 import { getAllPosts, getSortedTags, groupPostsByYear } from "@/lib/data-utils"
@@ -29,7 +29,7 @@ const displayTags = sortedTags.slice(0, 15)
   <PageHead slot="head" title="Blog" />
   <Breadcrumbs
     items={[
-      { label: "Blog", href: "/blog", icon: "mingcute:book-2-line" },
+      { label: "Blog", href: "/blog", icon: "mingcute:book-5-line" },
       { label: `Page ${page.currentPage}`, icon: "mingcute:copy-line" }
     ]}
   />

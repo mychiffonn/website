@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon/components"
+import Icon from "@/components/base/Icon.astro"
 
 import {
   getCombinedReadingTime,
@@ -52,7 +52,7 @@ const subpostsWithReadingTime = await Promise.all(
             <li>
               {isActivePost ? (
                 <div class="text-foreground bg-muted subposts-sidebar-active-item flex items-center gap-2 rounded-md py-1.5 pr-3 pl-2 text-sm font-medium text-pretty">
-                  <Icon name="var(--icon-post-active)" class="size-4 flex-shrink-0" aria-hidden="true" />
+                  <Icon name="post-active" class="size-4 flex-shrink-0" aria-hidden="true" />
                   <div class="flex flex-col">
                     <span class="line-clamp-2 text-pretty">{activePost.data.title}</span>
                     {activePostReadingTime && (
@@ -72,7 +72,7 @@ const subpostsWithReadingTime = await Promise.all(
                   class="hover:text-foreground text-muted-foreground hover:bg-muted/50 subposts-sidebar-link flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-pretty transition-colors"
                 >
                   <Icon
-                    name="var(--icon-blog)"
+                    name="blog"
                     class="size-4 flex-shrink-0"
                     aria-hidden="true"
                   />
@@ -101,7 +101,7 @@ const subpostsWithReadingTime = await Promise.all(
                 currentPostId === subpost.id ? (
                   <div class="text-foreground bg-muted subposts-sidebar-active-item flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-pretty">
                     <Icon
-                      name="var(--icon-post-active)"
+                      name="post-active"
                       class="size-4 flex-shrink-0"
                       aria-hidden="true"
                     />
@@ -116,7 +116,7 @@ const subpostsWithReadingTime = await Promise.all(
                     class="hover:text-foreground text-muted-foreground hover:bg-muted/50 subposts-sidebar-link flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-pretty transition-colors"
                   >
                     <Icon
-                      name="var(--icon-subpost)"
+                      name="subpost"
                       class="size-4 flex-shrink-0"
                       aria-hidden="true"
                     />

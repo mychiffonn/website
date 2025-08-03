@@ -1,0 +1,90 @@
+---
+import type { HTMLAttributes } from "astro/types"
+import { Icon as AstroIcon } from "astro-icon/components"
+
+// Semantic icon mapping - add new semantic names here
+const SEMANTIC_ICONS = {
+  // Navigation & Breadcrumbs
+  blog: "mingcute:book-5-line",
+  "post-active": "mingcute:book-line", // Used for both active parent posts and active subposts
+  post: "mingcute:book-2-line",
+  "parent-post": "mingcute:documents-line",
+  subpost: "mingcute:document-line",
+
+  // Meta information
+  hashtag: "mingcute:hashtag-line",
+  publish: "mingcute:calendar-line",
+  "reading-time": "mingcute:time-duration-line",
+  update: "mingcute:edit-line",
+  subposts: "mingcute:documents-line",
+
+  // Common UI icons
+  home: "mingcute:home-4-line",
+  menu: "mingcute:menu-line",
+  close: "mingcute:close-line",
+  "chevron-right": "mingcute:right-line",
+  "chevron-down": "mingcute:down-line",
+  "chevron-up": "mingcute:up-line",
+  "arrow-up": "mingcute:up-line",
+  "arrow-left": "mingcute:arrow-left-line",
+  "arrow-right": "mingcute:arrow-right-line",
+  "arrow-left-up": "mingcute:arrow-left-up-line",
+
+  // Content & actions
+  calendar: "mingcute:calendar-line",
+  time: "mingcute:time-line",
+  edit: "mingcute:edit-line",
+  check: "mingcute:check-line",
+  info: "mingcute:information-line",
+  warning: "mingcute:alert-triangle-line",
+  error: "mingcute:close-circle-line",
+
+  // Files & documents
+  file: "mingcute:file-line",
+  document: "mingcute:document-line",
+  documents: "mingcute:documents-line",
+  book: "mingcute:book-2-line",
+  "book-open": "mingcute:book-line",
+
+  // Navigation arrows
+  left: "mingcute:left-line",
+  right: "mingcute:right-line",
+  up: "mingcute:up-line",
+  down: "mingcute:down-line",
+  "more-horizontal": "mingcute:more-horizontal-line"
+} as const
+
+type SemanticIconName = keyof typeof SEMANTIC_ICONS
+
+interface Props extends HTMLAttributes<"svg"> {
+  /** The name of the icon to include - can be semantic name or direct icon name */
+  name: SemanticIconName | string
+  /** Shorthand for including a <title> element in the SVG */
+  title?: string
+  /** Shorthand for including a <desc> element in the SVG */
+  desc?: string
+  /** Shorthand for setting both width and height */
+  size?: number | string
+  /** Sets the width of the icon */
+  width?: number | string
+  /** Sets the height of the icon */
+  height?: number | string
+  /** CSS class names */
+  class?: string
+  /** Any other HTML attributes (forwarded to the <svg> element) */
+  [key: string]: any
+}
+
+const { name, title, desc, ...props } = Astro.props
+
+// Check if it's a semantic name, otherwise use the name directly
+const iconName = (SEMANTIC_ICONS as Record<string, string>)[name] || name
+
+// Derive accessibility attributes from props
+const accessibility: Record<string, any> = {
+  role: "img",
+  "aria-hidden": "true" // Default to decorative
+}
+---
+
+<AstroIcon name={iconName} {...props} {...accessibility} />
