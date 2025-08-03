@@ -1,12 +1,12 @@
 ---
-import { getSortedTags } from "@/lib/data-utils"
+import { TagManager } from "@/lib/tag-manager"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
 
-const sortedTags = await getSortedTags()
+const sortedTags = await TagManager.getInstance().getSortedTags()
 ---
 
 <Layout class="max-w-3xl">
