@@ -14,11 +14,21 @@ const badgeVariants = cva(
           "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-background [a&]:hover:text-foreground",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+        accent:
+          "border-transparent bg-accent text-accent-foreground [a&]:hover:bg-primary [a&]:hover:text-primary-foreground",
         destructive:
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/80 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/80",
-        outline: "text-foreground [a&]:hover:bg-primary [a&]:hover:text-primary-foreground",
+        outline: "border text-foreground [a&]:hover:bg-primary [a&]:hover:text-primary-foreground",
         muted:
-          "border-transparent bg-muted text-muted-foreground [a&]:hover:bg-secondary [a&]:hover:text-secondary-foreground"
+          "border-transparent bg-muted text-muted-foreground [a&]:hover:bg-secondary [a&]:hover:text-secondary-foreground",
+        success:
+          "border-transparent bg-green-500 text-white [a&]:hover:bg-green-600 focus-visible:ring-green-500/20 dark:focus-visible:ring-green-500/40 dark:bg-green-600",
+        warning:
+          "border-transparent bg-yellow-500 text-white [a&]:hover:bg-yellow-600 focus-visible:ring-yellow-500/20 dark:focus-visible:ring-yellow-500/40 dark:bg-yellow-600",
+        danger:
+          "border-transparent bg-red-500 text-white [a&]:hover:bg-red-600 focus-visible:ring-red-500/20 dark:focus-visible:ring-red-500/40 dark:bg-red-600",
+        info:
+          "border-transparent bg-blue-500 text-white [a&]:hover:bg-blue-600 focus-visible:ring-blue-500/20 dark:focus-visible:ring-blue-500/40 dark:bg-blue-600"
       }
     },
     defaultVariants: {
@@ -27,8 +37,10 @@ const badgeVariants = cva(
   }
 )
 
+export type BadgeVariant = VariantProps<typeof badgeVariants>["variant"]
+
 export interface Props extends astroHTML.JSX.HTMLAttributes {
-  variant?: VariantProps<typeof badgeVariants>["variant"]
+  variant?: BadgeVariant
   href?: string
 }
 
