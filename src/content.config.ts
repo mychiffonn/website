@@ -37,10 +37,10 @@ const blog = defineCollection({
       .refine(
         (data) => {
           if (!data.publishDate || !data.modifiedDate) return true
-          return data.modifiedDate >= data.publishDate
+          return data.modifiedDate > data.publishDate
         },
         {
-          message: "Modified date must be after or equal to published date"
+          message: "Modified date must be after published date"
         }
       )
 })

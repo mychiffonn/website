@@ -95,17 +95,17 @@ const iconSize = "size-3"
     showItems.publishDate && (
       <div class:list={[isFull && "w-full", itemClasses[variant]]}>
         <Icon name="publish" class={iconSize} />
-        <span>
-          <FormattedDate date={metadata.publishDate} />
-          {metadata.modifiedDate &&
-            metadata.modifiedDate > metadata.publishDate &&
-            showItems.modifiedDate && (
-              <span class="opacity-75">
-                {" "}
-                (updated <FormattedDate date={metadata.modifiedDate} />)
-              </span>
-            )}
-        </span>
+        <FormattedDate date={metadata.publishDate} />
+      </div>
+    )
+  }
+
+  {/** Modified date */}
+  {
+    showItems.modifiedDate && metadata.modifiedDate && (
+      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
+        <Icon name="edit" class={iconSize} />
+        <FormattedDate date={metadata.modifiedDate} />
       </div>
     )
   }
@@ -120,7 +120,7 @@ const iconSize = "size-3"
             <ReadingTime wordCount={metadata.wordCount} />
             {metadata.combinedWordCount && metadata.combinedWordCount !== metadata.wordCount && (
               <span class="opacity-75">
-                (<ReadingTime wordCount={metadata.combinedWordCount} showReadSuffix={false} />{" "}
+                (<ReadingTime wordCount={metadata.combinedWordCount} customSuffix="" />
                 total)
               </span>
             )}
