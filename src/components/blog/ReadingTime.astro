@@ -2,13 +2,13 @@
 interface Props {
   /** Word count to calculate reading time from */
   wordCount: number
-  /** Show "read" suffix (default: true) */
-  showReadSuffix?: boolean
+  /** Custom suffix to append after time (default: "read") */
+  customSuffix?: string
   /** Additional CSS classes */
   class?: string
 }
 
-const { wordCount, showReadSuffix = true, class: className } = Astro.props
+const { wordCount, customSuffix = "read", class: className } = Astro.props
 
 // Calculate reading time in minutes (220 words per minute)
 const minutes = Math.max(1, Math.round(wordCount / 220))
@@ -17,7 +17,7 @@ const minutes = Math.max(1, Math.round(wordCount / 220))
 const duration = `PT${minutes}M`
 
 // Format display text
-const displayText = showReadSuffix ? `${minutes} min read` : `${minutes} min`
+const displayText = customSuffix ? `${minutes} min ${customSuffix}` : `${minutes} min`
 ---
 
 <time datetime={duration} class={className}>

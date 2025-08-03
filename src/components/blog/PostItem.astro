@@ -1,0 +1,111 @@
+---
+import type { CollectionEntry } from "astro:content"
+
+import { cn } from "@/lib/utils"
+import Icon from "@/components/base/Icon.astro"
+import Link from "@/components/base/Link.astro"
+import ReadingTime from "@/components/blog/ReadingTime.astro"
+
+interface Props {
+  post: CollectionEntry<"blog">
+  isActive: boolean
+  wordCount: number
+  combinedWordCount?: number
+  variant: "header" | "sidebar"
+  iconName?: string
+  href?: string
+  isParentPost?: boolean
+}
+
+const { post, isActive, wordCount, combinedWordCount, variant, iconName, href, isParentPost } =
+  Astro.props
+
+const defaultIconName =
+  iconName || (isActive ? "post-active" : isParentPost ? "parent-post" : "post")
+const linkHref = href || `/blog/${post.id}`
+---
+
+{
+  isActive ? (
+    <div
+      class={cn(
+        "flex items-start gap-2 px-2 py-2 text-sm",
+        variant === "header"
+          ? "mobile-subposts-active-item bg-muted/80 font-medium"
+          : "subposts-sidebar-active-item bg-muted/80 rounded-md"
+      )}
+      aria-current="page"
+    >
+      <div
+        class="flex size-5 flex-shrink-0 items-center justify-center"
+        role="img"
+        aria-label="Current post"
+      >
+        <Icon name={defaultIconName} class="text-primary size-4" aria-hidden="true" />
+      </div>
+      <div class="flex min-w-0 flex-col gap-0.5">
+        <h3
+          class={cn(
+            "text-foreground line-clamp-2 font-medium",
+            variant === "sidebar" && "text-sm leading-tight font-semibold"
+          )}
+        >
+          {post.data.title}
+        </h3>
+        {wordCount > 0 && (
+          <div
+            class={cn("text-muted-foreground/80 text-xs", variant === "sidebar" && "font-medium")}
+          >
+            <ReadingTime wordCount={wordCount} />
+            {combinedWordCount && combinedWordCount !== wordCount && (
+              <span>
+                {" "}
+                (<ReadingTime wordCount={combinedWordCount} customSuffix="total" />)
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  ) : (
+    <Link
+      href={linkHref}
+      class={cn(
+        "group/post focus-visible:ring-ring flex items-start gap-2 px-2 py-2 text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+        variant === "header"
+          ? "mobile-subposts-link hover:bg-muted/50"
+          : "subposts-sidebar-link hover:bg-muted/60"
+      )}
+    >
+      <div
+        class="flex size-5 flex-shrink-0 items-center justify-center"
+        role="img"
+        aria-label="Parent post"
+      >
+        <Icon
+          name={defaultIconName}
+          class="text-muted-foreground group-hover/post:text-primary size-4 transition-colors"
+          aria-hidden="true"
+        />
+      </div>
+      <div class="flex min-w-0 flex-col gap-0.5">
+        <h3
+          class={cn(
+            "text-muted-foreground group-hover/post:text-foreground line-clamp-2 font-medium transition-colors",
+            variant === "sidebar" && "text-sm leading-tight"
+          )}
+        >
+          {post.data.title}
+        </h3>
+        {wordCount > 0 && (
+          <div class="text-muted-foreground/60 group-hover/post:text-muted-foreground/80 text-xs transition-colors">
+            <ReadingTime wordCount={wordCount} />
+            {combinedWordCount &&
+              combinedWordCount > wordCount &&
+              -(<ReadingTime wordCount={combinedWordCount} customSuffix="total" />)}
+          </div>
+        )}
+      </div>
+    </Link>
+  )
+}

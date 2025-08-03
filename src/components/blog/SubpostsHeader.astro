@@ -1,7 +1,9 @@
 ---
-import { type SubpostContext } from "@/lib/post-manager"
+import type { SubpostContext } from "@/lib/post-manager"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
+import PostItem from "@/components/blog/PostItem.astro"
+import SubpostItem from "@/components/blog/SubpostItem.astro"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Props {
@@ -15,204 +17,144 @@ const activePost = parentPost || currentPost
 const isActivePost = activePost?.id === currentPost.id
 
 const activePostMetadata = metadata.get(activePost.id)
-const activePostReadingTime = activePostMetadata?.readingTime
-const activePostCombinedReadingTime = activePostMetadata?.combinedReadingTime
+const activePostWordCount = activePostMetadata?.wordCount || 0
+const activePostCombinedWordCount = activePostMetadata?.combinedWordCount
 
-const subpostsWithReadingTime = subposts.map((subpost) => ({
+const subpostsWithWordCount = subposts.map((subpost) => ({
   ...subpost,
-  readingTime: metadata.get(subpost.id)?.readingTime || "0 min"
+  wordCount: metadata.get(subpost.id)?.wordCount || 0
 }))
 
 const currentSubpostDetails = isCurrentSubpost
-  ? subpostsWithReadingTime.find((subpost) => subpost.id === currentPost.id)
+  ? subpostsWithWordCount.find((subpost) => subpost.id === currentPost.id)
   : null
+
+const currentTitle = currentSubpostDetails
+  ? currentSubpostDetails.data.title
+  : activePost?.data.title
+const subpostCount = subposts.length
 ---
 
 {
-  activePost && subposts.length > 0 && (
-    <div id="mobile-subposts-container" class="w-full xl:hidden">
-      <details class="group">
-        <summary class="flex w-full cursor-pointer items-center justify-between">
-          <div class="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-3">
-            <div class="flex items-center gap-2">
-              <div class="relative flex size-4 flex-shrink-0 items-center justify-center">
+  activePost && subpostCount > 0 && (
+    <nav id="mobile-subposts-container" class="w-full xl:hidden" aria-label="Subposts navigation">
+      <details class="group" role="button" aria-expanded="false">
+        <summary class="focus-visible:ring-ring flex w-full cursor-pointer items-center justify-between focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
+          <header class="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+              <div
+                class="flex size-5 flex-shrink-0 items-center justify-center"
+                role="img"
+                aria-label="Post type indicator"
+              >
                 <Icon
-                  name={currentSubpostDetails ? "subpost" : isActivePost ? "post-active" : "post"}
+                  name={
+                    currentSubpostDetails ? "post-active" : isActivePost ? "post-active" : "post"
+                  }
                   class="size-4"
-                  aria-hidden="true"
                 />
               </div>
-              <span class="text-muted-foreground truncate text-sm leading-4">
-                {currentSubpostDetails ? currentSubpostDetails.data.title : activePost?.data.title}
-              </span>
-              {subposts.length > 0 && (
-                <Badge variant="info" class="ml-2 text-xs">
-                  <Icon name="subposts" class="size-3" />
-                  {subposts.length} subpost(s)
-                </Badge>
-              )}
+              <div class="flex items-center gap-2">
+                <span class="text-foreground truncate text-sm leading-tight font-medium">
+                  {currentTitle}
+                </span>
+                {!currentSubpostDetails && (
+                  <Badge variant="info" class="text-xs">
+                    {subpostCount}&nbsp;{subpostCount === 1 ? "subpost" : "subposts"}
+                  </Badge>
+                )}
+              </div>
             </div>
             <Icon
-              name="mingcute:down-line"
+              name="chevron-down"
               class="text-muted-foreground size-4 flex-shrink-0 transition-transform duration-200 group-open:rotate-180"
             />
-          </div>
+          </header>
         </summary>
 
-        <ScrollArea client:load className="mx-auto max-w-3xl" data-subposts-header-scroll>
-          <div class="max-h-[30vh]">
-            <ul class="flex list-none flex-col gap-y-1 px-4 pb-4">
+        <ScrollArea
+          client:load
+          className="mx-auto max-w-3xl border-t border-border/50"
+          data-subposts-header-scroll
+        >
+          <div class="max-h-[35vh]">
+            <ul class="flex list-none flex-col gap-y-1 px-3 py-2" role="list">
               {activePost && (
-                <li>
-                  {isActivePost ? (
-                    <div class="text-foreground bg-muted mobile-subposts-active-item flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium">
-                      <Icon name="post-active" class="size-4 flex-shrink-0" aria-hidden="true" />
-                      <div class="flex flex-col">
-                        <span class="line-clamp-2">{activePost.data.title}</span>
-                        {activePostReadingTime && (
-                          <span class="text-muted-foreground/80 text-xs">
-                            {activePostReadingTime}
-                            {activePostCombinedReadingTime &&
-                              activePostCombinedReadingTime !== activePostReadingTime && (
-                                <span> ({activePostCombinedReadingTime} total)</span>
-                              )}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <a
-                      href={`/blog/${activePost.id}`}
-                      class="mobile-subposts-link hover:text-foreground text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-                    >
-                      <Icon name="post-active" class="size-4 flex-shrink-0" aria-hidden="true" />
-                      <div class="flex flex-col">
-                        <span class="line-clamp-2">{activePost.data.title}</span>
-                        {activePostReadingTime && (
-                          <span class="text-muted-foreground/80 hover:text-foreground/80 text-xs">
-                            {activePostReadingTime}
-                            {activePostCombinedReadingTime &&
-                              activePostCombinedReadingTime !== activePostReadingTime && (
-                                <span> ({activePostCombinedReadingTime} total)</span>
-                              )}
-                          </span>
-                        )}
-                      </div>
-                    </a>
-                  )}
+                <li role="listitem">
+                  <PostItem
+                    post={activePost}
+                    isActive={isActivePost}
+                    wordCount={activePostWordCount}
+                    combinedWordCount={activePostCombinedWordCount || undefined}
+                    variant="header"
+                    isParentPost={!!parentPost}
+                  />
                 </li>
               )}
 
-              {subpostsWithReadingTime.length > 0 && (
-                <div class="ml-4 space-y-1">
-                  {subpostsWithReadingTime.map((subpost) =>
-                    currentPost.id === subpost.id ? (
-                      <div class="text-foreground bg-muted mobile-subposts-active-item flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium">
-                        <Icon name="subpost" class="size-4 flex-shrink-0" aria-hidden="true" />
-                        <div class="flex flex-col">
-                          <span class="line-clamp-2">{subpost.data.title}</span>
-                          <span class="text-muted-foreground/80 text-xs">
-                            {subpost.readingTime}
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      <a
-                        href={`/blog/${subpost.id}`}
-                        class="mobile-subposts-link hover:text-foreground text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-                      >
-                        <Icon name="subpost" class="size-4 flex-shrink-0" aria-hidden="true" />
-                        <div class="flex flex-col">
-                          <span class="line-clamp-2">{subpost.data.title}</span>
-                          <span class="text-muted-foreground/80 hover:text-foreground/80 text-xs">
-                            {subpost.readingTime}
-                          </span>
-                        </div>
-                      </a>
-                    )
-                  )}
-                </div>
+              {subpostsWithWordCount.length > 0 && (
+                <li role="listitem">
+                  <div class="ml-4 space-y-1" role="group" aria-labelledby="subposts-heading">
+                    <h4 id="subposts-heading" class="sr-only">
+                      Subposts
+                    </h4>
+                    {subpostsWithWordCount.map((subpost) => (
+                      <SubpostItem
+                        subpost={subpost}
+                        isActive={currentPost.id === subpost.id}
+                        variant="header"
+                      />
+                    ))}
+                  </div>
+                </li>
               )}
             </ul>
           </div>
         </ScrollArea>
       </details>
-    </div>
+    </nav>
   )
 }
 
 <script>
-  class SubpostsState {
-    scrollArea: HTMLElement | null = null
-    detailsElement: HTMLDetailsElement | null = null
-    headerScrollArea: HTMLElement | null = null
+  import { BaseScrollController } from "@/lib/subposts-scroll"
 
-    reset() {
-      this.scrollArea = null
-      this.detailsElement = null
-      this.headerScrollArea = null
-    }
-  }
+  class SubpostsHeaderController extends BaseScrollController {
+    private detailsElement: HTMLDetailsElement | null = null
 
-  const state = new SubpostsState()
-
-  class SubpostsHeaderScrollMask {
-    static update() {
-      if (!state.scrollArea || !state.headerScrollArea) return
-
-      const { scrollTop, scrollHeight, clientHeight } = state.scrollArea
-      const threshold = 5
-      const isAtTop = scrollTop <= threshold
-      const isAtBottom = scrollTop >= scrollHeight - clientHeight - threshold
-
-      state.headerScrollArea.classList.toggle("mask-t-from-80%", !isAtTop)
-      state.headerScrollArea.classList.toggle("mask-b-from-80%", !isAtBottom)
-    }
-  }
-
-  class SubpostsScroll {
-    static toActive() {
-      if (!state.scrollArea) return
-
-      const activeItem = state.scrollArea.querySelector(".mobile-subposts-active-item")
-      if (!activeItem) return
-
-      const { top: areaTop, height: areaHeight } = state.scrollArea.getBoundingClientRect()
-      const { top: itemTop, height: itemHeight } = activeItem.getBoundingClientRect()
-
-      const currentItemTop = itemTop - areaTop + state.scrollArea.scrollTop
-      const targetScroll = Math.max(
-        0,
-        Math.min(
-          currentItemTop - (areaHeight - itemHeight) / 2,
-          state.scrollArea.scrollHeight - state.scrollArea.clientHeight
-        )
-      )
-
-      state.scrollArea.scrollTop = targetScroll
+    getContainerSelector() {
+      return "#mobile-subposts-container"
     }
 
-    static setupInteraction() {
-      const container = document.getElementById("mobile-subposts-container")
+    getScrollAreaSelector() {
+      return "[data-radix-scroll-area-viewport]"
+    }
+
+    getContainerAttribute() {
+      return "data-subposts-header-scroll"
+    }
+
+    getActiveItemSelector() {
+      return ".mobile-subposts-active-item"
+    }
+
+    getMaskClasses() {
+      return { top: "mask-t-from-80%", bottom: "mask-b-from-80%" }
+    }
+
+    protected setupCustomBehavior() {
+      const container = document.querySelector(this.getContainerSelector())
       if (!container) return
 
-      state.scrollArea = container.querySelector("[data-radix-scroll-area-viewport]")
-      state.detailsElement = container.querySelector("details")
-      state.headerScrollArea = container.querySelector("[data-subposts-header-scroll]")
+      this.detailsElement = container.querySelector("details")
       const links = container.querySelectorAll(".mobile-subposts-link")
 
-      if (state.scrollArea) {
-        state.scrollArea.addEventListener("scroll", SubpostsHeaderScrollMask.update, {
-          passive: true
-        })
-      }
-
-      if (state.detailsElement) {
-        state.detailsElement.addEventListener("toggle", () => {
-          if (state.detailsElement?.open) {
+      if (this.detailsElement) {
+        this.detailsElement.addEventListener("toggle", () => {
+          if (this.detailsElement?.open) {
             requestAnimationFrame(() => {
-              SubpostsScroll.toActive()
-              setTimeout(SubpostsHeaderScrollMask.update, 100)
+              this.scrollToActive.scroll(this.getActiveItemSelector())
+              setTimeout(() => this.scrollMask.update(this.getMaskClasses()), 100)
             })
           }
         })
@@ -220,30 +162,18 @@ const currentSubpostDetails = isCurrentSubpost
 
       links.forEach((link) => {
         link.addEventListener("click", () => {
-          if (state.detailsElement) state.detailsElement.open = false
+          if (this.detailsElement) this.detailsElement.open = false
         })
       })
     }
   }
 
-  class SubpostsController {
-    static init() {
-      state.reset()
-      SubpostsScroll.setupInteraction()
-    }
+  const controller = new SubpostsHeaderController()
 
-    static cleanup() {
-      if (state.scrollArea) {
-        state.scrollArea.removeEventListener("scroll", SubpostsHeaderScrollMask.update)
-      }
-      state.reset()
-    }
-  }
-
-  document.addEventListener("astro:page-load", () => SubpostsController.init())
+  document.addEventListener("astro:page-load", () => controller.init())
   document.addEventListener("astro:after-swap", () => {
-    SubpostsController.cleanup()
-    SubpostsController.init()
+    controller.cleanup()
+    controller.init()
   })
-  document.addEventListener("astro:before-swap", () => SubpostsController.cleanup())
+  document.addEventListener("astro:before-swap", () => controller.cleanup())
 </script>
