@@ -2,13 +2,14 @@
 import "@/styles/callout.css"
 
 import { Image } from "astro:assets"
-import type { CollectionEntry } from "astro:content"
 
-import { formatDate } from "@/lib/utils"
+import { PostManager, type PostContext } from "@/lib/post-manager"
 import Layout from "@/layouts/Layout.astro"
+import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
-import Link from "@/components/base/Link.astro"
+import BackToTop from "@/components/blog/BackToTop.astro"
 import PostHead from "@/components/blog/PostHead.astro"
+import PostMetadata from "@/components/blog/PostMetadata.astro"
 import PostNavigation from "@/components/blog/PostNavigation.astro"
 import SubpostsHeader from "@/components/blog/SubpostsHeader.astro"
 import SubpostsSidebar from "@/components/blog/SubpostsSidebar.astro"
@@ -17,47 +18,33 @@ import TOCSidebar from "@/components/blog/TOCSidebar.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
 interface Props {
-  post: CollectionEntry<"blog">
-  headings: any[]
-  authors: any[]
-  isCurrentSubpost: boolean
-  navigation: any
-  parentPost: CollectionEntry<"blog"> | null
-  hasChildPosts: boolean
-  subpostCount: number
-  postReadingTime: string
-  combinedReadingTime: string | null
-  tocSections: any[]
-  currentPostId: string
+  postContext: PostContext
 }
 
+const { postContext } = Astro.props
+
+// Destructure context for cleaner code
 const {
   post,
   headings,
-  authors,
-  isCurrentSubpost,
-  navigation,
+  isSubpost: isCurrentSubpost,
   parentPost,
-  hasChildPosts,
-  subpostCount: _subpostCount,
-  postReadingTime,
-  combinedReadingTime,
-  tocSections,
-  currentPostId
-} = Astro.props
+  metadata,
+  tocSections
+} = postContext
 
-const publishDate = post.data.publishDate
-const modifiedDate = post.data.modifiedDate
+const currentPostId = post.id
+const { hasSubposts } = metadata
+
+// Get optimized subpost context for components
+const subpostContext = await PostManager.getInstance().getSubpostContext(currentPostId)
 ---
 
 <Layout>
   <PostHead slot="head" post={post} />
   {
-    (hasChildPosts || isCurrentSubpost) && (
-      <SubpostsHeader
-        slot="subposts-navigation"
-        parentId={isCurrentSubpost ? currentPostId.split("/")[0] : currentPostId}
-      />
+    (hasSubposts || isCurrentSubpost) && (
+      <SubpostsHeader slot="subposts-navigation" subpostContext={subpostContext!} />
     )
   }
   {
@@ -67,10 +54,11 @@ const modifiedDate = post.data.modifiedDate
       )
   }
 
-  <section
+  <main
     class="grid grid-cols-[minmax(0px,1fr)_min(calc(var(--breakpoint-md)-2rem),100%)_minmax(0px,1fr)] gap-y-6"
   >
-    <div class="col-start-2">
+    {/** Navigation breadcrumbs */}
+    <nav class="col-start-2" aria-label="Breadcrumb">
       <Breadcrumbs
         items={[
           { href: "/blog", label: "Blog", icon: "mingcute:book-5-line" },
@@ -96,8 +84,9 @@ const modifiedDate = post.data.modifiedDate
               ])
         ]}
       />
-    </div>
+    </nav>
 
+    {/** Hero image */}
     {
       post.data.image && (
         <Image
@@ -110,101 +99,51 @@ const modifiedDate = post.data.modifiedDate
       )
     }
 
-    <section class="col-start-2 flex flex-col gap-y-6 text-center">
-      <div class="flex flex-col">
-        <h1
-          class="mb-2 scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl"
-          id="post-title"
-        >
-          {post.data.title}
-        </h1>
+    {/** Post header */}
+    <header class="col-start-2 flex flex-col gap-y-4 text-center">
+      <h1 class="scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl" id="post-title">
+        {post.data.title}
+      </h1>
 
-        <div
-          class="text-muted-foreground divide-border mb-4 flex flex-col items-center justify-center divide-y text-xs sm:flex-row sm:flex-wrap sm:divide-x sm:divide-y-0 sm:text-sm"
-        >
-          {
-            authors.length > 0 && (
-              <div class="flex w-full items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0">
-                {authors.map((author) => (
-                  <div class="flex items-center gap-x-1.5">
-                    <Image
-                      src={author.avatar}
-                      alt={author.name}
-                      width={20}
-                      height={20}
-                      class="rounded-full"
-                    />
-                    {author.isRegistered ? (
-                      <Link href={`/authors/${author.id}`} underline class="text-foreground">
-                        <span>{author.name}</span>
-                      </Link>
-                    ) : (
-                      <span>{author.name}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )
-          }
+      {/** Post metadata */}
+      <PostMetadata metadata={metadata} variant="full" />
 
-          <div
-            class="flex w-full items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0"
-          >
-            <Icon name="publish" class="size-3" />
-            <time datetime={publishDate.toISOString().split("T")[0]}>
-              {formatDate(publishDate)}
-              {
-                modifiedDate && (
-                  <span class="block text-xs opacity-75">(updated {formatDate(modifiedDate)})</span>
-                )
-              }
-            </time>
+      {/** Tags */}
+      {
+        post.data.tags?.length > 0 && (
+          <div class="flex flex-wrap justify-center gap-2" role="list" aria-label="Post tags">
+            {post.data.tags.map((tag) => (
+              <Badge href={`/tags/${tag}`} variant="secondary" role="listitem">
+                <Icon name="hashtag" class="size-3" />
+                {tag}
+              </Badge>
+            ))}
           </div>
+        )
+      }
+    </header>
 
-          <div
-            class="flex w-full items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0"
-          >
-            <Icon name="reading-time" class="size-3" />
-            <span>{postReadingTime}</span>
-            {combinedReadingTime && <span>({combinedReadingTime} combined)</span>}
-          </div>
-        </div>
-      </div>
-    </section>
+    {/** Top navigation */}
+    <PostNavigation currentPost={post} />
 
-    <article class="col-start-2">
-      <div class="prose prose-lg dark:prose-invert max-w-none">
-        <slot />
-      </div>
+    {/** Table of contents sidebar */}
+    {tocSections.length > 0 && <TOCSidebar sections={tocSections} currentPostId={currentPostId} />}
+
+    {/** Main article content */}
+    <article class="prose col-start-2 max-w-none" role="main">
+      <slot />
     </article>
 
+    {/** Subposts sidebar */}
     {
-      (navigation.newer || navigation.older) && (
-        <div class="col-start-2">
-          <PostNavigation navigation={navigation} />
-        </div>
+      (hasSubposts || isCurrentSubpost) && (
+        <SubpostsSidebar subpostContext={subpostContext!} className="w-64" />
       )
     }
-  </section>
 
-  {
-    tocSections.length > 0 && (
-      <SubpostsSidebar
-        slot="subposts-sidebar"
-        sections={tocSections}
-        currentPostId={currentPostId}
-      />
-    )
-  }
+    {/** Bottom navigation */}
+    <PostNavigation currentPost={post} />
+  </main>
 
-  {
-    headings?.length > 0 &&
-      !(isCurrentSubpost && headings.length === 1 && headings[0].text === post.data.title) && (
-        <TOCSidebar
-          slot="table-of-contents-sidebar"
-          sections={tocSections}
-          currentPostId={currentPostId}
-        />
-      )
-  }
+  <BackToTop />
 </Layout>
