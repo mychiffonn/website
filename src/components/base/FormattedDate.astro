@@ -1,0 +1,19 @@
+---
+import { formatDate } from "@/lib/utils"
+
+interface Props {
+  /** Date to format */
+  date: Date
+  /** Additional CSS classes */
+  class?: string
+}
+
+const { date, class: className } = Astro.props
+
+const displayDate = formatDate(date)
+const isoDate = date.toISOString()
+---
+
+<time datetime={isoDate} class={className}>
+  {displayDate}
+</time>

@@ -1,11 +1,11 @@
 ---
-import { getAllAuthors } from "@/lib/data-utils"
+import { AuthorManager } from "@/lib/author-manager"
 import Layout from "@/layouts/Layout.astro"
 import AuthorCard from "@/components/blog/AuthorCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
 
-const authors = await getAllAuthors()
+const authors = await AuthorManager.getInstance().getAllAuthors()
 ---
 
 <Layout class="max-w-3xl">

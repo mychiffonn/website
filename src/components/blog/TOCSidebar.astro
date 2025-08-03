@@ -1,7 +1,8 @@
 ---
-import type { TOCSection } from "@/lib/data-utils"
-import { getParentId, isSubpost } from "@/lib/data-utils"
-import { cn, getHeadingMargin } from "@/lib/utils"
+import type { TOCSection } from "@/lib/post-manager"
+import { PostManager } from "@/lib/post-manager"
+import { getHeadingMargin } from "@/lib/toc-utils"
+import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 type Props = {
@@ -10,8 +11,10 @@ type Props = {
 }
 
 const { sections, currentPostId } = Astro.props
-const isCurrentSubpost = isSubpost(currentPostId)
-const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
+
+const blogManager = PostManager.getInstance()
+const isCurrentSubpost = blogManager.isSubpost(currentPostId)
+const parentId = isCurrentSubpost ? blogManager.getParentId(currentPostId) : currentPostId
 ---
 
 {

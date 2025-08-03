@@ -1,7 +1,7 @@
 ---
 import { render, type CollectionEntry } from "astro:content"
 
-import { getAllProjects } from "@/lib/data-utils"
+import { ProjectManager } from "@/lib/project-manager"
 import { createDateRange } from "@/lib/utils"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
@@ -14,7 +14,7 @@ import { getContextVariant, getProjectLinks, hasProjectContent } from "@/compone
 export const prerender = true
 
 export async function getStaticPaths() {
-  const projects = await getAllProjects()
+  const projects = await ProjectManager.getInstance().getAllProjects()
   // Only generate pages for projects with content
   return projects
     .filter((project) => hasProjectContent(project))

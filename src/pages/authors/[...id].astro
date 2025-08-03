@@ -1,5 +1,6 @@
 ---
-import { getAllAuthors, getPostsByAuthor } from "@/lib/data-utils"
+import { AuthorManager } from "@/lib/author-manager"
+import { PostManager } from "@/lib/post-manager"
 import Layout from "@/layouts/Layout.astro"
 import AuthorCard from "@/components/blog/AuthorCard.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
@@ -7,7 +8,7 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
 
 export async function getStaticPaths() {
-  const authors = await getAllAuthors()
+  const authors = await AuthorManager.getInstance().getAllAuthors()
   return authors.map((author) => ({
     params: { id: author.id },
     props: { author }
@@ -15,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { author } = Astro.props
-const authorPosts = await getPostsByAuthor(author.id)
+const authorPosts = await PostManager.getInstance().getPostsByAuthor(author.id)
 ---
 
 <Layout class="max-w-3xl">

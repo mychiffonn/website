@@ -1,0 +1,73 @@
+---
+import type { CollectionEntry } from "astro:content"
+import Icon from "@/components/base/Icon.astro"
+import Link from "@/components/base/Link.astro"
+import ReadingTime from "@/components/blog/ReadingTime.astro"
+import { cn } from "@/lib/utils"
+
+interface Props {
+  subpost: CollectionEntry<"blog"> & { wordCount: number }
+  isActive: boolean
+  variant: "header" | "sidebar"
+}
+
+const { subpost, isActive, variant } = Astro.props
+---
+
+
+{isActive ? (
+  <div class={cn(
+    "flex items-start gap-2 px-2 py-2 text-sm",
+    variant === "header" 
+      ? "mobile-subposts-active-item bg-muted/80 font-medium"
+      : "subposts-sidebar-active-item bg-muted/80 rounded-md"
+  )} aria-current="page">
+    <div 
+      class="flex size-5 flex-shrink-0 items-center justify-center"
+      role="img"
+      aria-label="Current subpost"
+    >
+      <Icon name="post-active" class="text-primary size-4" aria-hidden="true" />
+    </div>
+    <div class="flex min-w-0 flex-col gap-0.5">
+      <h5 class={cn(
+        "line-clamp-2 font-medium text-foreground",
+        variant === "sidebar" && "text-sm leading-tight font-semibold"
+      )}>
+        {subpost.data.title}
+      </h5>
+      <div class={cn(
+        "text-xs text-muted-foreground/80",
+        variant === "sidebar" && "font-medium"
+      )}>
+        <ReadingTime wordCount={subpost.wordCount} />
+      </div>
+    </div>
+  </div>
+) : (
+  <Link href={`/blog/${subpost.id}`} class={cn(
+    "group/subpost flex items-start gap-2 px-2 py-2 text-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none focus-visible:ring-ring",
+    variant === "header" 
+      ? "mobile-subposts-link hover:bg-muted/50"
+      : "subposts-sidebar-link hover:bg-muted/60"
+  )}>
+    <div 
+      class="flex size-5 flex-shrink-0 items-center justify-center"
+      role="img"
+      aria-label="Subpost"
+    >
+      <Icon name="subpost" class="text-muted-foreground group-hover/subpost:text-primary size-4 transition-colors" aria-hidden="true" />
+    </div>
+    <div class="flex min-w-0 flex-col gap-0.5">
+      <h5 class={cn(
+        "text-muted-foreground group-hover/subpost:text-foreground line-clamp-2 font-medium transition-colors",
+        variant === "sidebar" && "text-sm leading-tight"
+      )}>
+        {subpost.data.title}
+      </h5>
+      <div class="text-muted-foreground/60 group-hover/subpost:text-muted-foreground/80 text-xs transition-colors">
+        <ReadingTime wordCount={subpost.wordCount} />
+      </div>
+    </div>
+  </Link>
+)}

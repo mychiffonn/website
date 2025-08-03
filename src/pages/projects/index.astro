@@ -1,11 +1,11 @@
 ---
-import { getAllProjects } from "@/lib/data-utils"
+import { ProjectManager } from "@/lib/project-manager"
 import Layout from "@/layouts/Layout.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
 import { GithubActivity, ProjectCard } from "@/components/projects"
 
-const allProjects = await getAllProjects()
+const allProjects = await ProjectManager.getInstance().getAllProjects()
 
 // Sort by date (toDate, then fromDate, then by highlighted status)
 const sortedProjects = allProjects.sort((a, b) => {

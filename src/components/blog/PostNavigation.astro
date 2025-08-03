@@ -1,9 +1,20 @@
 ---
+import type { CollectionEntry } from "astro:content"
+
+import { PostManager } from "@/lib/post-manager"
 import { cn } from "@/lib/utils"
 import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
 
-const { newerPost, olderPost, parentPost } = Astro.props
+interface Props {
+  currentPost: CollectionEntry<"blog">
+}
+
+const { currentPost } = Astro.props
+
+const postManager = PostManager.getInstance()
+const navigation = await postManager.getNavigation(currentPost)
+const { newer: newerPost, older: olderPost, parent: parentPost } = navigation
 const isSubpost = !!parentPost
 ---
 
@@ -19,10 +30,7 @@ const isSubpost = !!parentPost
     )}
     aria-disabled={!olderPost}
   >
-    <Icon
-      name="mingcute:arrow-left-line"
-      class="mr-2 size-4 transition-transform group-hover:-translate-x-1"
-    />
+    <Icon name="arrow-left" class="mr-2 size-4 transition-transform group-hover:-translate-x-1" />
     <div class="flex flex-col items-start overflow-hidden text-wrap">
       <span class="text-muted-foreground text-left text-xs">
         {isSubpost ? "Previous Subpost" : "Previous Post"}
@@ -44,7 +52,7 @@ const isSubpost = !!parentPost
         )}
       >
         <Icon
-          name="mingcute:arrow-left-up-line"
+          name="arrow-left-up"
           class="mr-1 size-4 transition-transform group-hover:-translate-1"
         />
         <div class="flex flex-col items-center overflow-hidden text-wrap">
@@ -74,9 +82,6 @@ const isSubpost = !!parentPost
         {newerPost?.data.title || (isSubpost ? "No newer subpost" : "You're at the newest post!")}
       </span>
     </div>
-    <Icon
-      name="mingcute:arrow-right-line"
-      class="ml-1 size-4 transition-transform group-hover:translate-x-1"
-    />
+    <Icon name="arrow-right" class="ml-1 size-4 transition-transform group-hover:translate-x-1" />
   </Button>
 </nav>

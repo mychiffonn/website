@@ -3,17 +3,11 @@
 import { Image } from "astro:assets"
 import type { CollectionEntry } from "astro:content"
 
-import {
-  getCombinedReadingTime,
-  getPostReadingTime,
-  getSubpostCount,
-  parseAuthors
-} from "@/lib/data-utils"
-import { formatDate } from "@/lib/utils"
+import { PostManager } from "@/lib/post-manager"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
-import AvatarComponent from "@/components/ui/avatar"
+import PostMetadata from "@/components/blog/PostMetadata.astro"
 
 interface Props {
   entry: CollectionEntry<"blog">
@@ -21,15 +15,9 @@ interface Props {
 
 const { entry } = Astro.props
 
-const authors = await parseAuthors(entry.data.authors ?? [])
-const subpostCount = await getSubpostCount(entry.id)
-const combinedReadingTime = await getCombinedReadingTime(entry.id)
-const readingTime = await getPostReadingTime(entry.id)
+const postManager = PostManager.getInstance()
+const metadata = await postManager.getMetadata(entry.id)
 
-const publishDate = entry.data.publishDate
-const modifiedDate = entry.data.modifiedDate
-const formattedDate = formatDate(publishDate)
-const readTime = subpostCount > 0 ? combinedReadingTime : readingTime
 const tags = entry.data.tags
 ---
 
@@ -73,48 +61,7 @@ const tags = entry.data.tags
       </p>
 
       {/** Row 3: Meta information  */}
-      <div class="text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-        {
-          authors.length > 0 &&
-            authors.map((author) => (
-              <div class="flex items-center gap-x-1.5">
-                <AvatarComponent
-                  client:load
-                  src={author.avatar}
-                  alt={author.name}
-                  fallback={author.name[0]}
-                  className="size-4 rounded-full"
-                />
-                <span>{author.name}</span>
-              </div>
-            ))
-        }
-        <div class="flex items-center gap-x-1">
-          <Icon name="publish" class="size-3" />
-          <span>
-            {formattedDate}
-            {
-              modifiedDate && modifiedDate > publishDate && (
-                <span class="opacity-75"> (updated {formatDate(modifiedDate)})</span>
-              )
-            }
-          </span>
-        </div>
-        <div class="flex items-center gap-x-1">
-          <Icon name="reading-time" class="size-3" />
-          <span>{readTime}</span>
-        </div>
-        {
-          subpostCount > 0 && (
-            <div class="flex items-center gap-x-1">
-              <Icon name="subposts" class="size-3" />
-              <span>
-                {subpostCount} subpost{subpostCount === 1 ? "" : "s"}
-              </span>
-            </div>
-          )
-        }
-      </div>
+      <PostMetadata metadata={metadata} variant="card" />
 
       {/** Row 4: Tags */}
       {
