@@ -4,18 +4,24 @@ This is my personal academic website built with Astro, showcasing my research, p
 thoughts as a researcher, developer, teacher, and life-long learner.
 
 This website serves as a digital portfolio and blog where I share my work, insights, and journey in
-academia (NLP+HCI), technology, and anything I'm interested in
+academia (NLP+HCI), technology, and anything I'm interested in.
 
 ## Built With
 
-This website is built using enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite)
-template, using:
+This website is built on enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite)
+template:
 
 - [Astro](https://astro.build/) - Modern content-driven web framework
-- [TypeScript](https://www.typescriptlang.org/) - Type-safe JavaScript
 - [TailwindCSS 4](https://tailwindcss.com/) - Utility-first CSS framework
 - [shadcn/ui](https://ui.shadcn.com/) - UI component wrappers of Radix Primitives and TailwindCSS
 - [MDX](https://mdxjs.com/) - Markdown with JSX components
+
+Other inspirations:
+
+- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's
+  [pure](https://astro-pure.js.org/) theme
+- [Color palettes](src/assets/styles/global.css) from [catpuccin](https://catppuccin.com/palette/)
+- Projects and publications from [al-folio](https://github.com/alshedivat/al-folio)
 
 ## Getting Started
 
