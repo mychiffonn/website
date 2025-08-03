@@ -1,135 +1,246 @@
 ---
-import Icon from "@/components/base/Icon.astro"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import Icon from "@/components/base/Icon.astro"
 
 const calloutConfig = {
+  // Mimic Obsidian callouts
   note: {
-    style: "border-blue-500 dark:bg-blue-950/5",
-    textColor: "text-blue-700 dark:text-blue-300",
-    icon: "lucide:info"
+    style: "border-l-blue-500 bg-blue-50/50 dark:bg-blue-950/10",
+    textColor: "text-blue-800 dark:text-blue-200",
+    icon: "mingcute:pencil-line"
   },
-  tip: {
-    style: "border-green-500 dark:bg-green-950/5",
-    textColor: "text-green-700 dark:text-green-300",
-    icon: "lucide:lightbulb"
-  },
-  warning: {
-    style: "border-amber-500 dark:bg-amber-950/5",
-    textColor: "text-amber-700 dark:text-amber-300",
-    icon: "lucide:alert-triangle"
-  },
-  danger: {
-    style: "border-red-500 dark:bg-red-950/5",
-    textColor: "text-red-700 dark:text-red-300",
-    icon: "lucide:shield-alert"
-  },
-  important: {
-    style: "border-purple-500 dark:bg-purple-950/5",
-    textColor: "text-purple-700 dark:text-purple-300",
-    icon: "lucide:message-square-warning"
-  },
-  definition: {
-    style: "border-purple-500 dark:bg-purple-950/5",
-    textColor: "text-purple-700 dark:text-purple-300",
-    icon: "lucide:book-open"
-  },
-  theorem: {
-    style: "border-teal-500 dark:bg-teal-950/5",
-    textColor: "text-teal-700 dark:text-teal-300",
-    icon: "lucide:check-circle"
-  },
-  lemma: {
-    style: "border-sky-400 dark:bg-sky-950/5",
-    textColor: "text-sky-700 dark:text-sky-300",
-    icon: "lucide:puzzle"
-  },
-  proof: {
-    style: "border-gray-500 dark:bg-gray-950/5",
-    textColor: "text-gray-700 dark:text-gray-300",
-    icon: "lucide:check-square"
-  },
-  corollary: {
-    style: "border-cyan-500 dark:bg-cyan-950/5",
-    textColor: "text-cyan-700 dark:text-cyan-300",
-    icon: "lucide:git-branch"
-  },
-  proposition: {
-    style: "border-slate-500 dark:bg-slate-950/5",
-    textColor: "text-slate-700 dark:text-slate-300",
-    icon: "lucide:file-text"
-  },
-  axiom: {
-    style: "border-violet-600 dark:bg-violet-950/5",
-    textColor: "text-violet-700 dark:text-violet-300",
-    icon: "lucide:anchor"
-  },
-  conjecture: {
-    style: "border-pink-500 dark:bg-pink-950/5",
-    textColor: "text-pink-700 dark:text-pink-300",
-    icon: "lucide:help-circle"
-  },
-  notation: {
-    style: "border-slate-400 dark:bg-slate-950/5",
-    textColor: "text-slate-700 dark:text-slate-300",
-    icon: "lucide:pen-tool"
-  },
-  remark: {
-    style: "border-gray-400 dark:bg-gray-950/5",
-    textColor: "text-gray-700 dark:text-gray-300",
-    icon: "lucide:message-circle"
-  },
-  intuition: {
-    style: "border-yellow-500 dark:bg-yellow-950/5",
-    textColor: "text-yellow-700 dark:text-yellow-300",
-    icon: "lucide:lightbulb"
-  },
-  recall: {
-    style: "border-blue-300 dark:bg-blue-950/5",
-    textColor: "text-blue-600 dark:text-blue-300",
-    icon: "lucide:rotate-ccw"
-  },
-  explanation: {
-    style: "border-lime-500 dark:bg-lime-950/5",
-    textColor: "text-lime-700 dark:text-lime-300",
-    icon: "lucide:help-circle"
-  },
-  example: {
-    style: "border-emerald-500 dark:bg-emerald-950/5",
-    textColor: "text-emerald-700 dark:text-emerald-300",
-    icon: "lucide:code"
-  },
-  exercise: {
-    style: "border-indigo-500 dark:bg-indigo-950/5",
-    textColor: "text-indigo-700 dark:text-indigo-300",
-    icon: "lucide:dumbbell"
-  },
-  problem: {
-    style: "border-orange-600 dark:bg-orange-950/5",
-    textColor: "text-orange-700 dark:text-orange-300",
-    icon: "lucide:alert-circle"
-  },
-  answer: {
-    style: "border-teal-500 dark:bg-teal-950/5",
-    textColor: "text-teal-700 dark:text-teal-300",
-    icon: "lucide:check"
-  },
-  solution: {
-    style: "border-emerald-600 dark:bg-emerald-950/5",
-    textColor: "text-emerald-700 dark:text-emerald-300",
-    icon: "lucide:check-circle-2"
+  abstract: {
+    style: "border-l-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/10",
+    textColor: "text-cyan-800 dark:text-cyan-200",
+    icon: "mingcute:clipboard-line"
   },
   summary: {
-    style: "border-sky-500 dark:bg-sky-950/5",
-    textColor: "text-sky-700 dark:text-sky-300",
-    icon: "lucide:list"
+    style: "border-l-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/10",
+    textColor: "text-cyan-800 dark:text-cyan-200",
+    icon: "mingcute:clipboard-line"
+  },
+  tldr: {
+    style: "border-l-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/10",
+    textColor: "text-cyan-800 dark:text-cyan-200",
+    icon: "mingcute:clipboard-line"
+  },
+  info: {
+    style: "border-l-blue-500 bg-blue-50/50 dark:bg-blue-950/10",
+    textColor: "text-blue-800 dark:text-blue-200",
+    icon: "mingcute:information-line"
+  },
+  todo: {
+    style: "border-l-blue-500 bg-blue-50/50 dark:bg-blue-950/10",
+    textColor: "text-blue-800 dark:text-blue-200",
+    icon: "mingcute:checkbox-line"
+  },
+  tip: {
+    style: "border-l-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/10",
+    textColor: "text-cyan-800 dark:text-cyan-200",
+    icon: "mingcute:fire-line"
+  },
+  hint: {
+    style: "border-l-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/10",
+    textColor: "text-cyan-800 dark:text-cyan-200",
+    icon: "mingcute:fire-line"
+  },
+  important: {
+    style: "border-l-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/10",
+    textColor: "text-cyan-800 dark:text-cyan-200",
+    icon: "mingcute:fire-line"
+  },
+  success: {
+    style: "border-l-green-500 bg-green-50/50 dark:bg-green-950/10",
+    textColor: "text-green-800 dark:text-green-200",
+    icon: "mingcute:check-line"
+  },
+  check: {
+    style: "border-l-green-500 bg-green-50/50 dark:bg-green-950/10",
+    textColor: "text-green-800 dark:text-green-200",
+    icon: "mingcute:check-line"
+  },
+  done: {
+    style: "border-l-green-500 bg-green-50/50 dark:bg-green-950/10",
+    textColor: "text-green-800 dark:text-green-200",
+    icon: "mingcute:check-line"
+  },
+  question: {
+    style: "border-l-yellow-500 bg-yellow-50/50 dark:bg-yellow-950/10",
+    textColor: "text-yellow-800 dark:text-yellow-200",
+    icon: "mingcute:question-line"
+  },
+  help: {
+    style: "border-l-yellow-500 bg-yellow-50/50 dark:bg-yellow-950/10",
+    textColor: "text-yellow-800 dark:text-yellow-200",
+    icon: "mingcute:question-line"
+  },
+  faq: {
+    style: "border-l-yellow-500 bg-yellow-50/50 dark:bg-yellow-950/10",
+    textColor: "text-yellow-800 dark:text-yellow-200",
+    icon: "mingcute:question-line"
+  },
+  warning: {
+    style: "border-l-orange-500 bg-orange-50/50 dark:bg-orange-950/10",
+    textColor: "text-orange-800 dark:text-orange-200",
+    icon: "mingcute:alert-triangle-line"
+  },
+  caution: {
+    style: "border-l-orange-500 bg-orange-50/50 dark:bg-orange-950/10",
+    textColor: "text-orange-800 dark:text-orange-200",
+    icon: "mingcute:alert-triangle-line"
+  },
+  attention: {
+    style: "border-l-orange-500 bg-orange-50/50 dark:bg-orange-950/10",
+    textColor: "text-orange-800 dark:text-orange-200",
+    icon: "mingcute:alert-triangle-line"
+  },
+  failure: {
+    style: "border-l-red-500 bg-red-50/50 dark:bg-red-950/10",
+    textColor: "text-red-800 dark:text-red-200",
+    icon: "mingcute:close-circle-line"
+  },
+  fail: {
+    style: "border-l-red-500 bg-red-50/50 dark:bg-red-950/10",
+    textColor: "text-red-800 dark:text-red-200",
+    icon: "mingcute:close-circle-line"
+  },
+  missing: {
+    style: "border-l-red-500 bg-red-50/50 dark:bg-red-950/10",
+    textColor: "text-red-800 dark:text-red-200",
+    icon: "mingcute:close-circle-line"
+  },
+  danger: {
+    style: "border-l-red-500 bg-red-50/50 dark:bg-red-950/10",
+    textColor: "text-red-800 dark:text-red-200",
+    icon: "mingcute:zap-line"
+  },
+  error: {
+    style: "border-l-red-500 bg-red-50/50 dark:bg-red-950/10",
+    textColor: "text-red-800 dark:text-red-200",
+    icon: "mingcute:close-circle-line"
+  },
+  bug: {
+    style: "border-l-red-500 bg-red-50/50 dark:bg-red-950/10",
+    textColor: "text-red-800 dark:text-red-200",
+    icon: "mingcute:bug-line"
+  },
+  example: {
+    style: "border-l-purple-500 bg-purple-50/50 dark:bg-purple-950/10",
+    textColor: "text-purple-800 dark:text-purple-200",
+    icon: "mingcute:list-line"
+  },
+  quote: {
+    style: "border-l-gray-500 bg-gray-50/50 dark:bg-gray-950/10",
+    textColor: "text-gray-800 dark:text-gray-200",
+    icon: "mingcute:quote-line"
+  },
+  cite: {
+    style: "border-l-gray-500 bg-gray-50/50 dark:bg-gray-950/10",
+    textColor: "text-gray-800 dark:text-gray-200",
+    icon: "mingcute:quote-line"
+  },
+  // Math/Latex Callouts
+  definition: {
+    style: "border-l-purple-500 bg-purple-50/50 dark:bg-purple-950/10",
+    textColor: "text-purple-800 dark:text-purple-200",
+    icon: "mingcute:book-line"
+  },
+  axiom: {
+    style: "border-l-violet-600 bg-violet-50/50 dark:bg-violet-950/10",
+    textColor: "text-violet-800 dark:text-violet-200",
+    icon: "mingcute:anchor-line"
+  },
+  /**A proposition is a statement which is interesting in its own right */
+  proposition: {
+    style: "border-l-slate-500 bg-slate-50/50 dark:bg-slate-950/10",
+    textColor: "text-slate-800 dark:text-slate-200",
+    icon: "mingcute:document-line"
+  },
+  /** A lemma is an easily proved claim which is helpful for proving other propositions and theorems,
+  but is usually not particularly interesting in its own right. */
+  lemma: {
+    style: "border-l-sky-400 bg-sky-50/50 dark:bg-sky-950/10",
+    textColor: "text-sky-800 dark:text-sky-200",
+    icon: "mingcute:puzzle-line"
+  },
+  /** A theorem is a more important statement than a proposition
+   * which says something definitive on the subject,
+   * and often takes more effort to prove than a proposition or lemma. */
+  theorem: {
+    style: "border-l-teal-500 bg-teal-50/50 dark:bg-teal-950/10",
+    textColor: "text-teal-800 dark:text-teal-200",
+    icon: "mingcute:trophy-line"
+  },
+  /**
+   * A corollary is a proposition that follows from
+   * (and is often appended to) one already proved (theorem) */
+  corollary: {
+    style: "border-l-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/10",
+    textColor: "text-cyan-800 dark:text-cyan-200",
+    icon: "mingcute:git-branch-line"
+  },
+  proof: {
+    style: "border-l-gray-500 bg-gray-50/50 dark:bg-gray-950/10",
+    textColor: "text-gray-800 dark:text-gray-200",
+    icon: "mingcute:process-line"
+  },
+  conjecture: {
+    style: "border-l-pink-500 bg-pink-50/50 dark:bg-pink-950/10",
+    textColor: "text-pink-800 dark:text-pink-200",
+    icon: "mingcute:bulb-2-line"
+  },
+  notation: {
+    style: "border-l-slate-400 bg-slate-50/50 dark:bg-slate-950/10",
+    textColor: "text-slate-800 dark:text-slate-200",
+    icon: "mingcute:pen-line"
+  },
+  remark: {
+    style: "border-l-gray-400 bg-gray-50/50 dark:bg-gray-950/10",
+    textColor: "text-gray-800 dark:text-gray-200",
+    icon: "mingcute:message-3-line"
+  },
+  intuition: {
+    style: "border-l-yellow-500 bg-yellow-50/50 dark:bg-yellow-950/10",
+    textColor: "text-yellow-800 dark:text-yellow-200",
+    icon: "mingcute:bulb-line"
+  },
+  recall: {
+    style: "border-l-blue-300 bg-blue-50/50 dark:bg-blue-950/10",
+    textColor: "text-blue-800 dark:text-blue-200",
+    icon: "mingcute:refresh-ccw-line"
+  },
+  explanation: {
+    style: "border-l-lime-500 bg-lime-50/50 dark:bg-lime-950/10",
+    textColor: "text-lime-800 dark:text-lime-200",
+    icon: "mingcute:question-line"
+  },
+  exercise: {
+    style: "border-l-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/10",
+    textColor: "text-indigo-800 dark:text-indigo-200",
+    icon: "mingcute:dumbbell-line"
+  },
+  problem: {
+    style: "border-l-orange-600 bg-orange-50/50 dark:bg-orange-950/10",
+    textColor: "text-orange-800 dark:text-orange-200",
+    icon: "mingcute:alert-circle-line"
+  },
+  answer: {
+    style: "border-l-teal-500 bg-teal-50/50 dark:bg-teal-950/10",
+    textColor: "text-teal-800 dark:text-teal-200",
+    icon: "mingcute:check-line"
+  },
+  solution: {
+    style: "border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/10",
+    textColor: "text-emerald-800 dark:text-emerald-200",
+    icon: "mingcute:check-circle-line"
   }
 } as const
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
-const calloutVariants = cva("relative px-4 py-3 my-6 border-l-4 text-sm", {
+const calloutVariants = cva("relative px-4 py-3 my-6 border-l-4 text-sm rounded-r-md", {
   variants: {
     variant: Object.fromEntries(
       Object.entries(calloutConfig).map(([key, config]) => [key, config.style])
@@ -159,7 +270,9 @@ const { title, variant = "note", defaultOpen = true, ...rest } = Astro.props
   {...rest}
   open={defaultOpen}
 >
-  <summary class="flex cursor-pointer items-center font-medium [&::-webkit-details-marker]:hidden">
+  <summary
+    class="-mx-2 -mt-1 mb-2 flex cursor-pointer items-center rounded-sm p-2 font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 [&::-webkit-details-marker]:hidden"
+  >
     <Icon
       name={calloutConfig[variant].icon}
       class={cn("mr-2 size-4 shrink-0", calloutConfig[variant].textColor)}
@@ -169,7 +282,7 @@ const { title, variant = "note", defaultOpen = true, ...rest } = Astro.props
       {title && <span class="font-normal opacity-70"> ({title})</span>}
     </span>
     <Icon
-      name="lucide:chevron-down"
+      name="mingcute:down-line"
       class={cn(
         "ml-auto h-4 w-4 shrink-0 transition-transform duration-200",
         calloutConfig[variant].textColor
