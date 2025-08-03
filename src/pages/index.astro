@@ -1,13 +1,13 @@
 ---
 import { SITE } from "@/config"
-import { getRecentPosts } from "@/lib/data-utils"
+import { PostManager } from "@/lib/post-manager"
 import Layout from "@/layouts/Layout.astro"
 import Button from "@/components/base/Button.astro"
 import Profile from "@/components/base/Profile.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import PageHead from "@/components/layout/PageHead.astro"
 
-const blog = await getRecentPosts(SITE.featuredPostCount)
+const blog = await PostManager.getInstance().getRecentPosts(SITE.featuredPostCount)
 ---
 
 <Layout class="max-w-3xl">
