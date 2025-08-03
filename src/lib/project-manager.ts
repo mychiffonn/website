@@ -18,17 +18,14 @@ export class ProjectManager {
   private async initializeCache(): Promise<void> {
     if (this.cache !== null) return
 
-    console.log('🚀 Initializing ProjectManager cache...')
     const projects = await getCollection('projects')
-    
+
     // Sort projects by toDate (most recent first)
     this.cache = projects.sort((a, b) => {
       const dateA = a.data.toDate?.getTime() || 0
       const dateB = b.data.toDate?.getTime() || 0
       return dateB - dateA
     })
-    
-    console.log(`✅ ProjectManager cache initialized: ${this.cache.length} projects`)
   }
 
   async getAllProjects(): Promise<Project[]> {
@@ -53,8 +50,8 @@ export class ProjectManager {
 
   async getProjectsByTag(tag: string): Promise<Project[]> {
     await this.initializeCache()
-    return this.cache!.filter(project => 
-      project.data.tags?.some(projectTag => 
+    return this.cache!.filter(project =>
+      project.data.tags?.some(projectTag =>
         projectTag.toLowerCase() === tag.toLowerCase()
       )
     )
