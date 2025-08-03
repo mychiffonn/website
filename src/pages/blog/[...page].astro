@@ -1,12 +1,12 @@
 ---
 import type { PaginateFunction } from "astro"
-import Icon from "@/components/base/Icon.astro"
 
 import { SITE } from "@/config"
 import { getAllPosts, getSortedTags, groupPostsByYear } from "@/lib/data-utils"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
+import Icon from "@/components/base/Icon.astro"
 import Pagination from "@/components/blog/Pagination.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"

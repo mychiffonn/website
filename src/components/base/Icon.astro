@@ -2,8 +2,7 @@
 import type { HTMLAttributes } from "astro/types"
 import { Icon as AstroIcon } from "astro-icon/components"
 
-// Semantic icon mapping - add new semantic names here
-const SEMANTIC_ICONS = {
+export const SEMANTIC_ICONS = {
   // Navigation & Breadcrumbs
   blog: "mingcute:book-5-line",
   "post-active": "mingcute:book-line", // Used for both active parent posts and active subposts
@@ -52,7 +51,7 @@ const SEMANTIC_ICONS = {
   up: "mingcute:up-line",
   down: "mingcute:down-line",
   "more-horizontal": "mingcute:more-horizontal-line"
-} as const
+}
 
 type SemanticIconName = keyof typeof SEMANTIC_ICONS
 
