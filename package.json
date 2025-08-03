@@ -27,6 +27,7 @@
     "@iconify-json/academicons": "^1.2.2",
     "@iconify-json/lucide": "^1.2.60",
     "@iconify-json/mingcute": "^1.2.3",
+    "@r4ai/remark-callout": "^0.6.2",
     "@tailwindcss/vite": "^4.1.11",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",

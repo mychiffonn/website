@@ -1,0 +1,455 @@
+@import './global.css';
+@import './typography.css';
+
+/* Callout Icons Obsidian style, which uses lucide icon set */
+:root {
+  /* UI Icons */
+  --icon-chevron-down: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Im02IDkgNiA2IDYtNiIvPjwvc3ZnPg==");
+
+  /* Default/Note Icons */
+  --icon-pencil: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNUwyIDIybDEuNS01LjVabS0yIDJsNCA0Ii8+PC9zdmc+");
+  --icon-info: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNMTIgMTZ2LTRtMC00aC4wMSIvPjwvZz48L3N2Zz4=");
+  --icon-todo: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTIyIDExLjA4VjEyYTEwIDEwIDAgMSAxLTUuOTMtOS4xNCIvPjxwYXRoIGQ9Im05IDExbDMgM0wyMiA0Ii8+PC9nPjwvc3ZnPg==");
+
+  /* Summary/Abstract Icons */
+  --icon-clipboard-list: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHJlY3Qgd2lkdGg9IjgiIGhlaWdodD0iNCIgeD0iOCIgeT0iMiIgcng9IjEiIHJ5PSIxIi8+PHBhdGggZD0iTTE2IDRoMmEyIDIgMCAwIDEgMiAydjE0YTIgMiAwIDAgMS0yIDJINmEyIDIgMCAwIDEtMi0yVjZhMiAyIDAgMCAxIDItMmgybTQgN2g0bS00IDVoNG0tOC01aC4wMU04IDE2aC4wMSIvPjwvZz48L3N2Zz4=");
+
+  /* Tip/Important Icons */
+  --icon-flame: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTguNSAxNC41QTIuNSAyLjUgMCAwIDAgMTEgMTJjMC0xLjM4LS41LTItMS0zYy0xLjA3Mi0yLjE0My0uMjI0LTQuMDU0IDItNmMuNSAyLjUgMiA0LjkgNCA2LjVjMiAxLjYgMyAzLjUgMyA1LjVhNyA3IDAgMSAxLTE0IDBjMC0xLjE1My40MzMtMi4yOTQgMS0zYTIuNSAyLjUgMCAwIDAgMi41IDIuNSIvPjwvc3ZnPg==");
+
+  /* Success Icons */
+  --icon-check: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTIwIDZMOSAxN2wtNS01Ii8+PC9zdmc+");
+
+  /* Question/Help Icons */
+  --icon-circle-help: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNOS4wOSA5YTMgMyAwIDAgMSA1LjgzIDFjMCAyLTMgMy0zIDNtLjA4IDRoLjAxIi8+PC9nPjwvc3ZnPg==");
+
+  /* Warning Icons */
+  --icon-triangle-alert: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0ibTIxLjczIDE4bC04LTE0YTIgMiAwIDAgMC0zLjQ4IDBsLTggMTRBMiAyIDAgMCAwIDQgMjFoMTZhMiAyIDAgMCAwIDEuNzMtM00xMiA5djRtMCA0aC4wMSIvPjwvc3ZnPg==");
+
+  /* Error/Danger Icons */
+  --icon-zap: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXphcCI+PHBhdGggZD0iTTQgMTRhMSAxIDAgMCAxLS43OC0xLjYzbDkuOS0xMC4yYS41LjUgMCAwIDEgLjg2LjQ2bC0xLjkyIDYuMDJBMSAxIDAgMCAwIDEzIDEwaDdhMSAxIDAgMCAxIC43OCAxLjYzbC05LjkgMTAuMmEuNS41IDAgMCAxLS44Ni0uNDZsMS45Mi02LjAyQTEgMSAwIDAgMCAxMSAxNHoiLz48L3N2Zz4=");
+  --icon-bug: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0ibTggMmwxLjg4IDEuODhtNC4yNCAwTDE2IDJNOSA3LjEzdi0xYTMuMDAzIDMuMDAzIDAgMSAxIDYgMHYxIi8+PHBhdGggZD0iTTEyIDIwYy0zLjMgMC02LTIuNy02LTZ2LTNhNCA0IDAgMCAxIDQtNGg0YTQgNCAwIDAgMSA0IDR2M2MwIDMuMy0yLjcgNi02IDZtMCAwdi05Ii8+PHBhdGggZD0iTTYuNTMgOUM0LjYgOC44IDMgNy4xIDMgNW0zIDhIMm0xIDhjMC0yLjEgMS43LTMuOSAzLjgtNE0yMC45NyA1YzAgMi4xLTEuNiAzLjgtMy41IDRNMjIgMTNoLTRtLS44IDRjMi4xLjEgMy44IDEuOSAzLjggNCIvPjwvZz48L3N2Zz4=");
+
+  /* Example Icons */
+  --icon-list: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTggNmgxM004IDEyaDEzTTggMThoMTNNMyA2aC4wMU0zIDEyaC4wMU0zIDE4aC4wMSIvPjwvc3ZnPg==");
+
+  /* Quote Icons */
+  --icon-quote: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTMgMjFjMyAwIDctMSA3LThWNWMwLTEuMjUtLjc1Ni0yLjAxNy0yLTJINGMtMS4yNSAwLTIgLjc1LTIgMS45NzJWMTFjMCAxLjI1Ljc1IDIgMiAyYzEgMCAxIDAgMSAxdjFjMCAxLTEgMi0yIDJzLTEgLjAwOC0xIDEuMDMxVjIwYzAgMSAwIDEgMSAxbTEyIDBjMyAwIDctMSA3LThWNWMwLTEuMjUtLjc1Ny0yLjAxNy0yLTJoLTRjLTEuMjUgMC0yIC43NS0yIDEuOTcyVjExYzAgMS4yNS43NSAyIDIgMmguNzVjMCAyLjI1LjI1IDQtMi43NSA0djNjMCAxIDAgMSAxIDEiLz48L3N2Zz4=");
+}
+
+@layer components {
+  [data-callout] {
+    & {
+      @apply my-4 rounded-lg border border-blue-600/20 bg-blue-400/20 px-4 py-2 dark:border-blue-800/20 dark:bg-blue-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply flex flex-row items-center gap-x-2 py-2 font-bold text-blue-500;
+      }
+
+      &:empty::after {
+        content: "Note";
+      }
+
+      &::before {
+        @apply block size-5 bg-current content-[""] flex-shrink-0;
+        mask-repeat: no-repeat;
+        mask-size: cover;
+        mask-image: var(--icon-pencil);
+      }
+    }
+
+    &>[data-callout-body] {
+      & {
+        @apply pt-1 pb-2 space-y-4;
+      }
+
+      &>* {
+        @apply my-2 mx-0;
+      }
+
+      &>*:first-child {
+        @apply mt-0;
+      }
+
+      &>*:last-child {
+        @apply mb-0;
+      }
+    }
+  }
+
+  details[data-callout]>summary[data-callout-title] {
+    & {
+      @apply cursor-pointer;
+    }
+
+    &::after {
+      @apply ml-auto text-zinc-400 dark:text-zinc-500 transition-transform duration-200;
+      content: "";
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      mask-repeat: no-repeat;
+      mask-size: cover;
+      mask-position: center;
+      background-color: currentColor;
+      mask-image: var(--icon-chevron-down);
+      transform: rotate(-90deg);
+    }
+
+    &:not(:empty)::after {
+      @apply my-auto;
+    }
+  }
+
+  details[data-callout][open]>summary[data-callout-title]::after {
+    transform: rotate(0deg);
+  }
+
+  [data-callout][data-callout-type="info"] {
+    & {
+      @apply border-blue-600/20 bg-blue-400/20 dark:border-blue-800/20 dark:bg-blue-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-blue-500;
+      }
+
+      &:empty::after {
+        content: "Info";
+      }
+
+      &::before {
+        mask-image: var(--icon-info);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="todo"] {
+    & {
+      @apply border-blue-600/20 bg-blue-400/20 dark:border-blue-800/20 dark:bg-blue-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-blue-500;
+      }
+
+      &:empty::after {
+        content: "ToDo";
+      }
+
+      &::before {
+        mask-image: var(--icon-todo);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="abstract"],
+  [data-callout][data-callout-type="summary"],
+  [data-callout][data-callout-type="tldr"] {
+    & {
+      @apply border-cyan-600/20 bg-cyan-400/20 dark:border-cyan-800/20 dark:bg-cyan-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-cyan-500;
+      }
+
+      &::before {
+        mask-image: var(--icon-clipboard-list);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="abstract"]>[data-callout-title]:empty::after {
+    content: "Abstract";
+  }
+
+  [data-callout][data-callout-type="summary"]>[data-callout-title]:empty::after {
+    content: "Summary";
+  }
+
+  [data-callout][data-callout-type="tldr"]>[data-callout-title]:empty::after {
+    content: "TL;DR";
+  }
+
+  [data-callout][data-callout-type="tip"],
+  [data-callout][data-callout-type="hint"],
+  [data-callout][data-callout-type="important"] {
+    & {
+      @apply border-cyan-600/20 bg-cyan-400/20 dark:border-cyan-800/20 dark:bg-cyan-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-cyan-500;
+      }
+
+      &::before {
+        mask-image: var(--icon-flame);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="tip"]>[data-callout-title]:empty::after {
+    content: "Tip";
+  }
+
+  [data-callout][data-callout-type="hint"]>[data-callout-title]:empty::after {
+    content: "Hint";
+  }
+
+  [data-callout][data-callout-type="important"]>[data-callout-title]:empty::after {
+    content: "Important";
+  }
+
+  [data-callout][data-callout-type="success"],
+  [data-callout][data-callout-type="check"],
+  [data-callout][data-callout-type="done"] {
+    & {
+      @apply border-green-600/20 bg-green-400/20 dark:border-green-800/20 dark:bg-green-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-green-500;
+      }
+
+      &::before {
+        mask-image: var(--icon-check);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="success"]>[data-callout-title]:empty::after {
+    content: "Success";
+  }
+
+  [data-callout][data-callout-type="check"]>[data-callout-title]:empty::after {
+    content: "Check";
+  }
+
+  [data-callout][data-callout-type="done"]>[data-callout-title]:empty::after {
+    content: "Done";
+  }
+
+  [data-callout][data-callout-type="question"],
+  [data-callout][data-callout-type="help"],
+  [data-callout][data-callout-type="faq"] {
+    & {
+      @apply border-orange-600/20 bg-orange-400/20 dark:border-orange-800/20 dark:bg-orange-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-orange-500;
+      }
+
+      &::before {
+        /* lucide:circle-help */
+        mask-image: var(--icon-circle-help);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="question"]>[data-callout-title]:empty::after {
+    content: "Question";
+  }
+
+  [data-callout][data-callout-type="help"]>[data-callout-title]:empty::after {
+    content: "Help";
+  }
+
+  [data-callout][data-callout-type="faq"]>[data-callout-title]:empty::after {
+    content: "FAQ";
+  }
+
+  [data-callout][data-callout-type="warning"],
+  [data-callout][data-callout-type="caution"],
+  [data-callout][data-callout-type="attention"] {
+    & {
+      @apply border-orange-600/20 bg-orange-400/20 dark:border-orange-800/20 dark:bg-orange-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-orange-500;
+      }
+
+      &::before {
+        /* lucide:triangle-alert */
+        mask-image: var(--icon-triangle-alert);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="warning"]>[data-callout-title]:empty::after {
+    content: "Warning";
+  }
+
+  [data-callout][data-callout-type="caution"]>[data-callout-title]:empty::after {
+    content: "Caution";
+  }
+
+  [data-callout][data-callout-type="attention"]>[data-callout-title]:empty::after {
+    content: "Attention";
+  }
+
+  [data-callout][data-callout-type="failure"],
+  [data-callout][data-callout-type="fail"],
+  [data-callout][data-callout-type="missing"] {
+    & {
+      @apply border-red-600/20 bg-red-400/20 dark:border-red-800/20 dark:bg-red-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-red-500;
+      }
+
+      &::before {
+        mask-image: var(--icon-check);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="failure"]>[data-callout-title]:empty::after {
+    content: "Failure";
+  }
+
+  [data-callout][data-callout-type="fail"]>[data-callout-title]:empty::after {
+    content: "Fail";
+  }
+
+  [data-callout][data-callout-type="missing"]>[data-callout-title]:empty::after {
+    content: "Missing";
+  }
+
+  [data-callout][data-callout-type="danger"],
+  [data-callout][data-callout-type="error"] {
+    & {
+      @apply border-red-600/20 bg-red-400/20 dark:border-red-800/20 dark:bg-red-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-red-500;
+      }
+
+      &::before {
+        mask-image: var(--icon-zap);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="danger"]>[data-callout-title]:empty::after {
+    content: "Danger";
+  }
+
+  [data-callout][data-callout-type="error"]>[data-callout-title]:empty::after {
+    content: "Error";
+  }
+
+  [data-callout][data-callout-type="bug"] {
+    & {
+      @apply border-red-600/20 bg-red-400/20 dark:border-red-800/20 dark:bg-red-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-red-500;
+      }
+
+      &::before {
+        mask-image: var(--icon-bug);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="bug"]>[data-callout-title]:empty::after {
+    content: "Bug";
+  }
+
+  [data-callout][data-callout-type="example"] {
+    & {
+      @apply border-purple-600/20 bg-purple-400/20 dark:border-purple-800/20 dark:bg-purple-600/10;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-purple-500;
+      }
+
+      &::before {
+        mask-image: var(--icon-list);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="example"]>[data-callout-title]:empty::after {
+    content: "Example";
+  }
+
+  [data-callout][data-callout-type="quote"],
+  [data-callout][data-callout-type="cite"] {
+    & {
+      @apply border-zinc-600/20 bg-zinc-400/20 dark:border-zinc-800/20 dark:bg-zinc-600/15;
+    }
+
+    &>[data-callout-title] {
+      & {
+        @apply text-zinc-500;
+      }
+
+      &::before {
+        mask-image: var(--icon-quote);
+      }
+    }
+  }
+
+  [data-callout][data-callout-type="quote"]>[data-callout-title]:empty::after {
+    content: "Quote";
+  }
+
+  [data-callout][data-callout-type="cite"]>[data-callout-title]:empty::after {
+    content: "Cite";
+  }
+
+  /* Collapsible callout functionality */
+  [data-callout].is-collapsible>[data-callout-title] {
+    @apply flex flex-row cursor-pointer items-center text-zinc-400 dark:text-zinc-500;
+    gap: 0.5rem;
+    font-weight: bold;
+
+    &::after {
+      @apply ml-auto bg-current content-[""] transition-transform duration-200 flex-shrink-0;
+      width: 1.25rem;
+      height: 1.25rem;
+      mask-repeat: no-repeat;
+      mask-size: cover;
+      mask-position: center;
+      mask-image: var(--icon-chevron-down);
+    }
+  }
+
+  [data-callout].is-collapsible.is-collapsed {
+
+    &>[data-callout-title]::after {
+      transform: rotate(-90deg);
+    }
+
+    &>[data-callout-content] {
+      @apply hidden;
+    }
+  }
+}
+
+@layer utilities {
+  .callout-js-init {
+    --callout-initialized: true;
+  }
+}
