@@ -2,7 +2,8 @@
 import type { PaginateFunction } from "astro"
 
 import { SITE } from "@/config"
-import { getAllPosts, getSortedTags, groupPostsByYear } from "@/lib/data-utils"
+import { PostManager } from "@/lib/post-manager"
+import { TagManager } from "@/lib/tag-manager"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
@@ -13,15 +14,19 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
 
 export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
-  const allPosts = await getAllPosts()
+  const blogManager = PostManager.getInstance()
+  const allPosts = await blogManager.getAllPosts()
   return paginate(allPosts, { pageSize: SITE.postsPerPage })
 }
 
 const { page } = Astro.props
 
-const postsByYear = groupPostsByYear(page.data)
+const blogManager = PostManager.getInstance()
+const tagManager = TagManager.getInstance()
+
+const postsByYear = blogManager.groupPostsByYear(page.data)
 const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
-const sortedTags = await getSortedTags()
+const sortedTags = await tagManager.getSortedTags()
 const displayTags = sortedTags.slice(0, 15)
 ---
 
@@ -49,7 +54,7 @@ const displayTags = sortedTags.slice(0, 15)
             ))}
           </div>
           <div class="flex justify-end">
-            <Button href="/tags" variant={"default"} class="group">
+            <Button href="/tags" variant="outline" size="sm" class="group">
               <span>View all {sortedTags.length} tags</span>
               <Icon
                 name="mingcute:arrow-right-line"

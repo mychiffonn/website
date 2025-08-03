@@ -1,40 +1,30 @@
 ---
-import {
-  getCombinedReadingTime,
-  getParentId,
-  getParentPost,
-  getPostById,
-  getPostReadingTime,
-  getSubpostsForParent,
-  isSubpost
-} from "@/lib/data-utils"
+import { type SubpostContext } from "@/lib/post-manager"
+import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-const { parentId } = Astro.props
-const currentPostId = Astro.params.id as string
-const isCurrentSubpost = isSubpost(currentPostId)
-const rootParentId = isCurrentSubpost ? getParentId(currentPostId) : parentId
+interface Props {
+  subpostContext: SubpostContext
+}
 
-const currentPost = !isCurrentSubpost ? await getPostById(currentPostId) : null
-const subposts = await getSubpostsForParent(rootParentId)
-const parentPost = isCurrentSubpost ? await getParentPost(currentPostId) : null
+const { subpostContext } = Astro.props
+const { currentPost, parentPost, subposts, metadata, isCurrentSubpost } = subpostContext
 
 const activePost = parentPost || currentPost
-const isActivePost = activePost?.id === currentPostId
+const isActivePost = activePost?.id === currentPost.id
 
-const activePostReadingTime = activePost ? await getPostReadingTime(activePost.id) : null
-const activePostCombinedReadingTime =
-  activePost && subposts.length > 0 ? await getCombinedReadingTime(activePost.id) : null
-const subpostsWithReadingTime = await Promise.all(
-  subposts.map(async (subpost) => ({
-    ...subpost,
-    readingTime: await getPostReadingTime(subpost.id)
-  }))
-)
+const activePostMetadata = metadata.get(activePost.id)
+const activePostReadingTime = activePostMetadata?.readingTime
+const activePostCombinedReadingTime = activePostMetadata?.combinedReadingTime
+
+const subpostsWithReadingTime = subposts.map((subpost) => ({
+  ...subpost,
+  readingTime: metadata.get(subpost.id)?.readingTime || "0 min"
+}))
 
 const currentSubpostDetails = isCurrentSubpost
-  ? subpostsWithReadingTime.find((subpost) => subpost.id === currentPostId)
+  ? subpostsWithReadingTime.find((subpost) => subpost.id === currentPost.id)
   : null
 ---
 
@@ -55,6 +45,12 @@ const currentSubpostDetails = isCurrentSubpost
               <span class="text-muted-foreground truncate text-sm leading-4">
                 {currentSubpostDetails ? currentSubpostDetails.data.title : activePost?.data.title}
               </span>
+              {subposts.length > 0 && (
+                <Badge variant="info" class="ml-2 text-xs">
+                  <Icon name="subposts" class="size-3" />
+                  {subposts.length} subpost(s)
+                </Badge>
+              )}
             </div>
             <Icon
               name="mingcute:down-line"
@@ -110,7 +106,7 @@ const currentSubpostDetails = isCurrentSubpost
               {subpostsWithReadingTime.length > 0 && (
                 <div class="ml-4 space-y-1">
                   {subpostsWithReadingTime.map((subpost) =>
-                    currentPostId === subpost.id ? (
+                    currentPost.id === subpost.id ? (
                       <div class="text-foreground bg-muted mobile-subposts-active-item flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium">
                         <Icon name="subpost" class="size-4 flex-shrink-0" aria-hidden="true" />
                         <div class="flex flex-col">

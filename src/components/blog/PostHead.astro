@@ -2,7 +2,7 @@
 import type { CollectionEntry } from "astro:content"
 
 import { SITE } from "@/config"
-import { isSubpost } from "@/lib/data-utils"
+import { PostManager } from "@/lib/post-manager"
 
 interface Props {
   post: CollectionEntry<"blog">
@@ -24,7 +24,7 @@ const modifiedDate = post.data.modifiedDate
 <meta name="description" content={description} />
 <link rel="canonical" href={SITE.href} />
 
-{isSubpost(post.id) && <meta name="robots" content="noindex" />}
+{PostManager.getInstance().isSubpost(post.id) && <meta name="robots" content="noindex" />}
 
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />

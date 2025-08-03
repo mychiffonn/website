@@ -1,38 +1,28 @@
 ---
-import {
-  getCombinedReadingTime,
-  getParentId,
-  getParentPost,
-  getPostById,
-  getPostReadingTime,
-  getSubpostsForParent,
-  isSubpost
-} from "@/lib/data-utils"
+import { type SubpostContext } from "@/lib/post-manager"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-const { parentId } = Astro.props
-const currentPostId = Astro.params.id as string
-const isCurrentSubpost = isSubpost(currentPostId)
-const rootParentId = isCurrentSubpost ? getParentId(currentPostId) : parentId
+interface Props {
+  subpostContext: SubpostContext
+  className?: string
+}
 
-const currentPost = !isCurrentSubpost ? await getPostById(currentPostId) : null
-const subposts = await getSubpostsForParent(rootParentId)
-const parentPost = isCurrentSubpost ? await getParentPost(currentPostId) : null
+const { subpostContext } = Astro.props
+const { currentPost, parentPost, subposts, metadata } = subpostContext
 
 const activePost = parentPost || currentPost
-const isActivePost = activePost?.id === currentPostId
+const isActivePost = activePost?.id === currentPost.id
 
-const activePostReadingTime = activePost ? await getPostReadingTime(activePost.id) : null
-const activePostCombinedReadingTime =
-  activePost && subposts.length > 0 ? await getCombinedReadingTime(activePost.id) : null
-const subpostsWithReadingTime = await Promise.all(
-  subposts.map(async (subpost) => ({
-    ...subpost,
-    readingTime: await getPostReadingTime(subpost.id)
-  }))
-)
+const activePostMetadata = metadata.get(activePost.id)
+const activePostReadingTime = activePostMetadata?.readingTime
+const activePostCombinedReadingTime = activePostMetadata?.combinedReadingTime
+
+const subpostsWithReadingTime = subposts.map((subpost) => ({
+  ...subpost,
+  readingTime: metadata.get(subpost.id)?.readingTime || "0 min"
+}))
 ---
 
 <div
@@ -93,7 +83,7 @@ const subpostsWithReadingTime = await Promise.all(
           subpostsWithReadingTime.length > 0 && (
             <li class="ml-4 space-y-1">
               {subpostsWithReadingTime.map((subpost) =>
-                currentPostId === subpost.id ? (
+                currentPost.id === subpost.id ? (
                   <div class="text-foreground bg-muted subposts-sidebar-active-item flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-pretty">
                     <Icon name="post-active" class="size-4 flex-shrink-0" />
                     <div class="flex flex-col">
