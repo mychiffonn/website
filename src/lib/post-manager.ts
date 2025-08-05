@@ -16,7 +16,8 @@ export function calculateWordCountFromHtml(
 // TypeScript Interfaces
 // ========================================
 
-export interface Post extends CollectionEntry<'blog'> { }
+export type Post = CollectionEntry<'blog'>
+export type Author = CollectionEntry<'authors'>
 
 export interface ParsedAuthor {
   id: string

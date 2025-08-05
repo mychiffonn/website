@@ -4,10 +4,11 @@ import FormattedDate from "@/components/base/FormattedDate.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import ReadingTime from "@/components/blog/ReadingTime.astro"
-import AvatarComponent from "@/components/ui/avatar"
+
+import AuthorAvatar from "./AuthorAvatar.astro"
 
 interface Props {
-  /** Post metadata containing all post data */
+  /** PostMetadata contains all post data + computed fields + resolved authors */
   metadata: PostMetadata
   /** Display variant - affects layout and linking behavior */
   variant: "card" | "full"
@@ -59,7 +60,7 @@ const itemClasses = {
 }
 
 // Avatar sizes
-const avatarSize = isCard ? "size-4" : "size-5"
+const avatarSize = "size-4"
 const iconSize = "size-3"
 ---
 
@@ -70,14 +71,8 @@ const iconSize = "size-3"
       <div class:list={[isFull && "w-full", itemClasses[variant]]}>
         {metadata.authors.map((author) => (
           <div class="flex items-center gap-x-1.5">
-            <AvatarComponent
-              client:load
-              src={author.avatar}
-              alt={author.name}
-              fallback={author.name[0]}
-              className={`${avatarSize} rounded-full`}
-            />
-            {isCard || !author.isRegistered ? (
+            <AuthorAvatar author={author} class={avatarSize} inferSize />
+            {isCard ? (
               <span>{author.name}</span>
             ) : (
               <Link href={`/authors/${author.id}`} underline class="text-foreground">

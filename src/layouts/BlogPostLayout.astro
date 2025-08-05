@@ -61,23 +61,23 @@ const subpostContext = await PostManager.getInstance().getSubpostContext(current
     <nav class="col-start-2" aria-label="Breadcrumb">
       <Breadcrumbs
         items={[
-          { href: "/blog", label: "Blog", icon: "mingcute:book-5-line" },
+          { href: `/${post.collection}`, label: "Blog", icon: "mingcute:book-5-line" },
           ...(isCurrentSubpost && parentPost
             ? [
                 {
-                  href: `/blog/${parentPost.id}`,
+                  href: `/${post.collection}/${parentPost.id}`,
                   label: parentPost.data.title,
                   icon: "mingcute:documents-line"
                 },
                 {
-                  href: `/blog/${currentPostId}`,
+                  href: `/${post.collection}/${currentPostId}`,
                   label: post.data.title,
                   icon: "mingcute:document-line"
                 }
               ]
             : [
                 {
-                  href: `/blog/${currentPostId}`,
+                  href: `/${post.collection}/${currentPostId}`,
                   label: post.data.title,
                   icon: "mingcute:book-line"
                 }
