@@ -1,0 +1,45 @@
+---
+import { Image, type LocalImageProps, type RemoteImageProps } from "astro:assets"
+
+import { cn } from "@/lib/utils"
+
+type AstroImageProps = LocalImageProps | RemoteImageProps
+
+export interface Props extends Omit<AstroImageProps, "class"> {
+  fallback?: string
+  "data-slot"?: string
+  class?: string
+}
+
+const {
+  fallback = Astro.props.alt?.charAt(0) || "?",
+  "data-slot": dataSlot = "avatar-image",
+  class: className,
+  ...imageProps
+} = Astro.props
+
+// Auto-add inferSize for remote images without dimensions
+const isRemoteImage = typeof imageProps.src === "string" && imageProps.src.startsWith("http")
+const shouldInferSize =
+  isRemoteImage && !imageProps.width && !imageProps.height && !("inferSize" in imageProps)
+---
+
+<div class={cn("relative flex shrink-0 overflow-hidden rounded-full", className)}>
+  <Image
+    {...imageProps as any}
+    {...shouldInferSize && { inferSize: true }}
+    class="aspect-square size-full object-cover object-center"
+    data-slot={dataSlot}
+  />
+
+  <div
+    class="bg-muted text-foreground flex size-full items-center justify-center rounded-full font-medium uppercase"
+    class:list={[{ hidden: !!imageProps.src }]}
+    data-slot="avatar-fallback"
+    style="font-size: clamp(0.5rem, 25%, 1.5rem)"
+  >
+    <slot name="fallback">
+      {fallback}
+    </slot>
+  </div>
+</div>
