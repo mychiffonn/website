@@ -1,0 +1,41 @@
+---
+import type { MarkdownHeading } from "astro"
+
+import { cn } from "@/lib/utils"
+
+interface Props {
+  heading: MarkdownHeading
+  href: string
+  variant: "desktop" | "mobile"
+  className?: string
+  dataAttribute?: string
+}
+
+const { heading, href, variant, className, dataAttribute } = Astro.props
+
+const baseClasses =
+  variant === "mobile"
+    ? "mobile-toc-item text-foreground/70 hover:bg-muted/50 hover:text-foreground focus-visible:ring-ring block px-3 py-2 text-sm underline decoration-transparent underline-offset-[3px] transition-all duration-200 hover:decoration-inherit focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+    : "hover:bg-muted/50 focus-visible:ring-ring block px-2 py-1 underline decoration-transparent underline-offset-[3px] transition-all duration-200 hover:decoration-inherit focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+---
+
+<a
+  href={href}
+  class={cn(baseClasses, className)}
+  data-heading-link={dataAttribute || heading.slug}
+  data-heading-id={variant === "mobile" ? heading.slug : undefined}
+>
+  {
+    variant === "mobile" ? (
+      <span class="flex items-center gap-2">
+        <span
+          class="bg-muted-foreground/40 flex size-1.5 flex-shrink-0 rounded-full"
+          aria-hidden="true"
+        />
+        <span class="line-clamp-2">{heading.text}</span>
+      </span>
+    ) : (
+      heading.text
+    )
+  }
+</a>

@@ -1,11 +1,10 @@
 ---
 import type { TOCSection } from "@/lib/post-manager"
 import { PostManager } from "@/lib/post-manager"
-import { getHeadingMargin } from "@/lib/toc-utils"
-import { cn } from "@/lib/utils"
+import TOCSectionComponent from "@/components/blog/TOCSection.astro"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-type Props = {
+interface Props {
   sections: TOCSection[]
   currentPostId: string
 }
@@ -15,12 +14,15 @@ const { sections, currentPostId } = Astro.props
 const blogManager = PostManager.getInstance()
 const isCurrentSubpost = blogManager.isSubpost(currentPostId)
 const parentId = isCurrentSubpost ? blogManager.getParentId(currentPostId) : currentPostId
+const hasSections = sections.length > 0
 ---
 
 {
-  sections.length > 0 && (
-    <div
+  hasSections && (
+    <aside
       id="toc-sidebar-container"
+      role="complementary"
+      aria-labelledby="toc-heading"
       class="sticky top-20 col-start-1 row-span-1 mr-8 ml-auto hidden h-[calc(100vh-5rem)] max-w-md xl:block"
     >
       <ScrollArea
@@ -29,110 +31,51 @@ const parentId = isCurrentSubpost ? blogManager.getParentId(currentPostId) : cur
         type="hover"
         data-toc-scroll-area
       >
-        <div class="flex flex-col gap-2 px-4">
-          <span class="text-lg font-medium">Table of Contents</span>
-          {sections.map((section, index) => {
-            const isFirstSubpost =
-              section.type === "subpost" && (index === 0 || sections[index - 1].type === "parent")
+        <div class="flex flex-col gap-2 p-2">
+          <header>
+            <h2
+              id="toc-heading"
+              class="text-foreground/80 border-border/50 mb-2 border-b pb-1 text-sm font-semibold"
+            >
+              Table of Contents
+            </h2>
+          </header>
+          <nav aria-labelledby="toc-heading">
+            <ul class="space-y-2" role="list">
+              {sections.map((section, index) => {
+                const isFirstSubpost =
+                  section.type === "subpost" &&
+                  (index === 0 || sections[index - 1].type === "parent")
 
-            return (
-              <>
-                {isFirstSubpost && (
-                  <div class="mt-2 flex items-center gap-2">
-                    <div class="bg-border h-px flex-1" />
-                    <span class="text-muted-foreground text-xs font-medium">Subposts</span>
-                    <div class="bg-border h-px flex-1" />
-                  </div>
-                )}
-
-                {section.type === "parent" ? (
-                  <ul class="flex list-none flex-col gap-y-2">
-                    {section.headings.map((heading) => (
-                      <li
-                        class={cn(
-                          "text-sm",
-                          getHeadingMargin(heading.depth),
-                          isCurrentSubpost ? "text-foreground/40" : "text-foreground/60"
-                        )}
+                return (
+                  <li role="listitem">
+                    {isFirstSubpost && (
+                      <div
+                        class="mb-4 flex items-center gap-3"
+                        role="separator"
+                        aria-label="Subposts section"
                       >
-                        <a
-                          href={
-                            isCurrentSubpost
-                              ? `/blog/${parentId}#${heading.slug}`
-                              : `#${heading.slug}`
-                          }
-                          class="marker:text-foreground/30 list-none underline decoration-transparent underline-offset-[3px] transition-colors duration-200 hover:decoration-inherit"
-                          data-heading-link={heading.slug}
-                        >
-                          {heading.text}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div
-                    class={cn(
-                      "border p-2",
-                      section.subpostId === currentPostId ? "bg-muted/50" : ""
+                        <div class="bg-border h-px flex-1" />
+                        <span class="text-muted-foreground px-2 text-xs font-semibold tracking-wider uppercase">
+                          Subposts
+                        </span>
+                        <div class="bg-border h-px flex-1" />
+                      </div>
                     )}
-                  >
-                    <ul class="flex list-none flex-col gap-y-2">
-                      <li
-                        class={cn(
-                          "text-xs font-medium",
-                          section.subpostId === currentPostId
-                            ? "text-foreground"
-                            : "text-foreground/60"
-                        )}
-                      >
-                        <a
-                          href={
-                            section.subpostId === currentPostId ? "#" : `/blog/${section.subpostId}`
-                          }
-                          class="marker:text-foreground/30 list-none underline decoration-transparent underline-offset-[3px] transition-colors duration-200 hover:decoration-inherit"
-                          data-heading-link={
-                            section.subpostId === currentPostId ? "top" : `${section.subpostId}-top`
-                          }
-                        >
-                          {section.title}
-                        </a>
-                      </li>
-                      {section.headings.map((heading) => (
-                        <li
-                          class={cn(
-                            "text-xs",
-                            getHeadingMargin(heading.depth),
-                            section.subpostId === currentPostId
-                              ? "text-foreground/60"
-                              : "text-foreground/30"
-                          )}
-                        >
-                          <a
-                            href={
-                              section.subpostId === currentPostId
-                                ? `#${heading.slug}`
-                                : `/blog/${section.subpostId}#${heading.slug}`
-                            }
-                            class="marker:text-foreground/30 hover:text-foreground/60 list-none underline decoration-transparent underline-offset-[3px] transition-colors duration-200 hover:decoration-inherit"
-                            data-heading-link={
-                              section.subpostId === currentPostId
-                                ? heading.slug
-                                : `${section.subpostId}-${heading.slug}`
-                            }
-                          >
-                            {heading.text}
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </>
-            )
-          })}
+                    <TOCSectionComponent
+                      section={section}
+                      currentPostId={currentPostId}
+                      isCurrentSubpost={isCurrentSubpost}
+                      parentId={parentId}
+                    />
+                  </li>
+                )
+              })}
+            </ul>
+          </nav>
         </div>
       </ScrollArea>
-    </div>
+    </aside>
   )
 }
 
@@ -147,7 +90,6 @@ const parentId = isCurrentSubpost ? blogManager.getParentId(currentPostId) : cur
     getScrollAreaSelector() {
       return "[data-radix-scroll-area-viewport]"
     }
-  }
 
     getContainerAttribute() {
       return "data-toc-scroll-area"
