@@ -50,7 +50,11 @@ const hasSubposts = subpostsWithWordCount.length > 0
                   wordCount={activePostWordCount}
                   combinedWordCount={activePostCombinedWordCount || undefined}
                   variant="sidebar"
-                  href={isActivePost ? undefined : `/blog/${activePost.id}#post-title`}
+                  href={
+                    isActivePost
+                      ? undefined
+                      : `/${activePost.collection}/${activePost.id}#post-title`
+                  }
                   isParentPost={!!parentPost}
                 />
               </li>

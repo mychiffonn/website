@@ -22,7 +22,7 @@ const { post, isActive, wordCount, combinedWordCount, variant, iconName, href, i
 
 const defaultIconName =
   iconName || (isActive ? "post-active" : isParentPost ? "parent-post" : "post")
-const linkHref = href || `/blog/${post.id}`
+const linkHref = href || `/${post.collection}/${post.id}`
 ---
 
 {

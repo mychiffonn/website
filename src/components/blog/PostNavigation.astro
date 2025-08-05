@@ -22,7 +22,7 @@ const isSubpost = !!parentPost
   class={cn("col-start-2 grid grid-cols-1 gap-4", isSubpost ? "sm:grid-cols-3" : "sm:grid-cols-2")}
 >
   <Button
-    href={olderPost ? `/blog/${olderPost.id}#post-title` : "#"}
+    href={olderPost ? `/${currentPost.collection}/${olderPost.id}#post-title` : "#"}
     variant="outline"
     class={cn(
       "rounded-lg group flex items-center justify-start size-full",
@@ -44,7 +44,7 @@ const isSubpost = !!parentPost
   {
     isSubpost && (
       <Button
-        href={parentPost ? `/blog/${parentPost.id}#post-title` : "#"}
+        href={parentPost ? `/${currentPost.collection}/${parentPost.id}#post-title` : "#"}
         variant="outline"
         class={cn(
           "group flex size-full items-center justify-center rounded-lg",
@@ -66,7 +66,7 @@ const isSubpost = !!parentPost
   }
 
   <Button
-    href={newerPost ? `/blog/${newerPost.id}#post-title` : "#"}
+    href={newerPost ? `/${currentPost.collection}/${newerPost.id}#post-title` : "#"}
     variant="outline"
     class={cn(
       "rounded-lg group flex items-center justify-end size-full",

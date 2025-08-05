@@ -49,7 +49,7 @@ const { subpost, isActive, variant } = Astro.props
     </div>
   ) : (
     <Link
-      href={`/blog/${subpost.id}`}
+      href={`/${subpost.collection}/${subpost.id}`}
       class={cn(
         "group/subpost flex items-start gap-2 px-2 py-2 text-sm",
         "hover:bg-accent transition-all duration-200",
