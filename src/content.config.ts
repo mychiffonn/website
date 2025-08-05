@@ -51,10 +51,18 @@ const authors = defineCollection({
     id: z.string(),
     name: z.string(),
     pronouns: z.string().optional(),
-    /** URL path to avatar, or /public/path/to/image.jpg.
+    /**
+     * Optional URL path to avatar, or /public/path/to/image.jpg.
      * The latter renders to /path/to/image.jpg, which you should use
      */
-    avatar: z.string().url().or(z.string().startsWith("/")),
+    avatar: z
+      .string()
+      .url()
+      .or(z.string().startsWith("/"))
+      .optional()
+      .describe(
+        "This author's avatar field only deal with image under /public/ directory or a remote image"
+      ),
     bio: z.string().max(200).optional(),
     links: ProfileLinkConfigSchema
   })
