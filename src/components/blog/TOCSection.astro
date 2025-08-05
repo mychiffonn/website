@@ -1,0 +1,102 @@
+---
+import type { TOCSection } from "@/lib/post-manager"
+import { getHeadingMargin } from "@/lib/toc-utils"
+import { cn } from "@/lib/utils"
+import TOCHeadingLink from "@/components/blog/TOCHeadingLink.astro"
+
+interface Props {
+  section: TOCSection
+  currentPostId: string
+  isCurrentSubpost: boolean
+  parentId?: string
+}
+
+const { section, currentPostId, isCurrentSubpost, parentId } = Astro.props
+
+const isActiveSection = section.subpostId === currentPostId
+---
+
+{
+  section.type === "parent" ? (
+    <div class="space-y-1">
+      <h3 class="text-muted-foreground/60 mb-1 px-2 text-xs font-medium tracking-wider uppercase">
+        Main Post
+      </h3>
+      <ul class="space-y-1" role="list">
+        {section.headings.map((heading) => (
+          <li
+            role="listitem"
+            class={cn(
+              "text-sm transition-colors",
+              getHeadingMargin(heading.depth),
+              isCurrentSubpost ? "text-foreground/40" : "text-foreground/60"
+            )}
+          >
+            <TOCHeadingLink
+              heading={heading}
+              href={isCurrentSubpost ? `/blog/${parentId}#${heading.slug}` : `#${heading.slug}`}
+              variant="desktop"
+              className={cn(isCurrentSubpost ? "text-foreground/40" : "text-foreground/60")}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : (
+    <article
+      class={cn(
+        "border-l-2 py-1 pl-2 transition-all duration-200",
+        isActiveSection ? "border-primary bg-muted/50" : "border-border/30 hover:border-border/60"
+      )}
+    >
+      <div class="space-y-1">
+        <h4
+          class={cn(
+            "text-sm font-medium",
+            isActiveSection ? "text-foreground" : "text-foreground/70"
+          )}
+        >
+          <a
+            href={isActiveSection ? "#" : `/blog/${section.subpostId}`}
+            class="hover:bg-muted/50 focus-visible:ring-ring block rounded-md px-2 py-1.5 underline decoration-transparent underline-offset-[3px] transition-all duration-200 hover:decoration-inherit focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            data-heading-link={isActiveSection ? "top" : `${section.subpostId}-top`}
+            aria-current={isActiveSection ? "page" : undefined}
+          >
+            {section.title}
+          </a>
+        </h4>
+        {section.headings.length > 0 && (
+          <ul class="ml-2 space-y-0.5" role="list">
+            {section.headings.map((heading) => (
+              <li
+                role="listitem"
+                class={cn(
+                  "text-xs transition-colors",
+                  getHeadingMargin(heading.depth),
+                  isActiveSection ? "text-foreground/70" : "text-foreground/40"
+                )}
+              >
+                <TOCHeadingLink
+                  heading={heading}
+                  href={
+                    isActiveSection
+                      ? `#${heading.slug}`
+                      : `/blog/${section.subpostId}#${heading.slug}`
+                  }
+                  variant="desktop"
+                  dataAttribute={
+                    isActiveSection ? heading.slug : `${section.subpostId}-${heading.slug}`
+                  }
+                  className={cn(
+                    "hover:text-foreground/80 rounded-md px-2 py-1.5",
+                    isActiveSection ? "text-foreground/70" : "text-foreground/40"
+                  )}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </article>
+  )
+}
