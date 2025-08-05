@@ -73,10 +73,10 @@ const iconSize = "size-3"
           <div class="flex items-center gap-x-1.5">
             <AuthorAvatar author={author} class={avatarSize} inferSize />
             {isCard ? (
-              <span>{author.data.name}</span>
+              <span>{author.name}</span>
             ) : (
-              <Link href={`/${author.collection}/${author.id}`} underline class="text-foreground">
-                {author.data.name}
+              <Link href={`/authors/${author.id}`} underline class="text-foreground">
+                {author.name}
               </Link>
             )}
           </div>

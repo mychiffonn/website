@@ -1,9 +1,9 @@
 ---
-import type { Author } from "@/lib/post-manager"
+import type { ParsedAuthor } from "@/lib/post-manager"
 import Avatar from "@/components/base/Avatar.astro"
 
 interface Props {
-  author: Author
+  author: ParsedAuthor
   class?: string
   "data-slot"?: string
   fallbackStyle?: "first-initial" | "all-initials"
@@ -18,8 +18,8 @@ const {
   ...imageProps
 } = Astro.props
 
-const authorName = author?.data?.name || author?.id || "Unknown"
-const authorAvatar = author?.data?.avatar
+const authorName = author?.name || author?.id || "Unknown"
+const authorAvatar = author?.avatar
 
 // Default placeholder for users without avatars
 const defaultAvatar =

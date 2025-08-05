@@ -1,6 +1,5 @@
 ---
-import type { CollectionEntry } from "astro:content"
-
+import { PostManager, type Author } from "@/lib/post-manager"
 import { cn } from "@/lib/utils"
 import Link from "@/components/base/Link.astro"
 import ProfileLinks from "@/components/profile/ProfileLinks.astro"
@@ -8,13 +7,17 @@ import ProfileLinks from "@/components/profile/ProfileLinks.astro"
 import AuthorAvatar from "./AuthorAvatar.astro"
 
 interface Props {
-  author: CollectionEntry<"authors">
+  author: Author
 }
 
 const { author } = Astro.props
 const { name, bio, pronouns, links } = author.data
 const currentPath = Astro.url.pathname
 const isAuthorPage = currentPath === `/${author.collection}/${author.id}`
+
+// Convert to ParsedAuthor for AuthorAvatar component
+const postManager = PostManager.getInstance()
+const [parsedAuthor] = await postManager.parseAuthors([author.id])
 ---
 
 <div
@@ -23,7 +26,7 @@ const isAuthorPage = currentPath === `/${author.collection}/${author.id}`
   <div class="flex flex-wrap gap-4">
     <Link href={`/${author.collection}/${author.id}`}>
       <AuthorAvatar
-        author={author}
+        author={parsedAuthor}
         fallbackStyle="all-initials"
         class={cn(
           'size-36 rounded-md [&>[data-slot="avatar-fallback"]]:rounded-md',
