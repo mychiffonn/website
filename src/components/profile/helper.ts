@@ -56,7 +56,7 @@ export const PROFILE_ICON_MAP = {
   figma: { label: 'Stack Overflow', iconName: 'mingcute:figma-line' },
 
   // Professional & Portfolio
-  website: { label: 'Website', iconName: 'mingcute:world-line' },
+  website: { label: 'Website', iconName: 'mingcute:globe-2-line' },
   portfolio: { label: 'Portfolio', iconName: 'mingcute:briefcase-line' },
   blog: { label: 'Blog', iconName: 'mingcute:pen-line' },
   cv: { label: 'CV', iconName: 'academicons:cv' },
