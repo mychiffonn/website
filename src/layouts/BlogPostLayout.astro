@@ -24,14 +24,7 @@ interface Props {
 const { postContext } = Astro.props
 
 // Destructure context for cleaner code
-const {
-  post,
-  headings,
-  isSubpost: isCurrentSubpost,
-  parentPost,
-  metadata,
-  tocSections
-} = postContext
+const { post, headings, isSubpost, parentPost, metadata, tocSections } = postContext
 
 const currentPostId = post.id
 const { hasSubposts } = metadata
@@ -62,7 +55,7 @@ const subpostContext = await PostManager.getInstance().getSubpostContext(current
       <Breadcrumbs
         items={[
           { href: `/${post.collection}`, label: "Blog", icon: "mingcute:book-5-line" },
-          ...(isCurrentSubpost && parentPost
+          ...(isSubpost && parentPost
             ? [
                 {
                   href: `/${post.collection}/${parentPost.id}`,
@@ -136,7 +129,7 @@ const subpostContext = await PostManager.getInstance().getSubpostContext(current
 
     {/** Subposts sidebar */}
     {
-      subpostContext && (hasSubposts || isCurrentSubpost) && (
+      subpostContext && (hasSubposts || isSubpost) && (
         <SubpostsSidebar subpostContext={subpostContext} class="w-64" />
       )
     }
