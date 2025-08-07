@@ -27,10 +27,15 @@ const processedLinks = getProcessedProfileLinks(links, includeRss)
           aria-label={label}
           title={label}
           class:list={[
-            "text-muted-foreground flex items-center gap-x-1 text-sm",
+            "text-muted-foreground flex touch-manipulation items-center transition-colors",
+            "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
             includeLabel
-              ? ""
-              : "hover:bg-accent hover:text-accent-foreground size-10 touch-manipulation justify-center rounded-md border p-1 transition-colors"
+              ? "gap-x-1 p-1"
+              : [
+                  "size-10 justify-center rounded-md border",
+                  "has-[>svg:only-child]:aspect-square",
+                  "hover:text-accent-foreground hover:bg-accent"
+                ]
           ]}
           external={isExternal}
         >
