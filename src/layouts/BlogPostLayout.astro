@@ -5,9 +5,9 @@ import { Image } from "astro:assets"
 
 import { PostManager, type PostContext } from "@/lib/post-manager"
 import Layout from "@/layouts/Layout.astro"
+import BackToTop from "@/components/base/BackToTop.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
-import BackToTop from "@/components/blog/BackToTop.astro"
 import PostHead from "@/components/blog/PostHead.astro"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
 import PostNavigation from "@/components/blog/PostNavigation.astro"
@@ -24,14 +24,7 @@ interface Props {
 const { postContext } = Astro.props
 
 // Destructure context for cleaner code
-const {
-  post,
-  headings,
-  isSubpost: isCurrentSubpost,
-  parentPost,
-  metadata,
-  tocSections
-} = postContext
+const { post, headings, isSubpost, parentPost, metadata, tocSections } = postContext
 
 const currentPostId = post.id
 const { hasSubposts } = metadata
@@ -43,14 +36,14 @@ const subpostContext = await PostManager.getInstance().getSubpostContext(current
 <Layout>
   <PostHead slot="head" post={post} />
   {
-    subpostContext && (hasSubposts || isCurrentSubpost) && (
-      <SubpostsHeader slot="subposts-navigation" subpostContext={subpostContext} />
+    subpostContext && (hasSubposts || isSubpost) && (
+      <SubpostsHeader slot="subposts-navigation-header" subpostContext={subpostContext} />
     )
   }
   {
     headings?.length > 0 &&
-      !(isCurrentSubpost && headings.length === 1 && headings[0].text === post.data.title) && (
-        <TOCHeader slot="table-of-contents" headings={headings} />
+      !(isSubpost && headings.length === 1 && headings[0].text === post.data.title) && (
+        <TOCHeader slot="toc-header" headings={headings} />
       )
   }
 
@@ -62,7 +55,7 @@ const subpostContext = await PostManager.getInstance().getSubpostContext(current
       <Breadcrumbs
         items={[
           { href: `/${post.collection}`, label: "Blog", icon: "mingcute:book-5-line" },
-          ...(isCurrentSubpost && parentPost
+          ...(isSubpost && parentPost
             ? [
                 {
                   href: `/${post.collection}/${parentPost.id}`,
@@ -136,7 +129,7 @@ const subpostContext = await PostManager.getInstance().getSubpostContext(current
 
     {/** Subposts sidebar */}
     {
-      subpostContext && (hasSubposts || isCurrentSubpost) && (
+      subpostContext && (hasSubposts || isSubpost) && (
         <SubpostsSidebar subpostContext={subpostContext} class="w-64" />
       )
     }

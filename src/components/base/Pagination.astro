@@ -115,7 +115,6 @@ const pages = generatePages()
       <Button
         href={currentPage < totalPages ? getPageUrl(currentPage + 1) : undefined}
         variant="ghost"
-        size="default"
         class={cn(
           "gap-1 px-2.5 sm:pr-2.5",
           currentPage === totalPages && "pointer-events-none opacity-50"

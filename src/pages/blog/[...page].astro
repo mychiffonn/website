@@ -8,7 +8,7 @@ import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
-import Pagination from "@/components/blog/Pagination.astro"
+import Pagination from "@/components/base/Pagination.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import PageHead from "@/components/layout/PageHead.astro"
@@ -54,7 +54,7 @@ const displayTags = sortedTags.slice(0, 15)
             ))}
           </div>
           <div class="flex justify-end">
-            <Button href="/tags" variant="outline" size="sm" class="group">
+            <Button href="/tags" variant="outline" class="group">
               <span>View all {sortedTags.length} tags</span>
               <Icon
                 name="mingcute:arrow-right-line"
