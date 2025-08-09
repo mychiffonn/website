@@ -2,7 +2,7 @@ import { defineCollection, reference, z } from "astro:content"
 import { file, glob } from "astro/loaders"
 
 import { ProfileLinkConfigSchema } from "@/lib/schemas"
-import { dedupLowerCase, dedupPreserveCase } from "@/lib/string-manipulation"
+import { dedupLowerCase, dedupPreserveCase, slugify } from "@/lib/string-manipulation"
 
 /** Accepts both YYYY-MM and YYYY-MM-DD formats */
 const dateSchema = z
@@ -30,8 +30,11 @@ const blog = defineCollection({
         modifiedDate: z.coerce.date().optional(),
         order: z.number().optional(),
         image: image().optional(),
-        tags: z.array(z.string()).default([]).transform(dedupLowerCase),
-        authors: z.array(reference("authors")).optional(),
+        tags: z
+          .array(z.string())
+          .default([])
+          .transform((arr) => dedupLowerCase(arr).map((tag) => slugify(tag))),
+        authors: z.array(reference("authors")).default([]),
         draft: z.boolean().default(false)
       })
       .refine(
@@ -82,7 +85,10 @@ const projects = defineCollection({
       release: z.string().url().optional(),
       context: z.enum(["school", "personal", "work", "collab"]).optional(),
       description: z.string().max(150).optional(),
-      tags: z.array(z.string()).default([]).transform(dedupPreserveCase)
+      tags: z
+        .array(z.string())
+        .default([])
+        .transform((arr) => dedupPreserveCase(arr).map((tag) => slugify(tag)))
     })
     .refine(
       // Validate that toDate is after fromDate
