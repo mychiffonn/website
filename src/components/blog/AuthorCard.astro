@@ -1,5 +1,5 @@
 ---
-import { PostManager, type Author } from "@/lib/post-manager"
+import type { AuthorData } from "@/lib/blog/types"
 import { cn } from "@/lib/utils"
 import Link from "@/components/base/Link.astro"
 import ProfileLinks from "@/components/profile/ProfileLinks.astro"
@@ -7,39 +7,41 @@ import ProfileLinks from "@/components/profile/ProfileLinks.astro"
 import AuthorAvatar from "./AuthorAvatar.astro"
 
 interface Props {
-  author: Author
+  author: AuthorData
 }
 
 const { author } = Astro.props
-const { name, bio, pronouns, links } = author.data
+const { id, name, bio, pronouns, links } = author
 const currentPath = Astro.url.pathname
-const isAuthorPage = currentPath === `/${author.collection}/${author.id}`
-
-// Convert to ParsedAuthor for AuthorAvatar component
-const postManager = PostManager.getInstance()
-const [parsedAuthor] = await postManager.parseAuthors([author.id])
+const isAuthorPage = currentPath === `/authors/${id}`
 ---
 
 <div
-  class="has-[a:hover]:bg-secondary/50 overflow-hidden rounded-xl border p-4 transition-colors duration-300 ease-in-out"
+  class={cn(
+    "overflow-hidden rounded-xl border p-4",
+    "has-[a:hover]:bg-secondary transition-colors duration-300 ease-in-out"
+  )}
 >
   <div class="flex flex-wrap gap-4">
-    <Link href={`/${author.collection}/${author.id}`}>
+    <Link href={`/authors/${id}`}>
       <AuthorAvatar
-        author={parsedAuthor}
+        author={author}
         fallbackStyle="all-initials"
+        width={40}
         class={cn(
-          'size-36 rounded-md [&>[data-slot="avatar-fallback"]]:rounded-md',
+          "size-40",
           !isAuthorPage &&
             "hover:ring-accent transition-shadow duration-300 hover:cursor-pointer hover:ring-3"
         )}
-        inferSize
       />
     </Link>
     <div class="flex grow flex-col justify-between gap-y-4">
       <div>
         <div class="flex flex-wrap items-center gap-x-2">
-          <Link href={`/${author.collection}/${author.id}`} class="hover:text-primary">
+          <Link
+            href={`/authors/${id}`}
+            class={!isAuthorPage ? "hover:text-primary hover:underline" : ""}
+          >
             <h3 class="text-lg font-medium">{name}</h3>
           </Link>
           {pronouns && <span class="text-muted-foreground text-sm">({pronouns})</span>}

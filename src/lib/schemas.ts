@@ -26,6 +26,9 @@ export const SiteConfigSchema = z.object({
   featuredPostCount: z.number().positive().default(2),
   postsPerPage: z.number().positive().default(8),
 
+  /** TOC max depth of markdown headings, between 1 and 6 */
+  tocMaxDepth: z.number().min(1).max(6).default(3),
+
   // Theme settings
   favicon: z.string().default('/favicon.ico'),
   prerender: z.boolean().default(true),

@@ -1,5 +1,5 @@
 ---
-import type { PostMetadata } from "@/lib/post-manager"
+import type { PostMeta } from "@/lib/blog/types"
 import FormattedDate from "@/components/base/FormattedDate.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
@@ -8,17 +8,13 @@ import ReadingTime from "@/components/base/ReadingTime.astro"
 import AuthorAvatar from "./AuthorAvatar.astro"
 
 interface Props {
-  /** PostMetadata contains all post data + computed fields + resolved authors */
-  metadata: PostMetadata
-  /** Display variant - affects layout and linking behavior */
+  metadata: PostMeta
   variant: "card" | "full"
-  /** Custom container class */
-  containerClass?: string
-  /** Show specific metadata items */
+  class?: string
   showItems?: {
     authors?: boolean
-    publishDate?: boolean
-    modifiedDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     readingTime?: boolean
     subpostCount?: boolean
   }
@@ -27,51 +23,38 @@ interface Props {
 const {
   metadata,
   variant = "full",
-  containerClass,
+  class: className,
   showItems = {
     authors: true,
-    publishDate: true,
-    modifiedDate: true,
+    createdAt: true,
+    updatedAt: true,
     readingTime: true,
     subpostCount: true
   }
 } = Astro.props
 
-// Determine word count for reading time calculation
 const wordCount =
   metadata.hasSubposts && metadata.combinedWordCount
     ? metadata.combinedWordCount
     : metadata.wordCount
 
-// Layout configurations for different variants
 const isCard = variant === "card"
-const isFull = variant === "full"
-
-// Container classes based on variant
-const containerClasses = {
-  card: "text-muted-foreground flex flex-wrap items-center gap-x-3 gap-y-1 text-sm",
-  full: "text-muted-foreground divide-border flex flex-col items-center justify-center divide-y text-xs sm:flex-row sm:flex-wrap sm:divide-x sm:divide-y-0 sm:text-sm"
-}
-
-// Item classes based on variant
-const itemClasses = {
-  card: "flex items-center gap-x-1",
-  full: "flex items-center justify-center gap-x-2 py-2 sm:w-fit sm:px-2 sm:py-0 first:sm:pl-0 last:sm:pr-0"
-}
-
-// Avatar sizes
-const avatarSize = "size-4"
-const iconSize = "size-3"
 ---
 
-<div class:list={[containerClasses[variant], containerClass]}>
-  {/** Authors */}
+<div
+  id="post-metadata"
+  class:list={[
+    "text-muted-foreground flex items-center gap-3 text-sm",
+    isCard ? "card flex-wrap" : "flex-col justify-center sm:flex-row",
+    className
+  ]}
+>
   {
     showItems.authors && metadata.authors.length > 0 && (
-      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
+      <div class="flex items-center gap-1.5">
         {metadata.authors.map((author) => (
-          <div class="flex items-center gap-x-1.5">
-            <AuthorAvatar author={author} class={avatarSize} inferSize />
+          <div class="flex items-center gap-1">
+            <AuthorAvatar author={author} class="size-4" />
             {isCard ? (
               <span>{author.name}</span>
             ) : (
@@ -85,57 +68,56 @@ const iconSize = "size-3"
     )
   }
 
-  {/** Publish date */}
   {
-    showItems.publishDate && (
-      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
-        <Icon name="publish" class={iconSize} />
-        <FormattedDate date={metadata.publishDate} />
+    showItems.createdAt && (
+      <div class="flex items-center gap-1">
+        <Icon name="publish" class="size-4" aria-label="Published" />
+        <FormattedDate date={metadata.createdAt} />
       </div>
     )
   }
 
-  {/** Modified date */}
   {
-    showItems.modifiedDate && metadata.modifiedDate && (
-      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
-        <Icon name="edit" class={iconSize} />
-        <FormattedDate date={metadata.modifiedDate} />
+    showItems.updatedAt && metadata.updatedAt && (
+      <div class="flex items-center gap-1">
+        <Icon name="edit" class="size-4" aria-label="Updated" />
+        <FormattedDate date={metadata.updatedAt} />
       </div>
     )
   }
 
-  {/** Reading time */}
-  {
-    showItems.readingTime && wordCount > 0 && (
-      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
-        <Icon name="reading-time" class={iconSize} />
-        {isFull ? (
-          <span>
-            <ReadingTime wordCount={metadata.wordCount} />
-            {metadata.combinedWordCount && metadata.combinedWordCount !== metadata.wordCount && (
-              <span class="opacity-75">
-                (<ReadingTime wordCount={metadata.combinedWordCount} customSuffix="" />
-                total)
-              </span>
-            )}
-          </span>
-        ) : (
-          <ReadingTime wordCount={wordCount} />
-        )}
-      </div>
-    )
-  }
-
-  {/** Subpost count */}
   {
     showItems.subpostCount && metadata.hasSubposts && (
-      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
-        <Icon name="subposts" class={iconSize} />
+      <div class="flex items-center gap-1">
+        <Icon name="subposts" class="size-4" />
         <span>
           {metadata.subpostCount} subpost{metadata.subpostCount === 1 ? "" : "s"}
         </span>
       </div>
     )
   }
+
+  {
+    showItems.readingTime && wordCount > 0 && (
+      <div class="flex items-center gap-1">
+        <Icon name="reading-time" class="size-4" />
+        <ReadingTime
+          wordCount={isCard ? wordCount : metadata.wordCount}
+          combinedWordCount={!isCard ? metadata.combinedWordCount : undefined}
+        />
+      </div>
+    )
+  }
 </div>
+<style>
+  /* Add separator | to blog, but not stacked layout */
+  #post-metadata:not(.flex-col) > *:not(:first-child)::before {
+    content: "|";
+    color: color-mix(in srgb, currentColor 50%, transparent);
+    margin-inline: 0.5rem;
+  }
+
+  #post-metadata.card > *:not(:first-child)::before {
+    display: none;
+  }
+</style>

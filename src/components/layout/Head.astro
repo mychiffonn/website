@@ -1,8 +1,101 @@
 ---
 import { ClientRouter } from "astro:transitions"
 
-import { SITE } from "@/config"
-import Favicons from "@/components/base/Favicons.astro"
+import { PROFILE, SITE } from "@/config"
+
+interface Props {
+  title?: string
+  description?: string
+  image?: string | URL
+  noindex?: boolean
+  type?: "website" | "article" | "profile"
+  publishedTime?: Date
+  modifiedTime?: Date
+  author?: string
+  tags?: string[]
+  section?: string
+}
+
+const {
+  title,
+  description = SITE.description,
+  image,
+  noindex = false,
+  type = "website",
+  publishedTime,
+  modifiedTime,
+  author,
+  tags = [],
+  section
+} = Astro.props
+
+// SEO title optimization
+const seoTitle = title
+  ? title === SITE.title
+    ? SITE.title // Don't duplicate if title is already site title
+    : `${title} - ${SITE.title} - ${PROFILE.tagline}`
+  : `${SITE.title} - ${PROFILE.tagline}`
+
+// Image handling with fallback
+const socialImage = (() => {
+  // 1. If no image, use social-preview.png
+  if (!image) {
+    return new URL("/img/social-preview.png", Astro.site)
+  }
+  // 2. If image is already a URL object, use it directly
+  if (image instanceof URL) {
+    return image
+  }
+  // 3. If image is a string
+  if (typeof image === "string") {
+    // Check if it's a remote link (starts with http:// or https://)
+    if (image.startsWith("http")) {
+      return image
+    }
+    // If it starts with /, prepend Astro.site
+    if (image.startsWith("/")) {
+      return new URL(image, Astro.site)
+    }
+    // For other strings, prepend Astro.site
+    return new URL(image, Astro.site)
+  }
+  // 4. For any other type, fall back to social-preview.png
+  return new URL("/img/social-preview.png", Astro.site)
+})()
+
+// Canonical URL optimization
+const canonicalURL = Astro.site?.toString() || SITE.href
+
+// JSON-LD structured data for better SEO
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": type === "article" ? "BlogPosting" : "WebSite",
+  name: seoTitle,
+  description: description,
+  url: canonicalURL,
+  image: socialImage.toString(),
+  author: author
+    ? {
+        "@type": "Person",
+        name: author
+      }
+    : {
+        "@type": "Person",
+        name: SITE.author || SITE.title
+      },
+  publisher: {
+    "@type": "Person",
+    name: SITE.title,
+    logo: {
+      "@type": "ImageObject",
+      url: new URL("/favicon/android-chrome-512x512.png", Astro.site).toString()
+    }
+  },
+  ...(publishedTime && { datePublished: publishedTime.toISOString() }),
+  ...(modifiedTime && { dateModified: modifiedTime.toISOString() }),
+  ...(type === "article" && section && { articleSection: section }),
+  ...(tags.length > 0 && { keywords: tags.join(", ") })
+}
 ---
 
 <head>
@@ -11,26 +104,77 @@ import Favicons from "@/components/base/Favicons.astro"
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="generator" content={Astro.generator} />
 
+  <title>{seoTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalURL} />
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
+  {!noindex && <meta name="robots" content="index, follow" />}
+
+  {author && <meta name="author" content={author} />}
+  {publishedTime && <meta name="article:published_time" content={publishedTime.toISOString()} />}
+  {modifiedTime && <meta name="article:modified_time" content={modifiedTime.toISOString()} />}
+  {section && <meta name="article:section" content={section} />}
+  {tags.length > 0 && <meta name="keywords" content={tags.join(", ")} />}
+
+  {/* Font preloads */}
+  <link rel="preload" href="/fonts/NotoSansSC.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/ZedPlexMono.woff2" as="font" type="font/woff2" crossorigin />
+
+  {/* Open Graph / Facebook */}
+  <meta property="og:type" content={type} />
+  <meta property="og:site_name" content={SITE.title} />
+  <meta property="og:title" content={seoTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={socialImage} />
+  <meta property="og:image:alt" content={title || SITE.title} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:locale" content={SITE.locale.attrs} />
+  {
+    publishedTime && (
+      <meta property="article:published_time" content={publishedTime.toISOString()} />
+    )
+  }
+  {modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
+  {author && <meta property="article:author" content={author} />}
+  {section && <meta property="article:section" content={section} />}
+  {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title || SITE.title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={socialImage} />
+  <meta name="twitter:image:alt" content={title || SITE.title} />
+
+  <meta name="theme-color" content="#15151f" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#eff1f5" media="(prefers-color-scheme: light)" />
+  <meta name="color-scheme" content="light dark" />
+
   <meta name="HandheldFriendly" content="True" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content={SITE.title} />
   <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no" />
 
-  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: light)" />
-
-  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link rel="icon" type="image/png" href="/favicon/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="/favicon/favicon-16x16.png" sizes="16x16" />
+  <link rel="shortcut icon" href="/favicon/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="/favicon/android-chrome-192x192.png" sizes="192x192" />
+  <link rel="icon" type="image/png" href="/favicon/android-chrome-512x512.png" sizes="512x512" />
   <link rel="manifest" href="/favicon/site.webmanifest" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
   <link
     rel="alternate"
     type="application/rss+xml"
     title={SITE.title}
-    href={new URL("rss.xml", Astro.site)}
+    href={`${SITE.href}rss.xml`}
   />
 
-  <Favicons />
   <ClientRouter />
 
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <slot />
 </head>

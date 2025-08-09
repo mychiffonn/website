@@ -2,12 +2,11 @@
 import Layout from "@/layouts/Layout.astro"
 import FormattedDate from "@/components/base/FormattedDate.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import PageHead from "@/components/layout/PageHead.astro"
 
 interface Props {
   title: string
   description?: string
-  lastModified?: Date
+  updatedAt?: Date
   class?: string
   breadcrumbs?: Array<{
     href?: string
@@ -16,26 +15,19 @@ interface Props {
   }>
 }
 
-const {
-  title,
-  description,
-  lastModified,
-  class: className = "max-w-3xl",
-  breadcrumbs
-} = Astro.props
+const { title, description, updatedAt, class: className = "max-w-3xl", breadcrumbs } = Astro.props
 ---
 
-<Layout class={className}>
-  <PageHead slot="head" title={title} description={description} />
+<Layout class={className} title={title} description={description}>
 
   {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
 
   <hgroup>
     <h1 class="text-3xl font-bold">{title}</h1>
     {
-      lastModified && (
+      updatedAt && (
         <FormattedDate
-          date={lastModified}
+          date={updatedAt}
           class="text-muted-foreground text-sm italic before:content-['Last_updated:_']"
         />
       )

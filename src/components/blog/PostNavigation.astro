@@ -1,20 +1,16 @@
 ---
-import type { CollectionEntry } from "astro:content"
-
-import { PostManager } from "@/lib/post-manager"
+import type { Post } from "@/lib/blog/types"
 import { cn } from "@/lib/utils"
 import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
 
 interface Props {
-  currentPost: CollectionEntry<"blog">
+  prevPost?: Post | null
+  nextPost?: Post | null
+  parentPost?: Post | null
 }
 
-const { currentPost } = Astro.props
-
-const postManager = PostManager.getInstance()
-const navigation = await postManager.getNavigation(currentPost)
-const { newer: newerPost, older: olderPost, parent: parentPost } = navigation
+const { prevPost, nextPost, parentPost } = Astro.props
 const isSubpost = !!parentPost
 ---
 
@@ -22,13 +18,13 @@ const isSubpost = !!parentPost
   class={cn("col-start-2 grid grid-cols-1 gap-4", isSubpost ? "sm:grid-cols-3" : "sm:grid-cols-2")}
 >
   <Button
-    href={olderPost ? `/${currentPost.collection}/${olderPost.id}#post-title` : "#"}
+    href={nextPost ? `/${nextPost.collection}/${nextPost.id}#post-title` : undefined}
     variant="outline"
     class={cn(
       "rounded-lg group flex items-center justify-start size-full",
-      !olderPost && "pointer-events-none opacity-50 cursor-not-allowed"
+      !nextPost && "pointer-events-none opacity-50 cursor-not-allowed"
     )}
-    aria-disabled={!olderPost}
+    aria-disabled={!nextPost}
   >
     <Icon name="arrow-left" class="mr-2 size-4 transition-transform group-hover:-translate-x-1" />
     <div class="flex flex-col items-start overflow-hidden text-wrap">
@@ -36,7 +32,7 @@ const isSubpost = !!parentPost
         {isSubpost ? "Previous Subpost" : "Previous Post"}
       </span>
       <span class="line-clamp-2 w-full text-left text-sm text-balance text-ellipsis">
-        {olderPost?.data.title || (isSubpost ? "No older subpost" : "You're at the oldest post!")}
+        {nextPost?.data.title || (isSubpost ? "No older subpost" : "You're at the oldest post!")}
       </span>
     </div>
   </Button>
@@ -44,7 +40,7 @@ const isSubpost = !!parentPost
   {
     isSubpost && (
       <Button
-        href={parentPost ? `/${currentPost.collection}/${parentPost.id}#post-title` : "#"}
+        href={parentPost ? `/${parentPost.collection}/${parentPost.id}#post-title` : undefined}
         variant="outline"
         class={cn(
           "group flex size-full items-center justify-center rounded-lg",
@@ -66,20 +62,20 @@ const isSubpost = !!parentPost
   }
 
   <Button
-    href={newerPost ? `/${currentPost.collection}/${newerPost.id}#post-title` : "#"}
+    href={prevPost ? `/${prevPost.collection}/${prevPost.id}#post-title` : undefined}
     variant="outline"
     class={cn(
       "rounded-lg group flex items-center justify-end size-full",
-      !newerPost && "pointer-events-none opacity-50 cursor-not-allowed"
+      !prevPost && "pointer-events-none opacity-50 cursor-not-allowed"
     )}
-    aria-disabled={!newerPost}
+    aria-disabled={!prevPost}
   >
     <div class="flex flex-col items-end overflow-hidden text-wrap">
       <span class="text-muted-foreground text-right text-xs">
         {isSubpost ? "Next Subpost" : "Next Post"}
       </span>
       <span class="line-clamp-2 w-full text-right text-sm text-balance text-ellipsis">
-        {newerPost?.data.title || (isSubpost ? "No newer subpost" : "You're at the newest post!")}
+        {prevPost?.data.title || (isSubpost ? "No newer subpost" : "You're at the newest post!")}
       </span>
     </div>
     <Icon name="arrow-right" class="ml-1 size-4 transition-transform group-hover:translate-x-1" />

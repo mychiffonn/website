@@ -3,8 +3,8 @@ title: Knowledge, Diverse Ways of Knowing, and Epistemic Justice
 description:
   How I think about the scope and sources of knowledge, fairness in knowledge, and why I want to do
   AI research on these topics.
-publishDate: 2025-06-18
-modifiedDate: 2025-07-30
+createdAt: 2025-06-18
+updatedAt: 2025-07-30
 image: "./knowledge-banner.jpg"
 tags: [philosophy, social justice, research, personal]
 authors: ["mychiffon"]

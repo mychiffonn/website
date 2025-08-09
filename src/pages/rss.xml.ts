@@ -1,11 +1,11 @@
 import { SITE } from '@/config'
 import rss from '@astrojs/rss'
 import type { APIContext } from 'astro'
-import { PostManager } from '@/lib/post-manager'
+import { PostManager } from '@/lib/blog'
 
 export async function GET(context: APIContext) {
   try {
-    const posts = await PostManager.getInstance().getAllPosts()
+    const posts = await PostManager.getInstance().getMainPosts()
 
     const items = await Promise.all(
       posts.map(async (post) => {
@@ -18,10 +18,10 @@ export async function GET(context: APIContext) {
         return {
           title: post.data.title,
           description: fullContent,
-          pubDate: post.data.publishDate,
+          pubDate: post.data.createdAt,
           link: `/blog/${post.id}/`,
           categories: post.data.tags,
-          ...(post.data.modifiedDate && { customData: `<updated>${post.data.modifiedDate.toISOString()}</updated>` })
+          ...(post.data.updatedAt && { customData: `<updated>${post.data.updatedAt.toISOString()}</updated>` })
         }
       })
     )

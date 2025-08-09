@@ -1,6 +1,6 @@
 ---
 title: Now
-lastUpdated: 2025-07-28
+updatedAt: 2025-07-28
 ---
 
 I'm actively applying for New Grad jobs in data science and AI engineering, and research labs in HCI

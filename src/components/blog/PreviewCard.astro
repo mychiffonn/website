@@ -1,40 +1,35 @@
 ---
 // Original code: https://github.com/cworld1/astro-theme-pure/blob/main/packages/pure/components/pages/PreviewCard.astro
 import { Image } from "astro:assets"
-import type { CollectionEntry } from "astro:content"
 
-import { PostManager } from "@/lib/post-manager"
+import type { PostMeta } from "@/lib/blog/types"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
 
 interface Props {
-  entry: CollectionEntry<"blog">
+  metadata: PostMeta
 }
 
-const { entry } = Astro.props
-
-const postManager = PostManager.getInstance()
-const metadata = await postManager.getMetadata(entry.id)
-
-const tags = entry.data.tags
+const { metadata } = Astro.props
+const tags = metadata.tags
 ---
 
 <div
   class:list={[
     "blog-card group relative overflow-hidden rounded-xl border transition-all duration-300 ease-in-out",
-    !entry.data.image && "hover:bg-secondary/50"
+    !metadata.image && "hover:bg-secondary/50"
   ]}
-  style={entry.data.image &&
+  style={metadata.image &&
     `--card-highlight: hsl(var(--primary));
      --card-highlight-bg: hsl(var(--secondary) / 50%);`}
 >
   {
-    entry.data.image && (
+    metadata.image && (
       <Image
-        src={entry.data.image}
-        alt={entry.data.title}
+        src={metadata.image}
+        alt={metadata.title}
         width={1200}
         height={630}
         class="cover-image absolute end-0 top-0 z-0 h-full w-3/5 object-cover opacity-30 transition-all duration-300 group-hover:opacity-50 max-md:h-2/3 max-md:w-full"
@@ -43,21 +38,21 @@ const tags = entry.data.tags
   }
 
   <Link
-    href={`/${entry.collection}/${entry.id}`}
+    href={`/blog/${metadata.id}`}
     class:list={[
       "relative z-10 block p-4 transition-all duration-300",
-      entry.data.image && "max-md:pt-24"
+      metadata.image && "max-md:pt-24"
     ]}
   >
-    <article class:list={["flex flex-col gap-3", entry.data.image && "md:max-w-[80%]"]}>
+    <article class:list={["flex flex-col gap-3", metadata.image && "md:max-w-[80%]"]}>
       {/** Row 1: Title  */}
       <h3 class="group-hover:text-primary text-lg font-medium transition-colors duration-300">
-        {entry.data.title}
+        {metadata.title}
       </h3>
 
       {/** Row 2: Desc  */}
       <p class="text-foreground">
-        {entry.data.description}
+        {metadata.description}
       </p>
 
       {/** Row 3: Meta information  */}

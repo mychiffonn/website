@@ -1,16 +1,14 @@
 ---
-import { TagManager } from "@/lib/tag-manager"
+import { PostManager } from "@/lib/blog"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import PageHead from "@/components/layout/PageHead.astro"
 
-const sortedTags = await TagManager.getInstance().getSortedTags()
+const sortedTags = await PostManager.getInstance().getSortedTags()
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead slot="head" title="Tags" />
+<Layout class="max-w-3xl" title="Tags">
   <Breadcrumbs items={[{ label: "Tags", icon: "mingcute:tag-2-line" }]} />
 
   <div class="flex flex-col gap-4">

@@ -1,35 +1,47 @@
 ---
-import { AuthorManager } from "@/lib/author-manager"
-import { PostManager } from "@/lib/post-manager"
+import { PostManager } from "@/lib/blog"
 import Layout from "@/layouts/Layout.astro"
 import AuthorCard from "@/components/blog/AuthorCard.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import PageHead from "@/components/layout/PageHead.astro"
 
 export async function getStaticPaths() {
-  const authors = await AuthorManager.getInstance().getAllAuthors()
+  const authors = await PostManager.getInstance().getAllAuthors()
+
   return authors.map((author) => ({
     params: { id: author.id },
-    props: { author }
+    props: { authorId: author.id }
   }))
 }
 
-const { author } = Astro.props
-const authorPosts = await PostManager.getInstance().getPostsByAuthor(author.id)
+const { authorId } = Astro.props
+
+const postManager = PostManager.getInstance()
+const [author, authorPosts] = await Promise.all([
+  postManager.getAuthorById(authorId),
+  postManager.getPostsByAuthor(authorId)
+])
+
+const authorPostsMetadata = await Promise.all(
+  authorPosts.map(post => postManager.getMetadata(post.id))
+)
+
+if (!author) {
+  return Astro.redirect("/404")
+}
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead
-    slot="head"
-    title={`${author.data.name} (Author)`}
-    description={author.data.bio || `Profile of ${author.data.name}.`}
-    noindex
-  />
+<Layout
+  class="max-w-3xl"
+  title={`${author.name} (Author)`}
+  description={author.bio || `Profile of ${author.name}.`}
+  noindex
+  type="profile"
+>
   <Breadcrumbs
     items={[
       { href: "/authors", label: "Authors", icon: "mingcute:group-line" },
-      { label: author.data.name, icon: "mingcute:user-1-line" }
+      { label: author.name, icon: "mingcute:user-1-line" }
     ]}
   />
 
@@ -37,17 +49,15 @@ const authorPosts = await PostManager.getInstance().getPostsByAuthor(author.id)
     <AuthorCard author={author} />
   </section>
   <section class="flex flex-col gap-y-4">
-    <h2 class="text-2xl font-medium">Posts by {author.data.name}</h2>
+    <h2 class="text-2xl font-medium">Posts by {author.name}</h2>
     {
       authorPosts.length > 0 ? (
         <ul class="flex flex-col gap-4">
-          {authorPosts
-            .filter((post) => !post.data.draft)
-            .map((post) => (
-              <li>
-                <PreviewCard entry={post} />
-              </li>
-            ))}
+          {authorPostsMetadata.map((metadata) => (
+            <li>
+              <PreviewCard metadata={metadata} />
+            </li>
+          ))}
         </ul>
       ) : (
         <p class="text-muted-foreground">No posts available from this author.</p>

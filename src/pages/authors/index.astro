@@ -1,15 +1,13 @@
 ---
-import { AuthorManager } from "@/lib/author-manager"
+import PostManager from "@/lib/blog"
 import Layout from "@/layouts/Layout.astro"
 import AuthorCard from "@/components/blog/AuthorCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import PageHead from "@/components/layout/PageHead.astro"
 
-const authors = await AuthorManager.getInstance().getAllAuthors()
+const authors = await PostManager.getInstance().getAllAuthors()
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead slot="head" title="Authors" />
+<Layout class="max-w-3xl" title="Authors">
   <Breadcrumbs items={[{ label: "Authors", icon: "mingcute:group-line" }]} />
   {
     authors.length > 0 ? (
