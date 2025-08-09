@@ -1,7 +1,5 @@
 import type { FooterConfig, ProfileConfig, SiteConfig, SocialLink } from "@/types"
 
-import { validateFooter, validateProfile, validateSiteConfig } from "@/lib/schemas"
-
 export const SITE: SiteConfig = {
   title: "My Chiffon N.",
   description:
@@ -23,6 +21,9 @@ export const SITE: SiteConfig = {
   // Blog settings
   featuredPostCount: 2,
   postsPerPage: 8,
+
+  // TOC settings
+  tocMaxDepth: 3,
 
   // Theme settings
   favicon: "/favicon.ico",
@@ -79,8 +80,8 @@ export const FOOTER: FooterConfig = {
   footerLinks: []
 }
 
-// Validate configuration in development for better DX
 if (import.meta.env.DEV) {
+  const { validateFooter, validateProfile, validateSiteConfig } = await import("@/lib/schemas")
   validateSiteConfig(SITE)
   validateProfile(PROFILE)
   validateFooter(FOOTER)
