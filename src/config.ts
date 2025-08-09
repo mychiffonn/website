@@ -4,7 +4,7 @@ export const SITE: SiteConfig = {
   title: "My Chiffon N.",
   description:
     "Researcher, Developer, Teacher, and Life-long Learner focused on making human knowledge work more accessible, productive, collaborative and enjoyable.",
-  href: "https://chiffonng.com",
+  href: "https://mychiffonn.com",
   author: "My (Chiffon) Nguyen",
 
   locale: {

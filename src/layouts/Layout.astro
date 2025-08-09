@@ -9,27 +9,59 @@ import Header from "@/components/layout/Header.astro"
 
 interface Props {
   class?: string
+  title?: string
+  description?: string
+  image?: string | URL
+  noindex?: boolean
+  type?: "website" | "article" | "profile"
+  publishedTime?: Date
+  modifiedTime?: Date
+  author?: string
+  tags?: string[]
+  section?: string
 }
 
-const { class: className } = Astro.props
+const {
+  class: className,
+  title,
+  description,
+  image,
+  noindex,
+  type,
+  publishedTime,
+  modifiedTime,
+  author,
+  tags,
+  section
+} = Astro.props
 ---
 
 <!doctype html>
 <html class="bg-background text-foreground" lang={SITE.locale.lang}>
-  <Head>
+  <Head
+    title={title}
+    description={description}
+    image={image}
+    noindex={noindex}
+    type={type}
+    publishedTime={publishedTime}
+    modifiedTime={modifiedTime}
+    author={author}
+    tags={tags}
+    section={section}
+  >
     <slot name="head" />
   </Head>
   <body>
     <div class="flex h-fit min-h-screen flex-col gap-y-6 font-sans">
       <div class="bg-background/50 sticky top-0 z-50 divide-y backdrop-blur-sm xl:divide-none">
         <Header />
-        <slot name="subposts-navigation-header" />
-        <slot name="toc-header" />
+        <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
+        <slot name="toc-header" aria-label="Table of contents" />
       </div>
-      <main class="grow">
-        <div class:list={["mx-auto flex grow flex-col gap-y-6 px-4", className]}>
-          <slot />
-        </div>
+      <slot name="breadcrumb" />
+      <main class:list={["mx-auto flex grow flex-col gap-y-4 px-4", className]}>
+        <slot />
       </main>
       <Footer />
     </div>
