@@ -1,25 +1,62 @@
 ---
 interface Props {
-  /** Word count to calculate reading time from */
+  /** Primary word count to calculate reading time from */
   wordCount: number
+  /** Optional combined word count (for posts with subposts) */
+  combinedWordCount?: number | null
   /** Custom suffix to append after time (default: "read") */
   customSuffix?: string
+  /** Separator between individual and combined reading times (default: " - ") */
+  separator?: string
   /** Additional CSS classes */
   class?: string
 }
 
-const { wordCount, customSuffix = "read", class: className } = Astro.props
+const {
+  wordCount,
+  combinedWordCount,
+  customSuffix = "read",
+  separator = " - ",
+  class: className
+} = Astro.props
 
 // Calculate reading time in minutes (220 words per minute)
-const minutes = Math.max(1, Math.round(wordCount / 220))
+const calculateMinutes = (words: number) => Math.max(1, Math.round(words / 220))
 
-// Convert to W3C valid duration string (PT5M for 5 minutes)
-const duration = `PT${minutes}M`
+const primaryMinutes = calculateMinutes(wordCount)
+const primaryDuration = `PT${primaryMinutes}M`
 
-// Format display text
-const displayText = customSuffix ? `${minutes} min ${customSuffix}` : `${minutes} min`
+// Format primary reading time
+const primaryText = customSuffix ? `${primaryMinutes} min ${customSuffix}` : `${primaryMinutes} min`
+
+// Handle combined word count if provided
+const combinedData = (() => {
+  if (!combinedWordCount || combinedWordCount <= 0 || combinedWordCount <= wordCount) {
+    return null
+  }
+  
+  const combinedMinutes = calculateMinutes(combinedWordCount)
+  if (combinedMinutes <= 0) {
+    return null
+  }
+  
+  return {
+    duration: `PT${combinedMinutes}M`,
+    text: `${combinedMinutes} min total`
+  }
+})()
 ---
 
-<time datetime={duration} class={className}>
-  {displayText}
-</time>
+{
+  wordCount > 0 && (
+    <span class={className}>
+      <time datetime={primaryDuration}>{primaryText}</time>
+      {combinedData && (
+        <>
+          <span>{separator}</span>
+          <time datetime={combinedData.duration}>{combinedData.text}</time>
+        </>
+      )}
+    </span>
+  )
+}
