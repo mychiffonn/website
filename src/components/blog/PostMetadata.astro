@@ -111,7 +111,7 @@ const isCard = variant === "card"
 </div>
 <style>
   /* Add separator | to blog, but not stacked layout */
-  #post-metadata.not(.flex-col) > *:not(:first-child)::before {
+  #post-metadata:not(.flex-col) > *:not(:first-child)::before {
     content: "|";
     color: color-mix(in srgb, currentColor 50%, transparent);
     margin-inline: 0.5rem;
