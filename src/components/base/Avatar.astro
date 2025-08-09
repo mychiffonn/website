@@ -18,6 +18,13 @@ const {
   ...imageProps
 } = Astro.props
 
+// Ensure square dimensions - if width or height is set, use it for both
+const squareDimension = imageProps.width || imageProps.height
+const finalImageProps = {
+  ...imageProps,
+  ...(squareDimension && { width: squareDimension, height: squareDimension })
+}
+
 // Auto-add inferSize for remote images without dimensions
 const isRemoteImage = typeof imageProps.src === "string" && imageProps.src.startsWith("http")
 const shouldInferSize =
@@ -25,16 +32,24 @@ const shouldInferSize =
 ---
 
 <div class={cn("relative flex shrink-0 overflow-hidden rounded-full", className)}>
-  <Image
-    {...imageProps as any}
-    {...shouldInferSize && { inferSize: true }}
-    class="aspect-square size-full object-cover object-center"
-    data-slot={dataSlot}
-  />
+  {
+    finalImageProps.src && (
+      <Image
+        {...(finalImageProps as any)}
+        {...(shouldInferSize && { inferSize: true })}
+        class="aspect-square size-full object-cover object-center"
+        data-slot={dataSlot}
+        aria-label="Avatar"
+      />
+    )
+  }
 
   <div
-    class="bg-muted text-foreground flex size-full items-center justify-center rounded-full font-medium uppercase"
-    class:list={[{ hidden: !!imageProps.src }]}
+    class={cn(
+      "bg-muted flex size-full items-center justify-center",
+      "text-foreground font-medium uppercase",
+      !!finalImageProps.src && "hidden"
+    )}
     data-slot="avatar-fallback"
     style="font-size: clamp(0.5rem, 25%, 1.5rem)"
   >
