@@ -1,0 +1,28 @@
+---
+import Badge from "@/components/base/Badge.astro"
+import Icon from "@/components/base/Icon.astro"
+
+interface Props {
+  count: number
+  variant?: "compact" | "full"
+  class?: string
+}
+
+const { count, variant = "compact", class: className } = Astro.props
+---
+
+<Badge variant="info" class:list={["flex flex-shrink-0 items-center gap-1 text-xs", className]}>
+  <Icon name="subposts" class="size-3" />
+  {
+    variant === "full" ? (
+      <>
+        <span class="hidden sm:inline">
+          {count}&nbsp;{count === 1 ? "subpost" : "subposts"}
+        </span>
+        <span class="sm:hidden">{count}</span>
+      </>
+    ) : (
+      <span>{count}</span>
+    )
+  }
+</Badge>

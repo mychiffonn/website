@@ -1,115 +1,84 @@
 ---
-import type { SubpostContext } from "@/lib/post-manager"
-import PostItem from "@/components/blog/PostItem.astro"
-import SubpostItem from "@/components/blog/SubpostItem.astro"
+import type { Post, PostMeta } from "@/lib/blog/types"
+import SubpostNavItem from "@/components/blog/SubpostNavItem.astro"
+import SubpostsList from "@/components/blog/SubpostsList.astro"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Props {
-  subpostContext: SubpostContext
+  currentPost: Post
+  parentPost?: Post | null
+  subposts?: PostMeta[]
+  activePost: PostMeta
+  isActivePost: boolean
   class?: string
 }
 
-const { subpostContext, class: className } = Astro.props
-const { currentPost, parentPost, subposts, metadata } = subpostContext
+const {
+  currentPost,
+  parentPost,
+  subposts = [],
+  activePost,
+  isActivePost,
+  class: className
+} = Astro.props
 
-const activePost = parentPost || currentPost
-const isActivePost = activePost?.id === currentPost.id
-
-const activePostMetadata = metadata.get(activePost.id)
-const activePostWordCount = activePostMetadata?.wordCount || 0
-const activePostCombinedWordCount = activePostMetadata?.combinedWordCount
-
-const subpostsWithWordCount = subposts.map((subpost) => ({
-  ...subpost,
-  wordCount: metadata.get(subpost.id)?.wordCount || 0
-}))
-
-const hasSubposts = subpostsWithWordCount.length > 0
+// Only render if there's meaningful content (has parent OR has subposts)
+const hasParent = !!parentPost
+const hasSubposts = subposts.length > 0
+const shouldRender = hasParent || hasSubposts
 ---
 
-<aside
-  id="subposts-sidebar-container"
-  class={`sticky top-20 col-start-3 row-span-1 mr-auto ml-8 hidden h-[calc(100vh-5rem)] max-w-md xl:block ${className || ""}`}
-  role="complementary"
-  aria-label="Subposts navigation"
->
-  <ScrollArea
-    client:load
-    className="flex max-h-[calc(100vh-8rem)] flex-col overflow-y-auto"
-    data-subposts-sidebar-scroll
-  >
-    <div class="p-2">
-      <nav aria-label="Post and subposts">
-        <ul class="space-y-1" role="list">
-          {
-            activePost && (
-              <li role="listitem">
-                <PostItem
-                  post={activePost}
-                  isActive={isActivePost}
-                  wordCount={activePostWordCount}
-                  combinedWordCount={activePostCombinedWordCount || undefined}
-                  variant="sidebar"
-                  href={
-                    isActivePost
-                      ? undefined
-                      : `/${activePost.collection}/${activePost.id}#post-title`
-                  }
-                  isParentPost={!!parentPost}
-                />
-              </li>
-            )
-          }
-
-          {
-            hasSubposts && (
-              <li role="listitem">
-                <div class="ml-4 space-y-1" role="group" aria-labelledby="subposts-heading">
-                  <h4
-                    id="subposts-heading"
-                    class="text-muted-foreground/60 mb-1 px-2 text-xs font-semibold tracking-wider uppercase"
-                  >
-                    Subposts
-                  </h4>
-                  <ul class="space-y-1" role="list">
-                    {subpostsWithWordCount.map((subpost) => (
-                      <li role="listitem">
-                        <SubpostItem
-                          subpost={subpost}
-                          isActive={currentPost.id === subpost.id}
-                          variant="sidebar"
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </li>
-            )
-          }
-        </ul>
-      </nav>
-    </div>
-  </ScrollArea>
-</aside>
+{
+  shouldRender && activePost && (
+    <aside
+      id="subposts-sidebar-container"
+      class={className}
+      role="complementary"
+      aria-label="Subposts navigation"
+    >
+      <ScrollArea
+        client:load
+        className="flex max-h-[calc(100vh-8rem)] flex-col overflow-y-auto"
+        data-scroll-container
+      >
+        <div class="p-2">
+          <nav aria-label="Post and subposts">
+            <div class="space-y-1">
+              <SubpostNavItem post={activePost} isActive={isActivePost} isSubpost={false} />
+              <h4
+                id="subposts-heading"
+                class="text-muted-foreground my-1 text-xs font-semibold tracking-wider uppercase"
+              >
+                Subposts
+              </h4>
+              <SubpostsList subposts={subposts} currentPostId={currentPost.id} />
+            </div>
+          </nav>
+        </div>
+      </ScrollArea>
+    </aside>
+  )
+}
 
 <script>
-  import { BaseScrollController } from "@/lib/subposts-scroll"
+  import { BaseScrollController } from "@/lib/blog/scroll"
 
   class SubpostsSidebarController extends BaseScrollController {
     getContainerSelector() {
       return "#subposts-sidebar-container"
     }
 
-    getScrollAreaSelector() {
+    // Override for Radix ScrollArea (sidebar uses ScrollArea)
+    protected getScrollAreaSelector(): string {
       return "[data-radix-scroll-area-viewport]"
     }
 
-    getContainerAttribute() {
-      return "data-subposts-sidebar-scroll"
+    protected getContainerAttribute(): string {
+      return "data-scroll-container"
     }
 
     getActiveItemSelector() {
-      return ".subposts-sidebar-active-item"
+      return "[aria-current='page']"
     }
 
     getMaskClasses() {

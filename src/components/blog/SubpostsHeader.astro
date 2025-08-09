@@ -1,37 +1,27 @@
 ---
-import type { SubpostContext } from "@/lib/post-manager"
-import Badge from "@/components/base/Badge.astro"
+import type { Post, PostMeta } from "@/lib/blog/types"
 import Icon from "@/components/base/Icon.astro"
-import PostItem from "@/components/blog/PostItem.astro"
-import SubpostItem from "@/components/blog/SubpostItem.astro"
+import SubpostCountBadge from "@/components/blog/SubpostCountBadge.astro"
+import SubpostNavItem from "@/components/blog/SubpostNavItem.astro"
+import SubpostsList from "@/components/blog/SubpostsList.astro"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Props {
-  subpostContext: SubpostContext
+  currentPost: Post
+  parentPost?: Post | null
+  subposts?: PostMeta[]
+  isSubpost?: boolean
+  activePost: PostMeta
 }
 
-const { subpostContext } = Astro.props
-const { currentPost, parentPost, subposts, metadata, isCurrentSubpost } = subpostContext
+const { currentPost, parentPost, subposts = [], isSubpost = false, activePost } = Astro.props
 
-const activePost = parentPost || currentPost
-const isActivePost = activePost?.id === currentPost.id
-
-const activePostMetadata = metadata.get(activePost.id)
-const activePostWordCount = activePostMetadata?.wordCount || 0
-const activePostCombinedWordCount = activePostMetadata?.combinedWordCount
-
-const subpostsWithWordCount = subposts.map((subpost) => ({
-  ...subpost,
-  wordCount: metadata.get(subpost.id)?.wordCount || 0
-}))
-
-const currentSubpostDetails = isCurrentSubpost
-  ? subpostsWithWordCount.find((subpost) => subpost.id === currentPost.id)
+const activePostData = parentPost || currentPost
+const isActivePost = activePostData.id === currentPost.id
+const currentSubpostDetails = isSubpost
+  ? subposts.find((subpost) => subpost.id === currentPost.id) || null
   : null
-
-const currentTitle = currentSubpostDetails
-  ? currentSubpostDetails.data.title
-  : activePost?.data.title
+const currentTitle = currentSubpostDetails?.title || activePostData.data.title
 const subpostCount = subposts.length
 ---
 
@@ -39,107 +29,76 @@ const subpostCount = subposts.length
   activePost && subpostCount > 0 && (
     <nav id="mobile-subposts-container" class="w-full xl:hidden" aria-label="Subposts navigation">
       <details class="group" role="button" aria-expanded="false">
-        <summary class="focus-visible:ring-ring flex w-full cursor-pointer items-center justify-between focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none">
-          <header class="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-3">
-            <div class="flex items-center gap-3">
-              <div
-                class="flex size-5 flex-shrink-0 items-center justify-center"
-                role="img"
-                aria-label="Post type indicator"
-              >
-                <Icon
-                  name={
-                    currentSubpostDetails ? "post-active" : isActivePost ? "post-active" : "post"
-                  }
-                  class="size-4"
-                />
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="text-foreground truncate text-sm leading-tight font-medium">
-                  {currentTitle}
-                </span>
-                {!currentSubpostDetails && (
-                  <Badge variant="info" class="text-xs">
-                    {subpostCount}&nbsp;{subpostCount === 1 ? "subpost" : "subposts"}
-                  </Badge>
-                )}
-              </div>
-            </div>
+        <summary class="mx-auto flex w-full max-w-3xl cursor-pointer items-center justify-between px-4 py-3">
+          <div class="flex min-w-0 items-center gap-2">
             <Icon
-              name="chevron-down"
-              class="text-muted-foreground size-4 flex-shrink-0 transition-transform duration-200 group-open:rotate-180"
+              name="post-active"
+              class="text-primary size-5 flex-shrink-0"
+              aria-label={isSubpost ? "Active subpost" : "Active post"}
             />
-          </header>
+            <span class="text-foreground min-w-0 truncate text-sm leading-tight font-medium">
+              {currentTitle}
+            </span>
+            {subpostCount && !isSubpost && (
+              <SubpostCountBadge count={subpostCount} variant="full" />
+            )}
+          </div>
+          <Icon
+            name="chevron-down"
+            class:list={[
+              "text-muted-foreground size-4 flex-shrink-0",
+              "transition-transform duration-200 group-open:rotate-180"
+            ]}
+          />
         </summary>
 
-        <ScrollArea
-          client:load
-          className="mx-auto max-w-3xl border-t border-border/50"
-          data-subposts-header-scroll
-        >
-          <div class="max-h-[35vh]">
-            <ul class="flex list-none flex-col gap-y-1 px-3 py-2" role="list">
+        <div class="border-border/50 mx-auto max-w-3xl border-t" data-scroll-container>
+          <ScrollArea
+            client:load
+            className="flex max-h-[30vh] flex-col overflow-y-auto"
+            data-scroll-area
+          >
+            <div class="flex list-none flex-col gap-y-1 px-3 py-2">
               {activePost && (
-                <li role="listitem">
-                  <PostItem
-                    post={activePost}
-                    isActive={isActivePost}
-                    wordCount={activePostWordCount}
-                    combinedWordCount={activePostCombinedWordCount || undefined}
-                    variant="header"
-                    isParentPost={!!parentPost}
-                  />
-                </li>
+                <SubpostNavItem post={activePost} isActive={isActivePost} isSubpost={false} />
               )}
 
-              {subpostsWithWordCount.length > 0 && (
-                <li role="listitem">
-                  <div class="ml-4 space-y-1" role="group" aria-labelledby="subposts-heading">
-                    <h4 id="subposts-heading" class="sr-only">
-                      Subposts
-                    </h4>
-                    {subpostsWithWordCount.map((subpost) => (
-                      <SubpostItem
-                        subpost={subpost}
-                        isActive={currentPost.id === subpost.id}
-                        variant="header"
-                      />
-                    ))}
-                  </div>
-                </li>
-              )}
-            </ul>
-          </div>
-        </ScrollArea>
+              <SubpostsList subposts={subposts} currentPostId={currentPost.id} />
+            </div>
+          </ScrollArea>
+        </div>
       </details>
     </nav>
   )
 }
 
 <script>
-  import { BaseScrollController } from "@/lib/subposts-scroll"
+  import { BaseTOCController } from "@/lib/blog/scroll"
+  import type { ScrollMaskConfig } from "@/lib/blog/types"
 
-  class SubpostsHeaderController extends BaseScrollController {
+  class SubpostsHeaderController extends BaseTOCController {
     private detailsElement: HTMLDetailsElement | null = null
 
     getContainerSelector() {
       return "#mobile-subposts-container"
     }
 
-    getScrollAreaSelector() {
+    getLinkSelector() {
+      return "#mobile-subposts-container a"
+    }
+
+    // Override for Radix ScrollArea (uses ScrollArea like sidebars)
+    protected getScrollAreaSelector(): string {
       return "[data-radix-scroll-area-viewport]"
     }
 
-    getContainerAttribute() {
-      return "data-subposts-header-scroll"
+    // Override mask classes for different fade effect
+    protected getMaskClasses(): ScrollMaskConfig {
+      return { top: "mask-t-from-80%", bottom: "mask-b-from-80%" }
     }
 
     getActiveItemSelector() {
-      return ".mobile-subposts-active-item"
-    }
-
-    getMaskClasses() {
-      return { top: "mask-t-from-80%", bottom: "mask-b-from-80%" }
+      return "[aria-current='page']"
     }
 
     protected setupCustomBehavior() {
@@ -147,14 +106,28 @@ const subpostCount = subposts.length
       if (!container) return
 
       this.detailsElement = container.querySelector("details")
-      const links = container.querySelectorAll(".mobile-subposts-link")
+      const links = container.querySelectorAll("a")
 
       if (this.detailsElement) {
         this.detailsElement.addEventListener("toggle", () => {
           if (this.detailsElement?.open) {
             requestAnimationFrame(() => {
-              this.scrollToActive.scroll(this.getActiveItemSelector())
-              setTimeout(() => this.scrollMask.update(this.getMaskClasses()), 100)
+              // Find active item and scroll to it
+              const activeItem = this.state.scrollArea?.querySelector(this.getActiveItemSelector())
+              if (activeItem && this.state.scrollArea) {
+                const areaRect = this.state.scrollArea.getBoundingClientRect()
+                const itemRect = activeItem.getBoundingClientRect()
+                const currentItemTop = itemRect.top - areaRect.top + this.state.scrollArea.scrollTop
+                const targetScroll = Math.max(
+                  0,
+                  Math.min(
+                    currentItemTop - (areaRect.height - itemRect.height) / 2,
+                    this.state.scrollArea.scrollHeight - this.state.scrollArea.clientHeight
+                  )
+                )
+                this.state.scrollArea.scrollTop = targetScroll
+              }
+              setTimeout(() => this.tocScrollMask.update(this.getMaskClasses()), 100)
             })
           }
         })
