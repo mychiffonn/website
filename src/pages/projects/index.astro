@@ -2,7 +2,6 @@
 import { ProjectManager } from "@/lib/project-manager"
 import Layout from "@/layouts/Layout.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import PageHead from "@/components/layout/PageHead.astro"
 import { GithubActivity, ProjectCard } from "@/components/projects"
 
 const allProjects = await ProjectManager.getInstance().getAllProjects()
@@ -27,9 +26,7 @@ const featuredProjects = sortedProjects.filter((project) => project.data.isHighl
 const otherProjects = sortedProjects.filter((project) => !project.data.isHighlighted)
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead slot="head" title="Projects" />
-
+<Layout class="max-w-3xl" title="Projects">
   <Breadcrumbs items={[{ label: "Projects", icon: "mingcute:folder-line" }]} />
 
   <section class="mb-8">

@@ -2,11 +2,9 @@
 import Layout from "@/layouts/Layout.astro"
 import Button from "@/components/base/Button.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import PageHead from "@/components/layout/PageHead.astro"
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead slot="head" title="404" />
+<Layout class="max-w-3xl" title="404">
   <Breadcrumbs items={[{ label: "???", icon: "mingcute:question-line" }]} />
 
   <section class="flex flex-col items-center justify-center gap-y-4 text-center">

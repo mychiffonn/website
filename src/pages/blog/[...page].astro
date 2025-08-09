@@ -2,8 +2,7 @@
 import type { PaginateFunction } from "astro"
 
 import { SITE } from "@/config"
-import { PostManager } from "@/lib/post-manager"
-import { TagManager } from "@/lib/tag-manager"
+import { PostManager } from "@/lib/blog"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
@@ -11,27 +10,41 @@ import Icon from "@/components/base/Icon.astro"
 import Pagination from "@/components/base/Pagination.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import PageHead from "@/components/layout/PageHead.astro"
 
 export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
-  const blogManager = PostManager.getInstance()
-  const allPosts = await blogManager.getAllPosts()
+  const allPosts = await PostManager.getInstance().getMainPosts()
   return paginate(allPosts, { pageSize: SITE.postsPerPage })
 }
 
 const { page } = Astro.props
+const postManager = PostManager.getInstance()
 
-const blogManager = PostManager.getInstance()
-const tagManager = TagManager.getInstance()
+// Get posts grouped by year for current page
+const currentPagePosts = page.data
 
-const postsByYear = blogManager.groupPostsByYear(page.data)
-const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
-const sortedTags = await tagManager.getSortedTags()
+// Get metadata for all posts in parallel
+const postsMetadata = await Promise.all(
+  currentPagePosts.map(post => postManager.getMetadata(post.id))
+)
+
+// Group metadata by year
+const postsByYearMap = postsMetadata.reduce((acc: Record<number, typeof postsMetadata>, metadata) => {
+  const year = metadata.createdAt.getFullYear()
+  ;(acc[year] ??= []).push(metadata)
+  return acc
+}, {})
+
+const postsByYear = Object.entries(postsByYearMap)
+  .map(([year, posts]) => ({ year: parseInt(year), posts }))
+  .sort((a, b) => b.year - a.year)
+
+const sortedTags = await postManager.getSortedTags()
 const displayTags = sortedTags.slice(0, 15)
+const numTags = sortedTags.length
+const moreTagsButton = numTags > 15
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead slot="head" title="Blog" />
+<Layout class="max-w-3xl" title="Blog">
   <Breadcrumbs
     items={[
       { label: "Blog", href: "/blog", icon: "mingcute:book-5-line" },
@@ -40,7 +53,7 @@ const displayTags = sortedTags.slice(0, 15)
   />
 
   {
-    displayTags.length > 0 && (
+    numTags > 0 && (
       <section class="mb-8">
         <h2 class="mb-4 text-lg font-medium">Browse by Tags</h2>
         <div class="flex flex-col gap-4">
@@ -53,15 +66,17 @@ const displayTags = sortedTags.slice(0, 15)
               </Badge>
             ))}
           </div>
-          <div class="flex justify-end">
-            <Button href="/tags" variant="outline" class="group">
-              <span>View all {sortedTags.length} tags</span>
-              <Icon
-                name="mingcute:arrow-right-line"
-                class="size-4 transition-transform group-hover:translate-x-0.5"
-              />
-            </Button>
-          </div>
+          {moreTagsButton && (
+            <div class="flex justify-end">
+              <Button href="/tags" variant="outline" class="group">
+                <span>View all {sortedTags.length} tags</span>
+                <Icon
+                  name="mingcute:arrow-right-line"
+                  class="size-4 transition-transform group-hover:translate-x-0.5"
+                />
+              </Button>
+            </div>
+          )}
         </div>
       </section>
     )
@@ -72,13 +87,13 @@ const displayTags = sortedTags.slice(0, 15)
 
   <div class="flex min-h-[calc(100vh-18rem)] flex-col gap-y-8">
     {
-      years.map((year) => (
+      postsByYear.map(({ year, posts }) => (
         <section class="flex flex-col gap-y-4">
           <div class="font-medium">{year}</div>
           <ul class="flex flex-col gap-4">
-            {postsByYear[year].map((post) => (
+            {posts.map((metadata) => (
               <li>
-                <PreviewCard entry={post} />
+                <PreviewCard metadata={metadata} />
               </li>
             ))}
           </ul>

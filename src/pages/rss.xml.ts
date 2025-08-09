@@ -1,11 +1,11 @@
 import { SITE } from '@/config'
 import rss from '@astrojs/rss'
 import type { APIContext } from 'astro'
-import { PostManager } from '@/lib/post-manager'
+import { PostManager } from '@/lib/blog'
 
 export async function GET(context: APIContext) {
   try {
-    const posts = await PostManager.getInstance().getAllPosts()
+    const posts = await PostManager.getInstance().getMainPosts()
 
     const items = await Promise.all(
       posts.map(async (post) => {

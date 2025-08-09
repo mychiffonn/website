@@ -1,9 +1,9 @@
 ---
-import type { ParsedAuthor } from "@/lib/post-manager"
+import type { AuthorData } from "@/lib/blog/types"
 import Avatar from "@/components/base/Avatar.astro"
 
 interface Props {
-  author: ParsedAuthor
+  author: AuthorData
   class?: string
   "data-slot"?: string
   fallbackStyle?: "first-initial" | "all-initials"
@@ -19,31 +19,28 @@ const {
 } = Astro.props
 
 const authorName = author?.name || author?.id || "Unknown"
-const authorAvatar = author?.avatar
-
-// Default placeholder for users without avatars
-const defaultAvatar =
-  "https://cdn2.iconfinder.com/data/icons/gaming-and-beyond-part-2-1/80/User_gray-512.png"
+const authorAvatar = author?.avatar || ""
 
 // Generate fallback text based on style
 const getFallback = (name: string, style: "first-initial" | "all-initials") => {
   if (style === "all-initials") {
-    return name
-      .split(" ")
-      .map((word) => word[0])
-      .filter((char) => /[A-Za-z]/.test(char))
-      .join("")
-      .toUpperCase()
+    let initials = ""
+    for (const word of name.split(" ")) {
+      const match = word.match(/[A-Za-z]/) // find first letter in word
+      if (match) initials += match[0]
+    }
+    return initials
   }
-  return name.charAt(0).toUpperCase()
+  const match = name.match(/[A-Za-z]/)
+  return match ? match[0] : ""
 }
 ---
 
 <Avatar
-  src={authorAvatar || defaultAvatar}
+  src={authorAvatar}
   alt={authorName}
   fallback={getFallback(authorName, fallbackStyle)}
   class={className}
-  data-slot={dataSlot}
+  aria-label={`${authorName}'s Avatar`}
   {...imageProps}
 />

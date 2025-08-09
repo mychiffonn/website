@@ -8,7 +8,6 @@ import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import PageHead from "@/components/layout/PageHead.astro"
 import { getContextVariant, getProjectLinks, hasProjectContent } from "@/components/projects"
 
 export const prerender = true
@@ -39,8 +38,11 @@ const links = getProjectLinks(repo, doc, url, release)
 const contextVariant = getContextVariant(context)
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead slot="head" title={title} description={`Project details for ${title}`} />
+<Layout
+  class="max-w-3xl"
+  title={title}
+  description={`Project details for ${title}`}
+>
 
   <Breadcrumbs
     items={[

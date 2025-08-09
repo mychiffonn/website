@@ -1,51 +1,45 @@
 ---
-import { PostManager } from "@/lib/post-manager"
-import { TagManager } from "@/lib/tag-manager"
+import { PostManager } from "@/lib/blog"
 import Layout from "@/layouts/Layout.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import PageHead from "@/components/layout/PageHead.astro"
 
 export async function getStaticPaths() {
-  const tagMap = await TagManager.getInstance().getAllTags()
+  const tagMap = await PostManager.getInstance().getAllTags()
   const uniqueTags = Array.from(tagMap.keys())
 
-  return Promise.all(
-    uniqueTags.map(async (tag) => {
-      const posts = await PostManager.getInstance().getPostsByTag(tag)
-      return {
-        params: { id: tag },
-        props: {
-          tag,
-          posts
-        }
-      }
-    })
-  )
+  return uniqueTags.map((tag) => ({
+    params: { id: tag },
+    props: { tag: tag }
+  }))
 }
 
-const { tag, posts } = Astro.props
+const { tag } = Astro.props
+const postManager = PostManager.getInstance()
+const posts = await postManager.getPostsByTag(tag)
+const postsMetadata = await Promise.all(
+  posts.map(post => postManager.getMetadata(post.id))
+)
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead
-    slot="head"
-    title={`Posts tagged with "${tag}"`}
-    description={`A collection of posts tagged with ${tag}.`}
-    noindex
-  />
+<Layout
+  class="max-w-3xl"
+  title={`Posts tagged with "${tag}"`}
+  description={`A collection of posts tagged with ${tag}.`}
+  noindex
+>
   <Breadcrumbs
     items={[
-      { href: "/tags", label: "Tags", icon: "mingcute:tag-2-line" },
-      { label: tag, icon: "mingcute:hashtag-line" }
+      { href: "/tags", label: "Tags", icon: "tags" },
+      { label: tag, icon: "hashtag" }
     ]}
   />
 
   <ul class="flex flex-col gap-y-4">
     {
-      posts.map((post) => (
+      postsMetadata.map((metadata) => (
         <li>
-          <PreviewCard entry={post} />
+          <PreviewCard metadata={metadata} />
         </li>
       ))
     }

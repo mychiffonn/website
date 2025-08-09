@@ -1,8 +1,23 @@
 ---
+import "@/styles/callout.css"
+
+import { Image } from "astro:assets"
 import { render } from "astro:content"
 
-import { PostManager } from "@/lib/post-manager"
-import BlogPostLayout from "@/layouts/BlogPostLayout.astro"
+import { SITE } from "@/config"
+import { PostManager } from "@/lib/blog"
+import type { PostMeta } from "@/lib/blog/types"
+import Layout from "@/layouts/Layout.astro"
+import BackToTop from "@/components/base/BackToTop.astro"
+import Badge from "@/components/base/Badge.astro"
+import Icon from "@/components/base/Icon.astro"
+import PostMetadata from "@/components/blog/PostMetadata.astro"
+import PostNavigation from "@/components/blog/PostNavigation.astro"
+import SubpostsHeader from "@/components/blog/SubpostsHeader.astro"
+import SubpostsSidebar from "@/components/blog/SubpostsSidebar.astro"
+import TOCHeader from "@/components/blog/TOCHeader.astro"
+import TOCSidebar from "@/components/blog/TOCSidebar.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
 export async function getStaticPaths() {
   const posts = await PostManager.getInstance().getAllPostsAndSubposts()
@@ -13,17 +28,205 @@ export async function getStaticPaths() {
 }
 
 const post = Astro.props
-const currentPostId = Astro.params.id as string
-const { Content } = await render(post)
-
-// Get all blog data with single optimized call
-const postContext = await PostManager.getInstance().getPostContext(currentPostId)
-
-if (!postContext) {
-  throw new Error(`Blog post not found: ${currentPostId}`)
+if (!post) {
+  throw new Error(`Blog post not found: ${post}`)
 }
+
+const postManager = PostManager.getInstance()
+const currentPostId = post.id
+const isSubpost = postManager.isSubpost(currentPostId)
+
+// Fetch all data in parallel
+const [{ Content }, metadata, navigation, tocSections, activePostHeadings] = await Promise.all([
+  render(post),
+  postManager.getMetadata(currentPostId),
+  postManager.getNavigation(currentPostId),
+  postManager.getTOCSections(currentPostId, SITE.tocMaxDepth),
+  postManager.getCurrentPostHeadings(currentPostId, SITE.tocMaxDepth)
+])
+
+const { hasSubposts } = metadata
+const parentPost = navigation.parent
+
+// Get subpost data if needed (for subpost navigation)
+let subposts: PostMeta[] = []
+let activePostMetadata: PostMeta | null = null
+if (hasSubposts || isSubpost) {
+  const parentId = isSubpost ? postManager.getParentId(currentPostId) : currentPostId
+  const [parentPostData, subpostsList] = await Promise.all([
+    isSubpost ? postManager.getPostById(parentId) : Promise.resolve(null),
+    postManager.getSubpostsByParent(parentId)
+  ])
+
+  // Create PostMeta objects for all subposts
+  subposts = await Promise.all(
+    subpostsList.map(async (subpost): Promise<PostMeta> => {
+      const meta = await postManager.getMetadata(subpost.id)
+      return {
+        ...meta,
+        id: subpost.id
+      }
+    })
+  )
+
+  // Set active post data
+  const activePostData = parentPostData || post
+  const activePostMeta = await postManager.getMetadata(activePostData.id)
+  activePostMetadata = {
+    ...activePostMeta,
+    id: activePostData.id
+  }
+}
+
+// Calculate isActivePost for SubpostsSidebar
+const activePostData = parentPost || post
+const isActivePost = activePostMetadata ? activePostData.id === post.id : false
 ---
 
-<BlogPostLayout postContext={postContext}>
-  <Content />
-</BlogPostLayout>
+<Layout
+  title={post.data.title}
+  description={post.data.description}
+  image={typeof post.data.image === "string" ? post.data.image : post.data.image?.src}
+  type="article"
+  publishedTime={post.data.createdAt}
+  modifiedTime={post.data.updatedAt}
+  author={metadata.authors[0]?.name}
+  tags={post.data.tags}
+  section="Blog"
+>
+  {
+    (hasSubposts || isSubpost) && activePostMetadata && (
+      <SubpostsHeader
+        slot="subposts-navigation-header"
+        currentPost={post}
+        parentPost={parentPost}
+        subposts={subposts}
+        isSubpost={isSubpost}
+        activePost={activePostMetadata}
+      />
+    )
+  }
+  {
+    activePostHeadings?.length > 0 &&
+      !(
+        isSubpost &&
+        activePostHeadings.length === 1 &&
+        activePostHeadings[0].text === post.data.title
+      ) && <TOCHeader slot="toc-header" headings={activePostHeadings} />
+  }
+
+  <div
+    class="grid grid-cols-[minmax(0px,1fr)_min(calc(var(--breakpoint-md)-2rem),100%)_minmax(0px,1fr)] gap-y-6"
+  >
+    {/** Navigation breadcrumbs */}
+    <Breadcrumbs
+      slot="breadcrumb"
+      class="col-start-2"
+      items={[
+        { href: `/${post.collection}`, label: "Blog", icon: "mingcute:book-5-line" },
+        ...(isSubpost && parentPost
+          ? [
+              {
+                href: `/${post.collection}/${parentPost.id}`,
+                label: parentPost.data.title,
+                icon: "mingcute:documents-line"
+              },
+              {
+                href: `/${post.collection}/${currentPostId}`,
+                label: post.data.title,
+                icon: "mingcute:document-line"
+              }
+            ]
+          : [
+              {
+                href: `/${post.collection}/${currentPostId}`,
+                label: post.data.title,
+                icon: "mingcute:book-line"
+              }
+            ])
+      ]}
+    />
+
+    {/** Hero image */}
+    {
+      post.data.image && (
+        <Image
+          src={post.data.image}
+          alt={post.data.title}
+          width={1200}
+          height={630}
+          class="col-span-full mx-auto w-full max-w-5xl object-cover"
+        />
+      )
+    }
+
+    {/** Post header */}
+    <header class="col-start-2 flex flex-col gap-y-4 text-center">
+      <h1 id="post-title" class="scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl">
+        {post.data.title}
+      </h1>
+
+      {/** Post metadata */}
+      <PostMetadata metadata={metadata} variant="full" />
+
+      {/** Tags */}
+      {
+        post.data.tags?.length > 0 && (
+          <div class="flex flex-wrap justify-center gap-2" role="list" aria-label="Post tags">
+            {post.data.tags.map((tag) => (
+              <Badge href={`/tags/${tag}`} variant="secondary" role="listitem">
+                <Icon name="hashtag" class="size-3" />
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    {/** Top navigation */}
+    <PostNavigation
+      prevPost={navigation.newer}
+      nextPost={navigation.older}
+      parentPost={navigation.parent}
+    />
+    {/** Left sidebar - Subposts */}
+    {
+      activePostMetadata && (
+        <SubpostsSidebar
+          currentPost={post}
+          parentPost={parentPost}
+          subposts={subposts}
+          activePost={activePostMetadata}
+          isActivePost={isActivePost}
+          class="sticky top-20 col-start-1 row-span-1 mr-8 ml-auto hidden h-[calc(100vh-5rem)] max-w-md xl:block"
+        />
+      )
+    }
+
+    {/** Main article content */}
+    <article id="post-content" class="prose col-start-2 max-w-none" role="main">
+      <Content />
+    </article>
+
+    {/** Right sidebar - TOC */}
+    {
+      tocSections.length > 0 && (
+        <TOCSidebar
+          sections={tocSections}
+          currentPostId={currentPostId}
+          class="sticky top-20 col-start-3 row-span-1 mr-auto ml-8 hidden h-[calc(100vh-5rem)] max-w-md xl:block"
+        />
+      )
+    }
+
+    {/** Bottom navigation */}
+    <PostNavigation
+      prevPost={navigation.newer}
+      nextPost={navigation.older}
+      parentPost={navigation.parent}
+    />
+  </div>
+
+  <BackToTop />
+</Layout>
