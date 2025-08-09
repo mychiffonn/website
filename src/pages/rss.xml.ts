@@ -18,10 +18,10 @@ export async function GET(context: APIContext) {
         return {
           title: post.data.title,
           description: fullContent,
-          pubDate: post.data.publishDate,
+          pubDate: post.data.createdAt,
           link: `/blog/${post.id}/`,
           categories: post.data.tags,
-          ...(post.data.modifiedDate && { customData: `<updated>${post.data.modifiedDate.toISOString()}</updated>` })
+          ...(post.data.updatedAt && { customData: `<updated>${post.data.updatedAt.toISOString()}</updated>` })
         }
       })
     )

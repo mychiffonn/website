@@ -17,8 +17,8 @@ interface Props {
   /** Show specific metadata items */
   showItems?: {
     authors?: boolean
-    publishDate?: boolean
-    modifiedDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     readingTime?: boolean
     subpostCount?: boolean
   }
@@ -30,8 +30,8 @@ const {
   containerClass,
   showItems = {
     authors: true,
-    publishDate: true,
-    modifiedDate: true,
+    createdAt: true,
+    updatedAt: true,
     readingTime: true,
     subpostCount: true
   }
@@ -87,20 +87,19 @@ const iconSize = "size-3"
 
   {/** Publish date */}
   {
-    showItems.publishDate && (
-      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
-        <Icon name="publish" class={iconSize} />
-        <FormattedDate date={metadata.publishDate} />
+    showItems.createdAt && (
+      <div class="flex items-center gap-1">
+        <Icon name="publish" class="size-4" aria-label="Published" />
+        <FormattedDate date={metadata.createdAt} />
       </div>
     )
   }
 
-  {/** Modified date */}
   {
-    showItems.modifiedDate && metadata.modifiedDate && (
-      <div class:list={[isFull && "w-full", itemClasses[variant]]}>
-        <Icon name="edit" class={iconSize} />
-        <FormattedDate date={metadata.modifiedDate} />
+    showItems.updatedAt && metadata.updatedAt && (
+      <div class="flex items-center gap-1">
+        <Icon name="edit" class="size-4" aria-label="Updated" />
+        <FormattedDate date={metadata.updatedAt} />
       </div>
     )
   }

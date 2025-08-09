@@ -7,7 +7,7 @@ import PageHead from "@/components/layout/PageHead.astro"
 interface Props {
   title: string
   description?: string
-  lastModified?: Date
+  updatedAt?: Date
   class?: string
   breadcrumbs?: Array<{
     href?: string
@@ -16,13 +16,7 @@ interface Props {
   }>
 }
 
-const {
-  title,
-  description,
-  lastModified,
-  class: className = "max-w-3xl",
-  breadcrumbs
-} = Astro.props
+const { title, description, updatedAt, class: className = "max-w-3xl", breadcrumbs } = Astro.props
 ---
 
 <Layout class={className}>

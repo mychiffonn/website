@@ -8,7 +8,7 @@ location: "San Francisco, CA, USA"
 
 I am interested in **making human knowledge work more accessible, productive, collaborative and
 enjoyable** using natural language processing, human-computer interaction, data science, and
-learning sciences:
+interdisciplinary insights:
 
 - Accessibility: Low-resource, multilingual, and multicultural adaptation
 - Productivity: Knowledge management and reasoning across modalities
@@ -17,7 +17,7 @@ learning sciences:
 [Knowledge can be broadly defined](./blog/knowledge-diversity), and so I care about many ways of
 accessing and producing knowledge. In the long term, I envision a personalized, self-evolving
 knowledge system externalized from human brain, but collaborate and augment human knowledge
-capabilities. Like a personal, knowledgeable robot!
+and reasoning capabilities. 
 
 I graduated in May 2025 from [Minerva University](https://minerva.edu/) studying Machine Learning &
 Statistics, while living and engaging civically in 6 cities 🇺🇸🇰🇷🇹🇼🇮🇳🇦🇷🇩🇪 as part of its global
