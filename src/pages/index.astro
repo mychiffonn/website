@@ -26,9 +26,12 @@ const recentPostsMetadata = await Promise.all(
         ))
       }
     </ul>
-    <div class="flex justify-center">
-      <Button href="/blog" variant="ghost" class="group">
+    <div class="flex justify-center gap-2">
+      <Button href="/blog" variant="default" class="group">
         See all posts <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+      </Button>
+      <Button href="/tags" variant="ghost" class="group">
+        Browse by tags <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
       </Button>
     </div>
   </section>
