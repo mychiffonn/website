@@ -1,26 +1,24 @@
 ---
 import { render, type CollectionEntry } from "astro:content"
 
-import { ProjectManager } from "@/lib/project-manager"
 import { createDateRange } from "@/lib/utils"
+import { getProjectsWithContent, getContextVariant, getProjectLinks, hasProjectContent } from "@/lib/projects"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import { getContextVariant, getProjectLinks, hasProjectContent } from "@/components/projects"
 
 export const prerender = true
 
 export async function getStaticPaths() {
-  const projects = await ProjectManager.getInstance().getAllProjects()
-  // Only generate pages for projects with content
-  return projects
-    .filter((project) => hasProjectContent(project))
-    .map((project) => ({
-      params: { id: project.id },
-      props: { project }
-    }))
+  // Filter at collection level for better performance
+  const projects = await getProjectsWithContent(hasProjectContent)
+
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project }
+  }))
 }
 
 type Props = {

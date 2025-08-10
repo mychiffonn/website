@@ -1,29 +1,10 @@
 ---
-import { ProjectManager } from "@/lib/project-manager"
 import Layout from "@/layouts/Layout.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import { GithubActivity, ProjectCard } from "@/components/projects"
+import { getProjectsForIndex } from "@/lib/projects"
 
-const allProjects = await ProjectManager.getInstance().getAllProjects()
-
-// Sort by date (toDate, then fromDate, then by highlighted status)
-const sortedProjects = allProjects.sort((a, b) => {
-  const dateA = a.data.toDate || a.data.fromDate || new Date(0)
-  const dateB = b.data.toDate || b.data.fromDate || new Date(0)
-
-  // First sort by date (most recent first)
-  const dateDiff = dateB.getTime() - dateA.getTime()
-  if (dateDiff !== 0) return dateDiff
-
-  // Then by highlighted status
-  if (a.data.isHighlighted && !b.data.isHighlighted) return -1
-  if (!a.data.isHighlighted && b.data.isHighlighted) return 1
-
-  return 0
-})
-
-const featuredProjects = sortedProjects.filter((project) => project.data.isHighlighted)
-const otherProjects = sortedProjects.filter((project) => !project.data.isHighlighted)
+const { featuredProjects, otherProjects } = await getProjectsForIndex()
 ---
 
 <Layout class="max-w-3xl" title="Projects">
