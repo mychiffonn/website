@@ -9,7 +9,7 @@ academia (NLP+HCI), technology, and anything I'm interested in.
 ## Built With
 
 This website is built on enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite)
-template:
+template and references from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s digital garden:
 
 - [Astro](https://astro.build/) - Modern content-driven web framework
 - [TailwindCSS 4](https://tailwindcss.com/) - Utility-first CSS framework

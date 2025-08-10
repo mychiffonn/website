@@ -6,11 +6,18 @@ interface Props {
   date: Date
   /** Additional CSS classes */
   class?: string
+  /** Use relative time format (e.g., "3 days ago") for recent dates */
+  relative?: boolean
+  /** Number of days threshold for relative formatting */
+  maxDaysThreshold?: number
 }
 
-const { date, class: className } = Astro.props
+const { date, class: className, relative, maxDaysThreshold } = Astro.props
 
-const displayDate = formatDate(date)
+const displayDate = formatDate(date, undefined, {
+  relative,
+  maxDaysThreshold
+})
 const isoDate = date.toISOString()
 ---
 

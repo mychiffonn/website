@@ -19,6 +19,11 @@ export const SiteConfigSchema = z.object({
       day: z.enum(['numeric', '2-digit']).optional(),
       month: z.enum(['numeric', '2-digit', 'narrow', 'short', 'long']).optional(),
       year: z.enum(['numeric', '2-digit']).optional(),
+      timeZone: z.string().optional(),
+    }).default({}),
+    relative: z.object({
+      enabled: z.boolean().default(false),
+      maxDaysThreshold: z.number().default(30)
     }).default({})
   }),
 
@@ -87,7 +92,7 @@ export const ProfileConfigSchema = z.object({
    * How you want the world to know about you.
    * Short biography, tagline, or job title and affiliations
    */
-  tagline: z.string().max(100),
+  tagline: z.string().max(70),
   /** Geographic location (city, state, country) */
   location: z.string().max(50).optional(),
   /** Phone number in international format */

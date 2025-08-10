@@ -15,17 +15,57 @@ export function cn(...inputs: ClassValue[]) {
 // ========================================
 
 /**
- * Format a date with optional locale and format options
+ * Format a date as a relative time string (e.g., "3 days ago", "2 months ago")
  */
+function formatRelativeTime(date: Date, locale: string = SITE.locale.dateLocale): string {
+  const now = new Date();
+  const diffInMs = date.getTime() - now.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+
+  if (Math.abs(diffInDays) < 7) {
+    return rtf.format(diffInDays, 'day');
+  } else if (Math.abs(diffInDays) < 30) {
+    return rtf.format(Math.floor(diffInDays / 7), 'week');
+  } else if (Math.abs(diffInDays) < 365) {
+    return rtf.format(Math.floor(diffInDays / 30), 'month');
+  } else {
+    return rtf.format(Math.floor(diffInDays / 365), 'year');
+  }
+}
+
 export function formatDate(
   date: string | number | Date,
   locale: string = SITE.locale.dateLocale,
-  options?: Intl.DateTimeFormatOptions
+  options?: Intl.DateTimeFormatOptions & {
+    relative?: boolean;
+    maxDaysThreshold?: number;
+  }
 ): string {
+  const dateObj = new Date(date);
+
+  // Check if relative formatting is requested (either via options or global config)
+  const useRelative = options?.relative ?? SITE.locale.relative.enabled;
+
+  if (useRelative) {
+    const threshold = options?.maxDaysThreshold ?? SITE.locale.relative.maxDaysThreshold;
+    const now = new Date();
+    const diffInDays = Math.abs(Math.floor((dateObj.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+
+    // If within threshold, use relative format
+    if (diffInDays <= threshold) {
+      return formatRelativeTime(dateObj, locale);
+    }
+  }
+
+  // Remove custom options before passing to Intl.DateTimeFormat
+  const { relative, maxDaysThreshold, ...intlOptions } = options || {};
+
   return new Intl.DateTimeFormat(locale, {
     ...SITE.locale.dateOptions,
-    ...options
-  }).format(new Date(date))
+    ...intlOptions
+  }).format(dateObj);
 }
 
 /**
@@ -34,7 +74,10 @@ export function formatDate(
 export function createDateRange(
   fromDate?: Date,
   toDate?: Date,
-  options?: Intl.DateTimeFormatOptions
+  options?: Intl.DateTimeFormatOptions & {
+    relative?: boolean;
+    maxDaysThreshold?: number;
+  }
 ): string | null {
   if (!fromDate && !toDate) return null
 
