@@ -2,13 +2,12 @@
 import { render, type CollectionEntry } from "astro:content"
 
 import { createDateRange } from "@/lib/utils"
-import { getProjectsWithContent } from "@/lib/projects"
+import { getProjectsWithContent, getContextVariant, getProjectLinks, hasProjectContent } from "@/lib/projects"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-import { getContextVariant, getProjectLinks, hasProjectContent } from "@/components/projects"
 
 export const prerender = true
 
