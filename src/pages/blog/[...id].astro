@@ -114,39 +114,35 @@ const isActivePost = activePostMetadata ? activePostData.id === post.id : false
         activePostHeadings[0].text === post.data.title
       ) && <TOCHeader slot="toc-header" headings={activePostHeadings} />
   }
-
+  <Breadcrumbs
+    slot="breadcrumb"
+    items={[
+      { href: `/${post.collection}`, label: "Blog", icon: "mingcute:book-5-line" },
+      ...(isSubpost && parentPost
+        ? [
+            {
+              href: `/${post.collection}/${parentPost.id}`,
+              label: parentPost.data.title,
+              icon: "mingcute:documents-line"
+            },
+            {
+              href: `/${post.collection}/${currentPostId}`,
+              label: post.data.title,
+              icon: "mingcute:document-line"
+            }
+          ]
+        : [
+            {
+              href: `/${post.collection}/${currentPostId}`,
+              label: post.data.title,
+              icon: "mingcute:book-line"
+            }
+          ])
+    ]}
+  />
   <div
     class="grid grid-cols-[minmax(0px,1fr)_min(calc(var(--breakpoint-md)-2rem),100%)_minmax(0px,1fr)] gap-y-6"
   >
-    {/** Navigation breadcrumbs */}
-    <Breadcrumbs
-      slot="breadcrumb"
-      class="col-start-2"
-      items={[
-        { href: `/${post.collection}`, label: "Blog", icon: "mingcute:book-5-line" },
-        ...(isSubpost && parentPost
-          ? [
-              {
-                href: `/${post.collection}/${parentPost.id}`,
-                label: parentPost.data.title,
-                icon: "mingcute:documents-line"
-              },
-              {
-                href: `/${post.collection}/${currentPostId}`,
-                label: post.data.title,
-                icon: "mingcute:document-line"
-              }
-            ]
-          : [
-              {
-                href: `/${post.collection}/${currentPostId}`,
-                label: post.data.title,
-                icon: "mingcute:book-line"
-              }
-            ])
-      ]}
-    />
-
     {/** Hero image */}
     {
       post.data.image && (

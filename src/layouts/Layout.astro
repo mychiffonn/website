@@ -59,8 +59,8 @@ const {
         <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
         <slot name="toc-header" aria-label="Table of contents" />
       </div>
-      <slot name="breadcrumb" />
-      <main class:list={["mx-auto flex grow flex-col gap-y-4 px-4", className]}>
+      <main class:list={["mx-auto flex max-w-3xl grow flex-col gap-y-4 px-4", className]}>
+        <slot name="breadcrumb" />
         <slot />
       </main>
       <Footer />
