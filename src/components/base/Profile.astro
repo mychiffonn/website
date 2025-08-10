@@ -11,7 +11,7 @@ import { Content as AboutContent } from "@/content/about.md"
 ---
 
 <article class="rounded-lg border">
-  <header class="flex flex-col gap-4 p-6 sm:flex-row sm:items-start">
+  <header class="flex flex-col items-center gap-4 p-4 sm:flex-row sm:items-start">
     <Avatar
       src={avatar}
       alt={PROFILE.name}
@@ -26,7 +26,7 @@ import { Content as AboutContent } from "@/content/about.md"
         <h1 class="text-3xl leading-none font-bold">{PROFILE.name}</h1>
         {
           PROFILE.pronouns && (
-            <Badge variant="info" class="text-xs">
+            <Badge variant="outline" class="text-xs">
               {PROFILE.pronouns}
             </Badge>
           )
@@ -53,19 +53,19 @@ import { Content as AboutContent } from "@/content/about.md"
         )
       }
 
-      <ProfileLinks includeLabel={true} class="gap-2" />
+      <ProfileLinks includeLabel={true} />
 
       {
         PROFILE.pronunciation && (
           <Collapse title="Pronunciation" variant="muted">
-            <p class="text-muted-foreground text-xs">{PROFILE.pronunciation}</p>
+            <p class="text-muted-foreground">{PROFILE.pronunciation}</p>
           </Collapse>
         )
       }
     </div>
   </header>
 
-  <section class="prose max-w-none p-6 pt-0">
+  <section class="prose max-w-none p-4">
     <AboutContent />
   </section>
 </article>

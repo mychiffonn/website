@@ -19,6 +19,8 @@ const buttonVariants = cva(
     // Touch & interaction
     "touch-manipulation transition-all cursor-pointer select-none",
 
+    "transform-gpu will-change-transform",
+
     // Focus & accessibility
     "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
 
@@ -30,18 +32,17 @@ const buttonVariants = cva(
     // Icon handling
     "[&_svg:not([class*='size-'])]:size-4",
     "[&_svg]:shrink-0 shrink-0"
-    // Base button styling"
   ],
   {
     variants: {
       variant: {
         default: [
-          "bg-primary text-primary-foreground",
-          "hover:text-foreground hover:bg-background hover:border-2",
+          "bg-primary text-primary-foreground border-2 border-transparent",
+          "hover:text-foreground hover:bg-background hover:border-primary",
           "active:scale-95"
         ],
         destructive: [
-          "bg-destructive text-white",
+          "bg-destructive text-white border-transparent",
           "hover:bg-destructive/90",
           "focus-visible:ring-destructive/20",
           "dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
@@ -54,12 +55,11 @@ const buttonVariants = cva(
           "active:scale-95"
         ],
         secondary: [
-          "bg-secondary text-secondary-foreground",
+          "bg-secondary text-secondary-foreground border-transparent",
           "hover:bg-secondary/80",
           "active:scale-95"
         ],
-        ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
-        link: "text-primary underline-offset-4 hover:underline active:text-primary/80"
+        ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent/80"
       },
       size: {
         default: "px-5 py-3",
@@ -95,7 +95,6 @@ const { variant = "default", size = "default", class: className, href, ...rest }
   ) : (
     <button
       type="button"
-      role="button"
       data-slot="button"
       class={cn(buttonVariants({ variant, size }), className)}
       {...rest}
