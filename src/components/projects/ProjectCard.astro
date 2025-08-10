@@ -26,7 +26,8 @@ const hasDetailPage = project.body && project.body.trim().length > 0
 
 <article
   class:list={[
-    "group relative block h-full overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg",
+    "group relative block h-full overflow-hidden rounded-xl border p-6",
+    "transition-all duration-300 hover:scale-[1.02] hover:shadow-lg",
     isHighlighted
       ? "ring-primary from-primary/5 via-background to-background hover:ring-primary/70 bg-gradient-to-br ring-2"
       : "bg-card hover:bg-secondary/50 hover:border-primary/20"
