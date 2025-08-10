@@ -14,7 +14,12 @@ export const SITE: SiteConfig = {
     dateOptions: {
       day: "numeric",
       month: "short",
-      year: "numeric"
+      year: "numeric",
+      timeZone: "America/Los_Angeles" // or your preferred timezone
+    },
+    relative: {
+      enabled: true,
+      maxDaysThreshold: 30
     }
   },
 
@@ -39,7 +44,7 @@ export const SITE: SiteConfig = {
 
 export const PROFILE: ProfileConfig = {
   name: "My (Chiffon) Nguyen",
-  tagline: "Researcher, Developer, Teacher, and Life-long Learner",
+  tagline: "NLP+HCI Researcher, Engineer, Teacher, and Life-long Learner",
   location: "San Francisco, CA, USA",
   pronouns: "she/her/hers",
   pronunciation: "My = /me/ or 미 , Chiffon = /shif-ON/, Nguyen = /ngwen/",
@@ -51,7 +56,7 @@ export const PROFILE: ProfileConfig = {
       label: "platform"
     },
     cv: "doc/cv.pdf",
-    x: "https://x.com/chiffonng"
+    bluesky: "https://bsky.app/profile/mychiffonng.bsky.social",
   }
 }
 
