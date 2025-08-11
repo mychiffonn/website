@@ -16,7 +16,7 @@ interface Props {
 const { items, class: className } = Astro.props
 ---
 
-<nav aria-label="Breadcrumb navigation" class={cn("", className)}>
+<nav aria-label="Breadcrumb navigation" class={cn("mx-auto flex w-full max-w-3xl", className)}>
   <ol
     class="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5"
   >

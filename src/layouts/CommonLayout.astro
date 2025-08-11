@@ -15,12 +15,11 @@ interface Props {
   }>
 }
 
-const { title, description, updatedAt, class: className = "max-w-3xl", breadcrumbs } = Astro.props
+const { title, description, updatedAt, class: className, breadcrumbs } = Astro.props
 ---
 
 <Layout class={className} title={title} description={description}>
-
-  {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+  {breadcrumbs && <Breadcrumbs slot="breadcrumb" items={breadcrumbs} />}
 
   <hgroup>
     <h1 class="text-3xl font-bold">{title}</h1>

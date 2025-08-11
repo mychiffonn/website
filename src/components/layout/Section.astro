@@ -1,13 +1,19 @@
 ---
 interface Props {
-  title: string
+  title?: string
   class?: string
 }
 
 const { class: className, title } = Astro.props
 ---
 
-<section class:list={["flex flex-col gap-y-2", className]}>
-  <h2 id={title.toLowerCase()} class="text-xl font-bold">{title}</h2>
+<section class:list={["mt-8 flex flex-col gap-y-2", className]}>
+  {
+    title && (
+      <h2 id={title.toLowerCase()} class="mt-8 mb-4 text-2xl font-medium">
+        {title}
+      </h2>
+    )
+  }
   <slot />
 </section>

@@ -6,7 +6,7 @@ description:
 createdAt: 2025-06-18
 updatedAt: 2025-07-30
 image: "./knowledge-banner.jpg"
-tags: [philosophy, social justice, research, personal]
+tags: [philosophy, epistemic justice, research, personal]
 authors: ["mychiffon"]
 ---
 

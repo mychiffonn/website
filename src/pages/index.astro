@@ -1,23 +1,53 @@
 ---
 import { SITE } from "@/config"
 import { PostManager } from "@/lib/blog"
+import { getLatestUpdates } from "@/lib/updates"
 import Layout from "@/layouts/Layout.astro"
 import Button from "@/components/base/Button.astro"
+import Link from "@/components/base/Link.astro"
 import Profile from "@/components/base/Profile.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
+import Section from "@/components/layout/Section.astro"
+import UpdateTimeline from "@/components/updates/UpdateTimeline.astro"
 
+import { Content as MiscContent } from "@/content/misc.md"
+
+// Updates
+const renderedUpdates = await getLatestUpdates(3)
+
+// Blog
 const postManager = PostManager.getInstance()
 const recentPosts = await postManager.getMainPosts(SITE.featuredPostCount)
 const recentPostsMetadata = await Promise.all(
   recentPosts.map((post) => postManager.getMetadata(post.id))
 )
+
+// Misc
 ---
 
-<Layout class="max-w-3xl" title="Home">
+<Layout title="Home">
   <Profile />
-  <section class="mt-8 flex flex-col gap-y-4">
-    <h2 class="text-2xl font-medium">Latest posts</h2>
-    <ul class="flex flex-col gap-y-4">
+
+  {
+    renderedUpdates.length > 0 && (
+      <Section>
+        <div class="flex items-center gap-x-3">
+          <h2 class="gap-y-4 text-2xl font-medium">Recent updates</h2>
+          <Link href="/now" underline class="text-muted-foreground hover:text-foreground text-sm">
+            see all &rarr;
+          </Link>
+        </div>
+        <UpdateTimeline
+          renderedUpdates={renderedUpdates}
+          itemClass="line-clamp-4 md:line-clamp-3"
+          variant="inline"
+        />
+      </Section>
+    )
+  }
+
+  <Section title="Latest posts">
+    <ul class="flex flex-col gap-y-2">
       {
         recentPostsMetadata.map((metadata) => (
           <li>
@@ -26,7 +56,7 @@ const recentPostsMetadata = await Promise.all(
         ))
       }
     </ul>
-    <div class="flex justify-center gap-2">
+    <div class="mt-4 flex justify-center gap-2">
       <Button href="/blog" variant="default" class="group">
         See all posts <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
       </Button>
@@ -34,5 +64,8 @@ const recentPostsMetadata = await Promise.all(
         Browse by tags <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
       </Button>
     </div>
-  </section>
+  </Section>
+  <Section title="Miscellanous">
+    <div class="prose"><MiscContent /></div>
+  </Section>
 </Layout>

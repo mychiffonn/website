@@ -1,0 +1,29 @@
+---
+import type { RenderedUpdate } from "@/lib/updates"
+
+import UpdateInline from "./UpdateInline.astro"
+import UpdateStacked from "./UpdateStacked.astro"
+
+interface Props {
+  renderedUpdates: RenderedUpdate[]
+  class?: string
+  itemClass?: string
+  variant: 'inline' | 'stacked'
+}
+
+const { renderedUpdates, class: className, itemClass, variant } = Astro.props
+---
+
+{variant === 'inline' ? (
+  <UpdateInline
+    renderedUpdates={renderedUpdates}
+    class={className}
+    itemClass={itemClass}
+  />
+) : (
+  <UpdateStacked
+    renderedUpdates={renderedUpdates}
+    class={className}
+    itemClass={itemClass}
+  />
+)}

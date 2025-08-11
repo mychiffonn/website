@@ -1,0 +1,221 @@
+---
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
+
+const dropdownContentVariants = cva([
+  "bg-popover text-popover-foreground z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md",
+  "absolute invisible opacity-0 scale-95 transition-all duration-150 ease-out",
+  "[&.show]:visible [&.show]:opacity-100 [&.show]:scale-100",
+  "touch-manipulation"
+], {
+  variants: {
+    align: {
+      start: "origin-top-left",
+      center: "origin-top",
+      end: "origin-top-right"
+    }
+  },
+  defaultVariants: {
+    align: "start"
+  }
+})
+
+
+
+export interface Props {
+  class?: string
+  align?: "start" | "end" | "center"
+  sideOffset?: number
+  id?: string
+  open?: boolean
+}
+
+const { 
+  class: className,
+  align = "start",
+  sideOffset = 4,
+  id = `dropdown-${Math.random().toString(36).substr(2, 9)}`,
+  open = false,
+  ...rest 
+} = Astro.props
+---
+
+<div class="relative inline-block" data-dropdown-root data-state={open ? "open" : "closed"}>
+  <slot name="trigger" />
+  
+  <div 
+    id={id}
+    class={cn(dropdownContentVariants({ align }), className)}
+    data-dropdown-content
+    data-align={align}
+    data-side="bottom"
+    role="menu"
+    aria-orientation="vertical"
+    tabindex="-1"
+    {...rest}
+  >
+    <slot />
+  </div>
+</div>
+
+<script>
+  class DropdownMenu {
+    private trigger: HTMLElement | null = null
+    private content: HTMLElement | null = null
+    private isOpen = false
+
+    constructor(private container: HTMLElement) {
+      this.trigger = container.querySelector('[data-dropdown-trigger]')
+      this.content = container.querySelector('[data-dropdown-content]')
+      
+      if (this.trigger && this.content) {
+        this.setupEventListeners()
+        
+        // Set initial state
+        const initialState = container.getAttribute('data-state')
+        if (initialState === 'open') {
+          this.open()
+        }
+      }
+    }
+
+
+    private setupEventListeners() {
+      if (!this.trigger || !this.content) return
+
+      // Simple event listeners
+      this.trigger.addEventListener('click', this.handleTriggerClick.bind(this))
+      this.content.addEventListener('click', this.handleContentClick.bind(this))
+      document.addEventListener('click', this.handleOutsideClick.bind(this))
+    }
+
+    private handleTriggerClick = (e: Event) => {
+      e.preventDefault()
+      e.stopPropagation()
+      this.toggle()
+    }
+
+    private handleContentClick = (e: Event) => {
+      const item = (e.target as Element).closest('[data-dropdown-item]')
+      if (item && !item.hasAttribute('data-disabled')) {
+        this.close()
+      }
+    }
+
+    private handleOutsideClick = (e: Event) => {
+      if (!this.container.contains(e.target as Node)) {
+        this.close()
+      }
+    }
+
+    private toggle() {
+      this.isOpen ? this.close() : this.open()
+    }
+
+    private open() {
+      if (!this.content || this.isOpen) return
+      
+      this.isOpen = true
+      this.container.setAttribute('data-state', 'open')
+      this.content.classList.add('show')
+      this.positionContent()
+      
+      // Emit open event
+      this.container.dispatchEvent(new CustomEvent('dropdown-open'))
+    }
+
+    private close() {
+      if (!this.content || !this.isOpen) return
+      
+      this.isOpen = false
+      this.container.setAttribute('data-state', 'closed')
+      this.content.classList.remove('show')
+      
+      // Emit close event
+      this.container.dispatchEvent(new CustomEvent('dropdown-close'))
+    }
+
+    private positionContent() {
+      if (!this.trigger || !this.content) return
+
+      const triggerRect = this.trigger.getBoundingClientRect()
+      const contentRect = this.content.getBoundingClientRect()
+      const { innerWidth: vw, innerHeight: vh } = window
+      const align = this.content.dataset.align || 'start'
+      const sideOffset = 4
+
+      // Get actual content width, fallback to 200px
+      const contentWidth = contentRect.width || 200
+
+      let left = 0
+      if (align === 'end') {
+        // Align to the right edge of the trigger
+        left = triggerRect.width - contentWidth
+      } else if (align === 'center') {
+        // Center on the trigger
+        left = (triggerRect.width - contentWidth) / 2
+      }
+      // For 'start', left remains 0 (align to left edge of trigger)
+
+      // Prevent overflow on the right side
+      const triggerLeftInViewport = triggerRect.left
+      const proposedRightEdge = triggerLeftInViewport + left + contentWidth
+      
+      if (proposedRightEdge > vw - 10) { // 10px margin from edge
+        // If it would overflow, align to the right edge of viewport
+        left = vw - triggerLeftInViewport - contentWidth - 10
+      }
+      
+      // Prevent overflow on the left side  
+      if (triggerLeftInViewport + left < 10) { // 10px margin from edge
+        left = 10 - triggerLeftInViewport
+      }
+
+      this.content.style.left = `${left}px`
+      this.content.style.top = `calc(100% + ${sideOffset}px)`
+      
+      // Set max height efficiently
+      const maxHeight = vh - triggerRect.bottom - sideOffset - 20
+      this.content.style.maxHeight = `${Math.max(200, maxHeight)}px`
+    }
+
+
+    public setOpen(open: boolean) {
+      if (open) {
+        this.open()
+      } else {
+        this.close()
+      }
+    }
+  }
+
+  // Initialize dropdowns
+  function initDropdowns() {
+    document.querySelectorAll('[data-dropdown-root]').forEach((container) => {
+      if (!container.hasAttribute('data-dropdown-initialized')) {
+        new DropdownMenu(container as HTMLElement)
+        container.setAttribute('data-dropdown-initialized', '')
+      }
+    })
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDropdowns)
+  } else {
+    initDropdowns()
+  }
+  
+  // Re-initialize after Astro page transitions
+  document.addEventListener('astro:after-swap', initDropdowns)
+</script>
+
+<style>
+  /* Touch-friendly hover states */
+  @media (hover: hover) and (pointer: fine) {
+    [data-dropdown-item]:hover {
+      background-color: hsl(var(--accent));
+      color: hsl(var(--accent-foreground));
+    }
+  }
+</style>

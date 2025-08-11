@@ -19,12 +19,12 @@ export const SITE: SiteConfig = {
     },
     relative: {
       enabled: true,
-      maxDaysThreshold: 30
+      maxDaysThreshold: 30 // relative date for dates less than 30 days ago
     }
   },
 
   // Blog settings
-  featuredPostCount: 2,
+  featuredPostCount: 3,
   postsPerPage: 8,
 
   // TOC settings
