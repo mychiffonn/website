@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { fromZonedTime, formatInTimeZone } from 'date-fns-tz'
 import { SITE } from '@/config'
 
 // ========================================
@@ -13,6 +14,31 @@ export function cn(...inputs: ClassValue[]) {
 // ========================================
 // Date Utilities
 // ========================================
+
+/**
+ * Create a Date object from a date string, interpreting it in the local timezone
+ * For date strings like "2025-08-10", treats it as midnight in the configured timezone
+ */
+export function createLocalDate(dateInput: string | number | Date): Date {
+  if (dateInput instanceof Date) {
+    return dateInput
+  }
+
+  if (typeof dateInput === 'number') {
+    return new Date(dateInput)
+  }
+
+  // For simple date strings like "2025-08-10", create date in configured timezone
+  if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+    const timeZone = SITE.locale.dateOptions.timeZone || 'UTC'
+
+    // Parse as midnight in the configured timezone
+    const dateAtMidnight = `${dateInput}T00:00:00`
+    return fromZonedTime(dateAtMidnight, timeZone)
+  }
+
+  return new Date(dateInput)
+}
 
 /**
  * Format a date as a relative time string (e.g., "3 days ago", "2 months ago")
@@ -43,7 +69,7 @@ export function formatDate(
     maxDaysThreshold?: number;
   }
 ): string {
-  const dateObj = new Date(date);
+  const dateObj = createLocalDate(date);
 
   // Check if relative formatting is requested (either via options or global config)
   const useRelative = options?.relative ?? SITE.locale.relative.enabled;
@@ -59,13 +85,26 @@ export function formatDate(
     }
   }
 
-  // Remove custom options before passing to Intl.DateTimeFormat
+  // Format in the configured timezone using configured options
   const { relative, maxDaysThreshold, ...intlOptions } = options || {};
+  const finalOptions = { ...SITE.locale.dateOptions, ...intlOptions };
 
-  return new Intl.DateTimeFormat(locale, {
-    ...SITE.locale.dateOptions,
-    ...intlOptions
-  }).format(dateObj);
+  // Use Intl.DateTimeFormat for proper formatting with all options
+  const formatter = new Intl.DateTimeFormat(locale, finalOptions);
+  return formatter.format(dateObj);
+}
+
+/**
+ * Generate timezone-aware ISO datetime string for HTML datetime attributes
+ */
+export function formatDateTimeISO(
+  date: string | number | Date,
+  timeZone: string = SITE.locale.dateOptions.timeZone || 'UTC'
+): string {
+  const dateObj = createLocalDate(date)
+
+  // Format as ISO string with timezone offset
+  return formatInTimeZone(dateObj, timeZone, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
 }
 
 /**
