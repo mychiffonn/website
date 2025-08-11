@@ -11,27 +11,9 @@ interface Props {
   metadata: PostMeta
   variant: "card" | "full"
   class?: string
-  showItems?: {
-    authors?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    readingTime?: boolean
-    subpostCount?: boolean
-  }
 }
 
-const {
-  metadata,
-  variant = "full",
-  class: className,
-  showItems = {
-    authors: true,
-    createdAt: true,
-    updatedAt: true,
-    readingTime: true,
-    subpostCount: true
-  }
-} = Astro.props
+const { metadata, variant = "full", class: className } = Astro.props
 
 const wordCount =
   metadata.hasSubposts && metadata.combinedWordCount
@@ -44,13 +26,13 @@ const isCard = variant === "card"
 <div
   id="post-metadata"
   class:list={[
-    "text-muted-foreground flex items-center gap-3 text-sm",
+    "text-muted-foreground flex items-center gap-x-3 gap-y-2 text-sm",
     isCard ? "card flex-wrap" : "flex-col justify-center sm:flex-row",
     className
   ]}
 >
   {
-    showItems.authors && metadata.authors.length > 0 && (
+    metadata.authors.length > 0 && (
       <div class="flex items-center gap-1.5">
         {metadata.authors.map((author) => (
           <div class="flex items-center gap-1">
@@ -68,26 +50,22 @@ const isCard = variant === "card"
     )
   }
 
-  {
-    showItems.createdAt && (
-      <div class="flex items-center gap-1">
-        <Icon name="publish" class="size-4" aria-label="Published" />
-        <FormattedDate date={metadata.createdAt} />
-      </div>
-    )
-  }
+  <div class="flex items-center gap-1">
+    <Icon name="publish" class="size-4" title="Published" />
+    <FormattedDate date={metadata.createdAt} />
+  </div>
 
   {
-    showItems.updatedAt && metadata.updatedAt && (
+    metadata.updatedAt && (
       <div class="flex items-center gap-1">
-        <Icon name="edit" class="size-4" aria-label="Updated" />
+        <Icon name="edit" class="size-4" title="Updated" />
         <FormattedDate date={metadata.updatedAt} />
       </div>
     )
   }
 
   {
-    showItems.subpostCount && metadata.hasSubposts && (
+    metadata.hasSubposts && (
       <div class="flex items-center gap-1">
         <Icon name="subposts" class="size-4" />
         <span>
@@ -98,7 +76,7 @@ const isCard = variant === "card"
   }
 
   {
-    showItems.readingTime && wordCount > 0 && (
+    wordCount > 0 && (
       <div class="flex items-center gap-1">
         <Icon name="reading-time" class="size-4" />
         <ReadingTime
@@ -110,14 +88,17 @@ const isCard = variant === "card"
   }
 </div>
 <style>
-  /* Add separator | to blog, but not stacked layout */
-  #post-metadata:not(.flex-col) > *:not(:first-child)::before {
-    content: "|";
-    color: color-mix(in srgb, currentColor 50%, transparent);
-    margin-inline: 0.5rem;
+  #post-metadata > *:not(:first-child)::before {
+    content: none;
   }
-
-  #post-metadata.card > *:not(:first-child)::before {
-    display: none;
+  @media (min-width: 640px) {
+    #post-metadata:not(.card) > *:not(:first-child)::before {
+      content: "•";
+      margin-inline: 0.5rem;
+      display: inline-block;
+      vertical-align: middle;
+      color: color-mix(in oklch, var(--text-muted-foreground) 50%, transparent);
+      pointer-events: none;
+    }
   }
 </style>
