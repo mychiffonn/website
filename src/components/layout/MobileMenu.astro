@@ -1,0 +1,112 @@
+---
+import { NAV_LINKS } from "@/config"
+import Button from "@/components/base/Button.astro"
+import Dropdown from "@/components/base/Dropdown.astro"
+import Icon from "@/components/base/Icon.astro"
+---
+
+<Dropdown align="end" class="sm:hidden">
+  <Button
+    slot="trigger"
+    variant="ghost"
+    size="square"
+    class="sm:hidden"
+    title="Menu"
+    data-dropdown-trigger
+  >
+    <Icon name="mingcute:menu-line" class="size-5" />
+    <span class="sr-only">Toggle menu</span>
+  </Button>
+
+  <div class="bg-background min-w-[200px]">
+    {
+      NAV_LINKS.map((item) => (
+        <a href={item.href} data-dropdown-item data-nav-link={item.href}>
+          {item.label}
+        </a>
+      ))
+    }
+  </div>
+</Dropdown>
+<style>
+  a[data-dropdown-item] {
+    display: block;
+    width: 100%;
+    border-radius: 0.375rem; /* rounded-md */
+    border: 1px solid transparent; /* border-1 border-transparent */
+    padding: 0.5rem; /* p-2 */
+    font-weight: 500; /* font-medium */
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  /* Hover: background & border */
+  a[data-dropdown-item]:hover {
+    background-color: color-mix(in oklch, var(--accent) 30%, transparent);
+    border-color: color-mix(in oklch, var(--accent) 100%, transparent);
+  }
+
+  /* Active (aria-current="page") */
+  a[data-dropdown-item][aria-current="page"] {
+    background-color: color-mix(in oklch, var(--accent) 50%, transparent);
+    border-color: var(--border);
+    color: var(--foreground);
+  }
+</style>
+<script>
+  // Cache selectors and optimize DOM queries
+  let navLinks: NodeListOf<Element> | null = null
+  let currentPath = ""
+
+  function updateActiveStates() {
+    const newPath = window.location.pathname
+    if (newPath === currentPath) return // Skip if path hasn't changed
+    currentPath = newPath
+
+    // Cache nav links on first run
+    if (!navLinks) {
+      navLinks = document.querySelectorAll("[data-nav-link]")
+    }
+
+    // Use ARIA attributes for CSS styling
+    requestAnimationFrame(() => {
+      navLinks!.forEach((link) => {
+        const href = link.getAttribute("data-nav-link")
+        if (!href) return
+
+        const isActive = currentPath === href || (href !== "/" && currentPath.startsWith(href))
+
+        // Use aria-current attribute for CSS styling
+        if (isActive) {
+          link.setAttribute("aria-current", "page")
+        } else {
+          link.removeAttribute("aria-current")
+        }
+      })
+    })
+  }
+
+  function closeDropdown() {
+    const dropdown = document.querySelector("[data-dropdown-root]")
+    if (dropdown?.getAttribute("data-state") === "open") {
+      dropdown.dispatchEvent(new CustomEvent("dropdown-close"))
+    }
+  }
+
+  // Efficient initialization
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", updateActiveStates, { once: true })
+  } else {
+    updateActiveStates()
+  }
+
+  // Optimized event listeners
+  document.addEventListener("astro:after-swap", () => {
+    navLinks = null // Reset cache
+    updateActiveStates()
+  })
+
+  document.addEventListener("astro:before-swap", closeDropdown)
+</script>
