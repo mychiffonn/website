@@ -1,22 +1,21 @@
 ---
+import { getLatestUpdates } from "@/lib/updates"
 import CommonLayout from "@/layouts/CommonLayout.astro"
 import Link from "@/components/base/Link.astro"
+import UpdateTimeline from "@/components/updates/UpdateTimeline.astro"
 
-import { frontmatter, Content as NowContent } from "src/content/now.md"
-
-const nowDescription =
-  "This is a now page, a page that tells you what I am focusing on at this point in my life."
-
-const updatedAt = frontmatter.updatedAt ? new Date(frontmatter.updatedAt) : undefined
+const nowDescription = "A sporadically updated log of what I am doing, thinking, and exploring."
+// Get all updates and process them
+const renderedUpdates = await getLatestUpdates(5)
 ---
 
 <CommonLayout
   title="What I'm doing now"
   description={nowDescription}
-  updatedAt={updatedAt}
   breadcrumbs={[{ label: "Now", icon: "mingcute:time-line" }]}
 >
-  <NowContent />
+  {renderedUpdates.length > 0 && <UpdateTimeline renderedUpdates={renderedUpdates} variant="stacked"/>
+
   <p class="text-muted-foreground text-sm">
     Learn more about now pages and browse others at
     <Link href="https://nownownow.com" class="text-foreground hover:text-primary" external underline

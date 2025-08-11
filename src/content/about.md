@@ -21,4 +21,4 @@ and reasoning capabilities.
 
 I graduated in May 2025 from [Minerva University](https://minerva.edu/) studying Machine Learning &
 Statistics, while living and engaging civically in 6 cities 🇺🇸🇰🇷🇹🇼🇮🇳🇦🇷🇩🇪 as part of its global
-rotation program. [[What am I doing?](./now)]
+rotation program.
