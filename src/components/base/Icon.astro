@@ -75,9 +75,13 @@ const { name, title, desc, ...props } = Astro.props
 const iconName = (SEMANTIC_ICONS as Record<string, string>)[name] || name
 
 // Derive accessibility attributes from props
-const accessibility: Record<string, any> = {
-  role: "img",
-  "aria-hidden": "true" // Default to decorative
+const accessibility: Record<string, any> = {}
+
+if (title || desc) {
+} else {
+  // If neither title nor desc, make it decorative
+  accessibility.role = "presentation"
+  accessibility["aria-hidden"] = "true"
 }
 ---
 
