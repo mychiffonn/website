@@ -195,7 +195,10 @@ const isActivePost = activePostMetadata ? activePostData.id === post.id : false
           subposts={subposts}
           activePost={activePostMetadata}
           isActivePost={isActivePost}
-          class="sticky top-20 col-start-1 row-span-1 mr-8 ml-auto hidden h-[calc(100vh-5rem)] max-w-md xl:block"
+          class:list={[
+            "sticky top-20 col-start-1 row-span-1 xl:block",
+            "mr-8 ml-auto hidden h-[calc(100vh-5rem)] min-w-64"
+          ]}
         />
       )
     }
@@ -211,7 +214,10 @@ const isActivePost = activePostMetadata ? activePostData.id === post.id : false
         <TOCSidebar
           sections={tocSections}
           currentPostId={currentPostId}
-          class="sticky top-20 col-start-3 row-span-1 mr-auto ml-8 hidden h-[calc(100vh-5rem)] max-w-md xl:block"
+          class:list={[
+            "sticky top-20 col-start-3 row-span-1 xl:block",
+            "mr-auto ml-8 hidden h-[calc(100vh-5rem)] min-w-64"
+          ]}
         />
       )
     }
