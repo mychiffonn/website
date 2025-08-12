@@ -117,25 +117,25 @@ const isActivePost = activePostMetadata ? activePostData.id === post.id : false
   <Breadcrumbs
     slot="breadcrumb"
     items={[
-      { href: `/${post.collection}`, label: "Blog", icon: "mingcute:book-5-line" },
+      { href: `/${post.collection}`, label: "Blog", icon: "blog" },
       ...(isSubpost && parentPost
         ? [
             {
               href: `/${post.collection}/${parentPost.id}`,
               label: parentPost.data.title,
-              icon: "mingcute:documents-line"
+              icon: "parent-post"
             },
             {
               href: `/${post.collection}/${currentPostId}`,
               label: post.data.title,
-              icon: "mingcute:document-line"
+              icon: "subpost"
             }
           ]
         : [
             {
               href: `/${post.collection}/${currentPostId}`,
               label: post.data.title,
-              icon: "mingcute:book-line"
+              icon: "post-active"
             }
           ])
     ]}

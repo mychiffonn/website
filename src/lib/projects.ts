@@ -1,17 +1,11 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
+import { PROJECT_LINK_TYPES, type ProjectLinkType } from '@/icons'
 
 export type Project = CollectionEntry<'projects'>
 
 // ========================================
 // Project Link Utilities
 // ========================================
-
-const projectLinkDefinitions = {
-  repo: { label: 'Repository', iconName: 'mingcute:github-line' },
-  doc: { label: 'Documentation', iconName: 'mingcute:document-line' },
-  url: { label: 'Website', iconName: 'mingcute:external-link-line' },
-  release: { label: 'Release', iconName: 'mingcute:download-line' }
-} as const
 
 export const getProjectLinks = (repo?: string, doc?: string, url?: string, release?: string) => {
   const linkData = [
@@ -22,12 +16,12 @@ export const getProjectLinks = (repo?: string, doc?: string, url?: string, relea
   ]
 
   return linkData
-    .filter((link): link is { type: keyof typeof projectLinkDefinitions; href: string } => !!link.href)
+    .filter((link): link is { type: ProjectLinkType; href: string } => !!link.href)
     .map((link) => ({
       type: link.type,
       href: link.href,
-      icon: projectLinkDefinitions[link.type].iconName,
-      label: projectLinkDefinitions[link.type].label
+      icon: PROJECT_LINK_TYPES[link.type].iconName,
+      label: PROJECT_LINK_TYPES[link.type].label
     }))
 }
 

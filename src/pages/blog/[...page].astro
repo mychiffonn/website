@@ -47,8 +47,8 @@ const moreTagsButton = numTags > 15
 <Layout class="max-w-3xl" title="Blog">
   <Breadcrumbs
     items={[
-      { label: "Blog", href: "/blog", icon: "mingcute:book-5-line" },
-      { label: `Page ${page.currentPage}`, icon: "mingcute:copy-line" }
+      { label: "Blog", href: "/blog", icon: "blog" },
+      { label: `Page ${page.currentPage}`, icon: "copy" }
     ]}
   />
 
@@ -60,7 +60,7 @@ const moreTagsButton = numTags > 15
           <div class="flex flex-wrap gap-2">
             {displayTags.map(({ tag, count }) => (
               <Badge href={`/tags/${tag}`} variant="secondary">
-                <Icon name="mingcute:hashtag-line" class="size-3" />
+                <Icon name="hashtag" class="size-3" />
                 {tag}
                 <span class="text-muted-foreground ml-1">({count})</span>
               </Badge>
@@ -71,7 +71,7 @@ const moreTagsButton = numTags > 15
               <Button href="/tags" variant="outline" class="group">
                 <span>View all {sortedTags.length} tags</span>
                 <Icon
-                  name="mingcute:arrow-right-line"
+                  name="arrow-right"
                   class="size-4 transition-transform group-hover:translate-x-0.5"
                 />
               </Button>

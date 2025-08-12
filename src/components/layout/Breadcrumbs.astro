@@ -22,7 +22,7 @@ const { items, class: className } = Astro.props
   >
     <li class="inline-flex items-center gap-1.5">
       <a href="/" class="hover:text-foreground flex items-center transition-colors">
-        <Icon name="mingcute:home-4-line" class="size-5 shrink-0" />
+        <Icon name="home" class="size-5 shrink-0" />
       </a>
     </li>
 
@@ -30,7 +30,7 @@ const { items, class: className } = Astro.props
       items.map((item, index) => (
         <>
           <li role="presentation" aria-hidden="true">
-            <Icon name="mingcute:right-line" class="size-4" />
+            <Icon name="chevron-right" class="size-4" />
           </li>
           <li class="inline-flex items-center gap-1.5">
             {index === items.length - 1 ? (

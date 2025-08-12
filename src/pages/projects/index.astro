@@ -1,14 +1,14 @@
 ---
+import { getProjectsForIndex } from "@/lib/projects"
 import Layout from "@/layouts/Layout.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import { GithubActivity, ProjectCard } from "@/components/projects"
-import { getProjectsForIndex } from "@/lib/projects"
 
 const { featuredProjects, otherProjects } = await getProjectsForIndex()
 ---
 
 <Layout class="max-w-3xl" title="Projects">
-  <Breadcrumbs items={[{ label: "Projects", icon: "mingcute:folder-line" }]} />
+  <Breadcrumbs items={[{ label: "Projects", icon: "folder-open" }]} />
 
   <section class="mb-8">
     <h1 class="mb-4 text-3xl font-bold">Projects</h1>

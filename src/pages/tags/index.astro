@@ -9,14 +9,14 @@ const sortedTags = await PostManager.getInstance().getSortedTags()
 ---
 
 <Layout class="max-w-3xl" title="Tags">
-  <Breadcrumbs items={[{ label: "Tags", icon: "mingcute:tag-2-line" }]} />
+  <Breadcrumbs items={[{ label: "Tags", icon: "tags" }]} />
 
   <div class="flex flex-col gap-4">
     <div class="flex flex-wrap gap-2">
       {
         sortedTags.map(({ tag, count }) => (
           <Badge href={`/tags/${tag}`} variant="secondary">
-            <Icon name="mingcute:hashtag-line" class="size-3" />
+            <Icon name="hashtag" class="size-3" />
             {tag}
             <span class="text-muted-foreground ml-1.5">({count})</span>
           </Badge>

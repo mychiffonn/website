@@ -8,7 +8,7 @@ const authors = await PostManager.getInstance().getAllAuthors()
 ---
 
 <Layout class="max-w-3xl" title="Authors">
-  <Breadcrumbs items={[{ label: "Authors", icon: "mingcute:group-line" }]} />
+  <Breadcrumbs items={[{ label: "Authors", icon: "group" }]} />
   {
     authors.length > 0 ? (
       <ul class="flex flex-col gap-4">
