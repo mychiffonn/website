@@ -44,19 +44,18 @@ export const SITE: SiteConfig = {
 
 export const PROFILE: ProfileConfig = {
   name: "My (Chiffon) Nguyen",
+  othernames: "Nguyễn Trà My / 자미 / 阮沐茶",
   tagline: "NLP+HCI Researcher, Engineer, Teacher, and Life-long Learner",
   location: "San Francisco, CA, USA",
   pronouns: "she/her/hers",
-  pronunciation: "My = /me/ or 미 , Chiffon = /shif-ON/, Nguyen = /ngwen/",
+  pronunciation: "My = /me/, Chiffon = /shif-ON/, Nguyen = /ngwen/",
   links: {
     email: "chiffonng136@gmail.com",
-    github: "https://github.com/chiffonng",
-    googleScholar: {
-      href: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
-      label: "platform"
-    },
+    github: "https://github.com/mychiffonn",
+    googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
     cv: "doc/cv.pdf",
-    bluesky: "https://bsky.app/profile/mychiffonng.bsky.social",
+    bluesky: "https://bsky.app/profile/mychiffonn.bsky.social",
+    discord: "discordapp.com/users/mychiffonn"
   }
 }
 

@@ -21,8 +21,6 @@ const recentPosts = await postManager.getMainPosts(SITE.featuredPostCount)
 const recentPostsMetadata = await Promise.all(
   recentPosts.map((post) => postManager.getMetadata(post.id))
 )
-
-// Misc
 ---
 
 <Layout title="Home">
@@ -32,7 +30,7 @@ const recentPostsMetadata = await Promise.all(
     renderedUpdates.length > 0 && (
       <Section>
         <div class="flex items-center gap-x-3">
-          <h2 class="gap-y-4 text-2xl font-medium">Recent updates</h2>
+          <h2 class="gap-y-4 text-2xl font-medium">Latest updates</h2>
           <Link href="/now" underline class="text-muted-foreground hover:text-foreground text-sm">
             see all &rarr;
           </Link>

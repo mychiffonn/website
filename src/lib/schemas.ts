@@ -88,6 +88,8 @@ export const ProfileLinkConfigSchema = z.record(
 export const ProfileConfigSchema = z.object({
   /** Full name or display name */
   name: z.string(),
+  /** (Optional) Your other names, including native, maiden, nicknames. */
+  othernames: z.string().or(z.array(z.string())).optional(),
   /**
    * How you want the world to know about you.
    * Short biography, tagline, or job title and affiliations
