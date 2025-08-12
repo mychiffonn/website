@@ -7,6 +7,7 @@ export const SEMANTIC_ICONS = {
   subpost: "mingcute:document-line",
   folder: "mingcute:folder-line",
   "folder-open": "mingcute:folder-open-line",
+  file: "mingcute:file-line",
   copy: "mingcute:copy-line",
   group: "mingcute:group-line",
   person: "mingcute:user-1-line",

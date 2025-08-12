@@ -17,7 +17,8 @@
       "Bash(pnpm build:*)",
       "Bash(pnpm dev:*)",
       "Bash(pnpm info:*)",
-      "Bash(pnpm preview:*)""Bash(pnpm format:*)",
+      "Bash(pnpm preview:*)",
+      "Bash(pnpm format:*)",
       "Bash(pnpm lint:*)",
       "Bash(pnpm routine:*)",
       "Bash(pnpm check:*)",
@@ -25,7 +26,7 @@
       "WebFetch(domain:localhost)",
       "WebFetch(domain:context7.com)",
       "WebFetch(domain:docs.astro.build)",
-      "WebFetch(domain:mychiffonn.com)",
+      "WebFetch(domain:mychiffonn.com)"
     ],
     "deny": []
   }
