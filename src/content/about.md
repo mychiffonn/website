@@ -1,14 +1,12 @@
-I am interested in **making human knowledge work and learning more accessible, productive, safe, collaborative and
-enjoyable** using natural language processing, human-computer interaction, data science, and
-interdisciplinary insights:
+I research and develop interdisciplinary approaches to **make human knowledge work and learning more inclusive, collaborative, and trustworthy through human-AI systems**:
 
-- Accessibility: Low-resource, multilingual, and multicultural adaptation
-- Productivity: Knowledge management and reasoning across modalities
-- Safety: Human-AI bi-alignment (including AI Alignment), knowledge editing, knowledge unlearning
-- Collaboration: Human-AI co-creation (plus ensued attribution problems)
-- Enjoyment: Design AI interfaces for non-technical users to utilize AI power.
+- Diversity & Inclusivity: Low-resource, multilingual, and multicultural adaptation, 
+and enriched AI interfaces beyond turn-based chatbot
+- Human-AI Collaboration: Human-AI teaming, co-creation and attribution frameworks
+- Safety: Human-AI bi-alignment (including AI Alignment), knowledge editing and unlearning,
+interpretable knowledge reasoning mechanisms
 
-[Knowledge can be broadly defined](./blog/knowledge-diversity), and so I care about many ways of
+Knowledge can be broadly defined, and so I care about many ways of
 accessing and producing knowledge. In the long term, I envision a personalized, self-evolving
 knowledge system externalized from human brain, but collaborate and augment human knowledge
 and reasoning capabilities. 

@@ -55,7 +55,7 @@ export const PROFILE: ProfileConfig = {
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
     cv: "doc/cv.pdf",
     bluesky: "https://bsky.app/profile/mychiffonn.bsky.social",
-    discord: "discordapp.com/users/mychiffonn"
+    discord: "https://discordapp.com/users/mychiffonn"
   }
 }
 
@@ -80,7 +80,8 @@ export const NAV_LINKS: SocialLink[] = [
 
 export const FOOTER: FooterConfig = {
   credits: true,
-  sourceCode: "https://github.com/chiffonng/astro-academic",
+  sourceCode: "https://github.com/mychiffonn/website",
+  sourceContent: "https://github.com/mychiffonn/website/tree/main/src/content",
   footerLinks: []
 }
 
