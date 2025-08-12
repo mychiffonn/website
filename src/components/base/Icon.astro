@@ -1,54 +1,7 @@
 ---
 import type { HTMLAttributes } from "astro/types"
 import { Icon as AstroIcon } from "astro-icon/components"
-
-export const SEMANTIC_ICONS = {
-  // Navigation & Breadcrumbs
-  blog: "mingcute:book-5-line",
-  "post-active": "mingcute:book-line", // Used for both active parent posts and active subposts
-  post: "mingcute:book-2-line",
-  "parent-post": "mingcute:documents-line",
-  subpost: "mingcute:document-line",
-
-  // Meta information
-  hashtag: "mingcute:hashtag-line",
-  tags: "mingcute:tag-2-line",
-  publish: "mingcute:calendar-line",
-  "reading-time": "mingcute:time-duration-line",
-  update: "mingcute:edit-line",
-  subposts: "mingcute:documents-line",
-
-  // Common UI icons
-  home: "mingcute:home-4-line",
-  menu: "mingcute:menu-line",
-  close: "mingcute:close-line",
-  "chevron-right": "mingcute:right-line",
-  "chevron-down": "mingcute:down-line",
-  "chevron-up": "mingcute:up-line",
-  "arrow-up": "mingcute:up-line",
-  "arrow-left": "mingcute:arrow-left-line",
-  "arrow-right": "mingcute:arrow-right-line",
-  "arrow-left-up": "mingcute:arrow-left-up-line",
-  "more-horizontal": "mingcute:more-1-line",
-
-  // Content & actions
-  calendar: "mingcute:calendar-line",
-  time: "mingcute:time-line",
-  edit: "mingcute:edit-line",
-  check: "mingcute:check-line",
-  info: "mingcute:information-line",
-  warning: "mingcute:alert-triangle-line",
-  error: "mingcute:close-circle-line",
-
-  // Files & documents
-  file: "mingcute:file-line",
-  document: "mingcute:document-line",
-  documents: "mingcute:documents-line",
-  book: "mingcute:book-2-line",
-  "book-open": "mingcute:book-line"
-}
-
-type SemanticIconName = keyof typeof SEMANTIC_ICONS
+import { SEMANTIC_ICONS, type SemanticIconName } from "@/icons"
 
 interface Props extends HTMLAttributes<"svg"> {
   /** The name of the icon to include - can be semantic name or direct icon name */

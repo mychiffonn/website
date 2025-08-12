@@ -6,7 +6,7 @@ import type {
   SiteConfigSchema,
   ToolSchema
 } from "@/lib/schemas"
-import type { ProfileLinkConfig } from "@/components/profile/types"
+import type { ProfileLinkConfig } from "@/components/profile/helper"
 
 // Infer TypeScript types from Zod schemas
 export type SiteConfig = z.infer<typeof SiteConfigSchema>
