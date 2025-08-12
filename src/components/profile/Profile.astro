@@ -4,9 +4,9 @@ import Avatar from "@/components/base/Avatar.astro"
 import Badge from "@/components/base/Badge.astro"
 import Collapse from "@/components/base/Collapse.astro"
 import Icon from "@/components/base/Icon.astro"
-import { ProfileLinks } from "@/components/profile"
 import avatar from "@/assets/avatar.jpg"
 
+import { ProfileLinks } from "./profile"
 import { Content as AboutContent } from "@/content/about.md"
 ---
 
@@ -23,7 +23,14 @@ import { Content as AboutContent } from "@/content/about.md"
 
     <div class="flex flex-1 flex-col space-y-3">
       <div class="flex flex-wrap items-center gap-3">
-        <h1 class="text-3xl leading-none font-bold">{PROFILE.name}</h1>
+        <div class="flex flex-col">
+          <h1 class="text-3xl leading-none font-bold">{PROFILE.name}</h1>
+          {
+            PROFILE.othernames && (
+              <p class="text-muted-foreground mt-1 text-sm">{PROFILE.othernames}</p>
+            )
+          }
+        </div>
         {
           PROFILE.pronouns && (
             <Badge variant="outline" class="text-xs">

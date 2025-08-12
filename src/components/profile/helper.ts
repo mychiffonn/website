@@ -4,10 +4,10 @@ import { PROFILE } from '@/config'
 export const PROFILE_ICON_MAP = {
   // Email & Communication
   email: { label: 'Email', iconName: 'mingcute:mail-line' },
-  skype: { label: 'Skype', iconName: 'mingcute:phone-line' },
-  telegram: { label: 'Telegram', iconName: 'mingcute:send-line' },
-  whatsapp: { label: 'WhatsApp', iconName: 'mingcute:message-circle-line' },
-  discord: { label: 'Discord', iconName: 'mingcute:message-square-line' },
+  skype: { label: 'Skype', iconName: 'mingcute:skype-line' },
+  telegram: { label: 'Telegram', iconName: 'mingcute:telegram-line' },
+  whatsapp: { label: 'WhatsApp', iconName: 'mingcute:whatsapp-line' },
+  discord: { label: 'Discord', iconName: 'mingcute:discord-line' },
   slack: { label: 'Slack', iconName: 'mingcute:slack-line' },
   wechat: { label: 'Wechat', iconName: 'mingcute:wechat-line' },
   kakaotalk: { label: 'Kakao Talk', iconName: 'mingcute:kakao-talk-line' },
