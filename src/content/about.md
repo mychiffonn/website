@@ -1,18 +1,12 @@
----
-name: My (Chiffon) Nguyen
-tagline: "Researcher, Developer, Teacher, and Life-long Learner"
-pronouns: "she/her/hers"
-pronunciation: "My = /me/, Chiffon = /shif-ON/, Nguyen = /ngwen/"
-location: "San Francisco, CA, USA"
----
-
-I am interested in **making human knowledge work more accessible, productive, collaborative and
+I am interested in **making human knowledge work and learning more accessible, productive, safe, collaborative and
 enjoyable** using natural language processing, human-computer interaction, data science, and
 interdisciplinary insights:
 
 - Accessibility: Low-resource, multilingual, and multicultural adaptation
 - Productivity: Knowledge management and reasoning across modalities
-- Collaboration: Human-AI bi-alignment, human-AI co-creation, human-AI-data relationship
+- Safety: Human-AI bi-alignment (including AI Alignment), knowledge editing, knowledge unlearning
+- Collaboration: Human-AI co-creation (plus ensued attribution problems)
+- Enjoyment: Design AI interfaces for non-technical users to utilize AI power.
 
 [Knowledge can be broadly defined](./blog/knowledge-diversity), and so I care about many ways of
 accessing and producing knowledge. In the long term, I envision a personalized, self-evolving
