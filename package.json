@@ -1,7 +1,7 @@
 {
   "name": "astro-academic",
   "type": "module",
-  "version": "1.6.2",
+  "version": "0.6",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

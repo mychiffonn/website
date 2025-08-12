@@ -13,8 +13,7 @@ template and references from [Maggie Appleton](https://github.com/MaggieAppleton
 
 - [Astro](https://astro.build/) - Modern content-driven web framework
 - [TailwindCSS 4](https://tailwindcss.com/) - Utility-first CSS framework
-- [shadcn/ui](https://ui.shadcn.com/) - UI component wrappers of Radix Primitives and TailwindCSS
-- [MDX](https://mdxjs.com/) - Markdown with JSX components
+- Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown)
 
 Other inspirations:
 
