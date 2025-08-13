@@ -1,4 +1,4 @@
-I research and develop interdisciplinary approaches to **make human knowledge work and learning more inclusive, collaborative, and trustworthy through human-AI systems**:
+I research and develop interdisciplinary approaches to make **human knowledge work and learning more inclusive, collaborative, and trustworthy** through **human-AI systems**:
 
 - Diversity & Inclusivity: Low-resource, multilingual, and multicultural adaptation, 
 and enriched AI interfaces beyond turn-based chatbot

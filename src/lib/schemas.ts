@@ -6,7 +6,8 @@ import { z } from 'astro/zod'
 export const SiteConfigSchema = z.object({
   // Site metadata
   title: z.string(),
-  description: z.string(),
+  /** To be used as meta description or description tag in head. <= 100 characters */
+  description: z.string().max(100),
   href: z.string().url(),
   author: z.string(),
 
@@ -94,7 +95,7 @@ export const ProfileConfigSchema = z.object({
    * How you want the world to know about you.
    * Short biography, tagline, or job title and affiliations
    */
-  tagline: z.string().max(70),
+  tagline: z.string().max(40),
   /** Geographic location (city, state, country) */
   location: z.string().max(50).optional(),
   /** Phone number in international format */

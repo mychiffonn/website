@@ -30,11 +30,14 @@ const {
 } = Astro.props
 
 // SEO title optimization
-const seoTitle = title
+const fullTitle = title
   ? title === SITE.title
     ? SITE.title // Don't duplicate if title is already site title
     : `${title} - ${SITE.title} - ${PROFILE.tagline}`
   : `${SITE.title} - ${PROFILE.tagline}`
+
+// Trim title to approximately 60 characters for SEO
+const seoTitle = fullTitle.length > 60 ? fullTitle.substring(0, 57) + "..." : fullTitle
 
 // Image handling with fallback
 const socialImage = (() => {

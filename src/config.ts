@@ -3,7 +3,7 @@ import type { FooterConfig, ProfileConfig, SiteConfig, SocialLink } from "@/type
 export const SITE: SiteConfig = {
   title: "My Chiffon N.",
   description:
-    "Researcher, Developer, Teacher, and Life-long Learner focused on making human knowledge work more accessible, productive, collaborative and enjoyable.",
+    "NLP+HCI Researcher and Engineer making human knowledge work more inclusive, collaborative and trustworthy.",
   href: "https://mychiffonn.com",
   author: "My (Chiffon) Nguyen",
 
@@ -45,7 +45,7 @@ export const SITE: SiteConfig = {
 export const PROFILE: ProfileConfig = {
   name: "My (Chiffon) Nguyen",
   othernames: "Nguyễn Trà My / 자미 / 阮沐茶",
-  tagline: "NLP+HCI Researcher, Engineer, Teacher, and Life-long Learner",
+  tagline: "NLP+HCI Researcher, Engineer & Life-long Learner",
   location: "San Francisco, CA, USA",
   pronouns: "she/her/hers",
   pronunciation: "My = /me/, Chiffon = /shif-ON/, Nguyen = /ngwen/",
