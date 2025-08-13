@@ -49,31 +49,31 @@ const recentPostsMetadata = await Promise.all(
       recentPostsMetadata.length > 0 ? (
         <>
           <ul class="flex flex-col gap-y-2">
-            {
-              recentPostsMetadata.map((metadata) => (
-                <li>
-                  <PreviewCard metadata={metadata} />
-                </li>
-              ))
-            }
+            {recentPostsMetadata.map((metadata) => (
+              <li>
+                <PreviewCard metadata={metadata} />
+              </li>
+            ))}
           </ul>
           <div class="mt-4 flex justify-center gap-2">
             <Button href="/blog" variant="default" class="group">
-              See all posts <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+              See all posts{" "}
+              <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
             </Button>
             <Button href="/tags" variant="ghost" class="group">
-              Browse by tags <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+              Browse by tags{" "}
+              <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
             </Button>
           </div>
         </>
       ) : (
-        <p class="text-muted-foreground text-center py-8">
+        <p class="text-muted-foreground py-8 text-center">
           No posts yet. Check back later for updates!
         </p>
       )
     }
   </Section>
-  <Section title="Miscellanous">
+  <Section title="Miscellaneous">
     <div class="prose"><MiscContent /></div>
   </Section>
 </Layout>
