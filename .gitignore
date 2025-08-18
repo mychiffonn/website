@@ -11,3 +11,7 @@ pnpm-debug.log*
 .idea/
 teaser.pptx
 ~$teaser.pptx
+
+# Writing
+.obsidian
+.logseq
