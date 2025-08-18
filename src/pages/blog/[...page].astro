@@ -21,27 +21,40 @@ const postManager = PostManager.getInstance()
 
 // Get posts grouped by year for current page
 const currentPagePosts = page.data
+const hasNoPosts = currentPagePosts.length === 0
 
-// Get metadata for all posts in parallel
-const postsMetadata = await Promise.all(
-  currentPagePosts.map(post => postManager.getMetadata(post.id))
-)
+let postsMetadata: Awaited<ReturnType<typeof postManager.getMetadata>>[] = []
+let postsByYear: { year: number; posts: typeof postsMetadata }[] = []
+let sortedTags: Awaited<ReturnType<typeof postManager.getSortedTags>> = []
+let displayTags: typeof sortedTags = []
+let numTags = 0
+let moreTagsButton = false
 
-// Group metadata by year
-const postsByYearMap = postsMetadata.reduce((acc: Record<number, typeof postsMetadata>, metadata) => {
-  const year = metadata.createdAt.getFullYear()
-  ;(acc[year] ??= []).push(metadata)
-  return acc
-}, {})
+if (!hasNoPosts) {
+  // Get metadata for all posts in parallel
+  postsMetadata = await Promise.all(
+    currentPagePosts.map((post) => postManager.getMetadata(post.id))
+  )
 
-const postsByYear = Object.entries(postsByYearMap)
-  .map(([year, posts]) => ({ year: parseInt(year), posts }))
-  .sort((a, b) => b.year - a.year)
+  // Group metadata by year
+  const postsByYearMap = postsMetadata.reduce(
+    (acc: Record<number, typeof postsMetadata>, metadata) => {
+      const year = metadata.createdAt.getFullYear()
+      ;(acc[year] ??= []).push(metadata)
+      return acc
+    },
+    {}
+  )
 
-const sortedTags = await postManager.getSortedTags()
-const displayTags = sortedTags.slice(0, 15)
-const numTags = sortedTags.length
-const moreTagsButton = numTags > 15
+  postsByYear = Object.entries(postsByYearMap)
+    .map(([year, posts]) => ({ year: parseInt(year), posts }))
+    .sort((a, b) => b.year - a.year)
+
+  sortedTags = await postManager.getSortedTags()
+  displayTags = sortedTags.slice(0, 15)
+  numTags = sortedTags.length
+  moreTagsButton = numTags > 15
+}
 ---
 
 <Layout title="Blog">
@@ -82,24 +95,39 @@ const moreTagsButton = numTags > 15
       </section>
     )
   }
-  <p class="text-muted-foreground text-sm">
-    Showing {page.start + 1}-{page.end + 1} of {page.total} posts
-  </p>
+
+  {/** Showing x-x of X posts */}
+  {
+    !hasNoPosts && (
+      <p class="text-muted-foreground text-sm">
+        Showing {page.start + 1}-{page.end + 1} of {page.total} posts
+      </p>
+    )
+  }
 
   <div class="flex min-h-[calc(100vh-18rem)] flex-col gap-y-8">
     {
-      postsByYear.map(({ year, posts }) => (
-        <section class="flex flex-col gap-y-4">
-          <div class="font-medium">{year}</div>
-          <ul class="flex flex-col gap-4">
-            {posts.map((metadata) => (
-              <li>
-                <PreviewCard metadata={metadata} />
-              </li>
-            ))}
-          </ul>
+      hasNoPosts ? (
+        <section class="flex flex-col items-center justify-center gap-y-4 text-center">
+          <div class="max-w-md">
+            <h2 class="mb-4 text-2xl font-medium">No posts yet</h2>
+            <p class="text-muted-foreground">Check back later for new content!</p>
+          </div>
         </section>
-      ))
+      ) : (
+        postsByYear.map(({ year, posts }) => (
+          <section class="flex flex-col gap-y-4">
+            <div class="font-medium">{year}</div>
+            <ul class="flex flex-col gap-4">
+              {posts.map((metadata) => (
+                <li>
+                  <PreviewCard metadata={metadata} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      )
     }
   </div>
 
