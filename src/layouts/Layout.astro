@@ -3,6 +3,7 @@ import "@/styles/global.css"
 import "@/styles/typography.css"
 
 import { SITE } from "@/config"
+import { cn } from "@/lib/utils"
 import Footer from "@/components/layout/Footer.astro"
 import Head from "@/components/layout/Head.astro"
 import Header from "@/components/layout/Header.astro"
@@ -52,18 +53,18 @@ const {
   >
     <slot name="head" />
   </Head>
-  <body>
-    <div class="flex h-fit min-h-screen flex-col gap-y-6 font-sans">
-      <div class="bg-background/50 sticky top-0 z-50 divide-y backdrop-blur-sm xl:divide-none">
-        <Header />
-        <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
-        <slot name="toc-header" aria-label="Table of contents" />
-      </div>
-      <main class:list={["mx-auto flex max-w-3xl grow flex-col gap-y-4 px-4", className]}>
-        <slot name="breadcrumb" />
-        <slot />
-      </main>
-      <Footer />
+  <body class="flex h-fit min-h-screen flex-col gap-y-6 font-sans">
+    <div class="bg-background/50 sticky top-0 z-50 divide-y backdrop-blur-sm xl:divide-none">
+      <Header />
+      <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
+      <slot name="toc-header" aria-label="Table of contents" />
     </div>
+    <div class="mx-auto w-full max-w-3xl px-4">
+      <slot name="breadcrumb" />
+    </div>
+    <main class={cn("mx-auto flex max-w-3xl grow flex-col gap-y-4 px-4", className)}>
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>

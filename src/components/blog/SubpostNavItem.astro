@@ -37,9 +37,7 @@ const linkHref = `/blog/${post.id}`
         aria-label={isSubpost ? "Current subpost" : "Current post"}
       />
       <div class="flex min-w-0 flex-col gap-0.5">
-        <span class:list={["text-foreground line-clamp-2 leading-tight font-medium"]}>
-          {post.title}
-        </span>
+        <span class="text-foreground line-clamp-2 leading-tight font-medium">{post.title}</span>
         {subpostCount && !isSubpost && <SubpostCountBadge count={subpostCount} variant="full" />}
         {(actualWordCount > 0 || (subpostCount && !isSubpost)) && (
           <div class="text-muted-foreground flex items-center gap-2 text-xs">

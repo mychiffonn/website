@@ -44,8 +44,9 @@ const numTags = sortedTags.length
 const moreTagsButton = numTags > 15
 ---
 
-<Layout class="max-w-3xl" title="Blog">
+<Layout title="Blog">
   <Breadcrumbs
+    slot="breadcrumb"
     items={[
       { label: "Blog", href: "/blog", icon: "blog" },
       { label: `Page ${page.currentPage}`, icon: "copy" }
