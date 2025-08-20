@@ -23,7 +23,7 @@ const [author, authorPosts] = await Promise.all([
 ])
 
 const authorPostsMetadata = await Promise.all(
-  authorPosts.map(post => postManager.getMetadata(post.id))
+  authorPosts.map((post) => postManager.getMetadata(post.id))
 )
 
 if (!author) {

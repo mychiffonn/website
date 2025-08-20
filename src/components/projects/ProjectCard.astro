@@ -1,12 +1,11 @@
 ---
 import type { CollectionEntry } from "astro:content"
 
+import { getContextVariant, getProjectDescription, getProjectLinks } from "@/lib/projects"
 import { createDateRange } from "@/lib/utils"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
-
-import { getContextVariant, getProjectDescription, getProjectLinks } from "@/lib/projects"
 
 interface Props {
   project: CollectionEntry<"projects">

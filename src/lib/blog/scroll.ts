@@ -758,7 +758,7 @@ export class MobileTOCUtils {
   static initProgressCircle(progressCircle: SVGCircleElement | null): void {
     if (!progressCircle) return
 
-    const { PROGRESS_CIRCLE_CIRCUMFERENCE: circ } = this
+    const circ = this.PROGRESS_CIRCLE_CIRCUMFERENCE
     Object.assign(progressCircle.style, {
       strokeDasharray: circ.toString(),
       strokeDashoffset: circ.toString()

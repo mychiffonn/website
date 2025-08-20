@@ -46,7 +46,7 @@ export function calculateWordCountFromHtml(html: string | null | undefined): num
       const segmenter = new Intl.Segmenter(SITE.locale.lang, { granularity: 'word' })
       const segments = Array.from(segmenter.segment(content))
       return segments.filter(segment => segment.isWordLike).length
-    } catch (error) {
+    } catch {
       // Fall through to fallback if Segmenter fails
     }
   }

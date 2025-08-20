@@ -116,9 +116,9 @@ export const ProfileConfigSchema = z.object({
 export const FooterConfigSchema = z.object({
   /** Whether to show "Built with" credits in footer */
   credits: z.boolean().default(true),
-  /** URL to source code repository */
+  /** URL to source code repository, optional */
   sourceCode: z.string().url().optional(),
-  /** URL to content source repository */
+  /** URL to content source repository, optional */
   sourceContent: z.string().url().optional(),
   /** Additional links to display in footer */
   footerLinks: z.array(z.object({

@@ -11,8 +11,8 @@ export const slugify = (text: string): string => {
   return text
     .trim()
     .replace(/\s+/g, '-')  // Replace spaces with dashes
-    .replace(/[^\w\-]+/g, '')  // Remove non-word characters except dashes
-    .replace(/\-\-+/g, '-')  // Replace multiple dashes with single dash
+    .replace(/[^\w-]+/g, '')  // Remove non-word characters except dashes
+    .replace(/--+/g, '-')  // Replace multiple dashes with single dash
     .replace(/^-+/, '')  // Remove leading dashes
     .replace(/-+$/, '')  // Remove trailing dashes
 }

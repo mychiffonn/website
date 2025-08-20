@@ -17,9 +17,7 @@ export async function getStaticPaths() {
 const { tag } = Astro.props
 const postManager = PostManager.getInstance()
 const posts = await postManager.getPostsByTag(tag)
-const postsMetadata = await Promise.all(
-  posts.map(post => postManager.getMetadata(post.id))
-)
+const postsMetadata = await Promise.all(posts.map((post) => postManager.getMetadata(post.id)))
 ---
 
 <Layout
