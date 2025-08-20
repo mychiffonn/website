@@ -1,4 +1,4 @@
-import { SITE } from '@/config'
+import { SITE } from '@site-config'
 import rss from '@astrojs/rss'
 import type { APIContext } from 'astro'
 import { PostManager } from '@/lib/blog'

@@ -1,5 +1,6 @@
 ---
-import { SITE } from "@/config"
+import { PROFILE, SITE } from "@site-config"
+
 import { PostManager } from "@/lib/blog"
 import { getLatestUpdates } from "@/lib/updates"
 import Layout from "@/layouts/Layout.astro"
@@ -24,7 +25,7 @@ const recentPostsMetadata = await Promise.all(
 ---
 
 <Layout title="Home">
-  <Profile />
+  <Profile profile={PROFILE} />
 
   {
     renderedUpdates.length > 0 && (

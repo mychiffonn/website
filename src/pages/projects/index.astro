@@ -1,10 +1,18 @@
 ---
+import { PROFILE } from "@site-config"
+
 import { getProjectsForIndex } from "@/lib/projects"
 import Layout from "@/layouts/Layout.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import { GithubActivity, ProjectCard } from "@/components/projects"
 
 const { featuredProjects, otherProjects } = await getProjectsForIndex()
+
+// Get GitHub URL for GithubActivity
+const githubUrl =
+  typeof PROFILE.links.github === "string"
+    ? PROFILE.links.github
+    : PROFILE.links.github?.href || "https://github.com"
 ---
 
 <Layout class="max-w-3xl" title="Projects">
@@ -49,6 +57,6 @@ const { featuredProjects, otherProjects } = await getProjectsForIndex()
     }
 
     {/* GitHub Activity */}
-    <GithubActivity />
+    <GithubActivity githubUrl={githubUrl} />
   </div>
 </Layout>

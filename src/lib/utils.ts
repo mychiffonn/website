@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { fromZonedTime, formatInTimeZone } from 'date-fns-tz'
-import { SITE } from '@/config'
+import { SITE } from '@site-config'
 
 // ========================================
 // UI Utilities

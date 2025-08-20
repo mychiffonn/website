@@ -11,7 +11,7 @@
 
 import type { Post } from './types'
 import type { PostUtils as PostUtilsInterface } from './types'
-import { SITE } from '@/config'
+import { SITE } from '@site-config'
 
 /**
  * Calculates word count from HTML content, excluding code blocks and math expressions.
@@ -24,7 +24,7 @@ import { SITE } from '@/config'
  * ```typescript
  * const count = calculateWordCountFromHtml('<p>Hello <strong>world</strong> <code>code</code></p>')
  * console.log(count) // 2 (excludes code)
- * 
+ *
  * const multiScript = calculateWordCountFromHtml('<p>Hello 你好 мир שלום</p>')
  * console.log(multiScript) // Works with all Unicode scripts
  * ```
@@ -35,7 +35,7 @@ export function calculateWordCountFromHtml(html: string | null | undefined): num
   // Remove code blocks and math expressions first
   let content = html
     .replace(/<pre[^>]*>.*?<\/pre>/gs, '') // code blocks
-    .replace(/<code[^>]*>.*?<\/code>/g, '') // inline code  
+    .replace(/<code[^>]*>.*?<\/code>/g, '') // inline code
     .replace(/\$\$.*?\$\$/g, '') // display math
     .replace(/\$.*?\$/g, '') // inline math
     .replace(/<[^>]+>/g, '') // HTML tags
@@ -57,7 +57,7 @@ export function calculateWordCountFromHtml(html: string | null | undefined): num
   const arabicWords = content.match(/[\u0600-\u06ff]+/g)?.length || 0
   const cyrillicWords = content.match(/[\u0400-\u04ff]+/g)?.length || 0
   const hebrewWords = content.match(/[\u0590-\u05ff]+/g)?.length || 0
-  
+
   return latinWords + cjkChars + arabicWords + cyrillicWords + hebrewWords
 }
 

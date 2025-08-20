@@ -1,7 +1,6 @@
 ---
 import { Image } from "astro:assets"
 
-import { PROFILE } from "@/config"
 import { cn } from "@/lib/utils"
 import Link from "@/components/base/Link.astro"
 import Section from "@/components/layout/Section.astro"
@@ -9,20 +8,17 @@ import Section from "@/components/layout/Section.astro"
 interface Props {
   class?: string
   username?: string
+  githubUrl?: string
 }
 
-// Get GitHub username from profile links
-const githubUrl =
-  typeof PROFILE.links.github === "string"
-    ? PROFILE.links.github
-    : PROFILE.links.github?.href || "https://github.com"
-const ghUser = githubUrl?.split("/").pop() || ""
+const { class: className, username, githubUrl = "https://github.com" } = Astro.props
 
-const { class: className, username = ghUser } = Astro.props
+// Extract username from githubUrl if not provided
+const ghUser = username || githubUrl?.split("/").pop() || ""
 ---
 
 {
-  username && (
+  ghUser && (
     <Section title="GitHub Activity" class={cn("flex flex-col gap-4", className)}>
       <p class="text-muted-foreground">
         My{" "}
@@ -33,7 +29,7 @@ const { class: className, username = ghUser } = Astro.props
       </p>
       <div class="bg-card mb-4 flex justify-center rounded-lg border">
         <Image
-          src={`https://ghchart.rshah.org/659eb9/${username}`}
+          src={`https://ghchart.rshah.org/659eb9/${ghUser}`}
           alt="GitHub contribution chart"
           inferSize
           loading="lazy"

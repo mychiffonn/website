@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
-import { PROJECT_LINK_TYPES, type ProjectLinkType } from '@/icons'
+import { PROJECT_LINK_TYPES, type ProjectLinkType } from '@icon-config'
 
 export type Project = CollectionEntry<'projects'>
 

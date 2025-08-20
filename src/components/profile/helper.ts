@@ -1,5 +1,5 @@
-import { PROFILE } from '@/config'
-import { PROFILE_ICON_MAP, type ProfileLinkType } from '@/icons'
+import { PROFILE } from '@site-config'
+import { PROFILE_ICON_MAP, type ProfileLinkType } from '@icon-config'
 
 export type ProfileLinkConfig = {
   [K in ProfileLinkType]?: string | {

@@ -46,7 +46,7 @@ export default {
     "<THIRD_PARTY_MODULES>",
     "",
     "^@/plugins$|^@/plugins/(.*)$",
-    "^@/config$",
+    "^@/config$|^(.*)config$",
     "^@/lib$|^@/lib/(.*)$",
     "^@/pages/(.*)$",
     "^@/layouts$|^@/layouts/(.*)$",

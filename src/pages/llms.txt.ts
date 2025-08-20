@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { SITE, PROFILE } from '@/config'
+import { SITE, PROFILE } from '@site-config'
 
 const llmsTxt = `
 # LLMs.txt

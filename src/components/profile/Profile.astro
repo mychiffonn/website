@@ -1,5 +1,6 @@
 ---
-import { PROFILE } from "@/config"
+import type { ProfileConfig } from "@/types"
+
 import Avatar from "@/components/base/Avatar.astro"
 import Badge from "@/components/base/Badge.astro"
 import Collapse from "@/components/base/Collapse.astro"
@@ -8,14 +9,20 @@ import avatar from "@/assets/avatar.jpg"
 
 import ProfileLinks from "./ProfileLinks.astro"
 import { Content as AboutContent } from "@/content/about.md"
+
+interface Props {
+  profile: ProfileConfig
+}
+
+const { profile } = Astro.props
 ---
 
 <article class="rounded-lg border">
   <header class="flex flex-col items-center gap-4 p-4 sm:flex-row sm:items-start">
     <Avatar
       src={avatar}
-      alt={PROFILE.name}
-      fallback={PROFILE.name.charAt(0)}
+      alt={profile.name}
+      fallback={profile.name.charAt(0)}
       class="size-64"
       data-slot="profile-avatar"
       priority
@@ -24,38 +31,38 @@ import { Content as AboutContent } from "@/content/about.md"
     <div class="flex flex-1 flex-col space-y-3">
       <div class="flex flex-wrap items-center gap-3">
         <div class="flex flex-col">
-          <h1 class="text-3xl leading-none font-bold">{PROFILE.name}</h1>
+          <h1 class="text-3xl leading-none font-bold">{profile.name}</h1>
           {
-            PROFILE.othernames && (
-              <p class="text-muted-foreground mt-1 text-sm">{PROFILE.othernames}</p>
+            profile.othernames && (
+              <p class="text-muted-foreground mt-1 text-sm">{profile.othernames}</p>
             )
           }
         </div>
         {
-          PROFILE.pronouns && (
+          profile.pronouns && (
             <Badge variant="outline" class="text-xs">
-              {PROFILE.pronouns}
+              {profile.pronouns}
             </Badge>
           )
         }
       </div>
 
-      <p class="text-foreground text-lg">{PROFILE.tagline}</p>
+      <p class="text-foreground text-lg">{profile.tagline}</p>
 
       {
-        PROFILE.location && (
+        profile.location && (
           <p class="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
             <Icon name="mingcute:location-line" class="size-4" />
-            {PROFILE.location}
+            {profile.location}
           </p>
         )
       }
 
       {
-        PROFILE.phone && (
+        profile.phone && (
           <p class="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
             <Icon name="mingcute:phone-line" class="size-4" />
-            {PROFILE.phone}
+            {profile.phone}
           </p>
         )
       }
@@ -63,9 +70,9 @@ import { Content as AboutContent } from "@/content/about.md"
       <ProfileLinks includeLabel={true} />
 
       {
-        PROFILE.pronunciation && (
+        profile.pronunciation && (
           <Collapse title="Pronunciation" variant="muted">
-            <p class="text-muted-foreground">{PROFILE.pronunciation}</p>
+            <p class="text-muted-foreground">{profile.pronunciation}</p>
           </Collapse>
         )
       }
