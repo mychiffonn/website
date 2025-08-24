@@ -149,6 +149,11 @@
     @apply bg-background text-foreground;
   }
 
+  html, body {
+    @apply overflow-x-hidden;
+    max-width: 100vw;
+  }
+
   ::selection {
     background-color: var(--accent);
     color: var(--accent-foreground);
