@@ -72,11 +72,11 @@ const pages = generatePages()
         href={currentPage > 1 ? getPageUrl(currentPage - 1) : undefined}
         variant="ghost"
         size="default"
-        class={cn("gap-1 px-2.5 sm:pl-2.5", currentPage === 1 && "pointer-events-none opacity-50")}
+        class={cn("gap-2 px-2", currentPage === 1 && "pointer-events-none opacity-50")}
         aria-label="Go to previous page"
         aria-disabled={currentPage === 1}
       >
-        <Icon name="left" class="size-5" />
+        <Icon name="left" />
         <span class="hidden sm:block">Previous</span>
       </Button>
     </li>
@@ -91,7 +91,7 @@ const pages = generatePages()
               data-slot="pagination-ellipsis"
               class="flex size-9 items-center justify-center"
             >
-              <Icon name="more-horizontal" class="size-5" />
+              <Icon name="more-horizontal" />
               <span class="sr-only">More pages</span>
             </span>
           ) : (
@@ -115,15 +115,13 @@ const pages = generatePages()
       <Button
         href={currentPage < totalPages ? getPageUrl(currentPage + 1) : undefined}
         variant="ghost"
-        class={cn(
-          "gap-1 px-2.5 sm:pr-2.5",
-          currentPage === totalPages && "pointer-events-none opacity-50"
-        )}
+        size="default"
+        class={cn("gap-2 px-2", currentPage === totalPages && "pointer-events-none opacity-50")}
         aria-label="Go to next page"
         aria-disabled={currentPage === totalPages}
       >
         <span class="hidden sm:block">Next</span>
-        <Icon name="right" class="size-4" />
+        <Icon name="right" />
       </Button>
     </li>
   </ul>

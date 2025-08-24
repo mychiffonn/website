@@ -37,7 +37,7 @@ const hasDetailPage = project.body && project.body.trim().length > 0
       {
         isHighlighted && (
           <>
-            <Icon name="star" class="text-primary size-4" />
+            <Icon name="star" class="text-primary" />
             <span class="sr-only">Featured</span>
           </>
         )
@@ -103,7 +103,7 @@ const hasDetailPage = project.body && project.body.trim().length > 0
               external
               class="border-border hover:bg-primary hover:text-primary-foreground hover:border-primary inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 px-2 py-1.5 text-xs font-medium no-underline transition-all duration-200"
             >
-              <Icon name={icon} class="size-4" />
+              <Icon name={icon} />
               <span>{label} ↗</span>
             </Link>
           ))}

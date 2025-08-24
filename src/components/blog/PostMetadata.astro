@@ -36,7 +36,7 @@ const isCard = variant === "card"
       <div class="flex items-center gap-1.5">
         {metadata.authors.map((author) => (
           <div class="flex items-center gap-1">
-            <AuthorAvatar author={author} class="size-4" />
+            <AuthorAvatar author={author} />
             {isCard ? (
               <span>{author.name}</span>
             ) : (
@@ -51,14 +51,14 @@ const isCard = variant === "card"
   }
 
   <div class="flex items-center gap-1">
-    <Icon name="publish" class="size-4" title="Published" />
+    <Icon name="publish" title="Published" />
     <FormattedDate date={metadata.createdAt} />
   </div>
 
   {
     metadata.updatedAt && (
       <div class="flex items-center gap-1">
-        <Icon name="edit" class="size-4" title="Updated" />
+        <Icon name="edit" title="Updated" />
         <FormattedDate date={metadata.updatedAt} />
       </div>
     )
@@ -67,7 +67,7 @@ const isCard = variant === "card"
   {
     metadata.hasSubposts && (
       <div class="flex items-center gap-1">
-        <Icon name="subposts" class="size-4" />
+        <Icon name="subposts" />
         <span>
           {metadata.subpostCount} subpost{metadata.subpostCount === 1 ? "" : "s"}
         </span>
@@ -78,7 +78,7 @@ const isCard = variant === "card"
   {
     wordCount > 0 && (
       <div class="flex items-center gap-1">
-        <Icon name="reading-time" class="size-4" />
+        <Icon name="reading-time" />
         <ReadingTime
           wordCount={isCard ? wordCount : metadata.wordCount}
           combinedWordCount={!isCard ? metadata.combinedWordCount : undefined}

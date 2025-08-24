@@ -2,6 +2,8 @@
 import type { HTMLAttributes } from "astro/types"
 import { Icon as AstroIcon } from "astro-icon/components"
 
+import type { Icon } from "virtual:astro-icon"
+
 import { SEMANTIC_ICONS, type SemanticIconName } from "@icon-config"
 
 interface Props extends HTMLAttributes<"svg"> {
@@ -26,7 +28,7 @@ interface Props extends HTMLAttributes<"svg"> {
 const { name, title, desc, ...props } = Astro.props
 
 // Check if it's a semantic name, otherwise use the name directly
-const iconName = (SEMANTIC_ICONS as Record<string, string>)[name] || name
+const iconName: Icon = ((SEMANTIC_ICONS as Record<string, string>)[name] || name) as Icon
 
 // Derive accessibility attributes from props
 const accessibility: Record<string, any> = {}

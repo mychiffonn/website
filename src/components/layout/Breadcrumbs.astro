@@ -22,7 +22,7 @@ const { items, class: className } = Astro.props
   >
     <li class="inline-flex items-center gap-1.5">
       <a href="/" class="hover:text-foreground flex items-center transition-colors">
-        <Icon name="home" class="size-5 shrink-0" />
+        <Icon name="home" size="1.25rem" />
       </a>
     </li>
 
@@ -30,7 +30,7 @@ const { items, class: className } = Astro.props
       items.map((item, index) => (
         <>
           <li role="presentation" aria-hidden="true">
-            <Icon name="chevron-right" class="size-4" />
+            <Icon name="chevron-right" />
           </li>
           <li class="inline-flex items-center gap-1.5">
             {index === items.length - 1 ? (
@@ -40,12 +40,12 @@ const { items, class: className } = Astro.props
                 aria-current="page"
                 class="text-foreground flex items-center font-normal"
               >
-                {item.icon && <Icon name={item.icon} class="mr-1 size-5 shrink-0" />}
+                {item.icon && <Icon name={item.icon} size="1.25rem" class="mr-1" />}
                 {item.label}
               </span>
             ) : (
               <a href={item.href} class="hover:text-foreground flex items-center transition-colors">
-                {item.icon && <Icon name={item.icon} class="mr-1 size-5 shrink-0" />}
+                {item.icon && <Icon name={item.icon} size="1.25rem" class="mr-1" />}
                 <span class="leading-none">{item.label}</span>
               </a>
             )}
