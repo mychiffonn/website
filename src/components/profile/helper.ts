@@ -4,7 +4,7 @@ import { PROFILE_ICON_MAP, type ProfileLinkType } from '@icon-config'
 export type ProfileLinkConfig = {
   [K in ProfileLinkType]?: string | {
     href: string
-    label?: string | 'platform'
+    label?: string
   }
 }
 

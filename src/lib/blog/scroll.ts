@@ -467,7 +467,7 @@ export abstract class BaseScrollController implements ScrollController {
 
     if (this.state.scrollArea) {
       const maskClasses = this.getMaskClasses()
-      this.scrollHandler = () => this.scrollMask.update(maskClasses)
+      this.scrollHandler = () => { this.scrollMask.update(maskClasses) }
       this.state.scrollArea.addEventListener("scroll", this.scrollHandler, { passive: true })
     }
 
@@ -475,7 +475,7 @@ export abstract class BaseScrollController implements ScrollController {
 
     requestAnimationFrame(() => {
       this.scrollToActive.scroll(this.getActiveItemSelector())
-      setTimeout(() => this.scrollMask.update(this.getMaskClasses()), 100)
+      setTimeout(() => { this.scrollMask.update(this.getMaskClasses()) }, 100)
     })
   }
 
@@ -570,8 +570,8 @@ export abstract class BaseTOCController implements ScrollController {
    */
   private setupScrollHandlers(): void {
     // Throttle handlers for better performance
-    this.scrollHandler = throttle(() => this.handleScroll(), 16) // ~60fps
-    this.resizeHandler = throttle(() => this.handleResize(), 100)
+    this.scrollHandler = throttle(() => { this.handleScroll() }, 16) // ~60fps
+    this.resizeHandler = throttle(() => { this.handleResize() }, 100)
 
     const options = { passive: true }
     window.addEventListener("scroll", this.scrollHandler, options)
@@ -579,7 +579,7 @@ export abstract class BaseTOCController implements ScrollController {
 
     if (this.state.scrollArea) {
       const maskClasses = this.getMaskClasses()
-      const tocScrollHandler = throttle(() => this.tocScrollMask.update(maskClasses), 16)
+      const tocScrollHandler = throttle(() => { this.tocScrollMask.update(maskClasses) }, 16)
       this.state.scrollArea.addEventListener("scroll", tocScrollHandler, options)
     }
   }
@@ -688,7 +688,7 @@ export abstract class BaseTOCController implements ScrollController {
       // Visual debugging
       highlightActiveRegions: () => {
         // Remove existing highlights
-        document.querySelectorAll('.scroll-debug-highlight').forEach(el => el.remove())
+        document.querySelectorAll('.scroll-debug-highlight').forEach(el => { el.remove() })
 
         // Highlight visible heading regions
         const visibleIds = this.headingRegions.getVisibleIds()

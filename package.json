@@ -12,7 +12,7 @@
     "astro": "astro",
     "format": "prettier --write **/*.{ts,tsx,css,astro,mjs,js,md,mdx} --ignore-path .gitignore",
     "postinstall": "patch-package",
-    "lint": "oxlint",
+    "lint": "pnpm dlx oxlint --type-aware",
     "routine": "pnpm lint && pnpm sync && pnpm format",
     "clean": "rm -rf dist/ .astro/"
   },
@@ -58,7 +58,8 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.6.1",
-    "oxlint": "^1.11.1",
+    "oxlint": "^1.13.0",
+    "oxlint-tsgolint": "^0.0.4",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.14"
