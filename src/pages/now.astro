@@ -14,7 +14,11 @@ const renderedUpdates = await getLatestUpdates(5)
   description={nowDescription}
   breadcrumbs={[{ label: "Now", icon: "timeline" }]}
 >
-  {renderedUpdates.length > 0 && <UpdateTimeline renderedUpdates={renderedUpdates} variant="stacked"/>
+  {
+    renderedUpdates.length > 0 && (
+      <UpdateTimeline renderedUpdates={renderedUpdates} variant="stacked" />
+    )
+  }
 
   <p class="text-muted-foreground text-sm">
     Learn more about now pages and browse others at
