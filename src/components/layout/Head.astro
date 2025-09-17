@@ -178,6 +178,9 @@ const structuredData = {
 
   <ClientRouter />
 
+  {/* KaTeX CSS for math rendering */}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
+
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <slot />
 </head>

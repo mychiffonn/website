@@ -112,13 +112,7 @@ export default defineConfig({
         }
       ]
     ],
-    remarkPlugins: [
-      remarkNormalizeHeadings,
-      remarkSectionize,
-      remarkCallout,
-      remarkMath,
-      remarkEmoji
-    ]
+    remarkPlugins: [remarkMath, remarkEmoji, remarkCallout, remarkNormalizeHeadings, remarkSectionize]
   },
   experimental: {
     contentIntellisense: true,
