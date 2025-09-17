@@ -53,7 +53,7 @@ export const PROFILE: ProfileConfig = {
     email: "chiffonng136@gmail.com",
     github: "https://github.com/mychiffonn",
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
-    cv: "doc/cv.pdf",
+    cv: "/doc/cv.pdf",
     bluesky: "https://bsky.app/profile/mychiffonn.bsky.social",
     discord: "https://discordapp.com/users/mychiffonn"
   }

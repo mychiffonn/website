@@ -19,11 +19,21 @@ const processedLinks = getProcessedProfileLinks(links, includeRss)
 <nav class={`flex flex-wrap gap-x-2 gap-y-1 ${className}`} role="list">
   {
     processedLinks.map(({ href, label, iconName }) => {
-      const isExternal = !href.startsWith("/")
+      // Normalize public asset paths and convert to absolute URLs
+      let normalizedHref = href
+
+      // Handle different input formats for public assets
+      if (href.startsWith("/public/")) {
+        // /public/doc/cv.pdf → /doc/cv.pdf
+        normalizedHref = href.replace("/public", "")
+      }
+
+      const finalHref = new URL(normalizedHref, Astro.site).toString()
+      const isExternal = !normalizedHref.startsWith("/")
 
       return (
         <Link
-          href={href}
+          href={finalHref}
           aria-label={label}
           title={label}
           rel="me"
