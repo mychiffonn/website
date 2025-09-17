@@ -7,7 +7,6 @@ repo: https://github.com/chiffonng/jupyter-notebooks/blob/main/get_all_comments_
 fromDate: 2025-05-07
 toDate: 2025-05-24
 context: work
-isHighlighted: true
 tags:
   - Google Drive API
   - Google Colaboratory
