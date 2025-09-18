@@ -31,7 +31,6 @@ academia (NLP+HCI), technology, and anything I'm interested in. Co-created with 
   - [IN PROGRESS] Obsidian-flavored markdown with wikilinks and callouts (no backlinks yet).
   - [UPCOMING] Show mentions of a post across the web in lieu of comment section
   - [UPCOMING] Search with pagefind/typesense
-  - [UPCOMING] Medium-style image zoom
   - [UPCOMING] Render /media library from .json and from scraped Storygraph
 
 ## Built With

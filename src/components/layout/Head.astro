@@ -181,6 +181,26 @@ const structuredData = {
   {/* KaTeX CSS for math rendering */}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
 
+  {/* Medium Zoom CSS and JS */}
+  <link rel="stylesheet" href="/src/assets/styles/zoom.css" />
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script>
+
+  {/* Medium Zoom initialization */}
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof mediumZoom !== "undefined") {
+        const images = document.querySelectorAll("main img:not(a img):not(.blog-card img):not(.card img):not(.clickable-card img)")
+        
+        if (images.length) {
+          mediumZoom(images, {
+            margin: 24,
+            scrollOffset: 40
+          })
+        }
+      }
+    })
+  </script>
+
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <slot />
 </head>
