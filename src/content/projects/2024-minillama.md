@@ -3,7 +3,7 @@ title: Mini Llama2 (CMU Advanced NLP)
 description:
   Minimalist Llama2 implementation using PyTorch, exploring LLM components like RoPE, attention
   mechanisms, and AdamW optimizer.
-repo: https://github.com/chiffonng/cmu-advanced-nlp-minllama-assignment
+repo: https://github.com/mychiffonn/cmu-advanced-nlp-minllama-assignment
 toDate: 2024-07-15
 context: personal
 tags:

@@ -5,8 +5,8 @@ description:
   LSTM models, built with React and Flask.
 fromDate: 2024-02-01
 toDate: 2024-04-19
-repo: https://github.com/chiffonng/cs162-SeisureSavvy
-doc: https://github.com/chiffonng/cs162-SeisureSavvy
+repo: https://github.com/mychiffonn/cs162-SeisureSavvy
+doc: https://github.com/mychiffonn/cs162-SeisureSavvy
 context: school
 isHighlighted: true
 tags:

@@ -52,7 +52,7 @@ tags:
 | `repo`          | URL      | ❌        | Link to source code repository                           | Must be a valid URL                              |
 | `doc`           | URL      | ❌        | Link to project documentation                            | Must be a valid URL                              |
 | `url`           | URL      | ❌        | Link to live site or demo                                | Must be a valid URL                              |
-| `context`       | Enum     | ❌        | One of: `school`, `personal`, `work`, `collab`           |                                                  |
+| `context`       | Enum     | ❌        | One of: `school`, `personal`, `work`, `community`        |                                                  |
 | `isHighlighted` | Boolean  | ❌        | Whether to feature this project                          | Defaults to `false`                              |
 | `release`       | URL      | ❌        | Link to release or deployment                            | Must be a valid URL                              |
 | `tags`          | String[] | ❌        | Project keywords, categories, frameworks, languages, etc | Will be lowercased and deduplicated              |

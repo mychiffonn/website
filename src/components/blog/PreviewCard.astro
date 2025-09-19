@@ -62,7 +62,7 @@ const tags = metadata.tags
       {
         tags && (
           <div class="flex flex-wrap gap-2">
-            {tags.map((tag) => (
+            {tags.map((tag: string) => (
               <Badge variant={"secondary"} class="tag-badge transition-all duration-300">
                 <Icon name="hashtag" />
                 {tag}

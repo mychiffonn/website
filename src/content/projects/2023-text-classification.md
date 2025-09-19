@@ -1,14 +1,13 @@
 ---
-cover:
-title: Classify notes into notes and assignments
+title: Text classification using SVM and Naive Bayes
 description:
-  Machine learning classification system to automatically organize Obsidian notes using SVM and
-  Naive Bayes with 87% accuracy.
+  Text classification system to automatically organize notes using SVM and Naive Bayes with 87%
+  accuracy.
 toDate: 2023-10
 context: school
 tags:
+  - traditional machine learning
   - scikit-learn
-  - PyTorch
   - Support Vector Machine (SVM)
   - Support Vector Classifier (SVC)
   - Naive Bayes

@@ -23,7 +23,7 @@ individuals per group) in UK, I discovered a critical problem: entire age-region
 completely missing. This wasn't random missingness: it followed systematic patterns that could bias
 any analysis if handled naively.
 
-![](2024_bayesian_data.png)
+![](2024-bayesian-data.png)
 
 The data revealed three key patterns: **zero-inflation** (far more people never visit doctors than a
 standard Poisson would predict), **systematic missingness** (entire demographic groups absent), and
@@ -97,9 +97,9 @@ model weight and lower standard error (113 vs. 334).
 
 But the most compelling evidence came from visualizing the imputed missing data:
 
-![](2024_bayesian_complete_pooling.png)
+![](2024-bayesian-complete-pooling.png)
 
-![](2024_bayesian_hierarchical_model.png)
+![](2024-bayesian-hierarchical-model.png)
 
 Complete pooling (top) imputed all missing values around 8-9 visits—treating every group as average.
 The hierarchical model (bottom) successfully reconstructed missing combinations by learning from

@@ -25,7 +25,7 @@ const blog = defineCollection({
     z
       .object({
         title: z.string(),
-        description: z.string(),
+        description: z.string().max(200).optional(),
         createdAt: z.coerce.date(),
         updatedAt: z.coerce.date().optional(),
         order: z.number().optional(),
@@ -83,12 +83,12 @@ const projects = defineCollection({
       doc: z.string().url().optional(),
       url: z.string().url().optional(),
       release: z.string().url().optional(),
-      context: z.enum(["school", "personal", "work", "collab"]).optional(),
+      context: z.enum(["school", "personal", "work", "community"]).optional(),
       description: z.string().max(150).optional(),
       tags: z
         .array(z.string())
         .default([])
-        .transform((arr) => dedupPreserveCase(arr).map((tag) => slugify(tag)))
+        .transform((arr) => dedupPreserveCase(arr))
     })
     .refine(
       // Validate that toDate is after fromDate

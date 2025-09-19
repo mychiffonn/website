@@ -61,7 +61,7 @@ export const getContextVariant = (context?: string) => {
       return 'outline'
     case 'personal':
       return 'secondary'
-    case 'collab':
+    case 'community':
       return 'destructive'
     default:
       return 'secondary'
