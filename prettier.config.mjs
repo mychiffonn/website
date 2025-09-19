@@ -69,8 +69,7 @@ export default {
     {
       files: "*.{md,mdx}",
       options: {
-        proseWrap: "always",
-        printWidth: 100
+        proseWrap: "never"
       }
     },
     {
