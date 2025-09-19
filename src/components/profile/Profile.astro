@@ -7,6 +7,7 @@ import Collapse from "@/components/base/Collapse.astro"
 import Icon from "@/components/base/Icon.astro"
 import avatar from "@/assets/avatar.jpg"
 
+import EmailLink from "./EmailLink.astro"
 import ProfileLinks from "./ProfileLinks.astro"
 import { Content as AboutContent } from "@/content/about.md"
 
@@ -18,54 +19,53 @@ const { profile } = Astro.props
 ---
 
 <article class="rounded-lg border">
-  <header class="flex flex-col items-center gap-4 p-4 sm:flex-row sm:items-start">
+  <header class="flex flex-col items-start gap-4 p-4 sm:flex-row">
     <Avatar
       src={avatar}
       alt={profile.name}
       fallback={profile.name.charAt(0)}
-      class="size-64"
+      class="size-50"
       data-slot="profile-avatar"
       priority
     />
 
-    <div class="flex flex-1 flex-col space-y-3">
-      <div class="flex flex-wrap items-center gap-3">
-        <div class="flex flex-col">
-          <h1 class="text-3xl leading-none font-bold">{profile.name}</h1>
+    <div class="flex-1 space-y-4">
+      <div class="space-y-2">
+        <h1 class="flex flex-wrap items-center gap-2 text-3xl font-bold">
+          {profile.name}
           {
-            profile.othernames && (
-              <p class="text-muted-foreground mt-1 text-sm">{profile.othernames}</p>
+            profile.pronouns && (
+              <Badge variant="outline" class="text-xs">
+                {profile.pronouns}
+              </Badge>
             )
           }
-        </div>
+        </h1>
+        {profile.othernames && <p class="text-muted-foreground text-sm">{profile.othernames}</p>}
+        <p class="text-foreground text-lg">{profile.tagline}</p>
+      </div>
+
+      <div class="text-muted-foreground space-y-2">
+        <EmailLink email={profile.email} />
+
         {
-          profile.pronouns && (
-            <Badge variant="outline" class="text-xs">
-              {profile.pronouns}
-            </Badge>
+          profile.location && (
+            <span class="flex items-center gap-2">
+              <Icon name="mingcute:location-line" class="size-4" />
+              <span>{profile.location}</span>
+            </span>
+          )
+        }
+
+        {
+          profile.phone && (
+            <span class="flex items-center gap-2">
+              <Icon name="mingcute:phone-line" class="size-4" />
+              <span>{profile.phone}</span>
+            </span>
           )
         }
       </div>
-
-      <p class="text-foreground text-lg">{profile.tagline}</p>
-
-      {
-        profile.location && (
-          <p class="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
-            <Icon name="mingcute:location-line" />
-            {profile.location}
-          </p>
-        )
-      }
-
-      {
-        profile.phone && (
-          <p class="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
-            <Icon name="mingcute:phone-line" />
-            {profile.phone}
-          </p>
-        )
-      }
 
       <ProfileLinks includeLabel={true} />
 

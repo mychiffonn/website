@@ -1,4 +1,4 @@
-import type { FooterConfig, ProfileConfig, SiteConfig, SocialLink } from "@/types"
+import type { FooterConfig, LinkConfig, ProfileConfig, SiteConfig } from "@/types"
 
 export const SITE: SiteConfig = {
   title: "My Chiffon N.",
@@ -44,13 +44,13 @@ export const SITE: SiteConfig = {
 
 export const PROFILE: ProfileConfig = {
   name: "My (Chiffon) Nguyen",
-  othernames: "Nguyễn Trà My / 자미 / 阮沐茶",
+  othernames: "Nguyễn Trà My / 阮沐茶 / 윈자미",
   tagline: "NLP+HCI Researcher & Life-long Learner",
+  email: "hi@mychiffonn.com",
   location: "San Francisco, CA, USA",
   pronouns: "she/her/hers",
   pronunciation: "My = /me/, Chiffon = /shif-ON/, Nguyen = /ngwen/",
   links: {
-    email: "chiffonng136@gmail.com",
     github: "https://github.com/mychiffonn",
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
     cv: "/doc/cv.pdf",
@@ -59,7 +59,7 @@ export const PROFILE: ProfileConfig = {
   }
 }
 
-export const NAV_LINKS: SocialLink[] = [
+export const NAV_LINKS: LinkConfig[] = [
   {
     href: "/projects",
     label: "Projects"

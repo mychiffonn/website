@@ -1,0 +1,68 @@
+---
+import { Icon } from "astro-icon/components"
+
+import Link from "../base/Link.astro"
+import { getTransformedEmail } from "./helper"
+
+interface Props {
+  email: string
+  showIcon?: boolean
+  showCopyButton?: boolean
+}
+
+const { email, showIcon = true, showCopyButton = true } = Astro.props
+const displayEmail = getTransformedEmail(email, "display")
+---
+
+<span class="flex items-center gap-2">
+  {showIcon && <Icon name="mingcute:mail-line" class="size-5" />}
+  <Link href={`mailto:${email}`} aria-label="Send email" title="Send email" external>
+    {displayEmail}
+  </Link>
+  {
+    showCopyButton && (
+      <button
+        type="button"
+        class="copy-email-btn hover:text-accent-foreground focus:ring-ring rounded p-1 transition-colors focus:ring-2 focus:outline-none"
+        aria-label="Copy email address"
+        title="Copy email address"
+      >
+        <Icon name="mingcute:copy-line" class="size-5" />
+      </button>
+    )
+  }
+</span>
+
+<script define:vars={{ email: email }}>
+  function initCopyButtons() {
+    const copyButtons = document.querySelectorAll(".copy-email-btn")
+
+    copyButtons.forEach((button) => {
+      // Remove existing listeners to prevent duplicates
+      button.removeEventListener("click", handleCopyClick)
+      button.addEventListener("click", handleCopyClick)
+    })
+  }
+
+  async function handleCopyClick(event) {
+    const button = event.currentTarget
+
+    try {
+      await navigator.clipboard.writeText(email)
+      console.log("Email copied to clipboard:", email)
+
+      // Show visual feedback
+      const originalContent = button.innerHTML
+      button.innerHTML = `<svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`
+
+      setTimeout(() => {
+        button.innerHTML = originalContent
+      }, 1000)
+    } catch (err) {
+      console.error("Failed to copy email:", err)
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", initCopyButtons)
+  document.addEventListener("astro:page-load", initCopyButtons)
+</script>

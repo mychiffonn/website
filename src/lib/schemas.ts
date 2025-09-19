@@ -1,4 +1,5 @@
 import { z } from 'astro/zod'
+import type { ProfileLinkType } from '@icon-config'
 
 /**
  * Configuration schema for site-wide settings including metadata, localization, and theme options.
@@ -61,7 +62,6 @@ export const SiteConfigSchema = z.object({
  * @example
  * ```ts
  * {
- *   email: "user@example.com",
  *   github: "https://github.com/username",
  *   googleScholar: {
  *     href: "https://scholar.google.com/citations?user=...",
@@ -71,7 +71,7 @@ export const SiteConfigSchema = z.object({
  * ```
  */
 export const ProfileLinkConfigSchema = z.record(
-  z.string(),
+  z.custom<ProfileLinkType>((val) => typeof val === 'string'),
   z.union([
     z.string(),
     z.object({
@@ -97,9 +97,11 @@ export const ProfileConfigSchema = z.object({
    * Max 50 characters
    */
   tagline: z.string().max(50),
-  /** Geographic location (city, state, country) */
+  /** required: Main email address */
+  email: z.string().email(),
+  /** optional: Geographic location (city, state, country) */
   location: z.string().max(50).optional(),
-  /** Phone number in international format */
+  /** Phone number, accepting international format */
   phone: z.string().regex(/^[+]?[\d\s().-]{7,22}$/).optional(),
   /** Preferred pronouns (e.g., "she/her", "they/them") */
   pronouns: z.string().max(20).optional(),
@@ -107,7 +109,7 @@ export const ProfileConfigSchema = z.object({
   pronunciation: z.string().optional(),
   // pronunciationAudioPath: z.string().optional(),
   /** Social media and professional platform links */
-  links: ProfileLinkConfigSchema.default({})
+  links: ProfileLinkConfigSchema
 })
 
 /**

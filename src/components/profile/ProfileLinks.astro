@@ -1,4 +1,5 @@
 ---
+import { cn } from "@/lib/utils"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 
@@ -8,52 +9,41 @@ interface Props {
   links?: ProfileLinkConfig | Record<string, string>
   class?: string
   includeLabel?: boolean
+  includeEmail?: boolean
   includeRss?: boolean
 }
 
-const { links, class: className = "", includeLabel = false, includeRss = false } = Astro.props
+const {
+  links,
+  class: className = "",
+  includeLabel = false,
+  includeEmail = false,
+  includeRss = false
+} = Astro.props
 
-const processedLinks = getProcessedProfileLinks(links, includeRss)
+const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
 ---
 
 <nav class={`flex flex-wrap gap-x-2 gap-y-1 ${className}`} role="list">
   {
-    processedLinks.map(({ href, label, iconName }) => {
-      // Normalize public asset paths and convert to absolute URLs
-      let normalizedHref = href
-
-      // Handle different input formats for public assets
-      if (href.startsWith("/public/")) {
-        // /public/doc/cv.pdf → /doc/cv.pdf
-        normalizedHref = href.replace("/public", "")
-      }
-
-      const finalHref = new URL(normalizedHref, Astro.site).toString()
-      const isExternal = !normalizedHref.startsWith("/")
-
-      return (
-        <Link
-          href={finalHref}
-          aria-label={label}
-          title={label}
-          rel="me"
-          class:list={[
-            "text-muted-foreground flex touch-manipulation items-center transition-colors",
-            "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-            includeLabel
-              ? "gap-x-1 p-1"
-              : [
-                  "size-10 justify-center rounded-md border",
-                  "has-[>svg:only-child]:aspect-square",
-                  "hover:text-accent-foreground hover:bg-accent"
-                ]
-          ]}
-          external={isExternal}
-        >
-          <Icon name={iconName} class="size-5" />
-          {includeLabel && <span set:html={label} />}
-        </Link>
-      )
-    })
+    processedLinks.map(({ href, isExternal, label, iconName }) => (
+      <Link
+        href={href}
+        aria-label={label}
+        title={label}
+        rel="me"
+        class={cn(
+          "text-muted-foreground flex touch-manipulation items-center transition-colors",
+          "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+          "size-10 justify-center rounded-md border",
+          "hover:text-accent-foreground hover:bg-accent",
+          includeLabel ? "sm:size-auto sm:gap-x-1 sm:border-0 sm:p-1" : ""
+        )}
+        external={isExternal}
+      >
+        <Icon name={iconName} class="size-5" />
+        {includeLabel ? <span class="hidden sm:inline" set:html={label} /> : null}
+      </Link>
+    ))
   }
 </nav>

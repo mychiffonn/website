@@ -54,7 +54,6 @@ export const SEMANTIC_ICONS = {
 // Official platform icon mapping with camelCase keys and object values
 export const PROFILE_ICON_MAP = {
   // Email & Communication
-  email: { label: "Email", iconName: "mingcute:mail-line" },
   skype: { label: "Skype", iconName: "mingcute:skype-line" },
   telegram: { label: "Telegram", iconName: "mingcute:telegram-line" },
   whatsapp: { label: "WhatsApp", iconName: "mingcute:whatsapp-line" },
@@ -94,8 +93,9 @@ export const PROFILE_ICON_MAP = {
   mendeley: { label: "Mendeley", iconName: "academicons:mendeley" },
   zotero: { label: "Zotero", iconName: "academicons:zotero" },
   figshare: { label: "Figshare", iconName: "academicons:figshare" },
-  dblp: { label: "DBLP", iconName: "mingcute:database-line" },
-  semanticScholar: { label: "Semantic Scholar", iconName: "mingcute:brain-line" },
+  dblp: { label: "DBLP", iconName: "academicons:dblp" },
+  semanticScholar: { label: "Semantic Scholar", iconName: "academicons:semantic-scholar" },
+  inspire: { label: "Inspire", iconName: "academicons:inspire" },
 
   // Developer Platforms
   github: { label: "GitHub", iconName: "mingcute:github-line" },
@@ -104,7 +104,7 @@ export const PROFILE_ICON_MAP = {
   codepen: { label: "CodePen", iconName: "mingcute:code-line" },
   codesandbox: { label: "CodeSandbox", iconName: "mingcute:code-line" },
   stackoverflow: { label: "Stack Overflow", iconName: "academicons:stackoverflow" },
-  figma: { label: "Stack Overflow", iconName: "mingcute:figma-line" },
+  figma: { label: "Figma", iconName: "mingcute:figma-line" },
 
   // Professional & Portfolio
   website: { label: "Website", iconName: "mingcute:globe-2-line" },

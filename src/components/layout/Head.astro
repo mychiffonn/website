@@ -80,11 +80,13 @@ const structuredData = {
   author: author
     ? {
         "@type": "Person",
-        name: author
+        name: author,
+        ...(PROFILE.email && { email: PROFILE.email })
       }
     : {
         "@type": "Person",
-        name: SITE.author || SITE.title
+        name: SITE.author || SITE.title,
+        ...(PROFILE.email && { email: PROFILE.email })
       },
   publisher: {
     "@type": "Person",
@@ -189,8 +191,10 @@ const structuredData = {
   <script is:inline>
     document.addEventListener("DOMContentLoaded", function () {
       if (typeof mediumZoom !== "undefined") {
-        const images = document.querySelectorAll("main img:not(a img):not(.blog-card img):not(.card img):not(.clickable-card img)")
-        
+        const images = document.querySelectorAll(
+          "main img:not(a img):not(.blog-card img):not(.card img):not(.clickable-card img)"
+        )
+
         if (images.length) {
           mediumZoom(images, {
             margin: 24,
