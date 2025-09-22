@@ -16,5 +16,5 @@ I'm currently involved in [SEACrowd](https://seacrowd.org/),
 [Cohere Open Science Community](https://cohere.com/research/open-science), and
 [CommonCrawl](https://commoncrawl.org/). 
 I graduated in May 2025 from [Minerva University](https://minerva.edu/) studying Machine Learning & Statistics, while living with
-peer from 50+ countries and engaging civically in 6 cities 🇺🇸🇰🇷🇹🇼🇮🇳🇦🇷🇩🇪 as part of its global
-rotation program.
+peers from 50+ countries and engaging civically in 6 cities 🇺🇸🇰🇷🇹🇼🇮🇳🇦🇷🇩🇪 as part of its [global
+rotation program](https://www.minerva.edu/global-immersion/).
