@@ -1,14 +1,12 @@
 I am interested in researching and building **human–AI systems** that **reshape how people access,
-trust, and collaborate around _knowledge_**.
+trust, and collaborate** with:
 
-- Inclusivity: building systems that adapt across languages, cultures, and modalities.
-- Safety: caliberating reliability and trust, knowledge editing and unlearning, and memory
-  mechanisms
-- Collaboration: Human-AI bidrectional alignment, collaborative dynamics, and synergy
-- Other interests: data-centric AI, social impacts of AI, AI ethics, AI & education
+- multilingual and cross-cultural adaptation
+- **human-AI alignment**: data curation, pluralistic alignment, scalable oversight, benchmarking and holistic evaluation
+- **human-AI collaboration**: building cooperative AI while maintaining human agency
+- Other interests: social intelligence, social impacts of AI, AI ethics, AI & education
 
-Knowledge can be broadly defined, and so I care about many ways and aspects of
-accessing and producing knowledge. In the long term, I envision a **personalized, external 
+In the long term, I envision a **personalized, external 
 knowledge system that co-evolve with humans and society** as we forget, re-prioritize, and integrate 
 new knowlege over time.
 
