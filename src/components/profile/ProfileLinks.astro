@@ -35,9 +35,12 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
         class={cn(
           "text-muted-foreground flex touch-manipulation items-center transition-colors",
           "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-          "size-10 justify-center rounded-md border",
-          "hover:text-accent-foreground hover:bg-accent",
-          includeLabel ? "sm:size-auto sm:gap-x-1 sm:border-0 sm:p-1" : ""
+          includeLabel
+            ? [
+                "hover:text-accent-foreground hover:bg-accent size-10 justify-center rounded-md border",
+                "sm:hover:text-accent sm:size-auto sm:gap-x-1 sm:border-0 sm:p-1 sm:hover:bg-transparent"
+              ]
+            : "hover:text-accent-foreground hover:bg-accent size-10 justify-center rounded-md border"
         )}
         external={isExternal}
       >

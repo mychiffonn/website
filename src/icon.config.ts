@@ -111,7 +111,7 @@ export const PROFILE_ICON_MAP = {
   portfolio: { label: "Portfolio", iconName: "mingcute:briefcase-line" },
   blog: { label: "Blog", iconName: "mingcute:pen-line" },
   cv: { label: "CV", iconName: "academicons:cv" },
-  resume: { label: "Resume", iconName: "mingcute:file-line" },
+  resume: { label: "Resume", iconName: "mingcute:briefcase-line" },
   calendar: { label: "Calendar", iconName: "mingcute:calendar-line" },
 
   // Other
