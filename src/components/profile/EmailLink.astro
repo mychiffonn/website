@@ -1,7 +1,7 @@
 ---
-import { Icon } from "astro-icon/components"
+import Icon from "@/components/base/Icon.astro"
+import Link from "@/components/base/Link.astro"
 
-import Link from "../base/Link.astro"
 import { getTransformedEmail } from "./helper"
 
 interface Props {
@@ -33,7 +33,7 @@ const displayEmail = getTransformedEmail(email, "display")
   }
 </span>
 
-<script define:vars={{ email: email }}>
+<script is:inline define:vars={{ email: email }}>
   function initCopyButtons() {
     const copyButtons = document.querySelectorAll(".copy-email-btn")
 
