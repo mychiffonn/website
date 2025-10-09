@@ -1,18 +1,13 @@
-I am interested in researching and building **human–AI systems** that **reshape how people access,
-trust, and collaborate** with:
+I am interested in researching and building **human–AI systems** that **reflect and support diversity of human patterns**:
 
-- multilingual and cross-cultural adaptation
-- **human-AI alignment**: data curation, pluralistic alignment, scalable oversight, benchmarking and holistic evaluation
-- **human-AI collaboration**: building cooperative AI while maintaining human agency
-- Other interests: social intelligence, social impacts of AI, AI ethics, AI & education
+- languages and culture: multilingual and multicultural AI
+- values: [human-AI bidirectional alignment](https://arxiv.org/abs/2406.09264), [pluralistic alignment](https://arxiv.org/pdf/2402.05070), holistic and robust evaluation, and ML fairness
+- interactions with AI, others, and society: cooperative AI, human-AI collaboration, alternative UIs, social intelligence, social impacts of AI 
 
-In the long term, I envision a **personalized, external 
-knowledge system that co-evolve with humans and society** as we forget, re-prioritize, and integrate 
-new knowlege over time.
+Instrumental to this goal is safe and trustworthy AI systems, so I also like to work on 
+technical AI alignment and AI control.
 
-I'm currently involved in [SEACrowd](https://seacrowd.org/),
-[Cohere Open Science Community](https://cohere.com/research/open-science), and
-[CommonCrawl](https://commoncrawl.org/). 
-I graduated in May 2025 from [Minerva University](https://minerva.edu/) studying Machine Learning & Statistics, while living with
-peers from 50+ countries and engaging civically in 6 cities 🇺🇸🇰🇷🇹🇼🇮🇳🇦🇷🇩🇪 as part of its [global
-rotation program](https://www.minerva.edu/global-immersion/).
+I'm currently involved in [Algoverse](https://algoverseairesearch.org/), [SEACrowd](https://seacrowd.org/), and 
+[Cohere Open Science Community](https://cohere.com/research/open-science).
+
+For potential collaboration, please email me.
