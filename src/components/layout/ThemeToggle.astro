@@ -14,20 +14,21 @@ import Icon from "@/components/base/Icon.astro"
 </Button>
 
 <script is:inline data-astro-rerun>
-  const theme = (() => {
+  ;(() => {
     const localStorageTheme = localStorage?.getItem("theme") ?? ""
+    let theme
     if (["dark", "light"].includes(localStorageTheme)) {
-      return localStorageTheme
+      theme = localStorageTheme
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      theme = "dark"
+    } else {
+      theme = "light"
     }
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark"
-    }
-    return "light"
-  })()
 
-  document.documentElement.setAttribute("data-theme", theme)
-  document.documentElement.classList.add(theme === "dark" ? "scheme-dark" : "scheme-light")
-  window.localStorage.setItem("theme", theme)
+    document.documentElement.setAttribute("data-theme", theme)
+    document.documentElement.classList.add(theme === "dark" ? "scheme-dark" : "scheme-light")
+    window.localStorage.setItem("theme", theme)
+  })()
 </script>
 
 <script>
