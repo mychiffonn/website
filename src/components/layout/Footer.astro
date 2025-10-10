@@ -1,7 +1,6 @@
 ---
 import { FOOTER, PROFILE, SITE } from "@site-config"
 import Link from "@/components/base/Link.astro"
-import EmailLink from "@/components/profile/EmailLink.astro"
 import ProfileLinks from "@/components/profile/ProfileLinks.astro"
 
 // Create array of available source links
@@ -22,40 +21,42 @@ const sourceLinks = [
       class="my-2"
     />
 
-    <span>
+    <p>
       &copy; <span id="current-year"></span>
-      {PROFILE.name}. All rights reserved.
-
+      {PROFILE.name}.
       {
-        SITE.license && (
-          <span>
-            Unless otherwise stated, all content is licensed under{" "}
+        SITE.license ? (
+          <>
+            {`Unless otherwise stated, all content is licensed under `}
             <Link class="text-foreground" href={SITE.license.href} external>
               {SITE.license.label}
             </Link>
-          </span>
+            {`. Other rights reserved.`}
+          </>
+        ) : (
+          ` All rights reserved.`
         )
       }
-    </span>
+    </p>
 
     {/** Source Links */}
     {
       sourceLinks.length > 0 && (
-        <span class="text-xs">
+        <p class="text-xs">
           {sourceLinks.map((link, index) => [
             <Link href={link.href} class="text-muted-foreground" external>
               {link.label}
             </Link>,
             index < sourceLinks.length - 1 && " / "
           ])}
-        </span>
+        </p>
       )
     }
 
     {/** Credits */}
     {
       FOOTER.credits && (
-        <span class="text-xs">
+        <p>
           Built with{" "}
           <Link href="https://astro.build/" class="text-foreground" external>
             Astro.js
@@ -64,7 +65,7 @@ const sourceLinks = [
           <Link href="https://ui.shadcn.com/" class="text-foreground" external>
             shadcn/ui
           </Link>
-        </span>
+        </p>
       )
     }
   </div>
