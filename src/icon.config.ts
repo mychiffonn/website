@@ -131,6 +131,27 @@ export const PROJECT_LINK_TYPES = {
   release: { label: "Release", iconName: "mingcute:download-line" }
 } as const
 
+export const PUBLICATION_LINK_TYPES = {
+  abstract: { label: "Abstract", iconName: "mingcute:align-justify-line" },
+  doi: { label: "DOI", iconName: "academicons:doi" },
+  pdf: { label: "PDF", iconName: "mingcute:pdf-line" },
+  code: { label: "Code", iconName: "mingcute:code-line" },
+  resources: { label: "Resources", iconName: "mingcute:folder-zip-line" },
+  video: { label: "Video", iconName: "mingcute:video-line" },
+  slides: { label: "Slides", iconName: "mingcute:presentation-line" },
+  poster: { label: "Poster", iconName: "mingcute:image-line" },
+  website: { label: "Website", iconName: "mingcute:globe-2-line" },
+  arxiv: { label: "arXiv", iconName: "academicons:arxiv" },
+  talk: { label: "Talk", iconName: "mingcute:mic-line" },
+  post: { label: "Post", iconName: "mingcute:pen-line" },
+  demo: { label: "Demo", iconName: "mingcute:play-circle-line" },
+  award: { label: "Award", iconName: "mingcute:trophy-line" },
+  venue: { label: "Venue", iconName: "mingcute:building-line" },
+  selected: { label: "Selected", iconName: "mingcute:star-line" },
+  threads: { label: "Thread", iconName: "mingcute:comment-line" }
+} as const
+
 export type ProfileLinkType = keyof typeof PROFILE_ICON_MAP
 export type SemanticIconName = keyof typeof SEMANTIC_ICONS
 export type ProjectLinkType = keyof typeof PROJECT_LINK_TYPES
+export type PublicationLinkType = keyof typeof PUBLICATION_LINK_TYPES

@@ -23,7 +23,7 @@ academia (NLP+HCI), technology, and anything I'm interested in. Co-created with 
 - 🔧 Easy to configure:
   - theme -> [src/assets/styles/global.css](src/assets/styles/global.css),
   - page & personal information -> [src/config.ts](src/config.ts), with
-    [defined schemas](src/lib/schemas.ts)
+    [defined schemas](src/schemas.ts)
   - content -> [src/content](src/content)
   - add new content -> [src/content.config.ts](src/content.config.ts)
 - [UPCOMING] Showcase publications from a .bib file

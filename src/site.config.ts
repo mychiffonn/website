@@ -1,4 +1,10 @@
-import type { FooterConfig, LinkConfig, ProfileConfig, SiteConfig } from "@/types"
+import type {
+  FooterConfig,
+  LinkConfig,
+  ProfileConfig,
+  PublicationConfig,
+  SiteConfig
+} from "@/types"
 
 export const SITE: SiteConfig = {
   title: "My Chiffon N.",
@@ -66,6 +72,10 @@ export const NAV_LINKS: LinkConfig[] = [
     label: "Projects"
   },
   {
+    href: "/publications",
+    label: "Publications"
+  },
+  {
     href: "/blog",
     label: "Blog"
   },
@@ -79,6 +89,18 @@ export const NAV_LINKS: LinkConfig[] = [
   }
 ]
 
+export const PUB_CONFIG: PublicationConfig = {
+  maxFirstAuthors: 4,
+  maxLastAuthors: 4,
+  highlightAuthor: {
+    firstName: "My Chiffon",
+    lastName: "Nguyen",
+    aliases: ["My Nguyen", "M. Nguyen", "Chiffon Nguyen"]
+  },
+  citationStyle: "apa",
+  sortOrder: "reverse-chronological"
+}
+
 export const FOOTER: FooterConfig = {
   credits: true,
   sourceCode: "https://github.com/mychiffonn/website",
@@ -87,8 +109,10 @@ export const FOOTER: FooterConfig = {
 }
 
 if (import.meta.env.DEV) {
-  const { validateFooter, validateProfile, validateSiteConfig } = await import("@/lib/schemas")
+  const { validateFooter, validateProfile, validatePublicationConfig, validateSiteConfig } =
+    await import("@/schemas")
   validateSiteConfig(SITE)
   validateProfile(PROFILE)
   validateFooter(FOOTER)
+  validatePublicationConfig(PUB_CONFIG)
 }

@@ -1,7 +1,8 @@
 import { defineCollection, reference, z } from "astro:content"
 import { file, glob } from "astro/loaders"
 
-import { ProfileLinkConfigSchema } from "@/lib/schemas"
+import { ProfileLinkConfigSchema } from "@/schemas"
+
 import { dedupLowerCase, dedupPreserveCase, slugify } from "@/lib/string-manipulation"
 
 /** Accepts both YYYY-MM and YYYY-MM-DD formats */
