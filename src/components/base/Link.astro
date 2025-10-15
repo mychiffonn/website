@@ -18,7 +18,7 @@ const { href, external, class: className, underline, ...rest } = Astro.props
   class={cn(
     "inline-block transition-colors duration-300 ease-in-out hover:text-accent",
     underline &&
-      "underline decoration-muted-foreground underline-offset-[3px] hover:decoration-foreground",
+      "underline decoration-muted-foreground underline-offset-[3px] hover:decoration-accent",
     className
   )}
   {...rest}
