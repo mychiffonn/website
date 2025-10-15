@@ -23,14 +23,12 @@ const { publicationsByYear, years } = await loadAllPublications()
           </Section>
         ))
       ) : (
-        <Section>
-          <div class="py-12 text-center">
-            <h2 class="text-muted-foreground mb-2 text-xl font-medium">No publications found</h2>
-            <p class="text-muted-foreground">
-              Publications will appear here once they are added to the bibliography.
-            </p>
-          </div>
-        </Section>
+        <div class="py-12 text-center">
+          <h2 class="text-muted-foreground mb-2 text-xl font-medium">No publications found</h2>
+          <p class="text-muted-foreground">
+            Publications will appear here once they are added to the bibliography.
+          </p>
+        </div>
       )
     }
   </div>
