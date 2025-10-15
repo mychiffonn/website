@@ -15,7 +15,7 @@ const sortedTags = await PostManager.getInstance().getSortedTags()
     <div class="flex flex-wrap gap-2">
       {
         sortedTags.map(({ tag, count }) => (
-          <Badge href={`/tags/${tag}`} variant="secondary">
+          <Badge href={`/tags/${tag}`} variant="muted">
             <Icon name="hashtag" class="size-3" />
             {tag}
             <span class="text-muted-foreground ml-1.5">({count})</span>

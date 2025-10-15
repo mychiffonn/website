@@ -60,11 +60,11 @@ export const getContextVariant = (context?: string) => {
     case 'work':
       return 'outline'
     case 'personal':
-      return 'secondary'
+      return 'muted'
     case 'community':
       return 'destructive'
     default:
-      return 'secondary'
+      return 'muted'
   }
 }
 

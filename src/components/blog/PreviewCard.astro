@@ -19,7 +19,7 @@ const tags = metadata.tags
 
 <div
   class="card group relative overflow-hidden"
-  style="--card-highlight: hsl(var(--primary)); --card-highlight-bg: hsl(var(--secondary) / 50%);"
+  style="--card-highlight: hsl(var(--primary)); --card-highlight-bg: hsl(var(--muted) / 50%);"
 >
   {
     metadata.image && (
@@ -59,7 +59,7 @@ const tags = metadata.tags
         tags && (
           <div class="card-tags">
             {tags.map((tag: string) => (
-              <Badge variant={"secondary"} class="tag-badge transition-all duration-300">
+              <Badge variant={"muted"} class="tag-badge transition-all duration-300">
                 <Icon name="hashtag" />
                 {tag}
               </Badge>
@@ -73,10 +73,10 @@ const tags = metadata.tags
 
 <style>
   .card:hover {
-    background-color: var(--card-highlight-bg, hsl(var(--secondary) / 50%));
+    background-color: var(--card-highlight-bg, hsl(var(--muted) / 50%));
 
     & .tag-badge {
-      background-color: var(--card-highlight-bg, hsl(var(--secondary) / 50%));
+      background-color: var(--card-highlight-bg, hsl(var(--muted) / 50%));
     }
   }
 
