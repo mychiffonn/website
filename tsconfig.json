@@ -8,7 +8,7 @@
         "./src/*"
       ],
       "@/styles/*": [
-        "./src/assets/styles/*"
+        "./src/styles/*"
       ],
       "@/components": [
         "./src/components/index.ts"

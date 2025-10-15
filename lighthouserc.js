@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   ci: {
     collect: {
       staticDistDir: "./dist",
@@ -6,7 +6,7 @@ module.exports = {
         "http://localhost/index.html",
         "http://localhost/blog/index.html",
         "http://localhost/projects/index.html",
-        "http://localhost/publications.html"
+        "http://localhost/publications/index.html"
       ]
     },
     assert: {
