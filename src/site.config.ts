@@ -108,10 +108,10 @@ export const FOOTER: FooterConfig = {
 }
 
 if (import.meta.env.DEV) {
-  const { validateFooter, validateProfile, validatePublicationConfig, validateSiteConfig } =
+  const { FooterConfigSchema, ProfileConfigSchema, PublicationConfigSchema, SiteConfigSchema } =
     await import("@/schemas")
-  validateSiteConfig(SITE)
-  validateProfile(PROFILE)
-  validateFooter(FOOTER)
-  validatePublicationConfig(PUB_CONFIG)
+  SiteConfigSchema.parse(SITE)
+  ProfileConfigSchema.parse(PROFILE)
+  FooterConfigSchema.parse(FOOTER)
+  PublicationConfigSchema.parse(PUB_CONFIG)
 }

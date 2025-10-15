@@ -188,77 +188,6 @@ export const PublicationConfigSchema = z.object({
   sortOrder: z.enum(["chronological", "reverse-chronological"]).default("reverse-chronological")
 })
 
-/**
- * Schema for BibTeX bibliography entries with custom fields support.
- * Includes standard BibTeX fields plus some extensions.
- */
-export const BibEntrySchema = z.object({
-  // Standard BibTeX fields
-  /** Unique identifier for the bibliography entry */
-  id: z.string(),
-  /** Entry type (article, inproceedings, book, etc.) */
-  type: z.string(),
-  /** Publication title */
-  title: z.string(),
-  /** Authors list */
-  author: z.string().optional(),
-  /** Publication year */
-  year: z.number().or(z.string()).optional(),
-  /** DOI identifier */
-  doi: z.string().optional(),
-  /** Generic URL */
-  url: z.string().optional(),
-
-  // Journal/Conference fields
-  /** Journal name */
-  journal: z.string().optional(),
-  /** Conference/proceedings name */
-  booktitle: z.string().optional(),
-  /** Volume number */
-  volume: z.string().optional(),
-  /** Issue/number */
-  number: z.string().optional(),
-  /** Page range */
-  pages: z.string().optional(),
-  /** Publisher */
-  publisher: z.string().optional(),
-  /** Editor(s) */
-  editor: z.string().optional(),
-
-  // Custom academic fields
-  /** Abstract text */
-  abstract: z.string().optional(),
-  /** arXiv identifier */
-  arxiv: z.string().optional(),
-  /** Award or honor received */
-  award: z.string().optional(),
-  /** Source code repository URL */
-  code: z.string().optional(),
-  /** Live demo URL */
-  demo: z.string().optional(),
-  /** PDF file path or URL */
-  pdf: z.string().optional(),
-  /** Blog post URL */
-  post: z.string().optional(),
-  /** Poster file path or URL */
-  poster: z.string().optional(),
-  /** Additional resources URL */
-  resources: z.string().optional(),
-  /** Boolean for featured publications */
-  selected: z.boolean().optional(),
-  /** Presentation slides URL */
-  slides: z.string().optional(),
-  /** Talk/presentation URL */
-  talk: z.string().optional(),
-  /** Social media threads (X/Twitter/Bluesky/Threads) */
-  threads: z.string().optional(),
-  /** Publication venue */
-  venue: z.string().optional(),
-  /** Video URL */
-  video: z.string().optional(),
-  /** Project website URL */
-  website: z.string().optional()
-})
 
 /**
  * Processed publication data type for component rendering.
@@ -308,15 +237,5 @@ export type ProfileConfig = z.infer<typeof ProfileConfigSchema>
 export type FooterConfig = z.infer<typeof FooterConfigSchema>
 export type Tool = z.infer<typeof ToolSchema>
 export type PublicationConfig = z.infer<typeof PublicationConfigSchema>
-export type BibEntry = z.infer<typeof BibEntrySchema>
 export type ProcessedPublication = z.infer<typeof ProcessedPublicationSchema>
 
-// Validation functions
-export const validateSiteConfig = (data: unknown) => SiteConfigSchema.parse(data)
-export const validateProfile = (data: unknown) => ProfileConfigSchema.parse(data)
-export const validateFooter = (data: unknown) => FooterConfigSchema.parse(data)
-export const validateTool = (data: unknown) => ToolSchema.parse(data)
-export const validatePublicationConfig = (data: unknown) => PublicationConfigSchema.parse(data)
-export const validateBibEntry = (data: unknown) => BibEntrySchema.parse(data)
-export const validateProcessedPublication = (data: unknown) =>
-  ProcessedPublicationSchema.parse(data)

@@ -165,7 +165,6 @@ export function parseBibTeX(bibContent: string): Publication[] {
     const publications: CitationEntry[] = cite.data
 
     return publications.map((entry) => {
-      // Extract custom fields from raw BibTeX
       const customFields = extractCustomFields(entry)
 
       return {
