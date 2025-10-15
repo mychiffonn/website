@@ -2,11 +2,14 @@
  * Publication processing utilities for BibTeX parsing and citation formatting
  */
 // @ts-ignore - citation-js doesn't have types
-import pkg from '@citation-js/core'
-import '@citation-js/plugin-bibtex'
-import { PUBLICATION_LINK_TYPES } from "@/icon.config"
-import type { PublicationConfig } from "@/types"
+import pkg from "@citation-js/core"
+
+import "@citation-js/plugin-bibtex"
+
 import type { ProcessedPublication } from "@/schemas"
+import type { PublicationConfig } from "@/types"
+
+import { PUBLICATION_LINK_TYPES } from "@/icon.config"
 
 // @ts-ignore - citation-js doesn't have types
 const { Cite, plugins } = pkg
@@ -95,29 +98,29 @@ interface PublicationLink {
 
 // Configure custom field types for academic publications using the plugin's configuration API
 const configureCustomFields = (): void => {
-  const config = plugins.config.get('@bibtex')
+  const config = plugins.config.get("@bibtex")
 
   // Add custom academic field types following the documentation format
   // Format: config.constants.fieldTypes.fieldname = [fieldType, valueType]
   // fieldType: 'field', 'list', or 'separated'
   // valueType: 'literal', 'title', 'name', 'date', 'verbatim', 'uri', 'other'
 
-  config.constants.fieldTypes.abstract = ['field', 'literal']
-  config.constants.fieldTypes.arxiv = ['field', 'literal']
-  config.constants.fieldTypes.award = ['field', 'literal']
-  config.constants.fieldTypes.code = ['field', 'uri']
-  config.constants.fieldTypes.demo = ['field', 'uri']
-  config.constants.fieldTypes.pdf = ['field', 'uri']
-  config.constants.fieldTypes.post = ['field', 'uri']
-  config.constants.fieldTypes.poster = ['field', 'uri']
-  config.constants.fieldTypes.resources = ['field', 'uri']
-  config.constants.fieldTypes.selected = ['field', 'literal']
-  config.constants.fieldTypes.slides = ['field', 'uri']
-  config.constants.fieldTypes.talk = ['field', 'uri']
-  config.constants.fieldTypes.threads = ['field', 'uri']
-  config.constants.fieldTypes.venue = ['field', 'literal']
-  config.constants.fieldTypes.video = ['field', 'uri']
-  config.constants.fieldTypes.website = ['field', 'uri']
+  config.constants.fieldTypes.abstract = ["field", "literal"]
+  config.constants.fieldTypes.arxiv = ["field", "literal"]
+  config.constants.fieldTypes.award = ["field", "literal"]
+  config.constants.fieldTypes.code = ["field", "uri"]
+  config.constants.fieldTypes.demo = ["field", "uri"]
+  config.constants.fieldTypes.pdf = ["field", "uri"]
+  config.constants.fieldTypes.post = ["field", "uri"]
+  config.constants.fieldTypes.poster = ["field", "uri"]
+  config.constants.fieldTypes.resources = ["field", "uri"]
+  config.constants.fieldTypes.selected = ["field", "literal"]
+  config.constants.fieldTypes.slides = ["field", "uri"]
+  config.constants.fieldTypes.talk = ["field", "uri"]
+  config.constants.fieldTypes.threads = ["field", "uri"]
+  config.constants.fieldTypes.venue = ["field", "literal"]
+  config.constants.fieldTypes.video = ["field", "uri"]
+  config.constants.fieldTypes.website = ["field", "uri"]
   config.parse.strict = false
 }
 
@@ -133,7 +136,7 @@ function extractCustomFields(entry: CitationEntry): Record<string, string> {
 
   if (entry._graph?.[0]?.data) {
     const rawBib = entry._graph[0].data
-    const entryMatch = rawBib.match(new RegExp(`@\\w+\\{${entry.id}[\\s\\S]*?\\n\\}`, 'i'))
+    const entryMatch = rawBib.match(new RegExp(`@\\w+\\{${entry.id}[\\s\\S]*?\\n\\}`, "i"))
     if (entryMatch) {
       const entryContent = entryMatch[0]
 
@@ -170,9 +173,13 @@ export function parseBibTeX(bibContent: string): Publication[] {
       return {
         id: entry.id || entry.label || `pub-${Math.random().toString(36).substring(2, 11)}`,
         title: entry.title || customFields.title || "",
-        authors: entry.author ? entry.author.map((author) =>
-          typeof author === 'string' ? author.trim() : `${author.given || ''} ${author.family || ''}`.trim()
-        ) : [],
+        authors: entry.author
+          ? entry.author.map((author) =>
+              typeof author === "string"
+                ? author.trim()
+                : `${author.given || ""} ${author.family || ""}`.trim()
+            )
+          : [],
         year: entry.issued?.["date-parts"]?.[0]?.[0] || entry.year || parseInt(customFields.year),
         abstract: entry.abstract || customFields.abstract,
         venue: entry.venue || customFields.venue,
@@ -189,8 +196,8 @@ export function parseBibTeX(bibContent: string): Publication[] {
         post: entry.post || customFields.post,
         poster: entry.poster || customFields.poster,
         resources: entry.resources || customFields.resources,
-        selected: entry.selected === "true" || entry.selected === true ||
-          customFields.selected === "true",
+        selected:
+          entry.selected === "true" || entry.selected === true || customFields.selected === "true",
         slides: entry.slides || customFields.slides,
         talk: entry.talk || customFields.talk,
         threads: entry.threads || customFields.threads,
@@ -201,7 +208,6 @@ export function parseBibTeX(bibContent: string): Publication[] {
       }
     })
   } catch (error) {
-    console.error("Error parsing BibTeX:", error)
     return []
   }
 }
@@ -221,7 +227,6 @@ export function formatCitation(entry: Publication, style: string = "apa"): strin
       lang: "en-US"
     })
   } catch (error) {
-    console.error("Error formatting citation:", error)
     return `${entry.authors.join(", ")}. (${entry.year}). ${entry.title}.`
   }
 }
@@ -232,24 +237,30 @@ export function formatCitation(entry: Publication, style: string = "apa"): strin
  * @param highlightConfig - Configuration for author highlighting
  * @returns Array of authors with highlighted names in HTML
  */
-export function highlightAuthorName(authors: string[], highlightConfig: PublicationConfig['highlightAuthor']): string[] {
+export function highlightAuthorName(
+  authors: string[],
+  highlightConfig: PublicationConfig["highlightAuthor"]
+): string[] {
   const { firstName, lastName, aliases = [] } = highlightConfig
   const namesToHighlight = [
     `${firstName} ${lastName}`,
     `${lastName}, ${firstName}`,
-    `${firstName.split(' ')[0]} ${lastName}`, // Handle "My" from "My Chiffon"
-    `${lastName}, ${firstName.split(' ')[0]}`,
+    `${firstName.split(" ")[0]} ${lastName}`, // Handle "My" from "My Chiffon"
+    `${lastName}, ${firstName.split(" ")[0]}`,
     ...aliases
   ]
 
-  return authors.map(author => {
+  return authors.map((author) => {
     const authorLower = author.toLowerCase()
-    const shouldHighlight = namesToHighlight.some(name => {
+    const shouldHighlight = namesToHighlight.some((name) => {
       const nameLower = name.toLowerCase()
       // Check for exact match or partial match that includes both first and last name
-      return authorLower.includes(nameLower) ||
+      return (
+        authorLower.includes(nameLower) ||
         nameLower.includes(authorLower) ||
-        (authorLower.includes(firstName.toLowerCase()) && authorLower.includes(lastName.toLowerCase()))
+        (authorLower.includes(firstName.toLowerCase()) &&
+          authorLower.includes(lastName.toLowerCase()))
+      )
     })
 
     return shouldHighlight ? `<strong>${author}</strong>` : author
@@ -263,7 +274,11 @@ export function highlightAuthorName(authors: string[], highlightConfig: Publicat
  * @param maxLast - Maximum number of last authors to show (optional)
  * @returns Object with truncated author list and metadata
  */
-export function truncateAuthors(authors: string[], maxFirst: number, maxLast: number = 0): AuthorData {
+export function truncateAuthors(
+  authors: string[],
+  maxFirst: number,
+  maxLast: number = 0
+): AuthorData {
   const totalAuthors = authors.length
 
   // Early return if no truncation needed
@@ -298,8 +313,17 @@ export function getPublicationLinks(entry: Publication): PublicationLink[] {
   const links: PublicationLink[] = []
 
   const actionFields = [
-    "pdf", "code", "demo", "website", "slides", "video",
-    "poster", "resources", "talk", "post", "threads"
+    "pdf",
+    "code",
+    "demo",
+    "website",
+    "slides",
+    "video",
+    "poster",
+    "resources",
+    "talk",
+    "post",
+    "threads"
   ] as const
 
   for (const field of actionFields) {
@@ -325,7 +349,10 @@ export function getPublicationLinks(entry: Publication): PublicationLink[] {
  * @param config - Publication configuration
  * @returns Sorted array of publications
  */
-export function sortPublications(publications: Publication[], config: PublicationConfig): Publication[] {
+export function sortPublications(
+  publications: Publication[],
+  config: PublicationConfig
+): Publication[] {
   const sorted = [...publications].sort((a, b) => {
     const yearA = a.year || 0
     const yearB = b.year || 0
@@ -346,8 +373,11 @@ export function sortPublications(publications: Publication[], config: Publicatio
  * @param limit - Maximum number of publications to return
  * @returns Array of selected publications
  */
-export function getSelectedPublications(publications: Publication[], limit?: number): Publication[] {
-  const selected = publications.filter(pub => pub.selected === true)
+export function getSelectedPublications(
+  publications: Publication[],
+  limit?: number
+): Publication[] {
+  const selected = publications.filter((pub) => pub.selected === true)
   return limit ? selected.slice(0, limit) : selected
 }
 
@@ -356,7 +386,9 @@ export function getSelectedPublications(publications: Publication[], limit?: num
  * @param publications - Array of publications
  * @returns Object with years as keys and publication arrays as values
  */
-export function groupPublicationsByYear(publications: Publication[]): Record<string, Publication[]> {
+export function groupPublicationsByYear(
+  publications: Publication[]
+): Record<string, Publication[]> {
   const grouped: Record<string, Publication[]> = {}
 
   for (const pub of publications) {
@@ -376,18 +408,27 @@ export function groupPublicationsByYear(publications: Publication[]): Record<str
  * @param config - Publication configuration
  * @returns Processed publication data for component rendering
  */
-export function getPublicationData(publication: Publication, config: PublicationConfig): ProcessedPublication {
+export function getPublicationData(
+  publication: Publication,
+  config: PublicationConfig
+): ProcessedPublication {
   // Process authors
   const highlightedAuthors = highlightAuthorName(publication.authors || [], config.highlightAuthor)
-  const authorData = truncateAuthors(highlightedAuthors, config.maxFirstAuthors, config.maxLastAuthors)
+  const authorData = truncateAuthors(
+    highlightedAuthors,
+    config.maxFirstAuthors,
+    config.maxLastAuthors
+  )
 
   // Get publication links
   const links = getPublicationLinks(publication)
 
   // Determine main URL for title linking (prefer DOI, then arXiv, then URL)
-  const mainUrl = publication.doi ? `https://doi.org/${publication.doi}` :
-    publication.arxiv ? `https://arxiv.org/abs/${publication.arxiv}` :
-      publication.url || ""
+  const mainUrl = publication.doi
+    ? `https://doi.org/${publication.doi}`
+    : publication.arxiv
+      ? `https://arxiv.org/abs/${publication.arxiv}`
+      : publication.url || ""
 
   // Format venue/publication info
   const getPublisher = (): string => {

@@ -24,9 +24,11 @@ const { profile } = Astro.props
       src={avatar}
       alt={profile.name}
       fallback={profile.name.charAt(0)}
-      class="size-50"
       data-slot="profile-avatar"
-      priority
+      width={200}
+      height={200}
+      loading="eager"
+      fetchpriority="high"
     />
 
     <div class="flex-1 space-y-4">

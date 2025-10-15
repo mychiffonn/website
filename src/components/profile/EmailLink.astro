@@ -16,7 +16,12 @@ const displayEmail = getTransformedEmail(email, "display")
 
 <span class="flex items-center gap-2">
   {showIcon && <Icon name="mingcute:mail-line" class="size-5" />}
-  <Link href={`mailto:${email}`} aria-label="Send email" title="Send email" external>
+  <Link
+    href={`mailto:${email}`}
+    aria-label={`Send email to ${displayEmail}`}
+    title={`Send email to ${displayEmail}`}
+    external
+  >
     {displayEmail}
   </Link>
   {
@@ -57,9 +62,7 @@ const displayEmail = getTransformedEmail(email, "display")
       setTimeout(() => {
         button.innerHTML = originalContent
       }, 1000)
-    } catch (err) {
-      console.error("Failed to copy email:", err)
-    }
+    } catch (err) {}
   }
 
   document.addEventListener("DOMContentLoaded", initCopyButtons)

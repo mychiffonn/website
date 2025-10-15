@@ -169,12 +169,37 @@ const structuredData = {
 
   <ClientRouter />
 
-  {/* KaTeX CSS for math rendering */}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
+  {/* Preconnect to external CDNs for faster connections */}
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 
-  {/* Medium Zoom CSS and JS */}
-  <link rel="stylesheet" href="/src/styles/zoom.css" />
-  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script>
+  {/* Preload critical fonts to reduce render blocking */}
+  <link rel="preload" href="/fonts/NotoSansSC.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/ZedPlexMono.woff2" as="font" type="font/woff2" crossorigin />
+
+  {/* KaTeX CSS for math rendering - non-blocking load */}
+  <link
+    rel="preload"
+    href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    /></noscript
+  >
+
+  {/* Medium Zoom CSS and JS - non-blocking load */}
+  <link
+    rel="preload"
+    href="/src/styles/zoom.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript><link rel="stylesheet" href="/src/styles/zoom.css" /></noscript>
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"
+  ></script>
 
   {/* Medium Zoom initialization */}
   <script is:inline>
