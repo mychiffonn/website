@@ -27,7 +27,7 @@ const isCard = variant === "card"
   id="post-metadata"
   class:list={[
     "text-muted-foreground flex items-center gap-x-3 gap-y-2 text-sm",
-    isCard ? "card flex-wrap" : "flex-col justify-center sm:flex-row",
+    isCard ? "meta-card flex-wrap" : "flex-col justify-center sm:flex-row",
     className
   ]}
 >
@@ -36,7 +36,7 @@ const isCard = variant === "card"
       <div class="flex items-center gap-1.5">
         {metadata.authors.map((author) => (
           <div class="flex items-center gap-1">
-            <AuthorAvatar author={author} />
+            <AuthorAvatar author={author} class="size-5" />
             {isCard ? (
               <span>{author.name}</span>
             ) : (
@@ -92,9 +92,9 @@ const isCard = variant === "card"
     content: none;
   }
   @media (min-width: 640px) {
-    #post-metadata:not(.card) > *:not(:first-child)::before {
+    #post-metadata:not(.meta-card) > *:not(:first-child)::before {
       content: "•";
-      margin-inline: 0.5rem;
+      margin-inline: 0.25rem;
       display: inline-block;
       vertical-align: middle;
       color: color-mix(in oklch, var(--text-muted-foreground) 50%, transparent);

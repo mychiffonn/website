@@ -1,5 +1,4 @@
 ---
-// Original code: https://github.com/cworld1/astro-theme-pure/blob/main/packages/pure/components/pages/PreviewCard.astro
 import { Image } from "astro:assets"
 
 import type { PostMeta } from "@/lib/blog/types"
@@ -7,6 +6,8 @@ import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
+
+import "@/assets/styles/card.css"
 
 interface Props {
   metadata: PostMeta
@@ -17,13 +18,8 @@ const tags = metadata.tags
 ---
 
 <div
-  class:list={[
-    "blog-card group relative overflow-hidden rounded-xl border transition-all duration-300 ease-in-out",
-    !metadata.image && "hover:bg-secondary/50"
-  ]}
-  style={metadata.image &&
-    `--card-highlight: hsl(var(--primary));
-     --card-highlight-bg: hsl(var(--secondary) / 50%);`}
+  class="card group relative overflow-hidden"
+  style="--card-highlight: hsl(var(--primary)); --card-highlight-bg: hsl(var(--secondary) / 50%);"
 >
   {
     metadata.image && (
@@ -40,18 +36,18 @@ const tags = metadata.tags
   <Link
     href={`/blog/${metadata.id}`}
     class:list={[
-      "relative z-10 block p-4 transition-all duration-300",
+      "relative z-10 block transition-all duration-300",
       metadata.image && "max-md:pt-24"
     ]}
   >
-    <article class:list={["flex flex-col gap-3", metadata.image && "md:max-w-[80%]"]}>
+    <article class:list={["card-content", metadata.image && "md:max-w-[80%]"]}>
       {/** Row 1: Title  */}
-      <h3 class="group-hover:text-primary text-lg font-medium transition-colors duration-300">
+      <h3 class="card-title group-hover:text-primary transition-colors duration-300">
         {metadata.title}
       </h3>
 
       {/** Row 2: Desc  */}
-      <p class="text-foreground">
+      <p class="card-description">
         {metadata.description}
       </p>
 
@@ -61,7 +57,7 @@ const tags = metadata.tags
       {/** Row 4: Tags */}
       {
         tags && (
-          <div class="flex flex-wrap gap-2">
+          <div class="card-tags">
             {tags.map((tag: string) => (
               <Badge variant={"secondary"} class="tag-badge transition-all duration-300">
                 <Icon name="hashtag" />
@@ -76,15 +72,11 @@ const tags = metadata.tags
 </div>
 
 <style>
-  .blog-card {
-    --card-bg-hover: var(--card-highlight-bg, hsl(var(--secondary) / 50%));
-  }
-
-  .blog-card:hover {
-    background-color: var(--card-bg-hover);
+  .card:hover {
+    background-color: var(--card-highlight-bg, hsl(var(--secondary) / 50%));
 
     & .tag-badge {
-      background-color: var(--card-bg-hover);
+      background-color: var(--card-highlight-bg, hsl(var(--secondary) / 50%));
     }
   }
 

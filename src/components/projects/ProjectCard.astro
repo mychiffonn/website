@@ -7,6 +7,8 @@ import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 
+import "@/assets/styles/card.css"
+
 interface Props {
   project: CollectionEntry<"projects">
 }
@@ -23,17 +25,9 @@ const descriptionData = getProjectDescription(project)
 const hasDetailPage = project.body && project.body.trim().length > 0
 ---
 
-<article
-  class:list={[
-    "group relative block h-full overflow-hidden rounded-xl border p-6",
-    "transition-all duration-300 hover:scale-[1.02] hover:shadow-lg",
-    isHighlighted
-      ? "ring-primary from-primary/5 via-background to-background hover:ring-primary/70 bg-gradient-to-br ring-2"
-      : "bg-card hover:bg-secondary/50 hover:border-primary/20"
-  ]}
->
-  <div class="flex h-full flex-col gap-3">
-    <div class="flex items-center gap-x-2">
+<article class:list={["card", isHighlighted && "card-selected"]}>
+  <div class="card-content">
+    <div class="card-header">
       {
         isHighlighted && (
           <>
@@ -44,19 +38,17 @@ const hasDetailPage = project.body && project.body.trim().length > 0
       }
       {
         hasDetailPage ? (
-          <Link href={`/projects/${project.id}`} class="hover:text-primary">
-            <h3 class="text-foreground text-lg leading-tight font-semibold hover:underline">
-              {title}
-            </h3>
+          <Link href={`/projects/${project.id}`} class="card-title-link">
+            <h3 class="card-title">{title}</h3>
           </Link>
         ) : (
-          <h3 class="text-muted-foreground text-lg leading-tight font-semibold">{title}</h3>
+          <h3 class="card-title text-muted-foreground">{title}</h3>
         )
       }
     </div>
 
     {/* Context and Date */}
-    <div class="flex flex-wrap items-center gap-2 text-sm">
+    <div class="card-meta text-muted-foreground">
       {
         context && (
           <Badge variant={contextVariant}>
@@ -64,12 +56,12 @@ const hasDetailPage = project.body && project.body.trim().length > 0
           </Badge>
         )
       }
-      {dateRange && <time class="text-muted-foreground text-xs">{dateRange}</time>}
+      {dateRange && <time>{dateRange}</time>}
     </div>
 
     {
       descriptionData && (
-        <p class="text-muted-foreground flex-grow text-sm leading-relaxed">
+        <p class="card-description">
           {descriptionData.text}
           {descriptionData.needsReadMore && (
             <Link href={`/projects/${project.id}`} class="text-primary ml-1 hover:underline">
@@ -83,7 +75,7 @@ const hasDetailPage = project.body && project.body.trim().length > 0
     {/* Tags */}
     {
       tags && tags.length > 0 && (
-        <div class="flex flex-wrap gap-1">
+        <div class="card-tags">
           {tags.map((tag: string) => (
             <Badge variant="muted" class="text-xs">
               {tag}
@@ -96,15 +88,11 @@ const hasDetailPage = project.body && project.body.trim().length > 0
     {/* Links */}
     {
       links.length > 0 && (
-        <div class="mt-auto flex flex-wrap gap-x-2 pt-2">
+        <div class="card-actions">
           {links.map(({ href, icon, label }) => (
-            <Link
-              href={href}
-              external
-              class="border-border hover:bg-primary hover:text-primary-foreground hover:border-primary inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 px-2 py-1.5 text-xs font-medium no-underline transition-all duration-200"
-            >
+            <Link href={href} external class="card-button">
               <Icon name={icon} />
-              <span>{label} ↗</span>
+              <span>{label}</span>
             </Link>
           ))}
         </div>
