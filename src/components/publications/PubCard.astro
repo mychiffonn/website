@@ -144,11 +144,15 @@ const { pub } = Astro.props
   }
 </style>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  function initializeAuthorToggles() {
     const authorToggles = document.querySelectorAll(".author-toggle")
 
     authorToggles.forEach((toggle) => {
       const button = toggle as HTMLButtonElement
+
+      // Skip if already initialized
+      if (button.dataset.initialized === "true") return
+      button.dataset.initialized = "true"
 
       // Add keyboard support
       button.addEventListener("keydown", (e) => {
@@ -187,5 +191,9 @@ const { pub } = Astro.props
         }
       })
     })
-  })
+  }
+
+  // Re-initialize on Astro page navigation
+  document.addEventListener("astro:page-load", initializeAuthorToggles)
+  document.addEventListener("astro:after-swap", initializeAuthorToggles)
 </script>

@@ -8,8 +8,8 @@ import {
   groupPublicationsByYear,
   getSelectedPublications,
   getPublicationData,
-  type Publication
 } from "./utils"
+import bibContent from "/src/content/publications/main.bib?raw"
 
 /**
  * Load and process all publications grouped by year
@@ -17,7 +17,6 @@ import {
  */
 export async function loadAllPublications() {
   try {
-    const bibContent = await import("/src/content/publications/main.bib?raw").then(m => m.default)
     const allPublications = parseBibTeX(bibContent)
     const sortedPublications = sortPublications(allPublications, PUB_CONFIG)
     const publicationsByYear = groupPublicationsByYear(sortedPublications)
@@ -47,12 +46,11 @@ export async function loadAllPublications() {
  */
 export async function loadSelectedPublications() {
   try {
-    const bibContent = await import("/src/content/publications/main.bib?raw").then(m => m.default)
     const allPublications = parseBibTeX(bibContent)
-    const sortedPublications = sortPublications(allPublications, PUB_CONFIG)
-    const selectedPublications = getSelectedPublications(sortedPublications)
-    
-    return selectedPublications.map(pub => getPublicationData(pub, PUB_CONFIG))
+    const selectedPublications = getSelectedPublications(allPublications)
+    const sortedPublications = sortPublications(selectedPublications, PUB_CONFIG)
+
+    return sortedPublications.map(pub => getPublicationData(pub, PUB_CONFIG))
   } catch (error) {
     console.error("Error loading selected publications:", error)
     return []
