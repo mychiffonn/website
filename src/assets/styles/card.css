@@ -95,7 +95,7 @@
 
 /* Card button styles */
 .card-button {
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -117,18 +117,6 @@
 
 .card-button:focus,
 .card-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px oklch(from var(--primary) l c h / 0.2);
-}
-
-.card-button-primary:hover {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  border-color: var(--primary);
-}
-
-.card-button-primary:focus,
-.card-button-primary:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px oklch(from var(--primary) l c h / 0.2);
 }
