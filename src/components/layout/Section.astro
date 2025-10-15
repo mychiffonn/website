@@ -13,14 +13,14 @@ interface Props {
 const { class: className, title, moreLink, moreText = "see all →" } = Astro.props
 ---
 
-<section class:list={["mt-8 flex flex-col gap-y-2", className]}>
+<section class:list={["mt-2 flex flex-col gap-y-1", className]}>
   <div class={moreLink && "flex items-baseline gap-x-3"}>
-    <h2 id={title.toLowerCase()} class="mt-8 mb-4 text-2xl font-medium">
+    <h2 id={title.toLowerCase()} class="mt-4 mb-4 text-2xl font-medium">
       {title}
     </h2>
     {
       moreLink && (
-        <Link href={moreLink} underline class="text-muted-foreground hover:text-foreground text-sm">
+        <Link href={moreLink} underline class="text-muted-foreground text-sm">
           {moreText}
         </Link>
       )
