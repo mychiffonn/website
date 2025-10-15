@@ -118,10 +118,7 @@ const { pub } = Astro.props
   .author-toggle {
     color: var(--primary);
     cursor: pointer;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
     transition: text-decoration 0.2s;
-    min-height: 2rem;
     display: inline-flex;
     align-items: center;
   }
@@ -163,7 +160,6 @@ const { pub } = Astro.props
       button.addEventListener("click", (e) => {
         e.preventDefault()
         const hiddenAuthors = button.dataset.hiddenAuthors || ""
-        const hiddenCount = parseInt(button.dataset.hiddenCount || "0")
         const hiddenSpan = button.nextElementSibling as HTMLElement
         const isExpanded = button.getAttribute("aria-expanded") === "true"
 
