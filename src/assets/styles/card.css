@@ -1,0 +1,141 @@
+/* Base card styles for consistent appearance across components */
+.card {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid oklch(from var(--primary) l c h / 0.3);
+  padding: 1.25rem 1.5rem;
+  transition: all 300ms;
+  cursor: pointer;
+  position: relative;
+}
+
+.card:hover {
+  border-color: oklch(from var(--primary) l c h / 0.8);
+  box-shadow: 0 20px 25px -5px oklch(0 0 0 / 0.1), 0 10px 10px -5px oklch(0 0 0 / 0.04);
+  background-color: oklch(from var(--secondary) l c h / 0.5);
+}
+
+.card:active {
+  border-color: oklch(from var(--primary) l c h / 0.9);
+  background-color: oklch(from var(--primary) l c h / 0.08);
+  box-shadow: 0 4px 6px -1px oklch(0 0 0 / 0.1), 0 2px 4px -1px oklch(0 0 0 / 0.06);
+}
+
+/* Selected/highlighted card variant */
+.card-selected {
+  background: linear-gradient(to bottom right, oklch(from var(--primary) l c h / 0.05), var(--background), var(--background));
+  border: 1px solid oklch(from var(--primary) l c h / 0.6);
+}
+
+/* Card with focus states for accessibility */
+.card-focusable:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px oklch(from var(--primary) l c h / 0.3);
+}
+
+/* Card content layouts */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Card header styles */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-title {
+  color: var(--foreground);
+  font-size: 1.125rem;
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+.card-title-link {
+  text-decoration: none;
+}
+
+.card-title-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* Card metadata */
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.card-meta-muted {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+
+/* Card description */
+.card-description {
+  color: var(--muted-foreground);
+  flex-grow: 1;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Card actions/buttons */
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Card button styles */
+.card-button {
+  border: 2px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 200ms;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.card-button:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+  border-color: var(--accent);
+}
+
+.card-button:focus,
+.card-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px oklch(from var(--primary) l c h / 0.2);
+}
+
+.card-button-primary:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+
+.card-button-primary:focus,
+.card-button-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px oklch(from var(--primary) l c h / 0.2);
+}
+
+/* Tag styles */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
