@@ -36,7 +36,7 @@ const cardClasses = cn(
     hasDetailPage && (
       <a
         href={`/projects/${project.id}`}
-        class="absolute inset-0 z-0"
+        class="absolute inset-0 z-10"
         aria-label={`View details for ${title}`}
       />
     )
@@ -91,7 +91,7 @@ const cardClasses = cn(
   {/* Links */}
   {
     links.length > 0 && (
-      <div class="card-actions relative z-10">
+      <div class="card-actions relative z-20">
         {links.map(({ href, icon, label }) => (
           <Button href={href} variant="accent-outline">
             <Icon name={icon} />

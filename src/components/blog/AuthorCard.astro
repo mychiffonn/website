@@ -15,10 +15,9 @@ const { author } = Astro.props
 const { id, name, bio, pronouns, links } = author
 const isAuthorPage = Astro.url.pathname === `/authors/${id}`
 
-// Add 'relative' and 'group' for the stretched-link pattern
 const cardClasses = cn(
   "card relative flex flex-wrap gap-4 py-4",
-  !isAuthorPage && "card-clickable group" // 'group' enables group-hover styles
+  !isAuthorPage && "card-clickable group"
 )
 ---
 
@@ -27,15 +26,20 @@ const cardClasses = cn(
     !isAuthorPage && (
       <a
         href={`/authors/${id}`}
-        class="absolute inset-0 z-0"
+        class="absolute inset-0 z-20"
         aria-label={`View profile for ${name}`}
       />
     )
   }
 
-  <AuthorAvatar author={author} fallbackStyle="all-initials" width={40} class="relative size-40" />
+  <AuthorAvatar
+    author={author}
+    fallbackStyle="all-initials"
+    width={40}
+    class="relative z-10 size-40"
+  />
 
-  <div class="relative flex grow flex-col justify-between gap-y-4">
+  <div class="relative z-10 flex grow flex-col justify-between gap-y-4">
     <div>
       <div class="flex flex-wrap items-center gap-x-2">
         <h3 class="text-lg font-medium">{name}</h3>
@@ -44,6 +48,6 @@ const cardClasses = cn(
       <p class="text-muted-foreground text-sm">{bio}</p>
     </div>
 
-    <ProfileLinks links={links} />
+    <ProfileLinks links={links} class="relative z-30" />
   </div>
 </article>

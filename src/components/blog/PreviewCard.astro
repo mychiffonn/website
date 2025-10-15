@@ -16,11 +16,13 @@ const { metadata } = Astro.props
 const tags = metadata.tags
 ---
 
-<div class="card card-clickable group relative overflow-hidden">
+<article class="card card-clickable group relative overflow-hidden">
   <a
     href={`/blog/${metadata.id}`}
-    class="absolute inset-0 z-0"
-    aria-label={`Post: ${metadata.title}`}></a>
+    class="absolute inset-0 z-20"
+    aria-label={`Post: ${metadata.title}`}
+  >
+  </a>
 
   {
     metadata.image && (
@@ -34,23 +36,23 @@ const tags = metadata.tags
     )
   }
 
-  <article
+  <div
     class:list={[
       "card-content relative z-10 transition-all duration-300",
       metadata.image && "max-md:pt-24 md:max-w-[80%]"
     ]}
   >
-    {/** Row 1: Title  */}
+    {/** Row 1: Title */}
     <h3 class="card-title group-hover:text-primary transition-colors duration-300">
       {metadata.title}
     </h3>
 
-    {/** Row 2: Desc  */}
+    {/** Row 2: Desc */}
     <p class="card-description">
       {metadata.description}
     </p>
 
-    {/** Row 3: Meta information  */}
+    {/** Row 3: Meta information */}
     <PostMetadata metadata={metadata} variant="card" />
 
     {/** Row 4: Tags */}
@@ -66,8 +68,8 @@ const tags = metadata.tags
         </div>
       )
     }
-  </article>
-</div>
+  </div>
+</article>
 
 <style>
   .card {

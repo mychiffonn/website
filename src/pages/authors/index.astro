@@ -7,7 +7,7 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 const authors = await PostManager.getInstance().getAllAuthors()
 ---
 
-<Layout class="max-w-3xl" title="Authors">
+<Layout title="Authors">
   <Breadcrumbs items={[{ label: "Authors", icon: "group" }]} />
   {
     authors.length > 0 ? (
