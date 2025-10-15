@@ -97,7 +97,6 @@ export const PUB_CONFIG: PublicationConfig = {
     lastName: "Nguyen",
     aliases: ["My Nguyen", "M. Nguyen", "Chiffon Nguyen"]
   },
-  citationStyle: "apa",
   sortOrder: "reverse-chronological"
 }
 

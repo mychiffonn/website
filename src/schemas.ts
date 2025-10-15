@@ -185,7 +185,6 @@ export const PublicationConfigSchema = z.object({
   }),
 
   // Display settings
-  citationStyle: z.enum(["apa", "mla", "chicago"]).default("apa"),
   sortOrder: z.enum(["chronological", "reverse-chronological"]).default("reverse-chronological")
 })
 
