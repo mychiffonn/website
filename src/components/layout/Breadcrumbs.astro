@@ -14,38 +14,53 @@ interface Props {
 }
 
 const { items, class: className } = Astro.props
+
+// Add current page indicator to last item
+const breadcrumbItems = items.map((item, index) => ({
+  ...item,
+  isCurrent: index === items.length - 1
+}))
+
+const linkClasses =
+  "stretched-link hover:text-foreground flex items-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 rounded-sm"
+const currentClasses = "text-foreground flex items-center font-normal"
 ---
 
 <nav aria-label="Breadcrumb navigation" class={cn("flex w-full", className)}>
   <ol
     class="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5"
   >
-    <li class="inline-flex items-center gap-1.5">
-      <a href="/" class="hover:text-foreground flex items-center transition-colors">
-        <Icon name="home" size="1.25rem" />
+    <li class="relative inline-flex items-center gap-1.5">
+      <a href="/" class={linkClasses} aria-label="Navigate to home page" title="Go to home page">
+        <Icon name="home" size="1.25rem" aria-hidden="true" />
+        <span class="sr-only">Home</span>
       </a>
     </li>
 
     {
-      items.map((item, index) => (
+      breadcrumbItems.map((item) => (
         <>
           <li role="presentation" aria-hidden="true">
-            <Icon name="chevron-right" />
+            <Icon name="chevron-right" aria-hidden="true" />
           </li>
-          <li class="inline-flex items-center gap-1.5">
-            {index === items.length - 1 ? (
-              <span
-                role="link"
-                aria-disabled="true"
-                aria-current="page"
-                class="text-foreground flex items-center font-normal"
-              >
-                {item.icon && <Icon name={item.icon} size="1.25rem" class="mr-1" />}
-                {item.label}
+          <li class="relative inline-flex items-center gap-1.5">
+            {item.isCurrent ? (
+              <span aria-current="page" class={currentClasses}>
+                {item.icon && (
+                  <Icon name={item.icon} size="1.25rem" class="mr-1" aria-hidden="true" />
+                )}
+                <span>{item.label}</span>
               </span>
             ) : (
-              <a href={item.href} class="hover:text-foreground flex items-center transition-colors">
-                {item.icon && <Icon name={item.icon} size="1.25rem" class="mr-1" />}
+              <a
+                href={item.href}
+                aria-label={`Navigate to ${item.label}`}
+                title={`Go to ${item.label}`}
+                class={linkClasses}
+              >
+                {item.icon && (
+                  <Icon name={item.icon} size="1.25rem" class="mr-1" aria-hidden="true" />
+                )}
                 <span class="leading-none">{item.label}</span>
               </a>
             )}
