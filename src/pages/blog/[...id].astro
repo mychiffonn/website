@@ -151,7 +151,9 @@ const isActivePost = activePostMetadata ? activePostData.id === post.id : false
           alt={post.data.title}
           width={1200}
           height={630}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
           class="col-span-full mx-auto w-full object-cover"
+          loading="eager"
         />
       )
     }
@@ -168,14 +170,16 @@ const isActivePost = activePostMetadata ? activePostData.id === post.id : false
       {/** Tags */}
       {
         post.data.tags?.length > 0 && (
-          <div class="flex flex-wrap justify-center gap-2" role="list" aria-label="Post tags">
+          <ul class="flex list-none flex-wrap justify-center gap-2" aria-label="Post tags">
             {post.data.tags.map((tag: string) => (
-              <Badge href={`/tags/${tag}`} variant="muted" role="listitem">
-                <Icon name="hashtag" class="size-3" />
-                {tag}
-              </Badge>
+              <li role="listitem">
+                <Badge href={`/tags/${tag}`} variant="muted">
+                  <Icon name="hashtag" class="size-3" />
+                  {tag}
+                </Badge>
+              </li>
             ))}
-          </div>
+          </ul>
         )
       }
     </header>
@@ -204,7 +208,7 @@ const isActivePost = activePostMetadata ? activePostData.id === post.id : false
     }
 
     {/** Main article content */}
-    <article id="post-content" class="prose col-start-2 max-w-none" role="main">
+    <article id="post-content" class="prose col-start-2 max-w-none">
       <Content />
     </article>
 

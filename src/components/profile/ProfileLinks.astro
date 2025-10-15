@@ -24,29 +24,31 @@ const {
 const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
 ---
 
-<nav class={`flex flex-wrap gap-x-2 gap-y-1 ${className}`} role="list">
+<ul class={`flex flex-wrap gap-x-2 gap-y-1 ${className}`}>
   {
     processedLinks.map(({ href, isExternal, label, iconName }) => (
-      <Link
-        href={href}
-        aria-label={label}
-        title={label}
-        rel="me"
-        class={cn(
-          "text-muted-foreground flex touch-manipulation items-center transition-colors",
-          "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-          includeLabel
-            ? [
-                "hover:text-accent-foreground hover:bg-accent size-10 justify-center rounded-md border",
-                "sm:hover:text-accent sm:size-auto sm:gap-x-1 sm:border-0 sm:p-1 sm:hover:bg-transparent"
-              ]
-            : "hover:text-accent-foreground hover:bg-accent size-10 justify-center rounded-md border"
-        )}
-        external={isExternal}
-      >
-        <Icon name={iconName} class="size-5" />
-        {includeLabel ? <span class="hidden sm:inline" set:html={label} /> : null}
-      </Link>
+      <li>
+        <Link
+          href={href}
+          aria-label={label}
+          title={label}
+          rel="me"
+          class={cn(
+            "text-muted-foreground flex touch-manipulation items-center transition-colors",
+            "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+            includeLabel
+              ? [
+                  "hover:text-accent-foreground hover:bg-accent size-10 justify-center rounded-md border",
+                  "sm:hover:text-accent sm:size-auto sm:gap-x-1 sm:border-0 sm:p-1 sm:hover:bg-transparent"
+                ]
+              : "hover:text-accent-foreground hover:bg-accent size-10 justify-center rounded-md border"
+          )}
+          external={isExternal}
+        >
+          <Icon name={iconName} class="size-5" />
+          {includeLabel ? <span class="hidden sm:inline" set:html={label} /> : null}
+        </Link>
+      </li>
     ))
   }
-</nav>
+</ul>

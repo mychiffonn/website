@@ -31,7 +31,9 @@ const tags = metadata.tags
         alt={metadata.title}
         width={1200}
         height={630}
+        sizes="(max-width: 768px) 100vw, 60vw"
         class="cover-image absolute end-0 top-0 z-0 h-full w-3/5 object-cover opacity-30 transition-all duration-300 group-hover:opacity-50 max-md:h-2/3 max-md:w-full"
+        loading="lazy"
       />
     )
   }

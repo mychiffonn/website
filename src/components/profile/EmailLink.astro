@@ -49,7 +49,6 @@ const displayEmail = getTransformedEmail(email, "display")
 
     try {
       await navigator.clipboard.writeText(email)
-      console.log("Email copied to clipboard:", email)
 
       // Show visual feedback
       const originalContent = button.innerHTML

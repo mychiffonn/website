@@ -42,12 +42,12 @@ const hasSections = sections.length > 0
             </h2>
           </header>
           <nav aria-labelledby="toc-heading">
-            <ol class="space-y-2" role="list">
+            <ol class="space-y-2">
               {sections.map((section: TOCSection, index: number) => {
                 const isFirstSubpost = tocUtils.isFirstSubpostSection(sections, index)
 
                 return (
-                  <li role="listitem">
+                  <li>
                     {isFirstSubpost && (
                       <div
                         class="mb-4 flex items-center gap-3"

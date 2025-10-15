@@ -24,7 +24,7 @@ const isActiveSection = section.subpostId === currentPostId
         !isSubpost ? "border-l-accent bg-accent/10" : "border-l-border/30"
       )}
     >
-      <ul class="space-y-1" role="list">
+      <ul class="space-y-1">
         {section.headings.map((heading) => (
           <TOCHeadingLink
             heading={heading}
@@ -55,7 +55,7 @@ const isActiveSection = section.subpostId === currentPostId
         {section.title}
       </a>
       {section.headings.length > 0 && (
-        <ul class="ml-2 space-y-0.5" role="list">
+        <ul class="ml-2 space-y-0.5">
           {section.headings.map((heading) => (
             <TOCHeadingLink
               heading={heading}
