@@ -53,7 +53,7 @@ export default defineConfig({
           editorTabBarBackground: "transparent",
           editorTabBarBorderBottomColor: "transparent",
           frameBoxShadowCssValue: "none",
-          terminalBackground: "color-mix(in oklab, var(--secondary) 25%, transparent)",
+          terminalBackground: "color-mix(in oklab, var(--muted) 25%, transparent)",
           terminalTitlebarBackground: "transparent",
           terminalTitlebarBorderBottomColor: "transparent",
           terminalTitlebarForeground: "var(--muted-foreground)"

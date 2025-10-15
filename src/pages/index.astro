@@ -1,19 +1,20 @@
 ---
 import { PROFILE, SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
+import { loadSelectedPublications } from "@/lib/publications/loader"
 import { getLatestUpdates } from "@/lib/updates"
 import Layout from "@/layouts/Layout.astro"
 import Button from "@/components/base/Button.astro"
-import Link from "@/components/base/Link.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Section from "@/components/layout/Section.astro"
 import Profile from "@/components/profile/Profile.astro"
+import PubCard from "@/components/publications/PubCard.astro"
 import UpdateTimeline from "@/components/updates/UpdateTimeline.astro"
 
 import { Content as MiscContent } from "@/content/misc.md"
 
-// Updates
 const renderedUpdates = await getLatestUpdates(3)
+const selectedPublications = await loadSelectedPublications()
 
 // Blog
 const postManager = PostManager.getInstance()
@@ -28,18 +29,24 @@ const recentPostsMetadata = await Promise.all(
 
   {
     renderedUpdates.length > 0 && (
-      <Section>
-        <div class="flex items-center gap-x-3">
-          <h2 class="gap-y-4 text-2xl font-medium">Latest updates</h2>
-          <Link href="/now" underline class="text-muted-foreground hover:text-foreground text-sm">
-            see all &rarr;
-          </Link>
-        </div>
+      <Section title="Latest updates" moreLink="/now">
         <UpdateTimeline
           renderedUpdates={renderedUpdates}
           itemClass="line-clamp-4 md:line-clamp-3"
           variant="inline"
         />
+      </Section>
+    )
+  }
+
+  {
+    selectedPublications.length > 0 && (
+      <Section title="Selected publications" moreLink="/publications">
+        <div class="space-y-4">
+          {selectedPublications.slice(0, 3).map((pub) => (
+            <PubCard pub={pub} />
+          ))}
+        </div>
       </Section>
     )
   }

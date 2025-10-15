@@ -10,8 +10,8 @@ import {
 import { createDateRange } from "@/lib/utils"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
+import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
-import Link from "@/components/base/Link.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
 export const prerender = true
@@ -41,7 +41,7 @@ const links = getProjectLinks(repo, doc, url, release)
 const contextVariant = getContextVariant(context)
 ---
 
-<Layout class="max-w-3xl" title={title} description={`Project details for ${title}`}>
+<Layout title={title} description={`Project: ${title}`}>
   <Breadcrumbs
     items={[
       { href: "/projects", label: "Projects", icon: "folder-open" },
@@ -103,14 +103,10 @@ const contextVariant = getContextVariant(context)
             links.length > 0 && (
               <div class="flex flex-wrap gap-2">
                 {links.map(({ href, icon, label }) => (
-                  <Link
-                    href={href}
-                    external
-                    class="border-border hover:bg-primary hover:text-primary-foreground hover:border-primary inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium no-underline transition-all duration-200"
-                  >
+                  <Button href={href} variant="accent-outline">
                     <Icon name={icon} />
-                    <span>{label} ↗</span>
-                  </Link>
+                    <span>{label}</span>
+                  </Button>
                 ))}
               </div>
             )

@@ -13,25 +13,18 @@ academia (NLP+HCI), technology, and anything I'm interested in. Co-created with 
 ## Features
 
 - ⚡ Fast loading, build, and previewing with Astro 5 as static generator
-- 💻 Showcase profile, links, projects, news, blog posts, and uses/tech setup
-- ✏️ Write in Github-flavored markdown with KaTeX-rendered math, code highlighting (block and
+- 💻 Showcase projects, news, blog posts, and publications from .bib file
+- ✏️ Github-flavored markdown with KaTeX-rendered math, code highlighting (block and
   inline), and embeds
 - 📝 Blog supports post-subpost system, with tags and multiple authors
 - 🌐 i18n: Support non-English scripts, and (upcoming) i18n page routing and language toggle
 - 👩‍💻 Developer experience: type-safe with zod-first schema and TypeScript
 - 🔎 SEO friendly and ARIA accessibility compliant
-- 🔧 Easy to configure:
-  - theme -> [src/assets/styles/global.css](src/assets/styles/global.css),
-  - page & personal information -> [src/config.ts](src/config.ts), with
-    [defined schemas](src/lib/schemas.ts)
-  - content -> [src/content](src/content)
-  - add new content -> [src/content.config.ts](src/content.config.ts)
-- [UPCOMING] Showcase publications from a .bib file
-- Extensible with plugins:
-  - [IN PROGRESS] Obsidian-flavored markdown with wikilinks and callouts (no backlinks yet).
-  - [UPCOMING] Show mentions of a post across the web in lieu of comment section
-  - [UPCOMING] Search with pagefind/typesense
-  - [UPCOMING] Render /media library from .json and from scraped Storygraph
+- 🔧 Easily configure [theme](src/assets/styles/global.css),  [page & personal information](src/config.ts), [content](src/content) 
+- [IN PROGRESS] Obsidian-flavored markdown with wikilinks and callouts (no backlinks yet).
+- [UPCOMING] Show mentions of a post across the web in lieu of comment section
+- [UPCOMING] Search with pagefind/typesense
+- [UPCOMING] Render /media library from .json and from scraped Storygraph
 
 ## Built With
 
@@ -54,7 +47,7 @@ Other inspirations:
 
 ## Getting Started
 
-Assume Node.js >= 22 and pnpm installed:
+Have Node.js >= 20 (tested with Node 24) and pnpm installed:
 
 1. Clone the repository
 2. Install dependencies: `pnpm install`

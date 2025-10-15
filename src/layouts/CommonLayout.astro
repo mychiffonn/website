@@ -6,37 +6,44 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 interface Props {
   title: string
   description?: string
-  updatedAt?: Date
-  class?: string
+  modifiedTime?: Date
+  prose?: boolean
   breadcrumbs?: Array<{
     href?: string
     label: string
     icon?: string
   }>
+  [key: string]: any // Allow any additional props to pass through to Layout
 }
 
-const { title, description, updatedAt, class: className, breadcrumbs } = Astro.props
+const { title, description, modifiedTime, prose = true, breadcrumbs, ...layoutProps } = Astro.props
 ---
 
-<Layout class={className} title={title} description={description}>
+<Layout title={title} description={description} modifiedTime={modifiedTime} {...layoutProps}>
   {breadcrumbs && <Breadcrumbs slot="breadcrumb" items={breadcrumbs} />}
 
-  <hgroup>
-    <h1 class="text-3xl font-bold">{title}</h1>
+  <section class="mb-4">
+    <h1 class="mb-2 text-3xl font-bold">{title}</h1>
     {
-      updatedAt && (
+      modifiedTime && (
         <FormattedDate
-          date={updatedAt}
+          date={modifiedTime}
           class="text-muted-foreground text-sm italic before:content-['Last_updated:_']"
         />
       )
     }
-    {description && <p class="text-muted-foreground my-6">{description}</p>}
-  </hgroup>
+    {description && <p class="text-muted-foreground">{description}</p>}
+  </section>
 
-  <main>
-    <div class="prose dark:prose-invert max-w-none">
+  {
+    prose ? (
+      <main>
+        <div class="prose dark:prose-invert max-w-none">
+          <slot />
+        </div>
+      </main>
+    ) : (
       <slot />
-    </div>
-  </main>
+    )
+  }
 </Layout>

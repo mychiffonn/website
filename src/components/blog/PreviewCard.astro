@@ -1,12 +1,12 @@
 ---
-// Original code: https://github.com/cworld1/astro-theme-pure/blob/main/packages/pure/components/pages/PreviewCard.astro
 import { Image } from "astro:assets"
 
 import type { PostMeta } from "@/lib/blog/types"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
-import Link from "@/components/base/Link.astro"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
+
+import "@/assets/styles/card.css"
 
 interface Props {
   metadata: PostMeta
@@ -16,15 +16,14 @@ const { metadata } = Astro.props
 const tags = metadata.tags
 ---
 
-<div
-  class:list={[
-    "blog-card group relative overflow-hidden rounded-xl border transition-all duration-300 ease-in-out",
-    !metadata.image && "hover:bg-secondary/50"
-  ]}
-  style={metadata.image &&
-    `--card-highlight: hsl(var(--primary));
-     --card-highlight-bg: hsl(var(--secondary) / 50%);`}
->
+<article class="card card-clickable group relative overflow-hidden">
+  <a
+    href={`/blog/${metadata.id}`}
+    class="absolute inset-0 z-20"
+    aria-label={`Post: ${metadata.title}`}
+  >
+  </a>
+
   {
     metadata.image && (
       <Image
@@ -37,54 +36,52 @@ const tags = metadata.tags
     )
   }
 
-  <Link
-    href={`/blog/${metadata.id}`}
+  <div
     class:list={[
-      "relative z-10 block p-4 transition-all duration-300",
-      metadata.image && "max-md:pt-24"
+      "card-content relative z-10 transition-all duration-300",
+      metadata.image && "max-md:pt-24 md:max-w-[80%]"
     ]}
   >
-    <article class:list={["flex flex-col gap-3", metadata.image && "md:max-w-[80%]"]}>
-      {/** Row 1: Title  */}
-      <h3 class="group-hover:text-primary text-lg font-medium transition-colors duration-300">
-        {metadata.title}
-      </h3>
+    {/** Row 1: Title */}
+    <h3 class="card-title group-hover:text-primary transition-colors duration-300">
+      {metadata.title}
+    </h3>
 
-      {/** Row 2: Desc  */}
-      <p class="text-foreground">
-        {metadata.description}
-      </p>
+    {/** Row 2: Desc */}
+    <p class="card-description">
+      {metadata.description}
+    </p>
 
-      {/** Row 3: Meta information  */}
-      <PostMetadata metadata={metadata} variant="card" />
+    {/** Row 3: Meta information */}
+    <PostMetadata metadata={metadata} variant="card" />
 
-      {/** Row 4: Tags */}
-      {
-        tags && (
-          <div class="flex flex-wrap gap-2">
-            {tags.map((tag: string) => (
-              <Badge variant={"secondary"} class="tag-badge transition-all duration-300">
-                <Icon name="hashtag" />
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        )
-      }
-    </article>
-  </Link>
-</div>
+    {/** Row 4: Tags */}
+    {
+      tags && (
+        <div class="card-tags">
+          {tags.map((tag: string) => (
+            <Badge variant={"muted"} class="tag-badge transition-all duration-300">
+              <Icon name="hashtag" />
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</article>
 
 <style>
-  .blog-card {
-    --card-bg-hover: var(--card-highlight-bg, hsl(var(--secondary) / 50%));
+  .card {
+    --card-highlight: hsl(var(--primary));
+    --card-highlight-bg: hsl(var(--muted) / 50%);
   }
 
-  .blog-card:hover {
-    background-color: var(--card-bg-hover);
+  .card:hover {
+    background-color: var(--card-highlight-bg);
 
     & .tag-badge {
-      background-color: var(--card-bg-hover);
+      background-color: var(--card-highlight-bg);
     }
   }
 

@@ -26,7 +26,7 @@ interface Props extends HTMLAttributes<"svg"> {
 const { name, title, desc, ...props } = Astro.props
 
 // Check if it's a semantic name, otherwise use the name directly
-const iconName = ((SEMANTIC_ICONS as Record<string, string>)[name] || name) as string
+const iconName = (SEMANTIC_ICONS as Record<string, string>)[name] || name
 
 // Derive accessibility attributes from props
 const accessibility: Record<string, any> = {}
@@ -39,4 +39,4 @@ if (title || desc) {
 }
 ---
 
-<AstroIcon name={iconName} {...props} {...accessibility} />
+<AstroIcon name={iconName as any} {...props} {...accessibility} />

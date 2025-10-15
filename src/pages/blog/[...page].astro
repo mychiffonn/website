@@ -73,7 +73,7 @@ if (!hasNoPosts) {
         <div class="flex flex-col gap-4">
           <div class="flex flex-wrap gap-2">
             {displayTags.map(({ tag, count }) => (
-              <Badge href={`/tags/${tag}`} variant="secondary">
+              <Badge href={`/tags/${tag}`} variant="muted">
                 <Icon name="hashtag" class="size-3" />
                 {tag}
                 <span class="text-muted-foreground ml-1">({count})</span>

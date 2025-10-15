@@ -5,6 +5,9 @@ src/content/** merge=ours
 src/pages/index.astro merge=ours
 src/pages/*.{md,mdx} merge=ours
 src/pages/**/*.{md,mdx} merge=ours
+
 # Ignore files in linguist
 *.xsl -linguist-detectable
 src/content/** linguist-documentation
+*.bib linguist-documentation
+*.csl linguist-vendor

@@ -24,8 +24,11 @@
       "WebFetch(domain:localhost)",
       "WebFetch(domain:context7.com)",
       "WebFetch(domain:docs.astro.build)",
-      "WebFetch(domain:mychiffonn.com)"
+      "WebFetch(domain:citation.js.org)",
+      "WebFetch(domain:mychiffonn.com)",
+      "Bash(mkdir:*)"
     ],
-    "deny": []
+    "deny": [],
+    "defaultMode": "plan"
   }
 }

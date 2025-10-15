@@ -1,0 +1,193 @@
+---
+import type { ProcessedPublication } from "@/schemas"
+
+import Icon from "@/components/base/Icon.astro"
+import Link from "@/components/base/Link.astro"
+
+import "@/assets/styles/card.css"
+
+interface Props {
+  pub: ProcessedPublication
+}
+
+const { pub } = Astro.props
+---
+
+<article class="card card-content">
+  {pub.award && <span class="text-accent items-center text-sm font-bold">🏆 {pub.award}</span>}
+
+  <span class="bibliography-title">
+    {
+      pub.mainUrl ? (
+        <Link href={pub.mainUrl} external class="card-title-link">
+          <h3 class="card-title">{pub.title}</h3>
+        </Link>
+      ) : (
+        <h3 class="card-title">{pub.title}</h3>
+      )
+    }
+  </span>
+
+  <div class="bibliography-authors text-muted-foreground text-sm">
+    <span set:html={pub.authorData.displayFirstAuthors} />
+    {
+      pub.authorData.hasMore && (
+        <>
+          <button
+            type="button"
+            class="author-toggle"
+            data-hidden-authors={pub.authorData.hiddenAuthors}
+            data-hidden-count={pub.authorData.hiddenCount}
+            data-last-authors={pub.authorData.displayLastAuthors || ""}
+            aria-expanded="false"
+            aria-label={`Show ${pub.authorData.hiddenCount} hidden authors`}
+          >
+            ...and {pub.authorData.hiddenCount} more authors...
+          </button>
+          <span class="hidden-authors hidden" />
+        </>
+      )
+    }
+    {
+      pub.authorData.displayLastAuthors && pub.authorData.hasMore && (
+        <span class="last-authors">
+          <span>, </span>
+          <span set:html={pub.authorData.displayLastAuthors} />
+        </span>
+      )
+    }
+  </div>
+
+  {
+    (pub.publisher || pub.year) && (
+      <div class="bibliography-details text-muted-foreground text-sm">
+        {pub.publisher && <span class="publication-type">{pub.publisher}</span>}
+        {pub.publisher && pub.year && <span> • </span>}
+        {pub.year && <span>{pub.year}</span>}
+      </div>
+    )
+  }
+
+  <div class="card-actions">
+    {
+      pub.abstract && (
+        <details class="publication-abstract">
+          <summary class="card-button cursor-pointer">Abstract</summary>
+          <div class="abstract-content mt-2 rounded p-3 text-sm leading-relaxed">
+            {pub.abstract}
+          </div>
+        </details>
+      )
+    }
+
+    {
+      pub.links.map(({ href, icon, label }) => (
+        <Link href={href} external class="card-button">
+          <Icon name={icon} />
+          {label}
+        </Link>
+      ))
+    }
+  </div>
+</article>
+
+<style>
+  .publication-abstract[open] summary {
+    margin-bottom: 0.5rem;
+  }
+
+  .publication-abstract summary::marker {
+    content: "";
+  }
+
+  .publication-abstract summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .publication-abstract summary:before {
+    content: "⏵";
+    display: inline-block;
+    margin-right: 0.5em;
+    transition: transform 0.2s;
+  }
+
+  .publication-abstract[open] summary:before {
+    transform: rotate(90deg);
+  }
+
+  .author-toggle {
+    color: var(--primary);
+    cursor: pointer;
+    transition: text-decoration 0.2s;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .author-toggle:hover,
+  .author-toggle:focus-visible {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+
+  .expanded-authors {
+    cursor: pointer;
+  }
+
+  .expanded-authors:hover {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+</style>
+<script>
+  function initializeAuthorToggles() {
+    const authorToggles = document.querySelectorAll(".author-toggle")
+
+    authorToggles.forEach((toggle) => {
+      const button = toggle as HTMLButtonElement
+
+      // Skip if already initialized
+      if (button.dataset.initialized === "true") return
+      button.dataset.initialized = "true"
+
+      // Add keyboard support
+      button.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          button.click()
+        }
+      })
+
+      button.addEventListener("click", (e) => {
+        e.preventDefault()
+        const hiddenAuthors = button.dataset.hiddenAuthors || ""
+        const hiddenSpan = button.nextElementSibling as HTMLElement
+        const isExpanded = button.getAttribute("aria-expanded") === "true"
+
+        if (!isExpanded) {
+          // Show hidden authors - replace button with clickable author list
+          hiddenSpan.innerHTML = ` ${hiddenAuthors}`
+          hiddenSpan.classList.remove("hidden")
+          hiddenSpan.classList.add("expanded-authors")
+          button.style.display = "none"
+          button.setAttribute("aria-expanded", "true")
+
+          // Make the author span clickable to hide
+          hiddenSpan.addEventListener("click", hideAuthors, { once: true })
+        }
+
+        function hideAuthors() {
+          // Hide hidden authors - show button again
+          hiddenSpan.classList.add("hidden")
+          hiddenSpan.classList.remove("expanded-authors")
+          hiddenSpan.innerHTML = ""
+          button.style.display = "inline-flex"
+          button.setAttribute("aria-expanded", "false")
+        }
+      })
+    })
+  }
+
+  // Re-initialize on Astro page navigation
+  document.addEventListener("astro:page-load", initializeAuthorToggles)
+  document.addEventListener("astro:after-swap", initializeAuthorToggles)
+</script>

@@ -43,7 +43,7 @@ export const getTagVariant = (tag: ToolTag): BadgeVariant => {
     // Medium priority - free tools
     case ToolTag.Free:
     case ToolTag.Gifted:
-      return 'secondary'
+      return 'muted'
 
     // Lower priority - paid tools
     case ToolTag.Subscription:

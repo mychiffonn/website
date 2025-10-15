@@ -110,7 +110,11 @@ const {
     }
 
     private toggle() {
-      this.isOpen ? this.close() : this.open()
+      if (this.isOpen) {
+        this.close()
+      } else {
+        this.open()
+      }
     }
 
     private open() {
