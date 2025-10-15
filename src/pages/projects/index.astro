@@ -1,8 +1,8 @@
 ---
 import { PROFILE } from "@site-config"
 import { getProjectsForIndex } from "@/lib/projects"
-import Layout from "@/layouts/Layout.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import CommonLayout from "@/layouts/CommonLayout.astro"
+import Section from "@/components/layout/Section.astro"
 import { GithubActivity, ProjectCard } from "@/components/projects"
 
 const { featuredProjects, otherProjects } = await getProjectsForIndex()
@@ -14,30 +14,23 @@ const githubUrl =
     : PROFILE.links.github?.href || "https://github.com"
 ---
 
-<Layout title="Projects">
-  <Breadcrumbs items={[{ label: "Projects", icon: "folder-open" }]} />
-
-  <section class="mb-8">
-    <h1 class="mb-4 text-3xl font-bold">Projects</h1>
-    <p class="text-muted-foreground">
-      A collection of projects I've worked on, ranging from academic research to personal
-      explorations. If you think it would be useful or interesting to collaborate on a project,
-      please contact me to discuss.
-    </p>
-  </section>
-
+<CommonLayout
+  title="Projects"
+  description="A collection of projects I've worked on, ranging from academic research to personal explorations. If you think it would be useful or interesting to collaborate on a project, please contact me to discuss."
+  prose={false}
+  breadcrumbs={[{ label: "Projects", icon: "folder-open" }]}
+>
   <div class="flex flex-col gap-8">
     {/* Featured Projects */}
     {
       featuredProjects.length > 0 && (
-        <section>
-          <h2 class="mb-4 text-2xl font-semibold">Featured Projects</h2>
+        <Section title="Featured Projects">
           <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
             {featuredProjects.map((project) => (
               <ProjectCard {project} />
             ))}
           </div>
-        </section>
+        </Section>
       )
     }
 
@@ -58,4 +51,4 @@ const githubUrl =
     {/* GitHub Activity */}
     <GithubActivity githubUrl={githubUrl} />
   </div>
-</Layout>
+</CommonLayout>

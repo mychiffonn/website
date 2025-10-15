@@ -13,6 +13,7 @@ export const SEMANTIC_ICONS = {
   person: "mingcute:user-1-line",
   question: "mingcute:question-line",
   tool: "mingcute:tool-line",
+  research: "mingcute:mortarboard-line",
 
   // Meta information
   hashtag: "mingcute:hashtag-line",
