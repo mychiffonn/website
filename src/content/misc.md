@@ -2,8 +2,7 @@
 while living with peers from 50+ countries and engaging civically in 6 cities 🇺🇸🇰🇷🇹🇼🇮🇳🇦🇷🇩🇪 
 as part of its [global rotation program](https://www.minerva.edu/global-immersion/). 
 
-- I'm a minimialist, [avid reader](https://app.thestorygraph.com/profile/mychiffonn)
-([Storygraph stats](https://app.thestorygraph.com/stats/mychiffonn?year=2025)), 
+- I'm a minimialist, [avid reader](https://app.thestorygraph.com/profile/mychiffonn), 
 language learner, and plant-based cook. 
 
 - I love organzing events, from hackathons to friend hangouts, 
