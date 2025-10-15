@@ -4,7 +4,6 @@ import { Image } from "astro:assets"
 import type { PostMeta } from "@/lib/blog/types"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
-import Link from "@/components/base/Link.astro"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
 
 import "@/assets/styles/card.css"
@@ -17,10 +16,12 @@ const { metadata } = Astro.props
 const tags = metadata.tags
 ---
 
-<div
-  class="card group relative overflow-hidden"
-  style="--card-highlight: hsl(var(--primary)); --card-highlight-bg: hsl(var(--muted) / 50%);"
->
+<div class="card card-clickable group relative overflow-hidden">
+  <a
+    href={`/blog/${metadata.id}`}
+    class="absolute inset-0 z-0"
+    aria-label={`Post: ${metadata.title}`}></a>
+
   {
     metadata.image && (
       <Image
@@ -33,50 +34,52 @@ const tags = metadata.tags
     )
   }
 
-  <Link
-    href={`/blog/${metadata.id}`}
+  <article
     class:list={[
-      "relative z-10 block transition-all duration-300",
-      metadata.image && "max-md:pt-24"
+      "card-content relative z-10 transition-all duration-300",
+      metadata.image && "max-md:pt-24 md:max-w-[80%]"
     ]}
   >
-    <article class:list={["card-content", metadata.image && "md:max-w-[80%]"]}>
-      {/** Row 1: Title  */}
-      <h3 class="card-title group-hover:text-primary transition-colors duration-300">
-        {metadata.title}
-      </h3>
+    {/** Row 1: Title  */}
+    <h3 class="card-title group-hover:text-primary transition-colors duration-300">
+      {metadata.title}
+    </h3>
 
-      {/** Row 2: Desc  */}
-      <p class="card-description">
-        {metadata.description}
-      </p>
+    {/** Row 2: Desc  */}
+    <p class="card-description">
+      {metadata.description}
+    </p>
 
-      {/** Row 3: Meta information  */}
-      <PostMetadata metadata={metadata} variant="card" />
+    {/** Row 3: Meta information  */}
+    <PostMetadata metadata={metadata} variant="card" />
 
-      {/** Row 4: Tags */}
-      {
-        tags && (
-          <div class="card-tags">
-            {tags.map((tag: string) => (
-              <Badge variant={"muted"} class="tag-badge transition-all duration-300">
-                <Icon name="hashtag" />
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        )
-      }
-    </article>
-  </Link>
+    {/** Row 4: Tags */}
+    {
+      tags && (
+        <div class="card-tags">
+          {tags.map((tag: string) => (
+            <Badge variant={"muted"} class="tag-badge transition-all duration-300">
+              <Icon name="hashtag" />
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      )
+    }
+  </article>
 </div>
 
 <style>
+  .card {
+    --card-highlight: hsl(var(--primary));
+    --card-highlight-bg: hsl(var(--muted) / 50%);
+  }
+
   .card:hover {
-    background-color: var(--card-highlight-bg, hsl(var(--muted) / 50%));
+    background-color: var(--card-highlight-bg);
 
     & .tag-badge {
-      background-color: var(--card-highlight-bg, hsl(var(--muted) / 50%));
+      background-color: var(--card-highlight-bg);
     }
   }
 

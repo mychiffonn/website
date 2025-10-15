@@ -1,10 +1,11 @@
 ---
 import type { AuthorData } from "@/lib/blog/types"
 import { cn } from "@/lib/utils"
-import Link from "@/components/base/Link.astro"
 import ProfileLinks from "@/components/profile/ProfileLinks.astro"
 
 import AuthorAvatar from "./AuthorAvatar.astro"
+
+import "@/assets/styles/card.css"
 
 interface Props {
   author: AuthorData
@@ -12,61 +13,37 @@ interface Props {
 
 const { author } = Astro.props
 const { id, name, bio, pronouns, links } = author
-const currentPath = Astro.url.pathname
-const isAuthorPage = currentPath === `/authors/${id}`
+const isAuthorPage = Astro.url.pathname === `/authors/${id}`
 
-// Card variants
+// Add 'relative' and 'group' for the stretched-link pattern
 const cardClasses = cn(
-  "overflow-hidden rounded-xl border p-4",
-  !isAuthorPage && "has-[a:hover]:bg-secondary transition-colors duration-300 ease-in-out"
-)
-
-const avatarClasses = cn(
-  "size-40",
-  !isAuthorPage && "hover:ring-accent transition-shadow duration-300 hover:cursor-pointer hover:ring-3"
-)
-
-const nameClasses = cn(
-  "text-lg font-medium",
-  !isAuthorPage && "hover:text-primary hover:underline"
+  "card relative flex flex-wrap gap-4 py-4",
+  !isAuthorPage && "card-clickable group" // 'group' enables group-hover styles
 )
 ---
 
-<div class={cardClasses}>
-  <div class="flex flex-wrap gap-4">
-    {isAuthorPage ? (
-      <AuthorAvatar
-        author={author}
-        fallbackStyle="all-initials"
-        width={40}
-        class="size-40"
+<article class={cardClasses}>
+  {
+    !isAuthorPage && (
+      <a
+        href={`/authors/${id}`}
+        class="absolute inset-0 z-0"
+        aria-label={`View profile for ${name}`}
       />
-    ) : (
-      <Link href={`/authors/${id}`}>
-        <AuthorAvatar
-          author={author}
-          fallbackStyle="all-initials"
-          width={40}
-          class={avatarClasses}
-        />
-      </Link>
-    )}
-    
-    <div class="flex grow flex-col justify-between gap-y-4">
-      <div>
-        <div class="flex flex-wrap items-center gap-x-2">
-          {isAuthorPage ? (
-            <h3 class="text-lg font-medium">{name}</h3>
-          ) : (
-            <Link href={`/authors/${id}`}>
-              <h3 class={nameClasses}>{name}</h3>
-            </Link>
-          )}
-          {pronouns && <span class="text-muted-foreground text-sm">({pronouns})</span>}
-        </div>
-        <p class="text-muted-foreground text-sm">{bio}</p>
+    )
+  }
+
+  <AuthorAvatar author={author} fallbackStyle="all-initials" width={40} class="relative size-40" />
+
+  <div class="relative flex grow flex-col justify-between gap-y-4">
+    <div>
+      <div class="flex flex-wrap items-center gap-x-2">
+        <h3 class="text-lg font-medium">{name}</h3>
+        {pronouns && <span class="text-muted-foreground text-sm">({pronouns})</span>}
       </div>
-      <ProfileLinks links={links} />
+      <p class="text-muted-foreground text-sm">{bio}</p>
     </div>
+
+    <ProfileLinks links={links} />
   </div>
-</div>
+</article>
