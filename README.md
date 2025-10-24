@@ -1,36 +1,53 @@
 # My (Chiffon) Nguyen's Academic Website
 
-This is my personal academic website built with Astro, showcasing my research, projects, and
-thoughts as a researcher, developer, teacher, and life-long learner.
+[![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
 
-This website serves as a digital portfolio and blog where I share my work, insights, and journey in
-academia (NLP+HCI), technology, and anything I'm interested in.
+![](public/img/social-preview.png)
+
+This website serves as a digital portfolio and blog where I share my work, insights, and journey in academia (NLP+HCI), technology, and anything I'm interested in. Co-created with Claude Code.
+
+> ⚠️ Warning: Unstable. Theme will be refactored to "astro-academic" and posted to Astro community once all features are complete.
+
+## Features
+
+- ⚡ Fast loading, build, and previewing with Astro 5 as static generator
+- 💻 Showcase projects, news, blog posts, and publications from .bib file
+- ✏️ Github-flavored markdown with KaTeX-rendered math, code highlighting (block and inline), and embeds
+- 📝 Blog supports post-subpost system, with tags and multiple authors
+- 👩‍💻 Developer experience: type-safe with zod-first schema and TypeScript
+- 🔎 Support for non-English scripts, SEO friendly, ARIA accessibility compliant
+- 🔧 Easily configure [theme](src/styles/global.css), [page & personal information](src/config.ts), [content](src/content)
+- [IN PROGRESS] Obsidian-flavored markdown with wikilinks and callouts (no backlinks yet).
+- [UPCOMING] i18n page routing and language toggle
+- [UPCOMING] Show webmentions of a post across the web in lieu of comment section
+- [UPCOMING] Search with pagefind/typesense
+- [UPCOMING] Render /media library from .json and from scraped Storygraph
 
 ## Built With
 
-This website is built on enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite)
-template and references from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s digital garden:
+This website is built on enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite) template and references from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s digital garden:
 
 - [Astro](https://astro.build/) - Modern content-driven web framework
 - [TailwindCSS 4](https://tailwindcss.com/) - Utility-first CSS framework
-- [shadcn/ui](https://ui.shadcn.com/) - UI component wrappers of Radix Primitives and TailwindCSS
-- [MDX](https://mdxjs.com/) - Markdown with JSX components
+- Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown)
+- shadcn/ui - Customizable React components, with Radix primitives and TailwindCSS for styling
+- [Catpuccin color palettes](https://catppuccin.com/palette/)
 
 Other inspirations:
 
-- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's
-  [pure](https://astro-pure.js.org/) theme
-- [Color palettes](src/assets/styles/global.css) from [catpuccin](https://catppuccin.com/palette/)
-- Projects and publications from [al-folio](https://github.com/alshedivat/al-folio)
+- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's [pure](https://astro-pure.js.org/) theme
+- Publications from [al-folio](https://github.com/alshedivat/al-folio)
 
 ## Getting Started
 
-Assume Node.js >= 22 and pnpm installed:
+Have Node.js >= 20 (tested with Node 24) and pnpm installed:
 
 1. Clone the repository
 2. Install dependencies: `pnpm install`
 3. Start development server: `pnpm dev`
 4. Visit `http://localhost:4321`
+5. Read docs or search `TODO` across the codebase to complete setup
+6. Search `OPTIONAL` to customize as needed (color themes, icons, etc)
 
 ## License
 
