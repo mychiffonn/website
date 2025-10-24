@@ -128,28 +128,36 @@ export const PROFILE_ICON_MAP = {
 export const PROJECT_LINK_TYPES = {
   repo: { label: "Code", iconName: "mingcute:code-line" },
   doc: { label: "Documentation", iconName: "mingcute:document-line" },
-  url: { label: "Website", iconName: "mingcute:external-link-line" },
+  url: { label: "Website", iconName: "mingcute:globe-2-line" },
   release: { label: "Release", iconName: "mingcute:download-line" }
 } as const
 
 export const PUBLICATION_LINK_TYPES = {
+  // Core content & identifiers
   abstract: { label: "Abstract", iconName: "mingcute:align-justify-line" },
-  doi: { label: "DOI", iconName: "academicons:doi" },
   pdf: { label: "PDF", iconName: "mingcute:pdf-line" },
+  doi: { label: "DOI", iconName: "academicons:doi" },
+  arxiv: { label: "arXiv", iconName: "academicons:arxiv" },
+  website: { label: "Website", iconName: "mingcute:globe-2-line" },
+
+  // Interactive & supplementary materials
   code: { label: "Code", iconName: "mingcute:code-line" },
+  demo: { label: "Demo", iconName: "mingcute:play-circle-line" },
+  draft: { label: "Draft", iconName: "mingcute:flask-line" },
   resources: { label: "Resources", iconName: "mingcute:folder-zip-line" },
+
+  // Presentation & discussion
   video: { label: "Video", iconName: "mingcute:video-line" },
+  talk: { label: "Talk", iconName: "mingcute:mic-line" },
   slides: { label: "Slides", iconName: "mingcute:presentation-line" },
   poster: { label: "Poster", iconName: "mingcute:image-line" },
-  website: { label: "Website", iconName: "mingcute:globe-2-line" },
-  arxiv: { label: "arXiv", iconName: "academicons:arxiv" },
-  talk: { label: "Talk", iconName: "mingcute:mic-line" },
   post: { label: "Post", iconName: "mingcute:pen-line" },
-  demo: { label: "Demo", iconName: "mingcute:play-circle-line" },
+  threads: { label: "Thread", iconName: "mingcute:comment-line" },
+
+  // Metadata & accolades
   award: { label: "Award", iconName: "mingcute:trophy-line" },
-  venue: { label: "Venue", iconName: "mingcute:building-line" },
-  selected: { label: "Selected", iconName: "mingcute:star-line" },
-  threads: { label: "Thread", iconName: "mingcute:comment-line" }
+  selected: { label: "Selected", iconName: "" },
+  venue: { label: "Venue", iconName: "" }
 } as const
 
 export type ProfileLinkType = keyof typeof PROFILE_ICON_MAP
