@@ -59,12 +59,10 @@ const {
       <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
       <slot name="toc-header" aria-label="Table of contents" />
     </div>
-    <div class="mx-auto w-full max-w-3xl overflow-x-hidden px-4">
+    <div class="flex w-full">
       <slot name="breadcrumb" />
     </div>
-    <main
-      class={cn("mx-auto flex max-w-3xl grow flex-col gap-y-4 px-4 overflow-x-hidden", className)}
-    >
+    <main class={cn("flex grow flex-col gap-y-4", className)}>
       <slot />
     </main>
     <Footer />

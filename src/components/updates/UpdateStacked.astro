@@ -11,7 +11,7 @@ interface Props {
 const { renderedUpdates, class: className, itemClass } = Astro.props
 ---
 
-<div class:list={["max-w-none space-y-2", className]}>
+<div class:list={["space-y-2", className]}>
   {
     renderedUpdates.map((item) => (
       <article class="relative flex gap-3">

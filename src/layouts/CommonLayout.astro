@@ -37,11 +37,9 @@ const { title, description, modifiedTime, prose = true, breadcrumbs, ...layoutPr
 
   {
     prose ? (
-      <main>
-        <div class="prose dark:prose-invert max-w-none">
-          <slot />
-        </div>
-      </main>
+      <div class="prose lg:prose-lg">
+        <slot />
+      </div>
     ) : (
       <slot />
     )

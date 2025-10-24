@@ -27,7 +27,7 @@ const hasHeadings = headings && headings.length > 0
         <summary
           class={cn(
             "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-            "mx-auto flex w-full max-w-3xl flex-1 cursor-pointer items-start gap-3 px-4 py-3"
+            "flex w-full flex-1 cursor-pointer items-start gap-3 p-3"
           )}
         >
           <div
@@ -73,7 +73,7 @@ const hasHeadings = headings && headings.length > 0
           />
         </summary>
 
-        <div class="border-border/50 mx-auto max-w-3xl border-t" data-scroll-container>
+        <div class="border-border/50 border-t" data-scroll-container>
           <ScrollArea
             client:load
             className="flex max-h-[30vh] flex-col overflow-y-auto"

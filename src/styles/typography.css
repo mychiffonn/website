@@ -1,17 +1,6 @@
 @import './global.css';
 
 @layer base {
-
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply break-words;
-  }
-
   h1,
   h2,
   h3,
@@ -120,12 +109,16 @@
       @apply text-left [&[align=center]]:text-center [&[align=right]]:text-right;
     }
 
-    :where(img, video, figure, .expressive-code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-      @apply mx-auto my-6;
+    :where(img, video, figure):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      @apply mx-auto my-6 max-w-full;
+    }
+
+    :where(.expressive-code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      @apply mx-auto my-6 overflow-x-auto;
     }
 
     :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-      @apply !max-h-[min(68vh_1000px)] overflow-y-auto [&::-webkit-scrollbar-corner]:hidden;
+      @apply !max-h-[min(68vh_1000px)] overflow-y-auto [&::-webkit-scrollbar-corner]:hidden max-w-3xl overflow-x-auto;
     }
 
     :where(summary):not(:where([class~='not-prose'], [class~='not-prose'] *)) {

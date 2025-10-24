@@ -11,7 +11,7 @@ interface Props {
 const { renderedUpdates, class: className, itemClass } = Astro.props
 ---
 
-<div class:list={["max-w-none", className]}>
+<div class={className}>
   {
     renderedUpdates.map((item) => (
       <article class="relative block">

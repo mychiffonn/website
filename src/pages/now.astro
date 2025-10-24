@@ -5,8 +5,7 @@ import Link from "@/components/base/Link.astro"
 import UpdateTimeline from "@/components/updates/UpdateTimeline.astro"
 
 const nowDescription = "A sporadically updated log of what I am doing, thinking, and exploring."
-// Get all updates and process them
-const renderedUpdates = await getLatestUpdates(5)
+const renderedUpdates = await getLatestUpdates(10)
 ---
 
 <CommonLayout

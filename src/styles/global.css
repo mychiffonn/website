@@ -67,7 +67,7 @@
   --accent: oklch(0.7988 0.1061 49.64);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.55 0.216 19.8);
-  --border: oklch(0.922 0 0);
+  --border: oklch(0.9 0 0);
   --ring: oklch(0.708 0 0);
 
   /* Complete Catppuccin Palette */
@@ -98,7 +98,7 @@
   --accent: oklch(0.9778 0.0582 102.16);
   --accent-foreground: oklch(0.145 0 0);
   --destructive: oklch(0.737 0.125 11.2);
-  --border: oklch(1 0 0 / 10%);
+  --border: oklch(1 0 0 / 20%);
   --ring: oklch(0.556 0 0);
 
   /* Complete Catppuccin Palette */
@@ -150,9 +150,14 @@
   }
 
   html, body {
-    max-width: 100vw;
     background-color: var(--color-background);
     color: var(--color-foreground);
+    padding-left: 8px;
+    padding-right: 8px;
+    max-width: 48rem; /* Corresponds to '3xl' in Tailwind */
+    margin-left: auto;
+    margin-right: auto;
+    overflow-wrap: break-word;
   }
 
   ::selection {
