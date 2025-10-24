@@ -10,13 +10,13 @@
  */
 
 import type {
-  ScrollElements,
   HeadingRegion,
-  ScrollMaskConfig,
   ScrollController,
+  ScrollElements,
+  ScrollMaskConfig,
   ScrollMask as ScrollMaskInterface,
   ScrollToActive as ScrollToActiveInterface
-} from './types'
+} from "./types"
 
 // ========================================
 // Utility Functions
@@ -252,10 +252,7 @@ export class ScrollToActive implements ScrollToActiveInterface {
    * @param activeItemSelector - CSS selector for the active item
    * @param options - Optional configuration for focus behavior
    */
-  scroll(
-    activeItemSelector: string,
-    options: { shouldFocus?: boolean } = {}
-  ): void {
+  scroll(activeItemSelector: string, options: { shouldFocus?: boolean } = {}): void {
     if (!this.state.scrollArea) return
 
     const activeItem = this.state.scrollArea.querySelector(activeItemSelector)
@@ -371,8 +368,8 @@ export class TOCLinks {
       this.state.cachedLinks = document.querySelectorAll(linkSelector)
       // Build link map for O(1) lookups instead of O(n) nested loops
       this.linkMap = new Map(
-        Array.from(this.state.cachedLinks).map(link => [
-          link.getAttribute('data-heading-link') ?? '',
+        Array.from(this.state.cachedLinks).map((link) => [
+          link.getAttribute("data-heading-link") ?? "",
           link
         ])
       )
@@ -381,8 +378,8 @@ export class TOCLinks {
     // If cache was cleared but linkMap still exists, rebuild it
     if (!this.linkMap && this.state.cachedLinks) {
       this.linkMap = new Map(
-        Array.from(this.state.cachedLinks).map(link => [
-          link.getAttribute('data-heading-link') ?? '',
+        Array.from(this.state.cachedLinks).map((link) => [
+          link.getAttribute("data-heading-link") ?? "",
           link
         ])
       )
@@ -390,7 +387,7 @@ export class TOCLinks {
 
     // Remove active attribute from all links
     for (const link of this.state.cachedLinks) {
-      link.removeAttribute('data-active')
+      link.removeAttribute("data-active")
     }
 
     // Add active attribute to visible heading links using map lookup
@@ -399,7 +396,7 @@ export class TOCLinks {
 
       const link = this.linkMap?.get(id)
       if (link) {
-        link.setAttribute('data-active', 'true')
+        link.setAttribute("data-active", "true")
       }
     }
 
@@ -446,9 +443,15 @@ export abstract class BaseScrollController implements ScrollController {
   abstract getActiveItemSelector(): string
 
   // Conventional data attributes with overridable defaults
-  protected getScrollAreaSelector(): string { return "[data-scroll-area]" }
-  protected getContainerAttribute(): string { return "data-scroll-container" }
-  protected getMaskClasses(): ScrollMaskConfig { return { top: "mask-t-from-90%", bottom: "mask-b-from-90%" } }
+  protected getScrollAreaSelector(): string {
+    return "[data-scroll-area]"
+  }
+  protected getContainerAttribute(): string {
+    return "data-scroll-container"
+  }
+  protected getMaskClasses(): ScrollMaskConfig {
+    return { top: "mask-t-from-90%", bottom: "mask-b-from-90%" }
+  }
 
   /**
    * Initializes the scroll controller.
@@ -467,7 +470,9 @@ export abstract class BaseScrollController implements ScrollController {
 
     if (this.state.scrollArea) {
       const maskClasses = this.getMaskClasses()
-      this.scrollHandler = () => this.scrollMask.update(maskClasses)
+      this.scrollHandler = () => {
+        this.scrollMask.update(maskClasses)
+      }
       this.state.scrollArea.addEventListener("scroll", this.scrollHandler, { passive: true })
     }
 
@@ -475,7 +480,9 @@ export abstract class BaseScrollController implements ScrollController {
 
     requestAnimationFrame(() => {
       this.scrollToActive.scroll(this.getActiveItemSelector())
-      setTimeout(() => this.scrollMask.update(this.getMaskClasses()), 100)
+      setTimeout(() => {
+        this.scrollMask.update(this.getMaskClasses())
+      }, 100)
     })
   }
 
@@ -519,9 +526,15 @@ export abstract class BaseTOCController implements ScrollController {
   abstract getLinkSelector(): string
 
   // Conventional data attributes (no need to abstract)
-  protected getScrollAreaSelector(): string { return "[data-scroll-area]" }
-  protected getContainerAttribute(): string { return "data-scroll-container" }
-  protected getMaskClasses(): ScrollMaskConfig { return { top: "mask-t-from-90%", bottom: "mask-b-from-90%" } }
+  protected getScrollAreaSelector(): string {
+    return "[data-scroll-area]"
+  }
+  protected getContainerAttribute(): string {
+    return "data-scroll-container"
+  }
+  protected getMaskClasses(): ScrollMaskConfig {
+    return { top: "mask-t-from-90%", bottom: "mask-b-from-90%" }
+  }
 
   /**
    * Initializes the TOC scroll controller.
@@ -570,8 +583,12 @@ export abstract class BaseTOCController implements ScrollController {
    */
   private setupScrollHandlers(): void {
     // Throttle handlers for better performance
-    this.scrollHandler = throttle(() => this.handleScroll(), 16) // ~60fps
-    this.resizeHandler = throttle(() => this.handleResize(), 100)
+    this.scrollHandler = throttle(() => {
+      this.handleScroll()
+    }, 16) // ~60fps
+    this.resizeHandler = throttle(() => {
+      this.handleResize()
+    }, 100)
 
     const options = { passive: true }
     window.addEventListener("scroll", this.scrollHandler, options)
@@ -579,7 +596,9 @@ export abstract class BaseTOCController implements ScrollController {
 
     if (this.state.scrollArea) {
       const maskClasses = this.getMaskClasses()
-      const tocScrollHandler = throttle(() => this.tocScrollMask.update(maskClasses), 16)
+      const tocScrollHandler = throttle(() => {
+        this.tocScrollMask.update(maskClasses)
+      }, 16)
       this.state.scrollArea.addEventListener("scroll", tocScrollHandler, options)
     }
   }
@@ -661,7 +680,7 @@ export abstract class BaseTOCController implements ScrollController {
       scrollToHeading: (id: string) => {
         const element = document.getElementById(id)
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' })
+          element.scrollIntoView({ behavior: "smooth" })
         }
       },
 
@@ -676,7 +695,7 @@ export abstract class BaseTOCController implements ScrollController {
             scrollCount++
             const currentTime = performance.now()
             if (currentTime - startTime >= 1000) {
-              console.log(`Scroll performance: ${scrollCount} events/second`)
+              // Scroll performance logging disabled in production
               scrollCount = 0
               startTime = currentTime
             }
@@ -688,15 +707,17 @@ export abstract class BaseTOCController implements ScrollController {
       // Visual debugging
       highlightActiveRegions: () => {
         // Remove existing highlights
-        document.querySelectorAll('.scroll-debug-highlight').forEach(el => el.remove())
+        document.querySelectorAll(".scroll-debug-highlight").forEach((el) => {
+          el.remove()
+        })
 
         // Highlight visible heading regions
         const visibleIds = this.headingRegions.getVisibleIds()
-        visibleIds.forEach(id => {
+        visibleIds.forEach((id) => {
           const element = document.getElementById(id)
           if (element) {
-            const highlight = document.createElement('div')
-            highlight.className = 'scroll-debug-highlight'
+            const highlight = document.createElement("div")
+            highlight.className = "scroll-debug-highlight"
             highlight.style.cssText = `
               position: absolute;
               top: ${element.offsetTop}px;
@@ -722,16 +743,12 @@ export abstract class BaseTOCController implements ScrollController {
       })
     }
 
-      // Expose to global scope for dev tools
-      ; (window as any).__scrollDebug = debugAPI
+    // Expose to global scope for dev tools
+    ;(window as any).__scrollDebug = debugAPI
 
-    console.log('📊 TOC Scroll Debug Tools Available:', {
-      usage: 'window.__scrollDebug',
-      methods: Object.keys(debugAPI)
-    })
+    // Debug tools available at window.__scrollDebug
   }
 }
-
 
 /**
  * Mobile-specific TOC enhancements for progress tracking and current section display
@@ -746,10 +763,9 @@ export interface MobileTOCElements {
  * Mobile TOC progress and interaction utilities
  */
 export class MobileTOCUtils {
-  private static readonly INITIAL_OVERVIEW_TEXT = 'Overview'
+  private static readonly INITIAL_OVERVIEW_TEXT = "Overview"
   private static readonly PROGRESS_CIRCLE_RADIUS = 10
-  private static readonly PROGRESS_CIRCLE_CIRCUMFERENCE =
-    2 * Math.PI * this.PROGRESS_CIRCLE_RADIUS
+  private static readonly PROGRESS_CIRCLE_CIRCUMFERENCE = 2 * Math.PI * this.PROGRESS_CIRCLE_RADIUS
 
   /**
    * Initialize progress circle styling
@@ -758,7 +774,7 @@ export class MobileTOCUtils {
   static initProgressCircle(progressCircle: SVGCircleElement | null): void {
     if (!progressCircle) return
 
-    const { PROGRESS_CIRCLE_CIRCUMFERENCE: circ } = this
+    const circ = this.PROGRESS_CIRCLE_CIRCUMFERENCE
     Object.assign(progressCircle.style, {
       strokeDasharray: circ.toString(),
       strokeDashoffset: circ.toString()
@@ -796,9 +812,9 @@ export class MobileTOCUtils {
     const currentText =
       activeIds.length > 0
         ? markdownHeadings
-          .filter((h) => activeIds.includes(h.slug))
-          .map((h) => h.text.replace(/\s*🔗\s*$/, '').trim())
-          .join(', ')
+            .filter((h) => activeIds.includes(h.slug))
+            .map((h) => h.text.replace(/\s*🔗\s*$/, "").trim())
+            .join(", ")
         : this.INITIAL_OVERVIEW_TEXT
 
     currentSectionText.textContent = currentText
@@ -816,9 +832,9 @@ export class MobileTOCUtils {
   ): Array<{ slug: string; text: string; depth: number }> {
     return Array.from(document.querySelectorAll<HTMLElement>(`${containerSelector} .toc-item`))
       .map((el) => ({
-        slug: el.getAttribute('data-heading-link') ?? '',
-        text: el.textContent?.trim() ?? '',
-        depth: parseInt(el.getAttribute('data-depth') ?? '1', 10)
+        slug: el.getAttribute("data-heading-link") ?? "",
+        text: el.textContent?.trim() ?? "",
+        depth: parseInt(el.getAttribute("data-depth") ?? "1", 10)
       }))
       .filter((heading) => heading.depth <= tocMaxDepth)
   }
@@ -837,9 +853,9 @@ export class MobileTOCUtils {
     // Close TOC when item is clicked
     document
       .querySelector(containerSelector)
-      ?.querySelectorAll<HTMLElement>('.toc-item')
+      ?.querySelectorAll<HTMLElement>(".toc-item")
       .forEach((item) => {
-        item.addEventListener('click', () => {
+        item.addEventListener("click", () => {
           if (detailsElement) detailsElement.open = false
           onItemClick?.()
         })

@@ -12,9 +12,9 @@ const { subposts, currentPostId } = Astro.props
 
 {
   subposts.length > 0 && (
-    <ul class="ml-4 space-y-1" role="list">
+    <ul class="ml-4 space-y-1">
       {subposts.map((subpost) => (
-        <li role="listitem">
+        <li>
           <SubpostNavItem post={subpost} isActive={currentPostId === subpost.id} isSubpost={true} />
         </li>
       ))}

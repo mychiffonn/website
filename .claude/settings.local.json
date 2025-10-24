@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(sed:*)",
+      "Bash(pwd:*)",
+      "Bash(ls:*)",
+      "Bash(tree:*)",
+      "Bash(cat:*)",
+      "Bash(rg:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*):",
+      "Bash(pnpm info:*)",
+      "Bash(pnpm preview:*)",
+      "Bash(pnpm format:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm routine:*)",
+      "Bash(pnpm check:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:localhost)",
+      "WebFetch(domain:context7.com)",
+      "WebFetch(domain:docs.astro.build)",
+      "WebFetch(domain:citation.js.org)",
+      "WebFetch(domain:mychiffonn.com)",
+      "Bash(mkdir:*)"
+    ],
+    "deny": [],
+    "defaultMode": "plan"
+  }
+}

@@ -1,13 +1,30 @@
 ---
+import Link from "@/components/base/Link.astro"
+
 interface Props {
   title: string
   class?: string
+  /** Optional link to see more */
+  moreLink?: string
+  /** Custom more link text (defaults to "see all →") */
+  moreText?: string
 }
 
-const { class: className, title } = Astro.props
+const { class: className, title, moreLink, moreText = "see all →" } = Astro.props
 ---
 
-<section class:list={["flex flex-col gap-y-2", className]}>
-  <h2 id={title.toLowerCase()} class="text-xl font-bold">{title}</h2>
+<section class:list={["mt-2 flex flex-col gap-y-1", className]}>
+  <div class={moreLink && "flex items-baseline gap-x-3"}>
+    <h2 id={title.toLowerCase()} class="mt-4 mb-4 text-2xl font-medium">
+      {title}
+    </h2>
+    {
+      moreLink && (
+        <Link href={moreLink} underline class="text-muted-foreground text-sm">
+          {moreText}
+        </Link>
+      )
+    }
+  </div>
   <slot />
 </section>

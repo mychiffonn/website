@@ -4,26 +4,31 @@ import Icon from "@/components/base/Icon.astro"
 ---
 
 <Button id="theme-toggle" variant="ghost" size="square" title="Toggle theme">
-  <Icon name="mingcute:sun-line" class="size-5 scale-100 transition-all dark:scale-0" />
-  <Icon name="mingcute:moon-line" class="absolute size-5 scale-0 transition-all dark:scale-100" />
+  <Icon name="mingcute:sun-line" size="1.5rem" class="scale-100 transition-all dark:scale-0" />
+  <Icon
+    name="mingcute:moon-line"
+    size="1.5rem"
+    class="absolute scale-0 transition-all dark:scale-100"
+  />
   <span class="sr-only">Toggle theme</span>
 </Button>
 
 <script is:inline data-astro-rerun>
-  const theme = (() => {
+  ;(() => {
     const localStorageTheme = localStorage?.getItem("theme") ?? ""
+    let theme
     if (["dark", "light"].includes(localStorageTheme)) {
-      return localStorageTheme
+      theme = localStorageTheme
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      theme = "dark"
+    } else {
+      theme = "light"
     }
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark"
-    }
-    return "light"
-  })()
 
-  document.documentElement.setAttribute("data-theme", theme)
-  document.documentElement.classList.add(theme === "dark" ? "scheme-dark" : "scheme-light")
-  window.localStorage.setItem("theme", theme)
+    document.documentElement.setAttribute("data-theme", theme)
+    document.documentElement.classList.add(theme === "dark" ? "scheme-dark" : "scheme-light")
+    window.localStorage.setItem("theme", theme)
+  })()
 </script>
 
 <script>

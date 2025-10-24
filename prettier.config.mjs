@@ -46,7 +46,7 @@ export default {
     "<THIRD_PARTY_MODULES>",
     "",
     "^@/plugins$|^@/plugins/(.*)$",
-    "^@/config$",
+    "^@/config$|^(.*)config$",
     "^@/lib$|^@/lib/(.*)$",
     "^@/pages/(.*)$",
     "^@/layouts$|^@/layouts/(.*)$",
@@ -69,8 +69,7 @@ export default {
     {
       files: "*.{md,mdx}",
       options: {
-        proseWrap: "always",
-        printWidth: 100
+        proseWrap: "never"
       }
     },
     {

@@ -5,22 +5,22 @@ import { ToolSection, ToolTag } from "@/components/tools"
 
 const usesDescription =
   "A collection of tools that I use on a frequent basis. \
-  It is a work in progress and will be updated as I update my setup.\
-  Except for the hardware, I use free versions of most tools."
+  Except for the hardware, I use free versions of most tools. \
+  I'm also a big fan of open-source software (OSS)."
 ---
 
 <CommonLayout
   title="Uses"
   description={usesDescription}
-  updatedAt={new Date()}
-  breadcrumbs={[{ label: "Uses", icon: "mingcute:tool-line" }]}
+  modifiedTime={new Date()}
+  breadcrumbs={[{ label: "Uses", icon: "tool" }]}
 >
   <ToolSection
     title="Workstation (+Operating System)"
     tools={[
       {
-        name: 'MacBook M1 Pro 14"',
-        description: "MacOS Sequoia 15",
+        name: "MacBook M1 Pro 14'",
+        description: "MacOS Tahoe 26",
         href: "https://www.apple.com/mac/",
         icon: "mingcute:apple-line"
       },
@@ -56,7 +56,7 @@ const usesDescription =
         tags: [ToolTag.Free, ToolTag.OpenSource, ToolTag.Favorite]
       },
       {
-        name: "Claude CLI (Sonnet 4.0)",
+        name: "Claude CLI (Sonnet 4.5)",
         description: "AI-powered Code Assistant",
         href: "https://www.anthropic.com/claude",
         icon: "claude",
@@ -89,18 +89,18 @@ const usesDescription =
     title="Research & Knowledge Management"
     tools={[
       {
-        name: "Zotero",
-        description: "Citation Management",
-        href: "https://www.zotero.org/",
-        icon: "academicons:zotero",
-        tags: [ToolTag.Free]
-      },
-      {
         name: "Obsidian",
         description: "Knowledge Management",
         href: "https://obsidian.md/",
         icon: "obsidian",
         tags: [ToolTag.Free, ToolTag.Favorite]
+      },
+      {
+        name: "Logseq",
+        description: "Journaling & Writing",
+        href: "https://reclaim.ai/",
+        icon: "logseq",
+        tags: [ToolTag.OpenSource, ToolTag.Favorite]
       },
       {
         name: "Overleaf",
@@ -115,6 +115,13 @@ const usesDescription =
         href: "https://typst.app/",
         icon: "typst",
         tags: [ToolTag.OpenSource, ToolTag.Free]
+      },
+      {
+        name: "Zotero",
+        description: "Citation Management",
+        href: "https://www.zotero.org/",
+        icon: "academicons:zotero",
+        tags: [ToolTag.Free]
       }
     ]}
   />
@@ -141,14 +148,6 @@ const usesDescription =
         icon: "raycast",
         tags: [ToolTag.Free]
       },
-
-      {
-        name: "Notion",
-        description: "Project Management & Calendar",
-        href: "https://www.notion.so/",
-        icon: "mingcute:notion-line",
-        tags: [ToolTag.Free]
-      },
       {
         name: "Reclaim.ai",
         description: "AI Calendar",
@@ -157,29 +156,17 @@ const usesDescription =
         tags: [ToolTag.Subscription, ToolTag.Favorite]
       },
       {
-        name: "Logseq",
-        description: "Journaling & Writing",
-        href: "https://reclaim.ai/",
-        icon: "logseq",
-        tags: [ToolTag.OpenSource, ToolTag.Favorite]
-      }
-    ]}
-  />
-  <ToolSection
-    title="Setapp Subscription Bundle"
-    tools={[
+        name: "Todoist",
+        description: "Task Management",
+        href: "https://www.todoist.com/",
+        icon: "todoist",
+        tags: [ToolTag.Free]
+      },
       {
         name: "Spark Mail",
         description: "Email",
         href: "https://sparkmailapp.com/",
         icon: "mingcute:mail-ai-line",
-        tags: [ToolTag.Bundle]
-      },
-      {
-        name: "Timing Tracker",
-        description: "Time Tracking",
-        href: "https://timingapp.com/",
-        icon: "timingapp",
         tags: [ToolTag.Bundle]
       }
     ]}

@@ -28,31 +28,31 @@ const subpostCount = subposts.length
 {
   activePost && subpostCount > 0 && (
     <nav id="mobile-subposts-container" class="w-full xl:hidden" aria-label="Subposts navigation">
-      <details class="group" role="button" aria-expanded="false">
-        <summary class="mx-auto flex w-full max-w-3xl cursor-pointer items-center justify-between px-4 py-3">
-          <div class="flex min-w-0 items-center gap-2">
+      <details class="group" aria-expanded="false">
+        <summary class="flex w-full cursor-pointer items-center justify-between p-3">
+          <div class="flex flex-1 items-center gap-2">
             <Icon
               name="post-active"
-              class="text-primary size-5 flex-shrink-0"
+              class="text-primary"
               aria-label={isSubpost ? "Active subpost" : "Active post"}
             />
-            <span class="text-foreground min-w-0 truncate text-sm leading-tight font-medium">
+            <span class="text-foreground flex-1 truncate text-sm leading-tight font-medium">
               {currentTitle}
             </span>
             {subpostCount && !isSubpost && (
-              <SubpostCountBadge count={subpostCount} variant="full" />
+              <SubpostCountBadge count={subpostCount} variant="full" class="flex-shrink-0" />
             )}
           </div>
           <Icon
             name="chevron-down"
             class:list={[
-              "text-muted-foreground size-4 flex-shrink-0",
+              "text-muted-foreground ml-2 flex-shrink-0",
               "transition-transform duration-200 group-open:rotate-180"
             ]}
           />
         </summary>
 
-        <div class="border-border/50 mx-auto max-w-3xl border-t" data-scroll-container>
+        <div class="border-border/50 border-t" data-scroll-container>
           <ScrollArea
             client:load
             className="flex max-h-[30vh] flex-col overflow-y-auto"

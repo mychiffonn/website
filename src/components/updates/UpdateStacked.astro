@@ -1,0 +1,44 @@
+---
+import type { RenderedUpdate } from "@/lib/updates"
+import FormattedDate from "@/components/base/FormattedDate.astro"
+
+interface Props {
+  renderedUpdates: RenderedUpdate[]
+  class?: string
+  itemClass?: string
+}
+
+const { renderedUpdates, class: className, itemClass } = Astro.props
+---
+
+<div class:list={["space-y-2", className]}>
+  {
+    renderedUpdates.map((item) => (
+      <article class="relative flex gap-3">
+        {/* Timeline line and dot */}
+        <div class="relative flex flex-col items-center">
+          {/* Dot */}
+          <div class="border-primary relative z-10 mt-1 h-2 w-2 rounded-full border-2" />
+
+          <div
+            class:list={[
+              "border-muted border-l-2 border-dashed",
+              "absolute top-4 bottom-4 left-1 -translate-x-px"
+            ]}
+          />
+        </div>
+
+        <div>
+          <FormattedDate
+            date={item.date}
+            class="text-muted-foreground mb-2 block text-xs font-medium tracking-wide uppercase"
+            relative={false}
+          />
+          <div class:list={["prose prose-sm", itemClass]}>
+            <item.Content />
+          </div>
+        </div>
+      </article>
+    ))
+  }
+</div>

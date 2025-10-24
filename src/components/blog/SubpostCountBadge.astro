@@ -12,7 +12,7 @@ const { count, variant = "compact", class: className } = Astro.props
 ---
 
 <Badge variant="info" class:list={["flex flex-shrink-0 items-center gap-1 text-xs", className]}>
-  <Icon name="subposts" class="size-3" />
+  <Icon name="subposts" />
   {
     variant === "full" ? (
       <>

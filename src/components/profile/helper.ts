@@ -1,164 +1,78 @@
-import { PROFILE } from '@/config'
-
-// Official platform icon mapping with camelCase keys and object values
-export const PROFILE_ICON_MAP = {
-  // Email & Communication
-  email: { label: 'Email', iconName: 'mingcute:mail-line' },
-  skype: { label: 'Skype', iconName: 'mingcute:phone-line' },
-  telegram: { label: 'Telegram', iconName: 'mingcute:send-line' },
-  whatsapp: { label: 'WhatsApp', iconName: 'mingcute:message-circle-line' },
-  discord: { label: 'Discord', iconName: 'mingcute:message-square-line' },
-  slack: { label: 'Slack', iconName: 'mingcute:slack-line' },
-  wechat: { label: 'Wechat', iconName: 'mingcute:wechat-line' },
-  kakaotalk: { label: 'Kakao Talk', iconName: 'mingcute:kakao-talk-line' },
-  line: { label: 'Line', iconName: 'mingcute:line-app-line' },
-
-  // Social Media
-  x: { label: 'X', iconName: 'mingcute:social-x-line' },
-  twitter: { label: 'Twitter', iconName: 'mingcute:twitter-line' },
-  linkedin: { label: 'LinkedIn', iconName: 'mingcute:linkedin-line' },
-  facebook: { label: 'Facebook', iconName: 'mingcute:facebook-line' },
-  instagram: { label: 'Instagram', iconName: 'mingcute:instagram-line' },
-  bluesky: { label: 'Bluesky', iconName: 'mingcute:bluesky-social-line' },
-  mastodon: { label: 'Mastodon', iconName: 'mingcute:mastodon-line' },
-  threads: { label: 'Threads', iconName: 'mingcute:threads-line' },
-  youtube: { label: 'YouTube', iconName: 'mingcute:youtube-line' },
-  twitch: { label: 'Twitch', iconName: 'mingcute:twitch-line' },
-  tiktok: { label: 'TikTok', iconName: 'mingcute:tiktok-line' },
-  snapchat: { label: 'Snapchat', iconName: 'mingcute:snapchat-line' },
-  pinterest: { label: 'Pinterest', iconName: 'mingcute:pinterest-line' },
-  reddit: { label: 'Reddit', iconName: 'mingcute:reddit-line' },
-  medium: { label: 'Medium', iconName: 'mingcute:medium-line' },
-  weibo: { label: 'Weibo', iconName: 'mingcute:weibo-line' },
-
-  // Academic & Research
-  googleScholar: { label: 'Google Scholar', iconName: 'academicons:google-scholar' },
-  orcid: { label: 'ORCID', iconName: 'academicons:orcid' },
-  researchgate: { label: 'ResearchGate', iconName: 'academicons:researchgate' },
-  academia: { label: 'Academia.edu', iconName: 'academicons:academia' },
-  pubmed: { label: 'PubMed', iconName: 'academicons:pubmed' },
-  arXiv: { label: 'arXiv', iconName: 'academicons:arxiv' },
-  ssrn: { label: 'SSRN', iconName: 'academicons:ssrn' },
-  scopus: { label: 'Scopus', iconName: 'academicons:scopus' },
-  mendeley: { label: 'Mendeley', iconName: 'academicons:mendeley' },
-  zotero: { label: 'Zotero', iconName: 'academicons:zotero' },
-  figshare: { label: 'Figshare', iconName: 'academicons:figshare' },
-  dblp: { label: 'DBLP', iconName: 'mingcute:database-line' },
-  semanticScholar: { label: 'Semantic Scholar', iconName: 'mingcute:brain-line' },
-
-  // Developer Platforms
-  github: { label: 'GitHub', iconName: 'mingcute:github-line' },
-  gitlab: { label: 'GitLab', iconName: 'mingcute:git-lab-line' },
-  bitbucket: { label: 'Bitbucket', iconName: 'mingcute:git-branch-line' },
-  codepen: { label: 'CodePen', iconName: 'mingcute:code-line' },
-  codesandbox: { label: 'CodeSandbox', iconName: 'mingcute:code-line' },
-  stackoverflow: { label: 'Stack Overflow', iconName: 'academicons:stackoverflow' },
-  figma: { label: 'Stack Overflow', iconName: 'mingcute:figma-line' },
-
-  // Professional & Portfolio
-  website: { label: 'Website', iconName: 'mingcute:globe-2-line' },
-  portfolio: { label: 'Portfolio', iconName: 'mingcute:briefcase-line' },
-  blog: { label: 'Blog', iconName: 'mingcute:pen-line' },
-  cv: { label: 'CV', iconName: 'academicons:cv' },
-  resume: { label: 'Resume', iconName: 'mingcute:file-line' },
-  calendar: { label: 'Calendar', iconName: 'mingcute:calendar-line' },
-
-  // Other
-  rss: { label: 'RSS', iconName: 'mingcute:rss-line' },
-  patreon: { label: 'Patreon', iconName: 'mingcute:heart-line' },
-  kofi: { label: 'Ko-fi', iconName: 'mingcute:coffee-line' },
-  buymeacoffee: { label: 'Buy me a coffee', iconName: 'mingcute:coffee-line' },
-  paypal: { label: 'PayPal', iconName: 'mingcute:paypal-line' },
-  venmo: { label: 'Venmo', iconName: 'mingcute:wallet-4-line' },
-  cashapp: { label: 'Cash App', iconName: 'mingcute:currency-dollar-line' }
-} as const
-
-export type ProfileLinkType = keyof typeof PROFILE_ICON_MAP
+import { PROFILE_ICON_MAP, type ProfileLinkType } from "@icon-config"
+import { PROFILE, SITE } from "@site-config"
 
 export type ProfileLinkConfig = {
-  [K in ProfileLinkType]?: string | {
-    href: string
-    label?: string | 'platform'
-  }
+  [K in ProfileLinkType]?:
+    | string
+    | {
+        href: string
+        label?: string
+      }
 }
 
-export interface ProfileLinksProps {
-  links: ProfileLinkConfig
-  class?: string
-  includeLabel?: boolean
-  includeRss?: boolean
-}
+export type EmailVariant = "encoded" | "display"
 
-export type ProcessedProfileLinks = {
-  key: string,
+export type ProcessedProfileLink = {
+  key: ProfileLinkType
   /** Labels from PROFILE_ICON_MAP or user overrides */
-  label: string,
+  label: string
   /** IconName from PROFILE_ICON_MAP */
-  iconName: string,
-  href: string,
-  /** Display text for email (user-friendly obfuscated format) */
-  displayText?: string
+  iconName: string
+  /** Normalized and absolute URL */
+  href: string
+  /** Whether the link is external */
+  isExternal: boolean
 }
 
-/** Process links - uses provided links or falls back to PROFILE.links */
+/**
+ * Map links to their corresponding icon and label.
+ * @param links The links to process
+ * @param includeRss Whether to include the RSS link
+ * @param includeEmail Whether to include the email link
+ * @returns {@link ProcessedProfileLink[]} Array of processed profile links
+ */
 export const getProcessedProfileLinks = (
   links?: ProfileLinkConfig | Record<string, string>,
-  includeRss = false
-): ProcessedProfileLinks[] => {
-  const entries: ProcessedProfileLinks[] = []
-
-  // Use provided links or fall back to PROFILE.links
+  includeRss = false,
+  includeEmail = false
+): ProcessedProfileLink[] => {
   const linksToProcess = links || PROFILE.links
+  const entries: ProcessedProfileLink[] = []
 
-  // Process links
-  Object.entries(linksToProcess).forEach(([key, value]) => {
-    const iconConfig = PROFILE_ICON_MAP[key as ProfileLinkType]
-
-    if (!iconConfig) return
-
-    let href: string
-    let label: string
-
-    let displayText: string | undefined
-
-    if (typeof value === 'string') {
-      href = key === 'email' && !value.startsWith('mailto:')
-        ? `mailto:${protectEmail(value)}`
-        : value
-      label = iconConfig.label
-      if (key === 'email') {
-        displayText = getEmailDisplayText(value)
-      }
-    } else {
-      const emailAddress = value.href.startsWith('mailto:') ? value.href.replace('mailto:', '') : value.href
-      href = key === 'email' && !value.href.startsWith('mailto:')
-        ? `mailto:${protectEmail(emailAddress)}`
-        : key === 'email' && value.href.startsWith('mailto:')
-          ? `mailto:${protectEmail(emailAddress)}`
-          : value.href
-      // Use user-supplied label if provided, otherwise use the default from PROFILE_ICON_MAP
-      // Special case: if label is 'platform', use the default label from iconConfig
-      label = (value.label && value.label !== 'platform') ? value.label : iconConfig.label
-      if (key === 'email') {
-        displayText = getEmailDisplayText(emailAddress)
-      }
-    }
-
+  if (includeEmail && PROFILE.email) {
     entries.push({
-      key,
-      href,
-      label,
-      iconName: iconConfig.iconName,
-      ...(displayText && { displayText })
+      key: "email" as ProfileLinkType,
+      href: `mailto:${PROFILE.email}`,
+      isExternal: true,
+      label: "Email",
+      iconName: "mingcute:mail-line"
     })
-  })
+  }
 
-  // Add RSS if requested and not already present
-  if (includeRss && !entries.some(entry => entry.key === 'rss')) {
+  for (const [key, value] of Object.entries(linksToProcess)) {
+    const iconConfig = PROFILE_ICON_MAP[key as ProfileLinkType]
+    if (!iconConfig) continue
+
+    const linkData = processProfileLink(value, iconConfig)
+
+    const { href, isExternal } = normalizeHref(linkData.href)
+
     entries.push({
-      key: 'rss',
-      href: '/rss.xml',
-      label: 'RSS',
+      key: key as ProfileLinkType,
+      href,
+      isExternal,
+      label: linkData.label,
+      iconName: iconConfig.iconName
+    })
+  }
+
+  if (includeRss && !entries.some((entry) => entry.key === "rss")) {
+    const { href } = normalizeHref("/rss.xml")
+    entries.push({
+      key: "rss",
+      href,
+      isExternal: false,
+      label: "RSS",
       iconName: PROFILE_ICON_MAP.rss.iconName
     })
   }
@@ -166,22 +80,88 @@ export const getProcessedProfileLinks = (
   return entries
 }
 
+/**
+ * Get the icon for a platform
+ * @param platform The social/academic/professional platform to get the icon for
+ * @returns The icon name for the platform, e.g., "mingcute:linkedin-line"
+ */
 export const getIconForPlatform = (platform: string): string => {
   const iconConfig = PROFILE_ICON_MAP[platform as ProfileLinkType]
-  return iconConfig?.iconName || 'mingcute:external-link-line'
+  return iconConfig?.iconName || "mingcute:external-link-line"
 }
 
-// Email protection utilities
-export const protectEmail = (email: string): string => {
-  // Basic email obfuscation - replace @ and . with HTML entities
-  return email
-    .replace(/@/g, '&#64;')
-    .replace(/\./g, '&#46;')
+/**
+ * Return the email in the desired variant, display or encoded
+ * @param email The email to transform
+ * @param variant The variant to return, display or encoded
+ * @returns The email in the desired variant
+ */
+export const getTransformedEmail = (email: string, variant: EmailVariant = "display"): string => {
+  switch (variant) {
+    case "encoded":
+      return btoa(email)
+    case "display":
+    default:
+      return getEmailDisplayText(email)
+  }
 }
 
-export const getEmailDisplayText = (email: string): string => {
-  // Convert email to user-friendly obfuscated format: mail [at] example [dot] com
-  return email
-    .replace(/@/g, ' [at] ')
-    .replace(/\./g, ' [dot] ')
+// ========================================
+// Helper functions
+// ========================================
+
+const normalizeHref = (href: string): { href: string; isExternal: boolean } => {
+  const normalized = href.startsWith("/public/") ? href.replace("/public", "") : href
+  return {
+    href: new URL(normalized, SITE.href).toString(),
+    isExternal: !normalized.startsWith("/")
+  }
+}
+
+/**
+ * Get the label for a link. Use the label from the link if it exists and is not 'platform'
+ * @param value The link to get the label for
+ * @param iconConfig The icon configuration
+ * @returns The label for the link
+ */
+const getLabel = (value: string | { href: string; label?: string }, iconConfig: any): string => {
+  if (typeof value === "string") return iconConfig.label
+  return value.label && value.label !== "platform" ? value.label : iconConfig.label
+}
+
+/**
+ * Process a regular link
+ * @param value The link to process
+ * @param iconConfig The icon configuration
+ * @returns The processed link
+ */
+const processProfileLink = (value: string | { href: string; label?: string }, iconConfig: any) => ({
+  href: typeof value === "string" ? value : value.href,
+  label: getLabel(value, iconConfig)
+})
+
+/**
+ * The domain shortcuts to use for the email display text
+ */
+const DOMAIN_SHORTCUTS: Record<string, string> = {
+  "gmail.com": "[gmail]",
+  "yahoo.com": "[yahoo]",
+  "outlook.com": "[outlook]",
+  "hotmail.com": "[hotmail]"
+}
+
+const getEmailDisplayText = (email: string): string => {
+  const [localPart, domain] = email.split("@")
+  const siteDomain = new URL(SITE.href).hostname
+
+  if (domain === siteDomain) {
+    return `${localPart} [at] [domain]`
+  }
+
+  const shortcut = DOMAIN_SHORTCUTS[domain]
+  if (shortcut) {
+    return `${localPart} [at] ${shortcut}`
+  }
+
+  return `${localPart} [at] ${domain.replace(/\./g, " [dot] ")}`
 }

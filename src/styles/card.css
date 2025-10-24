@@ -29,7 +29,6 @@
   border-color: oklch(from var(--primary) l c h / 0.9);
   background-color: oklch(from var(--primary) l c h / 0.08);
   box-shadow: 0 4px 6px -1px oklch(from var(--ring) l c h / 0.1), 0 2px 4px -1px oklch(from var(--ring) l c h / 0.06);
-  transform: translateY(0);
 }
 
 /* Selected/highlighted card variant */

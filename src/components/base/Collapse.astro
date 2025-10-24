@@ -8,7 +8,6 @@ const collapseVariants = cva("rounded-lg border transition-colors", {
   variants: {
     variant: {
       default: "bg-background border-border",
-      secondary: "bg-secondary/30 border-secondary",
       muted: "bg-muted/30 border-muted"
     }
   },
@@ -34,7 +33,7 @@ const { title, variant = "default", defaultOpen = false, ...rest } = Astro.props
   <summary
     class="hover:bg-muted flex cursor-pointer items-center p-3 font-medium transition-colors [&::-webkit-details-marker]:hidden"
   >
-    <Icon name="mingcute:right-line" class="size-4 transition-transform duration-300 ease-in-out" />
+    <Icon name="right" class="transition-transform duration-300 ease-in-out" />
     <span class="text-sm font-medium">{title}</span>
   </summary>
   <div class="overflow-hidden transition-all duration-300 ease-in-out">

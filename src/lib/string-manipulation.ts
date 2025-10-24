@@ -10,11 +10,11 @@
 export const slugify = (text: string): string => {
   return text
     .trim()
-    .replace(/\s+/g, '-')  // Replace spaces with dashes
-    .replace(/[^\w\-]+/g, '')  // Remove non-word characters except dashes
-    .replace(/\-\-+/g, '-')  // Replace multiple dashes with single dash
-    .replace(/^-+/, '')  // Remove leading dashes
-    .replace(/-+$/, '')  // Remove trailing dashes
+    .replace(/\s+/g, "-") // Replace spaces with dashes
+    .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
+    .replace(/--+/g, "-") // Replace multiple dashes with single dash
+    .replace(/^-+/, "") // Remove leading dashes
+    .replace(/-+$/, "") // Remove trailing dashes
 }
 
 /**
@@ -22,7 +22,7 @@ export const slugify = (text: string): string => {
  * @param arr Array of strings to deduplicate
  * @returns Array with duplicates removed (case-insensitive)
  */
-export const dedupLowerCase = (arr: string[]) => [...new Set(arr.map(s => s.toLowerCase()))]
+export const dedupLowerCase = (arr: string[]) => [...new Set(arr.map((s) => s.toLowerCase()))]
 
 /**
  * Deduplicates an array of strings while preserving the case of the first occurrence

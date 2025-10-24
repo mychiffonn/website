@@ -33,13 +33,11 @@ const linkHref = `/blog/${post.id}`
     >
       <Icon
         name={iconName}
-        class="text-primary mt-0.5 size-4 flex-shrink-0 self-start"
+        class="text-primary mt-0.5 self-start"
         aria-label={isSubpost ? "Current subpost" : "Current post"}
       />
       <div class="flex min-w-0 flex-col gap-0.5">
-        <span class:list={["text-foreground line-clamp-2 leading-tight font-medium"]}>
-          {post.title}
-        </span>
+        <span class="text-foreground line-clamp-2 leading-tight font-medium">{post.title}</span>
         {subpostCount && !isSubpost && <SubpostCountBadge count={subpostCount} variant="full" />}
         {(actualWordCount > 0 || (subpostCount && !isSubpost)) && (
           <div class="text-muted-foreground flex items-center gap-2 text-xs">
@@ -61,7 +59,7 @@ const linkHref = `/blog/${post.id}`
     >
       <Icon
         name={iconName}
-        class="text-muted-foreground group-hover/post:text-accent-foreground mt-0.5 size-4 flex-shrink-0 self-start transition-colors"
+        class="text-muted-foreground group-hover/post:text-accent-foreground mt-0.5 self-start transition-colors"
         aria-label={isSubpost ? "Subpost" : "Parent post"}
       />
       <div class="flex min-w-0 flex-col gap-0.5">

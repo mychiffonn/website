@@ -3,15 +3,17 @@ import type { z } from "astro/zod"
 import type {
   FooterConfigSchema,
   ProfileConfigSchema,
+  PublicationConfigSchema,
   SiteConfigSchema,
   ToolSchema
-} from "@/lib/schemas"
-import type { ProfileLinkConfig } from "@/components/profile/types"
+} from "@/schemas"
+
+import type { ProfileLinkConfig } from "@/components/profile/helper"
 
 // Infer TypeScript types from Zod schemas
 export type SiteConfig = z.infer<typeof SiteConfigSchema>
 
-export type SocialLink = {
+export type LinkConfig = {
   href: string
   label: string
 }
@@ -22,11 +24,4 @@ export type FooterConfig = z.infer<typeof FooterConfigSchema>
 
 export type Tool = z.infer<typeof ToolSchema>
 
-export type IntegrationConfig = {
-  pagefind: boolean
-  mediumZoom: {
-    enable: boolean
-    selector: string
-    options: Record<string, any>
-  }
-}
+export type PublicationConfig = z.infer<typeof PublicationConfigSchema>

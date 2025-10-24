@@ -26,7 +26,7 @@ const isSubpost = !!parentPost
     )}
     aria-disabled={!nextPost}
   >
-    <Icon name="arrow-left" class="mr-2 size-4 transition-transform group-hover:-translate-x-1" />
+    <Icon name="arrow-left" class="mr-2 transition-transform group-hover:-translate-x-1" />
     <div class="flex flex-col items-start overflow-hidden text-wrap">
       <span class="text-muted-foreground text-left text-xs">
         {isSubpost ? "Previous Subpost" : "Previous Post"}
@@ -47,10 +47,7 @@ const isSubpost = !!parentPost
           !parentPost && "pointer-events-none cursor-not-allowed opacity-50"
         )}
       >
-        <Icon
-          name="arrow-left-up"
-          class="mr-1 size-4 transition-transform group-hover:-translate-1"
-        />
+        <Icon name="arrow-left-up" class="mr-1 transition-transform group-hover:-translate-1" />
         <div class="flex flex-col items-center overflow-hidden text-wrap">
           <span class="text-muted-foreground text-center text-xs">Parent Post</span>
           <span class="line-clamp-2 w-full text-center text-sm text-balance text-ellipsis">
@@ -78,6 +75,6 @@ const isSubpost = !!parentPost
         {prevPost?.data.title || (isSubpost ? "No newer subpost" : "You're at the newest post!")}
       </span>
     </div>
-    <Icon name="arrow-right" class="ml-1 size-4 transition-transform group-hover:translate-x-1" />
+    <Icon name="arrow-right" class="ml-1 transition-transform group-hover:translate-x-1" />
   </Button>
 </nav>

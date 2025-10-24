@@ -34,12 +34,12 @@ const combinedData = (() => {
   if (!combinedWordCount || combinedWordCount <= 0 || combinedWordCount <= wordCount) {
     return null
   }
-  
+
   const combinedMinutes = calculateMinutes(combinedWordCount)
   if (combinedMinutes <= 0) {
     return null
   }
-  
+
   return {
     duration: `PT${combinedMinutes}M`,
     text: `${combinedMinutes} min total`

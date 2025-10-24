@@ -1,13 +1,13 @@
 [mychiffon]
-id = "mychiffon"
-name = "My (Chiffon) Nguyen"
+id       = "mychiffon"
+name     = "My (Chiffon) Nguyen"
 pronouns = "she/her/hers"
-avatar = "https://gravatar.com/avatar/47b0b83e2fd2cf8838cce30a44e11b7d331cf73a77f7c413f4c4bee986d848c7?size=512&d=initials"
-bio = "Researcher, Developer, Teacher, and Life-long Learner"
+avatar   = "https://gravatar.com/avatar/47b0b83e2fd2cf8838cce30a44e11b7d331cf73a77f7c413f4c4bee986d848c7?size=512&d=initials"
+bio      = "Researcher, Developer, Teacher, and Life-long Learner"
 
 [mychiffon.links]
-website = "https://mychiffonn.com"
-email = "chiffonng136@gmail.com"
-github = "https://github.com/chiffonng"
+website       = "https://mychiffonn.com"
+email         = "hi@mychiffonn.com"
+github        = "https://github.com/mychiffonn"
 googleScholar = "https://scholar.google.com/citations?user=a25a-rUAAAAJ"
-x = "https://x.com/chiffonng"
+bluesky       = "https://bsky.app/profile/mychiffonn.bsky.social"

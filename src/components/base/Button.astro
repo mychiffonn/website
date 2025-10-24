@@ -18,52 +18,62 @@ const buttonVariants = cva(
 
     // Touch & interaction
     "touch-manipulation transition-all cursor-pointer select-none",
+    "text-decoration-none",
 
     // Focus & accessibility
     "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-
     "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
-
     "aria-invalid:ring-destructive/20 aria-invalid:border-destructive",
-    "dark:aria-invalid:ring-destructive/40",
-
-    // Icon handling
-    "[&_svg:not([class*='size-'])]:size-4",
-    "[&_svg]:shrink-0 shrink-0"
-    // Base button styling"
+    "dark:aria-invalid:ring-destructive/40"
   ],
   {
     variants: {
       variant: {
         default: [
-          "bg-primary text-primary-foreground",
-          "hover:text-foreground hover:bg-background hover:border-2",
-          "active:scale-95"
+          "bg-border text-foreground border border-transparent rounded-md",
+          "hover:bg-primary hover:text-primary-foreground hover:border-primary",
+          "focus-visible:ring-2 focus-visible:ring-primary/20"
+        ],
+        primary: [
+          "bg-primary text-primary-foreground border border-transparent rounded-md",
+          "hover:bg-background hover:text-foreground hover:border-primary",
+          "focus-visible:ring-2 focus-visible:ring-primary/20"
+        ],
+        accent: [
+          "bg-accent text-accent-foreground border border-transparent rounded-md",
+          "hover:bg-background hover:text-foreground hover:border-accent",
+          "focus-visible:ring-2 focus-visible:ring-accent/20"
         ],
         destructive: [
-          "bg-destructive text-white",
-          "hover:bg-destructive/90",
-          "focus-visible:ring-destructive/20",
-          "dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-          "active:scale-95"
+          "bg-destructive text-accent-foreground border border-transparent rounded-md",
+          "hover:bg-background hover:text-foreground hover:border-destructive",
+          "focus-visible:ring-2 focus-visible:ring-destructive/20"
         ],
         outline: [
-          "border bg-background",
-          "hover:bg-accent hover:text-accent-foreground",
-          "dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
-          "active:scale-95"
+          "bg-transparent text-foreground border border-border rounded-lg",
+          "hover:bg-accent hover:text-accent-foreground hover:border-accent",
+          "focus-visible:ring-2 focus-visible:ring-primary/20"
         ],
-        secondary: [
-          "bg-secondary text-secondary-foreground",
-          "hover:bg-secondary/80",
-          "active:scale-95"
+        "primary-outline": [
+          "bg-transparent text-foreground border border-border rounded-lg",
+          "hover:bg-primary hover:text-primary-foreground hover:border-primary",
+          "focus-visible:ring-2 focus-visible:ring-primary/20"
         ],
-        ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent/80",
-        link: "text-primary underline-offset-4 hover:underline active:text-primary/80"
+        "accent-outline": [
+          "bg-transparent text-foreground border border-border rounded-lg",
+          "hover:bg-accent hover:text-accent-foreground hover:border-accent",
+          "focus-visible:ring-2 focus-visible:ring-accent/20"
+        ],
+        "destructive-outline": [
+          "bg-transparent text-foreground border border-border rounded-lg",
+          "hover:bg-destructive hover:text-accent-foreground hover:border-destructive",
+          "focus-visible:ring-2 focus-visible:ring-destructive/20"
+        ],
+        ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent/80"
       },
       size: {
-        default: "px-5 py-3",
-        square: "aspect-square p-3 gap-0"
+        default: "px-3 py-2 min-h-[36px]",
+        square: "aspect-square p-2 gap-0 min-h-[36px]"
       }
     },
     defaultVariants: {
@@ -95,7 +105,6 @@ const { variant = "default", size = "default", class: className, href, ...rest }
   ) : (
     <button
       type="button"
-      role="button"
       data-slot="button"
       class={cn(buttonVariants({ variant, size }), className)}
       {...rest}

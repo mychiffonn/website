@@ -1,5 +1,6 @@
-import type { APIRoute } from 'astro'
-import { SITE, PROFILE } from '@/config'
+import type { APIRoute } from "astro"
+
+import { PROFILE, SITE } from "@site-config"
 
 const llmsTxt = `
 # LLMs.txt
@@ -12,7 +13,7 @@ This file contains information about this website for AI language models.
 - Owner: ${PROFILE.name} - ${PROFILE.tagline}
 - Content: Academic research, blog posts, projects, and tools
 - Language: English
-- Last Updated: ${new Date().toISOString().split('T')[0]}
+- Last Updated: ${new Date().toISOString().split("T")[0]}
 
 ## Content Overview
 
@@ -32,7 +33,7 @@ This website contains:
 
 ## Sitemap
 
-For a complete list of pages, see: ${new URL('sitemap-index.xml', SITE.href).href}
+For a complete list of pages, see: ${new URL("sitemap-index.xml", SITE.href).href}
 
 ## Contact
 
@@ -42,6 +43,6 @@ For questions about content usage or permissions, please refer to the website's 
 export const GET: APIRoute = () =>
   new Response(llmsTxt, {
     headers: {
-      'Content-Type': 'text/plain; charset=utf-8'
+      "Content-Type": "text/plain; charset=utf-8"
     }
   })

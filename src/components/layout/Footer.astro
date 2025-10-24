@@ -1,7 +1,7 @@
 ---
-import { FOOTER, PROFILE } from "@/config"
+import { FOOTER, PROFILE, SITE } from "@site-config"
 import Link from "@/components/base/Link.astro"
-import { ProfileLinks } from "@/components/profile"
+import ProfileLinks from "@/components/profile/ProfileLinks.astro"
 
 // Create array of available source links
 const sourceLinks = [
@@ -11,54 +11,69 @@ const sourceLinks = [
 ].filter(Boolean) as { href: string; label: string }[]
 ---
 
-<footer class="border-t py-6">
-  <div class="mx-auto max-w-3xl px-4">
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      {/** Left: Copyright & Credits */}
-      <div class="flex flex-col gap-y-2">
-        <span class="text-muted-foreground text-sm">
-          &copy; <span id="current-year"></span>
-          {PROFILE.name}
-        </span>
-        {
-          FOOTER.credits && (
-            <div class="text-muted-foreground text-xs">
-              Built with{" "}
-              <Link href="https://astro.build/" class="text-foreground hover:text-accent" external>
-                Astro
-              </Link>{" "}
-              &{" "}
-              <Link href="https://ui.shadcn.com" class="text-foreground hover:text-accent" external>
-                shadcn/ui
-              </Link>
-            </div>
-          )
-        }
-      </div>
+<footer class="border-t py-4">
+  <div class="text-muted-foreground flex flex-col gap-2 text-sm">
+    <ProfileLinks
+      links={PROFILE.links}
+      includeLabel={false}
+      includeRss={true}
+      includeEmail={true}
+      class="my-2"
+    />
 
-      {/** Right: Social Icons + Source Links */}
-      <div class="flex flex-col items-start gap-y-3 sm:items-end">
-        <ProfileLinks links={PROFILE.links} includeRss={true} includeLabel={false} />
-        {
-          sourceLinks.length > 0 && (
-            <div class="flex flex-wrap gap-x-2 text-xs">
-              {sourceLinks.map((link, index) => [
-                <Link href={link.href} class="text-muted-foreground" external>
-                  {link.label}
-                </Link>,
-                index < sourceLinks.length - 1 && <span class="text-muted-foreground/60">/</span>
-              ])}
-            </div>
-          )
-        }
-      </div>
-    </div>
-  </div>
+    <p>
+      &copy; <span id="current-year"></span>
+      {PROFILE.name}.
+      {
+        SITE.license ? (
+          <>
+            {`Unless otherwise stated, all content is licensed under `}
+            <Link class="text-foreground" href={SITE.license.href} external>
+              {SITE.license.label}
+            </Link>
+            {`. Other rights reserved.`}
+          </>
+        ) : (
+          ` All rights reserved.`
+        )
+      }
+    </p>
 
-  <script>
-    const yearElement = document.getElementById("current-year")
-    if (yearElement) {
-      yearElement.textContent = new Date().getFullYear().toString()
+    {/** Source Links */}
+    {
+      sourceLinks.length > 0 && (
+        <p class="text-xs">
+          {sourceLinks.map((link, index) => [
+            <Link href={link.href} class="text-muted-foreground" external>
+              {link.label}
+            </Link>,
+            index < sourceLinks.length - 1 && " / "
+          ])}
+        </p>
+      )
     }
-  </script>
+
+    {/** Credits */}
+    {
+      FOOTER.credits && (
+        <p class="text-xs">
+          Built with{" "}
+          <Link href="https://astro.build/" class="text-foreground" external>
+            Astro.js
+          </Link>{" "}
+          &{" "}
+          <Link href="https://ui.shadcn.com/" class="text-foreground" external>
+            shadcn/ui
+          </Link>
+        </p>
+      )
+    }
+  </div>
 </footer>
+
+<script>
+  const yearElement = document.getElementById("current-year")
+  if (yearElement) {
+    yearElement.textContent = new Date().getFullYear().toString()
+  }
+</script>

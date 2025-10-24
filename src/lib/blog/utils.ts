@@ -9,27 +9,57 @@
  * @version 2.0.0
  */
 
-import type { Post } from './types'
-import type { PostUtils as PostUtilsInterface } from './types'
+import { SITE } from "@site-config"
+
+import type { Post, PostUtils as PostUtilsInterface } from "./types"
 
 /**
- * Calculates word count from HTML content by stripping tags and counting words.
+ * Calculates word count from HTML content, excluding code blocks and math expressions.
+ * Uses modern Intl.Segmenter for accurate Unicode support with fallback for older environments.
  *
  * @param html - HTML content string (can be null or undefined)
  * @returns Word count as integer, 0 for empty/null content
  *
  * @example
  * ```typescript
- * const count = calculateWordCountFromHtml('<p>Hello <strong>world</strong></p>')
- * console.log(count) // 2
+ * const count = calculateWordCountFromHtml('<p>Hello <strong>world</strong> <code>code</code></p>')
+ * console.log(count) // 2 (excludes code)
+ *
+ * const multiScript = calculateWordCountFromHtml('<p>Hello 你好 мир שלום</p>')
+ * console.log(multiScript) // Works with all Unicode scripts
  * ```
  */
 export function calculateWordCountFromHtml(html: string | null | undefined): number {
   if (!html) return 0
 
-  // Strip HTML tags and count words
-  const textOnly = html.replace(/<[^>]+>/g, '')
-  return textOnly.split(/\s+/).filter(Boolean).length
+  // Remove code blocks and math expressions first
+  let content = html
+    .replace(/<pre[^>]*>.*?<\/pre>/gs, "") // code blocks
+    .replace(/<code[^>]*>.*?<\/code>/g, "") // inline code
+    .replace(/\$\$.*?\$\$/g, "") // display math
+    .replace(/\$.*?\$/g, "") // inline math
+    .replace(/<[^>]+>/g, "") // HTML tags
+
+  // Try modern Intl.Segmenter first (supports all Unicode scripts)
+  if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
+    try {
+      const segmenter = new Intl.Segmenter(SITE.locale.lang, { granularity: "word" })
+      const segments = Array.from(segmenter.segment(content))
+      return segments.filter((segment) => segment.isWordLike).length
+    } catch {
+      // Fall through to fallback if Segmenter fails
+    }
+  }
+
+  // Fallback: Handle most common scripts manually
+  const latinWords = content.match(/[a-zA-Z]+/g)?.length || 0
+  const cjkChars =
+    content.match(/[\u4e00-\u9fff\u3400-\u4dbf\u3040-\u309f\u30a0-\u30ff]/g)?.length || 0
+  const arabicWords = content.match(/[\u0600-\u06ff]+/g)?.length || 0
+  const cyrillicWords = content.match(/[\u0400-\u04ff]+/g)?.length || 0
+  const hebrewWords = content.match(/[\u0590-\u05ff]+/g)?.length || 0
+
+  return latinWords + cjkChars + arabicWords + cyrillicWords + hebrewWords
 }
 
 /**
@@ -74,7 +104,7 @@ export class PostUtils implements PostUtilsInterface {
    * ```
    */
   isSubpost(postId: string): boolean {
-    return postId.includes('/')
+    return postId.includes("/")
   }
 
   /**
@@ -93,7 +123,7 @@ export class PostUtils implements PostUtilsInterface {
    * ```
    */
   getParentId(subpostId: string): string {
-    return subpostId.split('/')[0]
+    return subpostId.split("/")[0]
   }
 
   /**
@@ -113,9 +143,7 @@ export class PostUtils implements PostUtilsInterface {
    * ```
    */
   sortByDateDesc<T extends { data: { createdAt: Date } }>(items: T[]): T[] {
-    return [...items].sort((a, b) =>
-      b.data.createdAt.valueOf() - a.data.createdAt.valueOf()
-    )
+    return [...items].sort((a, b) => b.data.createdAt.valueOf() - a.data.createdAt.valueOf())
   }
 
   /**

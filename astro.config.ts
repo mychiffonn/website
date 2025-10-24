@@ -24,6 +24,10 @@ import tailwindcss from "@tailwindcss/vite"
 export default defineConfig({
   site: "https://mychiffonn.com",
   trailingSlash: "never",
+  image: {
+    responsiveStyles: true,
+    layout: "constrained"
+  },
   integrations: [
     expressiveCode({
       themes: ["catppuccin-macchiato", "catppuccin-latte"],
@@ -34,9 +38,9 @@ export default defineConfig({
         collapseStyle: "collapsible-auto",
         overridesByLang: {
           "ansi,bat,bash,batch,cmd,console,powershell,ps,ps1,psd1,psm1,sh,shell,shellscript,shellsession,text,zsh":
-          {
-            showLineNumbers: false
-          }
+            {
+              showLineNumbers: false
+            }
         }
       },
       styleOverrides: {
@@ -53,7 +57,7 @@ export default defineConfig({
           editorTabBarBackground: "transparent",
           editorTabBarBorderBottomColor: "transparent",
           frameBoxShadowCssValue: "none",
-          terminalBackground: "color-mix(in oklab, var(--secondary) 25%, transparent)",
+          terminalBackground: "color-mix(in oklab, var(--muted) 25%, transparent)",
           terminalTitlebarBackground: "transparent",
           terminalTitlebarBorderBottomColor: "transparent",
           terminalTitlebarForeground: "var(--muted-foreground)"
@@ -113,15 +117,16 @@ export default defineConfig({
       ]
     ],
     remarkPlugins: [
-      remarkNormalizeHeadings,
-      remarkSectionize,
-      remarkCallout,
       remarkMath,
-      remarkEmoji
+      remarkEmoji,
+      remarkCallout,
+      remarkNormalizeHeadings,
+      remarkSectionize
     ]
   },
   experimental: {
     contentIntellisense: true,
-    headingIdCompat: true
+    headingIdCompat: true,
+    preserveScriptOrder: true
   }
 })

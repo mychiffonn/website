@@ -1,33 +1,28 @@
-import { getCollection, type CollectionEntry } from 'astro:content'
+import { getCollection, type CollectionEntry } from "astro:content"
 
-export type Project = CollectionEntry<'projects'>
+import { PROJECT_LINK_TYPES, type ProjectLinkType } from "@icon-config"
+
+export type Project = CollectionEntry<"projects">
 
 // ========================================
 // Project Link Utilities
 // ========================================
 
-const projectLinkDefinitions = {
-  repo: { label: 'Repository', iconName: 'mingcute:github-line' },
-  doc: { label: 'Documentation', iconName: 'mingcute:document-line' },
-  url: { label: 'Website', iconName: 'mingcute:external-link-line' },
-  release: { label: 'Release', iconName: 'mingcute:download-line' }
-} as const
-
 export const getProjectLinks = (repo?: string, doc?: string, url?: string, release?: string) => {
   const linkData = [
-    { type: 'repo' as const, href: repo },
-    { type: 'doc' as const, href: doc },
-    { type: 'url' as const, href: url },
-    { type: 'release' as const, href: release }
+    { type: "repo" as const, href: repo },
+    { type: "doc" as const, href: doc },
+    { type: "url" as const, href: url },
+    { type: "release" as const, href: release }
   ]
 
   return linkData
-    .filter((link): link is { type: keyof typeof projectLinkDefinitions; href: string } => !!link.href)
+    .filter((link): link is { type: ProjectLinkType; href: string } => !!link.href)
     .map((link) => ({
       type: link.type,
       href: link.href,
-      icon: projectLinkDefinitions[link.type].iconName,
-      label: projectLinkDefinitions[link.type].label
+      icon: PROJECT_LINK_TYPES[link.type].iconName,
+      label: PROJECT_LINK_TYPES[link.type].label
     }))
 }
 
@@ -35,7 +30,7 @@ export const hasProjectContent = (project: { body?: string }): boolean => {
   return !!(project.body && project.body.trim().length > 0)
 }
 
-export const getProjectDescription = (project: CollectionEntry<'projects'>) => {
+export const getProjectDescription = (project: CollectionEntry<"projects">) => {
   // First try to use description from frontmatter
   if (project.data.description) {
     return {
@@ -48,7 +43,7 @@ export const getProjectDescription = (project: CollectionEntry<'projects'>) => {
   if (project.body && project.body.trim().length > 0) {
     const bodyText = project.body.trim()
     const needsTruncation = bodyText.length > 150
-    const text = needsTruncation ? bodyText.substring(0, 150) + '...' : bodyText
+    const text = needsTruncation ? bodyText.substring(0, 150) + "..." : bodyText
 
     return {
       text,
@@ -61,16 +56,16 @@ export const getProjectDescription = (project: CollectionEntry<'projects'>) => {
 
 export const getContextVariant = (context?: string) => {
   switch (context) {
-    case 'school':
-      return 'default'
-    case 'work':
-      return 'outline'
-    case 'personal':
-      return 'secondary'
-    case 'collab':
-      return 'destructive'
+    case "school":
+      return "default"
+    case "work":
+      return "outline"
+    case "personal":
+      return "muted"
+    case "community":
+      return "destructive"
     default:
-      return 'secondary'
+      return "muted"
   }
 }
 
@@ -104,8 +99,8 @@ export function sortProjectsByPriority(projects: Project[]): Project[] {
  * @returns Object with featuredProjects and otherProjects arrays
  */
 export function categorizeProjects(projects: Project[]) {
-  const featuredProjects = projects.filter(project => project.data.isHighlighted)
-  const otherProjects = projects.filter(project => !project.data.isHighlighted)
+  const featuredProjects = projects.filter((project) => project.data.isHighlighted)
+  const otherProjects = projects.filter((project) => !project.data.isHighlighted)
 
   return { featuredProjects, otherProjects }
 }
@@ -127,8 +122,8 @@ export async function getProjects(filter?: (project: Project) => boolean): Promi
 
   // Fetch from collection with optional filtering
   const projects = filter
-    ? await getCollection('projects', filter)
-    : await getCollection('projects')
+    ? await getCollection("projects", filter)
+    : await getCollection("projects")
 
   const sortedProjects = sortProjectsByPriority(projects)
 
@@ -152,7 +147,9 @@ export async function getProjectsForIndex() {
  * Gets projects optimized for static path generation.
  * Only returns projects that have content.
  */
-export async function getProjectsWithContent(hasContentFn: (project: { body?: string }) => boolean) {
+export async function getProjectsWithContent(
+  hasContentFn: (project: { body?: string }) => boolean
+) {
   // Filter at collection level for better performance
-  return await getProjects(project => hasContentFn(project))
+  return await getProjects((project) => hasContentFn(project))
 }

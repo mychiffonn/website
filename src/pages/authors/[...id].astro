@@ -23,7 +23,7 @@ const [author, authorPosts] = await Promise.all([
 ])
 
 const authorPostsMetadata = await Promise.all(
-  authorPosts.map(post => postManager.getMetadata(post.id))
+  authorPosts.map((post) => postManager.getMetadata(post.id))
 )
 
 if (!author) {
@@ -32,7 +32,6 @@ if (!author) {
 ---
 
 <Layout
-  class="max-w-3xl"
   title={`${author.name} (Author)`}
   description={author.bio || `Profile of ${author.name}.`}
   noindex
@@ -40,8 +39,8 @@ if (!author) {
 >
   <Breadcrumbs
     items={[
-      { href: "/authors", label: "Authors", icon: "mingcute:group-line" },
-      { label: author.name, icon: "mingcute:user-1-line" }
+      { href: "/authors", label: "Authors", icon: "group" },
+      { label: author.name, icon: "person" }
     ]}
   />
 

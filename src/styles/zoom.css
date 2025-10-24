@@ -1,0 +1,30 @@
+/* Medium Zoom theme-aware overlay colors */
+:root {
+  --zoom-overlay-bg: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] {
+  --zoom-overlay-bg: rgba(0, 0, 0, 0.8);
+}
+
+/* Zoomable images cursor */
+main img:not(a img):not(.card img):not(.clickable-card img):not(.blog-card img) {
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+  max-width: 100%;
+}
+
+/* Ensure medium-zoom images respect max-width */
+.medium-zoom-image {
+  max-width: 100%;
+}
+
+/* Medium Zoom overlay styling */
+.medium-zoom-overlay {
+  z-index: 999;
+  background: var(--zoom-overlay-bg) !important;
+}
+
+.medium-zoom-image--opened {
+  z-index: 1000;
+}

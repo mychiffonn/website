@@ -14,12 +14,12 @@ This website serves as a digital portfolio and blog where I share my work, insig
 - 💻 Showcase projects, news, blog posts, and publications from .bib file
 - ✏️ Github-flavored markdown with KaTeX-rendered math, code highlighting (block and inline), and embeds
 - 📝 Blog supports post-subpost system, with tags and multiple authors
+- 🌐 i18n: Support non-English scripts, and (upcoming) i18n page routing and language toggle
 - 👩‍💻 Developer experience: type-safe with zod-first schema and TypeScript
-- 🔎 Support for non-English scripts, SEO friendly, ARIA accessibility compliant
+- 🔎 SEO friendly and ARIA accessibility compliant
 - 🔧 Easily configure [theme](src/styles/global.css), [page & personal information](src/config.ts), [content](src/content)
 - [IN PROGRESS] Obsidian-flavored markdown with wikilinks and callouts (no backlinks yet).
-- [UPCOMING] i18n page routing and language toggle
-- [UPCOMING] Show webmentions of a post across the web in lieu of comment section
+- [UPCOMING] Show mentions of a post across the web in lieu of comment section
 - [UPCOMING] Search with pagefind/typesense
 - [UPCOMING] Render /media library from .json and from scraped Storygraph
 
@@ -29,13 +29,16 @@ This website is built on enscribe's [astro-erudite](https://github.com/jktrn/ast
 
 - [Astro](https://astro.build/) - Modern content-driven web framework
 - [TailwindCSS 4](https://tailwindcss.com/) - Utility-first CSS framework
-- Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown)
+- Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown) <<<<<<< HEAD
 - shadcn/ui - Customizable React components, with Radix primitives and TailwindCSS for styling
-- [Catpuccin color palettes](https://catppuccin.com/palette/)
+- # [Catpuccin color palettes](https://catppuccin.com/palette/)
+  > > > > > > > main
 
 Other inspirations:
 
-- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's [pure](https://astro-pure.js.org/) theme
+- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's [pure](https://astro-pure.js.org/) theme <<<<<<< HEAD =======
+- [Color palettes](src/styles/global.css) from [catpuccin](https://catppuccin.com/palette/)
+  > > > > > > > main
 - Publications from [al-folio](https://github.com/alshedivat/al-folio)
 
 ## Getting Started

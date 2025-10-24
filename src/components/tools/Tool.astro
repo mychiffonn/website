@@ -18,49 +18,28 @@ const getSafeIcon = (icon: string): string => {
   return icon && icon.trim() !== "" ? icon : "mingcute:box-line"
 }
 
-const generateId = (name: string): string => {
-  return (
-    "tool_" +
-    name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "") // Remove special characters except spaces and hyphens
-      .replace(/\s+/g, "-") // Replace spaces with hyphens
-      .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
-      .replace(/^-|-$/g, "")
-  ) // Remove leading/trailing hyphens
-}
-
 const safeIcon = getSafeIcon(icon)
-const label = generateId(name)
 ---
 
 <a
-  class="group relative text-sm"
+  class="group hover:border-border hover:bg-muted flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors"
   href={href}
-  id={name}
   target="_blank"
   rel="noopener noreferrer nofollow"
+  aria-label={`${name}: ${description}`}
 >
-  <div
-    class="hover:border-border hover:bg-muted flex items-center gap-2 rounded-lg px-3 py-2 transition-colors"
-  >
-    <Icon name={safeIcon} class="size-8 shrink-0" title={name} aria-labelledby={label} />
-    <div class="flex flex-grow flex-col">
-      <div class="flex flex-wrap items-center gap-2">
-        <div id={label} class="text-foreground font-medium">{name}</div>
-        {
-          tags && tags.length > 0 && (
-            <div class="flex flex-wrap gap-1">
-              {tags.map((tag: ToolTag) => (
-                <Badge variant={getTagVariant(tag)} class="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )
-        }
-      </div>
-      <div class="text-muted-foreground">{description}</div>
+  <Icon name={safeIcon} size="2rem" aria-hidden="true" />
+  <div class="min-w-0 flex-1">
+    <div class="mb-1 flex flex-wrap items-center gap-2">
+      <span class="text-foreground font-medium">{name}</span>
+      {
+        tags?.map((tag: ToolTag) => (
+          <Badge variant={getTagVariant(tag)} class="text-xs">
+            {tag}
+          </Badge>
+        ))
+      }
     </div>
+    <p class="text-muted-foreground text-sm">{description}</p>
   </div>
 </a>

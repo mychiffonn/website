@@ -3,7 +3,7 @@ title: "Bayesian Hierarchical Modeling for GP Visit Count Data"
 description: "Analyze GP visit patterns using Zero-Inflated Poisson models with complete and partial pooling, with Bayesian inference and data imputation."
 context: school
 toDate: 2023-12
-isHighlighted: true
+isHighlighted: false
 repo: https://github.com/mychiffonn/jupyter-notebooks/blob/main/CS146-project-2.ipynb
 tags:
   - bayesian modeling
@@ -97,6 +97,28 @@ This analysis yielded several important insights that extend beyond the immediat
 **Partial pooling wins decisively**—the ability to share information across groups while allowing for group-specific effects led to dramatically better predictions. This "borrowing strength" concept proved its value in practice.
 
 **Missing data can be informative**—the systematic patterns in missingness suggested that simple imputation methods would fail. The hierarchical approach's success demonstrated the importance of modeling the missing data mechanism.
+
+## Key Technical Implementation
+
+The hierarchical model elegantly translates mathematical concepts to code:
+
+```python
+with pm.Model(coords=coords) as hierarchical_model:
+    # Hyperpriors and group-specific effects
+    sigma_region = pm.Exponential("sigma_region", lam=1)
+    beta_region = pm.Normal("beta_region", dims="region",
+                           mu=mu_region, sigma=sigma_region)
+
+    # Linear predictor combining age and region effects
+    lambda_ = pm.Deterministic("lambda",
+                              pm.math.exp(alpha + beta_region[region_idx] +
+                                        beta_age[age_idx]))
+
+    # ZIP likelihood handling zero-inflation
+    likelihood = pm.ZeroInflatedPoisson("y", psi=psi, mu=lambda_, observed=counts)
+```
+
+The imputation process leverages learned group-specific parameters to reconstruct missing data naturally.
 
 ## Real-World Impact and Skills Developed
 

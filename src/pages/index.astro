@@ -1,11 +1,22 @@
 ---
-import { SITE } from "@/config"
+import { PROFILE, SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
+import { loadSelectedPublications } from "@/lib/publications/loader"
+import { getLatestUpdates } from "@/lib/updates"
 import Layout from "@/layouts/Layout.astro"
 import Button from "@/components/base/Button.astro"
-import Profile from "@/components/base/Profile.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
+import Section from "@/components/layout/Section.astro"
+import Profile from "@/components/profile/Profile.astro"
+import PubCard from "@/components/publications/PubCard.astro"
+import UpdateTimeline from "@/components/updates/UpdateTimeline.astro"
 
+import { Content as MiscContent } from "@/content/misc.md"
+
+const renderedUpdates = await getLatestUpdates(3)
+const selectedPublications = await loadSelectedPublications()
+
+// Blog
 const postManager = PostManager.getInstance()
 const recentPosts = await postManager.getMainPosts(SITE.featuredPostCount)
 const recentPostsMetadata = await Promise.all(
@@ -13,23 +24,63 @@ const recentPostsMetadata = await Promise.all(
 )
 ---
 
-<Layout class="max-w-3xl" title="Home">
-  <Profile />
-  <section class="mt-8 flex flex-col gap-y-4">
-    <h2 class="text-2xl font-medium">Latest posts</h2>
-    <ul class="flex flex-col gap-y-4">
-      {
-        recentPostsMetadata.map((metadata) => (
-          <li>
-            <PreviewCard metadata={metadata} />
-          </li>
-        ))
-      }
-    </ul>
-    <div class="flex justify-center">
-      <Button href="/blog" variant="ghost" class="group">
-        See all posts <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
-      </Button>
-    </div>
-  </section>
+<Layout title="Home">
+  <Profile profile={PROFILE} />
+
+  {
+    renderedUpdates.length > 0 && (
+      <Section title="Latest updates" moreLink="/now">
+        <UpdateTimeline
+          renderedUpdates={renderedUpdates}
+          itemClass="line-clamp-4 md:line-clamp-3"
+          variant="inline"
+        />
+      </Section>
+    )
+  }
+
+  {
+    selectedPublications.length > 0 && (
+      <Section title="Selected publications" moreLink="/publications">
+        <div class="space-y-4">
+          {selectedPublications.slice(0, 3).map((pub) => (
+            <PubCard pub={pub} />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <Section title="Latest posts">
+    {
+      recentPostsMetadata.length > 0 ? (
+        <>
+          <ul class="flex flex-col gap-y-2">
+            {recentPostsMetadata.map((metadata) => (
+              <li>
+                <PreviewCard metadata={metadata} />
+              </li>
+            ))}
+          </ul>
+          <div class="mt-4 flex justify-center gap-2">
+            <Button href="/blog" variant="default" class="group">
+              See all posts{" "}
+              <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+            </Button>
+            <Button href="/tags" variant="ghost" class="group">
+              Browse by tags{" "}
+              <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+            </Button>
+          </div>
+        </>
+      ) : (
+        <p class="text-muted-foreground py-8 text-center">
+          No posts yet. Check back later for updates!
+        </p>
+      )
+    }
+  </Section>
+  <Section title="Miscellaneous">
+    <div class="prose"><MiscContent /></div>
+  </Section>
 </Layout>
