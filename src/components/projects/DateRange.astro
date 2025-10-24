@@ -1,0 +1,40 @@
+---
+import { createDateRange, formatDateTimeISO } from "@/lib/date-utils"
+import Icon from "@/components/base/Icon.astro"
+
+interface Props {
+  /** Start date of the project */
+  fromDate?: Date
+  /** End date of the project (optional, defaults to "Present") */
+  toDate?: Date
+  /** Additional CSS classes for the container */
+  class?: string
+  /** Show calendar icon */
+  showIcon?: boolean
+}
+
+const { fromDate, toDate, class: className, showIcon = false } = Astro.props
+
+const dateRangeData = createDateRange(fromDate, toDate)
+---
+
+{
+  dateRangeData && (
+    <span class={className}>
+      {showIcon && <Icon name="calendar" class="size-3" />}
+      {dateRangeData.fromDate && (
+        <time datetime={formatDateTimeISO(dateRangeData.fromDate)}>
+          {dateRangeData.fromDateDisplay}
+        </time>
+      )}
+      {dateRangeData.fromDate && dateRangeData.toDate && <span> - </span>}
+      {dateRangeData.toDate ? (
+        <time datetime={formatDateTimeISO(dateRangeData.toDate)}>
+          {dateRangeData.toDateDisplay}
+        </time>
+      ) : (
+        dateRangeData.fromDate && <span>- Present</span>
+      )}
+    </span>
+  )
+}

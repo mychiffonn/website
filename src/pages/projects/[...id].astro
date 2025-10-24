@@ -1,15 +1,17 @@
 ---
 import { render, type CollectionEntry } from "astro:content"
 
-import { createDateRange } from "@/lib/utils"
-import { getProjectsWithContent, getContextVariant, getProjectLinks, hasProjectContent } from "@/lib/projects"
+import {
+  getContextVariant,
+  getProjectLinks,
+  getProjectsWithContent,
+  hasProjectContent
+} from "@/lib/projects"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
-import Link from "@/components/base/Link.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
-
-export const prerender = true
+import DateRange from "@/components/projects/DateRange.astro"
 
 export async function getStaticPaths() {
   // Filter at collection level for better performance
@@ -30,18 +32,12 @@ const { Content } = await render(project)
 const { title, isHighlighted, fromDate, toDate, repo, doc, url, release, context, tags } =
   project.data
 
-const dateRange = createDateRange(fromDate, toDate)
 const links = getProjectLinks(repo, doc, url, release)
 
 const contextVariant = getContextVariant(context)
 ---
 
-<Layout
-  class="max-w-3xl"
-  title={title}
-  description={`Project details for ${title}`}
->
-
+<Layout class="max-w-3xl" title={title} description={`Project details for ${title}`}>
   <Breadcrumbs
     items={[
       { href: "/projects", label: "Projects", icon: "mingcute:folder-line" },
@@ -49,78 +45,66 @@ const contextVariant = getContextVariant(context)
     ]}
   />
 
-  <main>
-    <article>
-      <header class="mb-8">
-        <div class="flex flex-col gap-4">
-          {/* Title and Highlight */}
-          <div class="flex items-start justify-between gap-4">
-            <h1 class="text-3xl leading-tight font-bold sm:text-4xl">{title}</h1>
-            {
-              isHighlighted && (
-                <Badge variant="default" class="shrink-0">
-                  <Icon name="mingcute:star-line" class="mr-1 size-3" />
-                  Featured
-                </Badge>
-              )
-            }
-          </div>
+  <header class="mb-8 flex flex-col gap-4">
+    {/* Title and Highlight */}
+    <div class="flex items-start justify-between gap-4">
+      <h1 class="text-3xl leading-tight font-bold sm:text-4xl">{title}</h1>
+      {
+        isHighlighted && (
+          <Badge variant="default" class="shrink-0">
+            <Icon name="star" class="mr-1 size-3" />
+            Featured
+          </Badge>
+        )
+      }
+    </div>
 
-          {/* Context and Date */}
-          <div class="flex flex-wrap items-center gap-3 text-sm">
-            {
-              context && (
-                <Badge variant={contextVariant}>
-                  {context.charAt(0).toUpperCase() + context.slice(1)}
-                </Badge>
-              )
-            }
-            {
-              dateRange && (
-                <span class="text-muted-foreground flex items-center gap-1">
-                  <Icon name="mingcute:calendar-line" class="size-3" />
-                  {dateRange}
-                </span>
-              )
-            }
-          </div>
+    {/* Context and Date */}
+    <div class="flex flex-wrap items-center gap-3 text-sm">
+      {
+        context && (
+          <Badge variant={contextVariant}>
+            {context.charAt(0).toUpperCase() + context.slice(1)}
+          </Badge>
+        )
+      }
+      <DateRange
+        fromDate={fromDate}
+        toDate={toDate}
+        class="text-muted-foreground flex items-center gap-1"
+        showIcon={true}
+      />
+    </div>
 
-          {/* Tags */}
-          {
-            tags && tags.length > 0 && (
-              <div class="flex flex-wrap gap-2">
-                {tags.map((tag: string) => (
-                  <Badge variant="muted" class="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            )
-          }
-
-          {/* Links */}
-          {
-            links.length > 0 && (
-              <div class="flex flex-wrap gap-2">
-                {links.map(({ href, icon, label }) => (
-                  <Link
-                    href={href}
-                    external
-                    class="border-border hover:bg-primary hover:text-primary-foreground hover:border-primary inline-flex cursor-pointer items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium no-underline transition-all duration-200"
-                  >
-                    <Icon name={icon} class="size-4" />
-                    <span>{label} ↗</span>
-                  </Link>
-                ))}
-              </div>
-            )
-          }
+    {/* Tags */}
+    {
+      tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-2">
+          {tags.map((tag: string) => (
+            <Badge variant="muted" class="text-xs">
+              {tag}
+            </Badge>
+          ))}
         </div>
-      </header>
+      )
+    }
 
-      <div class="prose prose-lg dark:prose-invert max-w-none">
-        <Content />
-      </div>
-    </article>
-  </main>
+    {/* Links */}
+    {
+      links.length > 0 && (
+        <div class="flex flex-wrap gap-2">
+          {links.map(({ href, icon, label }) => (
+            <Button href={href} variant="accent-outline">
+              <Icon name={icon} />
+              <span>{label}</span>
+            </Button>
+          ))}
+        </div>
+      )
+    }
+  </header>
+
+  <article class="prose lg:prose-lg">
+    <Content />
+  </article>
 </Layout>
