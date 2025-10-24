@@ -24,6 +24,10 @@ import tailwindcss from "@tailwindcss/vite"
 export default defineConfig({
   site: "https://mychiffonn.com",
   trailingSlash: "never",
+  image: {
+    responsiveStyles: true,
+    layout: "constrained"
+  },
   integrations: [
     expressiveCode({
       themes: ["catppuccin-macchiato", "catppuccin-latte"],
@@ -34,9 +38,9 @@ export default defineConfig({
         collapseStyle: "collapsible-auto",
         overridesByLang: {
           "ansi,bat,bash,batch,cmd,console,powershell,ps,ps1,psd1,psm1,sh,shell,shellscript,shellsession,text,zsh":
-          {
-            showLineNumbers: false
-          }
+            {
+              showLineNumbers: false
+            }
         }
       },
       styleOverrides: {
@@ -112,10 +116,17 @@ export default defineConfig({
         }
       ]
     ],
-    remarkPlugins: [remarkMath, remarkEmoji, remarkCallout, remarkNormalizeHeadings, remarkSectionize]
+    remarkPlugins: [
+      remarkMath,
+      remarkEmoji,
+      remarkCallout,
+      remarkNormalizeHeadings,
+      remarkSectionize
+    ]
   },
   experimental: {
     contentIntellisense: true,
-    headingIdCompat: true
+    headingIdCompat: true,
+    preserveScriptOrder: true
   }
 })
