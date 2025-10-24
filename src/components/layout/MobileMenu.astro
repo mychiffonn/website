@@ -18,7 +18,7 @@ import Icon from "@/components/base/Icon.astro"
     <span class="sr-only">Toggle menu</span>
   </Button>
 
-  <div class="bg-background min-w-[200px]">
+  <div class="bg-background">
     {
       NAV_LINKS.map((item) => (
         <a href={item.href} data-dropdown-item data-nav-link={item.href}>
@@ -38,14 +38,12 @@ import Icon from "@/components/base/Icon.astro"
     font-weight: 500; /* font-medium */
     transition:
       background-color 0.2s ease,
-      border-color 0.2s ease,
       color 0.2s ease;
   }
 
   /* Hover: background & border */
   a[data-dropdown-item]:hover {
     background-color: color-mix(in oklch, var(--accent) 30%, transparent);
-    border-color: color-mix(in oklch, var(--accent) 100%, transparent);
   }
 
   /* Active (aria-current="page") */

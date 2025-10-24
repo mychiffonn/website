@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 
 const dropdownContentVariants = cva(
   [
-    "bg-popover text-popover-foreground z-50 min-w-[8rem] overflow-hidden rounded-md border p-1 shadow-md",
+    "bg-popover text-popover-foreground z-50 min-w-40 overflow-hidden rounded-md border shadow-md",
     "absolute invisible opacity-0 scale-95 transition-all duration-150 ease-out",
     "[&.show]:visible [&.show]:opacity-100 [&.show]:scale-100",
     "touch-manipulation"
@@ -162,20 +162,21 @@ const {
       }
       // For 'start', left remains 0 (align to left edge of trigger)
 
-      // Prevent overflow on the right side
-      const triggerLeftInViewport = triggerRect.left
-      const proposedRightEdge = triggerLeftInViewport + left + contentWidth
+      // Calculate absolute positions for overflow prevention
+      const triggerLeft = triggerRect.left
+      const proposedLeft = triggerLeft + left
+      const proposedRight = proposedLeft + contentWidth
 
-      if (proposedRightEdge > vw - 10) {
-        // 10px margin from edge
-        // If it would overflow, align to the right edge of viewport
-        left = vw - triggerLeftInViewport - contentWidth - 10
+      // Prevent overflow on the right side
+      if (proposedRight > vw - 10) {
+        // Adjust to fit within viewport with 10px margin
+        left = vw - triggerLeft - contentWidth - 10
       }
 
       // Prevent overflow on the left side
-      if (triggerLeftInViewport + left < 10) {
-        // 10px margin from edge
-        left = 10 - triggerLeftInViewport
+      if (proposedLeft < 10) {
+        // Adjust to maintain 10px margin from left edge
+        left = 10 - triggerLeft
       }
 
       this.content.style.left = `${left}px`
