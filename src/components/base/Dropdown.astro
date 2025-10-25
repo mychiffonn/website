@@ -144,39 +144,42 @@ const {
       if (!this.trigger || !this.content) return
 
       const triggerRect = this.trigger.getBoundingClientRect()
-      const contentRect = this.content.getBoundingClientRect()
       const { innerWidth: vw, innerHeight: vh } = window
       const align = this.content.dataset.align || "start"
       const sideOffset = 4
+      const margin = 10
 
-      // Get actual content width, fallback to 200px
-      const contentWidth = contentRect.width || 200
+      // Force max-width first to constrain the dropdown
+      const maxWidth = vw - 2 * margin
+      this.content.style.maxWidth = `${maxWidth}px`
+      this.content.style.width = "auto"
+
+      // Get dimensions after constraining width
+      const contentRect = this.content.getBoundingClientRect()
+      const contentWidth = contentRect.width
 
       let left = 0
+
+      // For "end" alignment on mobile, position from right edge of viewport
       if (align === "end") {
-        // Align to the right edge of the trigger
+        // Align the right edge of the content with the right edge of the trigger
         left = triggerRect.width - contentWidth
       } else if (align === "center") {
         // Center on the trigger
         left = (triggerRect.width - contentWidth) / 2
       }
-      // For 'start', left remains 0 (align to left edge of trigger)
 
-      // Calculate absolute positions for overflow prevention
+      // Ensure we don't overflow on either side
       const triggerLeft = triggerRect.left
       const proposedLeft = triggerLeft + left
       const proposedRight = proposedLeft + contentWidth
 
-      // Prevent overflow on the right side
-      if (proposedRight > vw - 10) {
-        // Adjust to fit within viewport with 10px margin
-        left = vw - triggerLeft - contentWidth - 10
+      // Clamp to viewport bounds
+      if (proposedRight > vw - margin) {
+        left = vw - triggerLeft - contentWidth - margin
       }
-
-      // Prevent overflow on the left side
-      if (proposedLeft < 10) {
-        // Adjust to maintain 10px margin from left edge
-        left = 10 - triggerLeft
+      if (proposedLeft < margin) {
+        left = margin - triggerLeft
       }
 
       this.content.style.left = `${left}px`

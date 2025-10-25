@@ -158,6 +158,7 @@
     margin-left: auto;
     margin-right: auto;
     overflow-wrap: break-word;
+    overflow-x: hidden;
   }
 
   ::selection {

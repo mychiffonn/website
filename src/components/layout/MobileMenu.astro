@@ -32,10 +32,14 @@ import Icon from "@/components/base/Icon.astro"
   a[data-dropdown-item] {
     display: block;
     width: 100%;
+    box-sizing: border-box;
     border-radius: 0.375rem; /* rounded-md */
     border: 1px solid transparent; /* border-1 border-transparent */
     padding: 0.5rem; /* p-2 */
     font-weight: 500; /* font-medium */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     transition:
       background-color 0.2s ease,
       color 0.2s ease;
