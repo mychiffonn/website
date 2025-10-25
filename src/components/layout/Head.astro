@@ -124,7 +124,7 @@ const structuredData = {
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:url" content={canonicalURL} />
-  <meta property="og:locale" content={SITE.locale.attrs} />
+  <meta property="og:locale" content={SITE.locale.lang} />
   {
     publishedTime && (
       <meta property="article:published_time" content={publishedTime.toISOString()} />
@@ -172,16 +172,12 @@ const structuredData = {
   {/* Preconnect to external CDNs for faster connections */}
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 
-  {/* Preload critical fonts to reduce render blocking */}
-  <link rel="preload" href="/fonts/NotoSansSC.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fonts/ZedPlexMono.woff2" as="font" type="font/woff2" crossorigin />
-
   {/* KaTeX CSS for math rendering - non-blocking load */}
   <link
     rel="preload"
     href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
     as="style"
-    onload="this.onload=null;this.rel='stylesheet'"
+    onload={`this.onload=null;this.rel='stylesheet'`}
   />
   <noscript
     ><link
@@ -195,19 +191,16 @@ const structuredData = {
     rel="preload"
     href="/src/styles/zoom.css"
     as="style"
-    onload="this.onload=null;this.rel='stylesheet'"
+    onload={`this.onload=null;this.rel='stylesheet'`}
   />
   <noscript><link rel="stylesheet" href="/src/styles/zoom.css" /></noscript>
-  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"
-  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script>
 
-  {/* Medium Zoom initialization */}
-  <script is:inline>
+  {/* Site locale configuration for client-side date formatting */}
+  <script is:inline define:vars={{ siteLocale: SITE.locale.lang }}>
     document.addEventListener("DOMContentLoaded", function () {
       if (typeof mediumZoom !== "undefined") {
-        const images = document.querySelectorAll(
-          "main img:not(a img):not(.blog-card img):not(.card img):not(.clickable-card img)"
-        )
+        const images = document.querySelectorAll("main img:not(a img):not(.card img)")
 
         if (images.length) {
           mediumZoom(images, {
@@ -217,8 +210,10 @@ const structuredData = {
         }
       }
     })
+    window.__SITE_LOCALE__ = siteLocale
   </script>
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <slot />
+
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 </head>

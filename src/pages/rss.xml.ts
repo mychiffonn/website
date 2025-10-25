@@ -1,7 +1,8 @@
-import { SITE } from '@site-config'
-import rss from '@astrojs/rss'
-import type { APIContext } from 'astro'
-import { PostManager } from '@/lib/blog'
+import type { APIContext } from "astro"
+import rss from "@astrojs/rss"
+
+import { SITE } from "@site-config"
+import { PostManager } from "@/lib/blog"
 
 export async function GET(context: APIContext) {
   try {
@@ -21,7 +22,9 @@ export async function GET(context: APIContext) {
           pubDate: post.data.createdAt,
           link: `/blog/${post.id}/`,
           categories: post.data.tags,
-          ...(post.data.updatedAt && { customData: `<updated>${post.data.updatedAt.toISOString()}</updated>` })
+          ...(post.data.updatedAt && {
+            customData: `<updated>${post.data.updatedAt.toISOString()}</updated>`
+          })
         }
       })
     )
@@ -30,11 +33,11 @@ export async function GET(context: APIContext) {
       title: SITE.title,
       description: SITE.description,
       site: context.site ?? SITE.href,
-      stylesheet: '/pretty-feed-v3.xsl',
-      items,
+      stylesheet: "/pretty-feed-v3.xsl",
+      items
     })
   } catch (error) {
-    console.error('Error generating RSS feed:', error)
-    return new Response('Error generating RSS feed', { status: 500 })
+    console.error("Error generating RSS feed:", error)
+    return new Response("Error generating RSS feed", { status: 500 })
   }
 }

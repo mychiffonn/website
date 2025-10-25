@@ -2,10 +2,11 @@
 import type { CollectionEntry } from "astro:content"
 
 import { getContextVariant, getProjectDescription, getProjectLinks } from "@/lib/projects"
-import { cn, createDateRange } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
+import DateRange from "@/components/projects/DateRange.astro"
 
 import "@/styles/card.css"
 
@@ -17,7 +18,6 @@ const { project } = Astro.props
 const { title, isHighlighted, fromDate, toDate, repo, doc, url, release, context, tags } =
   project.data
 
-const dateRange = createDateRange(fromDate, toDate)
 const links = getProjectLinks(repo, doc, url, release)
 const contextVariant = getContextVariant(context)
 
@@ -51,7 +51,7 @@ const cardClasses = cn(
         </>
       )
     }
-    <h3 class={cn("card-title", !hasDetailPage && "text-muted-foreground")}>{title}</h3>
+    <h3 class="card-title">{title}</h3>
   </div>
 
   {/* Context and Date */}
@@ -61,7 +61,7 @@ const cardClasses = cn(
         <Badge variant={contextVariant}>{context.charAt(0).toUpperCase() + context.slice(1)}</Badge>
       )
     }
-    {dateRange && <time>{dateRange}</time>}
+    <DateRange fromDate={fromDate} toDate={toDate} class="flex gap-1" />
   </div>
 
   {

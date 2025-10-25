@@ -29,12 +29,16 @@ This website is built on enscribe's [astro-erudite](https://github.com/jktrn/ast
 
 - [Astro](https://astro.build/) - Modern content-driven web framework
 - [TailwindCSS 4](https://tailwindcss.com/) - Utility-first CSS framework
-- Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown)
+- Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown) <<<<<<< HEAD
+- shadcn/ui - Customizable React components, with Radix primitives and TailwindCSS for styling
+- # [Catpuccin color palettes](https://catppuccin.com/palette/)
+  > > > > > > > main
 
 Other inspirations:
 
-- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's [pure](https://astro-pure.js.org/) theme
+- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's [pure](https://astro-pure.js.org/) theme <<<<<<< HEAD =======
 - [Color palettes](src/styles/global.css) from [catpuccin](https://catppuccin.com/palette/)
+  > > > > > > > main
 - Publications from [al-folio](https://github.com/alshedivat/al-folio)
 
 ## Getting Started
@@ -45,6 +49,8 @@ Have Node.js >= 20 (tested with Node 24) and pnpm installed:
 2. Install dependencies: `pnpm install`
 3. Start development server: `pnpm dev`
 4. Visit `http://localhost:4321`
+5. Read docs or search `TODO` across the codebase to complete setup
+6. Search `OPTIONAL` to customize as needed (color themes, icons, etc)
 
 ## License
 

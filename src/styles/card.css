@@ -5,13 +5,22 @@
   border: 1px solid oklch(from var(--border) l c h / 0.5);
   padding: 1.25rem 1.5rem;
   transition: all 300ms;
-  cursor: pointer;
   position: relative;
 }
 
-.card:hover {
+
+.card:not(.card-clickable):hover {
+  border-color: oklch(from var(--border) l c h / 0.8);
+}
+
+.card-clickable {
+  cursor: pointer;
+}
+
+.card-clickable:hover {
   border-color: oklch(from var(--accent) l c h / 0.8);
   box-shadow: 0 20px 25px -5px oklch(from var(--ring) l c h / 0.1), 0 10px 10px -5px oklch(from var(--ring) l c h / 0.04);
+  transform: translateY(-2px);
 }
 
 .card-clickable:active,

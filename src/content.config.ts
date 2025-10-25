@@ -5,19 +5,20 @@ import { ProfileLinkConfigSchema } from "@/schemas"
 
 import { dedupLowerCase, dedupPreserveCase, slugify } from "@/lib/string-manipulation"
 
-/** Accepts both YYYY-MM and YYYY-MM-DD formats */
+/**
+ * @input string YYYY-MM
+ * @returns Date object with year and month (defaults to first day of month)
+ */
+const yearMonthDateSchema = z
+  .union([z.date(), z.coerce.date()])
+  .describe("Should be valid YYYY-MM format.")
+
+/** Accepts YYYY-MM-DD and ISO datetime formats */
 const dateSchema = z
-  .union([
-    // Accept ISO date strings (YYYY-MM-DD)
-    z.coerce.date(),
-    // Accept YYYY-MM format
-    z
-      .string()
-      .regex(/^\d{4}-(?:0[1-9]|1[0-2])$/, "Invalid month format")
-      .transform((val) => new Date(`${val}-01`))
-  ])
+  .union([z.date(), z.coerce.date()])
   .refine((date) => !Number.isNaN(date.getTime()), {
-    message: "Invalid date format. Must be YYYY-MM-DD or YYYY-MM"
+    message:
+      "Invalid date format. Must be YYYY-MM-DD or ISO datetime format.\n For more, see https://zod.dev/api#datetimes"
   })
 
 const blog = defineCollection({
@@ -27,8 +28,8 @@ const blog = defineCollection({
       .object({
         title: z.string(),
         description: z.string().max(200).optional(),
-        createdAt: z.coerce.date(),
-        updatedAt: z.coerce.date().optional(),
+        createdAt: dateSchema,
+        updatedAt: dateSchema.optional(),
         order: z.number().optional(),
         image: image().optional(),
         tags: z
@@ -68,6 +69,7 @@ const authors = defineCollection({
         "This author's avatar field only deal with image under /public/ directory or a remote image"
       ),
     bio: z.string().max(200).optional(),
+    affiliation: z.string().max(100).optional(),
     links: ProfileLinkConfigSchema
   })
 })
@@ -78,8 +80,8 @@ const projects = defineCollection({
     .object({
       title: z.string(),
       isHighlighted: z.boolean().default(false),
-      fromDate: dateSchema.optional(),
-      toDate: dateSchema.optional(),
+      fromDate: yearMonthDateSchema.optional(),
+      toDate: yearMonthDateSchema.optional(),
       repo: z.string().url().optional(),
       doc: z.string().url().optional(),
       url: z.string().url().optional(),

@@ -1,5 +1,6 @@
 ---
-import { createLocalDate, formatDate, formatDateTimeISO } from "@/lib/utils"
+import { SITE } from "@site-config"
+import { createLocalDate, formatDate, formatDateTimeISO } from "@/lib/date-utils"
 
 interface Props {
   /** Date to format */
@@ -15,13 +16,20 @@ interface Props {
 const { date, class: className, relative, maxDaysThreshold } = Astro.props
 
 const dateObj = createLocalDate(date)
-const displayDate = formatDate(dateObj, undefined, {
-  relative,
-  maxDaysThreshold
-})
 const isoDate = formatDateTimeISO(dateObj)
+
+// Always render absolute date by default for better fallback
+const displayDate = formatDate(dateObj, undefined, {
+  relative: false
+})
+const threshold = maxDaysThreshold ?? SITE.locale.relative.maxDaysThreshold
 ---
 
-<time datetime={isoDate} class={className}>
+<time
+  datetime={isoDate}
+  class={className}
+  data-relative={relative ? "true" : undefined}
+  data-threshold={relative ? threshold : undefined}
+>
   {displayDate}
 </time>

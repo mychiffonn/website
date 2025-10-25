@@ -28,7 +28,7 @@ src/
 The following custom fields are supported beyond standard BibTeX:
 
 - `eprint` and `archivePrefix` - arXiv preprint fields (standard BibTeX for arXiv)
-- `award` - Award/honor received  
+- `award` - Award/honor received
 - `code` - Source code repository URL
 - `demo` - Live demo URL
 - `pdf` - PDF file path or URL
@@ -49,11 +49,12 @@ To add or remove custom fields:
 
 1. **Add field support in `src/lib/publications/utils.ts`**:
    - Add to `CitationEntry` interface (line ~33)
-   - Add to `Publication` interface (line ~51) 
+   - Add to `Publication` interface (line ~51)
    - Add to `configureCustomFields()` function (line ~96)
    - Add extraction in `parseBibTeX()` function (line ~162)
 
 2. **Add icon mapping in `src/icon.config.ts`**:
+
    ```typescript
    export const PUBLICATION_LINK_TYPES = {
      // ... existing fields
@@ -70,14 +71,14 @@ Publications are configured in `src/site.config.ts`:
 
 ```typescript
 export const PUBLICATIONS: PublicationConfig = {
-  maxFirstAuthors: 3,        // Number of first authors to show
-  maxLastAuthors: 2,         // Number of last authors to show (0 = none)
+  maxFirstAuthors: 3, // Number of first authors to show
+  maxLastAuthors: 2, // Number of last authors to show (0 = none)
   highlightAuthor: {
     firstName: "My Chiffon",
     lastName: "Nguyen",
     aliases: ["My Nguyen", "M. Nguyen", "Chiffon Nguyen"]
   },
-  sortOrder: "reverse-chronological"  // or "chronological"
+  sortOrder: "reverse-chronological" // or "chronological"
 }
 ```
 
@@ -118,7 +119,7 @@ Displays individual publication entries with:
 
 ### Selected Publications (Homepage)
 
-- Use `loadSelectedPublications()` to get featured publications  
+- Use `loadSelectedPublications()` to get featured publications
 - Filter publications where `selected=true` in BibTeX
 - Same PubCard component for consistency
 

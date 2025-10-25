@@ -6,7 +6,7 @@ import { z } from "astro/zod"
 import type { ProfileLinkType } from "@icon-config"
 
 /**
- * Configuration schema for site-wide settings including metadata, localization, and theme options.
+ * Configuration schema for site-wide settings
  */
 export const SiteConfigSchema = z.object({
   /** Site metadata */
@@ -16,12 +16,22 @@ export const SiteConfigSchema = z.object({
   href: z.string().url(),
   author: z.string(),
 
-  // Localization
+  /** Locale settings for date time */
   locale: z.object({
+    /**
+     * Main language for your website dates. Use IETF BCP 47 language tag.
+     * https://en.wikipedia.org/wiki/IETF_language_tag.
+     *
+     * Passed as Intl.DateTimeFormat `locales` argument.
+     * See https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag
+     */
     lang: z.string().default("en-US"),
-    attrs: z.string().default("en_US"),
-    dateLocale: z.string().default("en-US"),
-    dateOptions: z
+
+    /**
+     * Options to pass to Intl.DateTimeFormat `options` argument
+     * See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat#using_options
+     */
+    options: z
       .object({
         day: z.enum(["numeric", "2-digit"]).optional(),
         month: z.enum(["numeric", "2-digit", "narrow", "short", "long"]).optional(),
@@ -29,16 +39,24 @@ export const SiteConfigSchema = z.object({
         timeZone: z.string().optional()
       })
       .default({}),
+
+    /** Whether to enable relative dates across your site, e.g. 2 weeks ago */
     relative: z
       .object({
         enabled: z.boolean().default(false),
+
+        /**
+         * Threshold in days, under which the dates on your website will use relative dates.
+         * Default is 30 days
+         */
         maxDaysThreshold: z.number().default(30)
       })
       .default({})
   }),
 
-  // Blog settings
-  featuredPostCount: z.number().positive().default(2),
+  /** Number of featured posts on home page. Default is 3 */
+  featuredPostCount: z.number().positive().default(3),
+  /** Number of posts per pagination page. Default is 8. */
   postsPerPage: z.number().positive().default(8),
 
   /** TOC max depth of markdown headings, between 1 and 6 */
@@ -188,7 +206,6 @@ export const PublicationConfigSchema = z.object({
   sortOrder: z.enum(["chronological", "reverse-chronological"]).default("reverse-chronological")
 })
 
-
 /**
  * Processed publication data type for component rendering.
  * This represents the transformed data structure expected by PubCard.astro
@@ -238,4 +255,3 @@ export type FooterConfig = z.infer<typeof FooterConfigSchema>
 export type Tool = z.infer<typeof ToolSchema>
 export type PublicationConfig = z.infer<typeof PublicationConfigSchema>
 export type ProcessedPublication = z.infer<typeof ProcessedPublicationSchema>
-

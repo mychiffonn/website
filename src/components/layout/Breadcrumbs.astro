@@ -26,10 +26,8 @@ const linkClasses =
 const currentClasses = "text-foreground flex items-center font-normal"
 ---
 
-<nav aria-label="Breadcrumb navigation" class={cn("flex w-full", className)}>
-  <ol
-    class="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5"
-  >
+<nav aria-label="Breadcrumb navigation" class={className}>
+  <ol class="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm sm:gap-2.5">
     <li class="relative inline-flex items-center gap-1.5">
       <a href="/" class={linkClasses} aria-label="Navigate to home page" title="Go to home page">
         <Icon name="home" size="1.25rem" aria-hidden="true" />
@@ -49,7 +47,7 @@ const currentClasses = "text-foreground flex items-center font-normal"
                 {item.icon && (
                   <Icon name={item.icon} size="1.25rem" class="mr-1" aria-hidden="true" />
                 )}
-                <span>{item.label}</span>
+                <span class="truncate">{item.label}</span>
               </span>
             ) : (
               <a
@@ -61,7 +59,7 @@ const currentClasses = "text-foreground flex items-center font-normal"
                 {item.icon && (
                   <Icon name={item.icon} size="1.25rem" class="mr-1" aria-hidden="true" />
                 )}
-                <span class="leading-none">{item.label}</span>
+                <span class="truncate leading-none">{item.label}</span>
               </a>
             )}
           </li>

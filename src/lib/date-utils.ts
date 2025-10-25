@@ -1,10 +1,4 @@
-import {
-  differenceInCalendarDays,
-  intlFormat,
-  intlFormatDistance,
-  isValid,
-  parseISO
-} from "date-fns"
+import { differenceInCalendarDays, intlFormat, intlFormatDistance } from "date-fns"
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz"
 
 import { SITE } from "@site-config"
@@ -20,7 +14,7 @@ import { SITE } from "@site-config"
  * @param updateId - The update filename/ID (with or without extension)
  * @returns The extracted date string in YYYY-MM-DD format, or null if invalid
  */
-export function extractDateFromUpdateId(updateId: string): string | null {
+export function extractDateFromStr(updateId: string): string | null {
   // Remove file extension if present
   const idWithoutExt = updateId.replace(/\.[^/.]+$/, "")
 
@@ -40,30 +34,6 @@ export function extractDateFromUpdateId(updateId: string): string | null {
   }
 
   return dateString
-}
-
-/**
- * Validates if a string is a machine-readable format suitable for
- * the <time> element's `datetime` attribute.
- *
- * It primarily checks for ISO 8601 compliance, which covers the vast
- * majority of valid formats like YYYY-MM-DD, YYYY-MM, and full timestamps.
- *
- * @param input The string or value to validate.
- * @returns {boolean} True if the input is a valid machine-readable date string.
- */
-export function isValidMachineReadableDate(input: unknown): boolean {
-  if (typeof input !== "string" || input.trim() === "") {
-    return false
-  }
-
-  // parseISO is designed to parse ISO 8601 strings, which is the
-  // most robust format for the datetime attribute. It will correctly
-  // parse full dates, dates with times, and timezone offsets.
-  const date = parseISO(input)
-
-  // isValid checks if the resulting date from parsing is a real date.
-  return isValid(date)
 }
 
 /**
@@ -181,8 +151,6 @@ export interface DateRangeResult {
   toDate?: Date
   /** Formatted display text for end date */
   toDateDisplay?: string
-  /** Complete display range string (e.g., "Jan 2024 - Present") */
-  displayRange: string
 }
 
 /**
@@ -215,21 +183,7 @@ export function createDateRange(
     fromDate,
     fromDateDisplay: fromDate ? formatter(fromDate) : undefined,
     toDate,
-    toDateDisplay: toDate ? formatter(toDate) : undefined,
-    displayRange: ""
-  }
-
-  if (fromDate && !toDate) {
-    result.displayRange = `${result.fromDateDisplay} - Present`
-  } else if (!fromDate && toDate) {
-    result.displayRange = result.toDateDisplay!
-  } else if (fromDate && toDate && fromDate.getTime() === toDate.getTime()) {
-    result.displayRange = result.fromDateDisplay!
-  } else if (fromDate && toDate) {
-    const formattedFrom = result.fromDateDisplay!
-    const formattedTo = result.toDateDisplay!
-    result.displayRange =
-      formattedFrom === formattedTo ? formattedFrom : `${formattedFrom} - ${formattedTo}`
+    toDateDisplay: toDate ? formatter(toDate) : undefined
   }
 
   return result

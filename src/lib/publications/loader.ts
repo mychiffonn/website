@@ -2,12 +2,13 @@
  * Publication loading and processing utilities
  */
 import { PUB_CONFIG } from "@site-config"
+
 import {
-  parseBibTeX,
-  sortPublications,
-  groupPublicationsByYear,
-  getSelectedPublications,
   getPublicationData,
+  getSelectedPublications,
+  groupPublicationsByYear,
+  parseBibTeX,
+  sortPublications
 } from "./utils"
 import bibContent from "/src/content/publications/main.bib?raw"
 
@@ -26,12 +27,14 @@ export async function loadAllPublications() {
     const years: number[] = []
 
     for (const [year, publications] of Object.entries(publicationsByYear)) {
-      processedPublicationsByYear[year] = publications.map(pub => getPublicationData(pub, PUB_CONFIG))
+      processedPublicationsByYear[year] = publications.map((pub) =>
+        getPublicationData(pub, PUB_CONFIG)
+      )
       years.push(Number(year))
     }
 
     // Sort years based on configuration
-    years.sort((a, b) => PUB_CONFIG.sortOrder === "chronological" ? a - b : b - a)
+    years.sort((a, b) => (PUB_CONFIG.sortOrder === "chronological" ? a - b : b - a))
 
     return { publicationsByYear: processedPublicationsByYear, years }
   } catch (error) {
@@ -50,7 +53,7 @@ export async function loadSelectedPublications() {
     const selectedPublications = getSelectedPublications(allPublications)
     const sortedPublications = sortPublications(selectedPublications, PUB_CONFIG)
 
-    return sortedPublications.map(pub => getPublicationData(pub, PUB_CONFIG))
+    return sortedPublications.map((pub) => getPublicationData(pub, PUB_CONFIG))
   } catch (error) {
     console.error("Error loading selected publications:", error)
     return []

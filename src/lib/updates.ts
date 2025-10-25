@@ -1,6 +1,7 @@
+import { getCollection, render } from "astro:content"
 import type { AstroComponentFactory } from "astro/runtime/server/index.js"
-import { render, getCollection } from "astro:content"
-import { createLocalDate } from "./utils"
+
+import { createLocalDate, extractDateFromStr } from "./date-utils"
 
 export interface RenderedUpdate {
   date: Date // from update id
@@ -8,24 +9,35 @@ export interface RenderedUpdate {
 }
 
 /**
- * Get the latest N updates and process them efficiently
+ * Get the latest N updates and process them efficiently.
+ *
  * If count is not passed, render all updates
  */
 export async function getLatestUpdates(count?: number): Promise<RenderedUpdate[]> {
+  // Get all updates with parsed dates for efficient sorting
   const allUpdates = await getCollection("updates", ({ id }) => {
-    const date = new Date(id)
-    return !isNaN(date.getTime()) // Filter out invalid dates at query time
+    const dateString = extractDateFromStr(id)
+    return dateString !== null // Filter out invalid dates at query time
   })
 
-  // Sort and slice
-  const sortedUpdates = allUpdates.sort((a, b) => new Date(b.id).getTime() - new Date(a.id).getTime())
-  const latestUpdates = count && count > 0 ? sortedUpdates.slice(0, count) : sortedUpdates
+  // Parse dates once and sort efficiently
+  const updatesWithDates = allUpdates.map((update) => {
+    const dateString = extractDateFromStr(update.id)!
+    const date = createLocalDate(dateString)
+    return { update, date, dateTime: date.getTime() }
+  })
+
+  // Sort by pre-computed timestamp
+  updatesWithDates.sort((a, b) => b.dateTime - a.dateTime)
+
+  // Slice early to avoid unnecessary processing
+  const latestUpdatesWithDates =
+    count && count > 0 ? updatesWithDates.slice(0, count) : updatesWithDates
 
   // Process only the latest updates
   const renderedUpdates = await Promise.all(
-    latestUpdates.map(async (update) => {
+    latestUpdatesWithDates.map(async ({ update, date }) => {
       const { Content } = await render(update)
-      const date = createLocalDate(update.id)
       return { Content, date }
     })
   )
