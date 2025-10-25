@@ -99,7 +99,7 @@ export const getIconForPlatform = (platform: string): string => {
 export const getTransformedEmail = (email: string, variant: EmailVariant = "display"): string => {
   switch (variant) {
     case "encoded":
-      return btoa(email)
+      return Buffer.from(email, "utf8").toString("base64")
     case "display":
     default:
       return getEmailDisplayText(email)
