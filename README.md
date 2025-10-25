@@ -29,9 +29,9 @@ This website is built on enscribe's [astro-erudite](https://github.com/jktrn/ast
 
 - [Astro](https://astro.build/) - Modern content-driven web framework
 - [TailwindCSS 4](https://tailwindcss.com/) - Utility-first CSS framework
-- Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown) <<<<<<< HEAD
+- Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown)
 - shadcn/ui - Customizable React components, with Radix primitives and TailwindCSS for styling
-- # [Catpuccin color palettes](https://catppuccin.com/palette/)
+- [Catpuccin color palettes](https://catppuccin.com/palette/)
 
 Other inspirations:
 
