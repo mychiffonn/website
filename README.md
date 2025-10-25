@@ -32,13 +32,10 @@ This website is built on enscribe's [astro-erudite](https://github.com/jktrn/ast
 - Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown) <<<<<<< HEAD
 - shadcn/ui - Customizable React components, with Radix primitives and TailwindCSS for styling
 - # [Catpuccin color palettes](https://catppuccin.com/palette/)
-  > > > > > > > main
 
 Other inspirations:
 
-- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's [pure](https://astro-pure.js.org/) theme <<<<<<< HEAD =======
-- [Color palettes](src/styles/global.css) from [catpuccin](https://catppuccin.com/palette/)
-  > > > > > > > main
+- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's [pure](https://astro-pure.js.org/) theme
 - Publications from [al-folio](https://github.com/alshedivat/al-folio)
 
 ## Getting Started
