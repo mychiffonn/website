@@ -12,16 +12,15 @@ This website serves as a digital portfolio and blog where I share my work, insig
 
 - ⚡ Fast loading, build, and previewing with Astro 5 as static generator
 - 💻 Showcase projects, news, blog posts, and publications from .bib file
-- ✏️ Github-flavored markdown with KaTeX-rendered math, code highlighting (block and inline), and embeds
+- ✏️ Writing in Github-flavored markdown, a subset of Obsidian-flavored markdown (wikilinks + callouts), KaTeX-rendered math, code (block and inline, supported by Expressive Code), and embeds
 - 📝 Blog supports post-subpost system, with tags and multiple authors
 - 🌐 i18n: Support non-English scripts, and (upcoming) i18n page routing and language toggle
 - 👩‍💻 Developer experience: type-safe with zod-first schema and TypeScript
 - 🔎 SEO friendly and ARIA accessibility compliant
 - 🔧 Easily configure [theme](src/styles/global.css), [page & personal information](src/config.ts), [content](src/content)
-- [IN PROGRESS] Obsidian-flavored markdown with wikilinks and callouts (no backlinks yet).
 - [UPCOMING] Show mentions of a post across the web in lieu of comment section
 - [UPCOMING] Search with pagefind/typesense
-- [UPCOMING] Render /media library from .json and from scraped Storygraph
+- [UPCOMING] /media library. Planned support: scraped Storygraph, Spotify API.
 
 ## Built With
 
