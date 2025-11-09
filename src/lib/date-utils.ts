@@ -1,22 +1,25 @@
-import { differenceInCalendarDays, intlFormat, intlFormatDistance } from "date-fns"
-import { formatInTimeZone, fromZonedTime } from "date-fns-tz"
+import { tz, TZDate } from "@date-fns/tz"
+import {
+  differenceInCalendarDays,
+  format,
+  intlFormat,
+  intlFormatDistance,
+  isValid,
+  parseISO
+} from "date-fns"
 
 import { SITE } from "@site-config"
-
-// ============================================================================
-// DATE VALIDATION & PARSING
-// ============================================================================
 
 /**
  * Extracts the date portion (YYYY-MM-DD) from an update filename/ID.
  * Supports both simple date format (YYYY-MM-DD) and Jekyll-style format (YYYY-MM-DD-description).
  *
- * @param updateId - The update filename/ID (with or without extension)
+ * @param str - The string to extract the date from
  * @returns The extracted date string in YYYY-MM-DD format, or null if invalid
  */
-export function extractDateFromStr(updateId: string): string | null {
+export function extractDateFromStr(str: string): string | null {
   // Remove file extension if present
-  const idWithoutExt = updateId.replace(/\.[^/.]+$/, "")
+  const idWithoutExt = str.replace(/\.[^/.]+$/, "")
 
   // Match YYYY-MM-DD at the start, optionally followed by a dash and description
   const dateMatch = idWithoutExt.match(/^(\d{4}-\d{2}-\d{2})(?:-.*)?$/)
@@ -27,9 +30,12 @@ export function extractDateFromStr(updateId: string): string | null {
 
   const dateString = dateMatch[1]
 
-  // Validate that it's a real date
-  const date = new Date(dateString)
-  if (isNaN(date.getTime())) {
+  try {
+    const parsed = parseISO(dateString)
+    if (!isValid(parsed)) {
+      return null
+    }
+  } catch {
     return null
   }
 
@@ -44,44 +50,35 @@ export function extractDateFromStr(updateId: string): string | null {
  * - For strings that ALREADY HAVE a timezone offset (e.g., "...Z", "...-07:00"),
  * it respects that offset.
  * @input string | number | Date
- * @returns Date locale date, with timezone and language support
+ * @returns Date Local date, with timezone and language support
  */
 export function createLocalDate(dateInput: string | number | Date): Date {
-  // Pass through Date objects and numbers (timestamps)
-  if (dateInput instanceof Date) {
-    return dateInput
-  }
-  if (typeof dateInput === "number") {
-    return new Date(dateInput)
-  }
+  // Pass through non-string inputs
+  if (dateInput instanceof Date) return dateInput
+  if (typeof dateInput === "number") return new Date(dateInput)
 
   // Sanitize string input from potential YAML quotes
-  let cleanDateString = dateInput.trim()
-  if (
-    (cleanDateString.startsWith("'") && cleanDateString.endsWith("'")) ||
-    (cleanDateString.startsWith('"') && cleanDateString.endsWith('"'))
-  ) {
-    cleanDateString = cleanDateString.slice(1, -1)
-  }
-
-  // Regex to check if the string includes a timezone offset (Z, +HH:mm, -HHmm, etc.)
-  const hasTimezoneRegex = /Z|[+-]\d{2}(?::?\d{2})?$/
-
-  // If the string already has a timezone, let the native Date constructor handle it.
-  // It correctly parses ISO 8601 strings with offsets.
-  if (hasTimezoneRegex.test(cleanDateString)) {
-    return new Date(cleanDateString)
-  }
-
-  // If no timezone is present, interpret the date using the site's configured timezone.
-  // This correctly handles "YYYY-MM-DD" as midnight and "YYYY-MM-DDTHH:mm" as the specified time.
+  const cleanDateString = dateInput.trim().replace(/^["']|["']$/g, "")
   const timeZone = SITE.locale.options.timeZone || "UTC"
-  return fromZonedTime(cleanDateString, timeZone)
-}
 
-// ============================================================================
-// DATE FORMATTING
-// ============================================================================
+  // Check for timezone indicator (Z or ±HH:MM)
+  const hasTimezone = /Z|[+-]\d{2}:\d{2}$/.test(cleanDateString)
+
+  // If already has timezone, use parseISO directly
+  if (hasTimezone) {
+    const parsed = parseISO(cleanDateString)
+    return isValid(parsed) ? parsed : new TZDate(cleanDateString, timeZone)
+  }
+
+  // Handle date-only strings (YYYY-MM-DD) - create at midnight in local timezone
+  if (/^\d{4}-\d{2}-\d{2}$/.test(cleanDateString)) {
+    const [year, month, day] = cleanDateString.split("-").map(Number)
+    return new Date(year, month - 1, day)
+  }
+
+  // All other cases: use TZDate to interpret in site timezone
+  return new TZDate(cleanDateString, timeZone)
+}
 
 /**
  * Formats a date, automatically switching between relative and absolute formats.
@@ -132,12 +129,16 @@ export function formatDateTimeISO(
   timeZone: string = SITE.locale.options.timeZone || "UTC"
 ): string {
   const dateObj = createLocalDate(date)
-  return formatInTimeZone(dateObj, timeZone, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
+  // For date-only inputs, use the local timezone instead of converting
+  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date.trim())) {
+    return format(dateObj, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", {
+      in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
+    })
+  }
+  return format(dateObj, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", {
+    in: tz(timeZone)
+  })
 }
-
-// ============================================================================
-// DATE RANGE UTILITIES
-// ============================================================================
 
 /**
  * Date range result object with machine-readable and display formats.

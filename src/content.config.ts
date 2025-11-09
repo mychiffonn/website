@@ -3,6 +3,7 @@ import { file, glob } from "astro/loaders"
 
 import { ProfileLinkConfigSchema } from "@/schemas"
 
+import { createLocalDate } from "@/lib/date-utils"
 import { dedupLowerCase, dedupPreserveCase, slugify } from "@/lib/string-manipulation"
 
 /**
@@ -15,7 +16,7 @@ const yearMonthDateSchema = z
 
 /** Accepts YYYY-MM-DD and ISO datetime formats */
 const dateSchema = z
-  .union([z.date(), z.coerce.date()])
+  .union([z.date(), z.string().transform(createLocalDate)])
   .refine((date) => !Number.isNaN(date.getTime()), {
     message:
       "Invalid date format. Must be YYYY-MM-DD or ISO datetime format.\n For more, see https://zod.dev/api#datetimes"
