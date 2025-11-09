@@ -1,9 +1,9 @@
 ---
 import { PostManager } from "@/lib/blog"
 import Layout from "@/layouts/Layout.astro"
-import AuthorCard from "@/components/blog/AuthorCard.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import AuthorCard from "@/components/people/AuthorCard.astro"
 
 export async function getStaticPaths() {
   const authors = await PostManager.getInstance().getAllAuthors()
@@ -32,14 +32,14 @@ if (!author) {
 ---
 
 <Layout
-  title={`${author.name} (Author)`}
+  title={`${author.name}`}
   description={author.bio || `Profile of ${author.name}.`}
   noindex
   type="profile"
 >
   <Breadcrumbs
     items={[
-      { href: "/authors", label: "Authors", icon: "group" },
+      { href: "/people", label: "People", icon: "group" },
       { label: author.name, icon: "person" }
     ]}
   />
