@@ -1,12 +1,7 @@
 ---
 import { render, type CollectionEntry } from "astro:content"
 
-import {
-  getContextVariant,
-  getProjectLinks,
-  getProjectsWithContent,
-  hasProjectContent
-} from "@/lib/projects"
+import { getContextVariant, getProjectLinks, getProjects } from "@/lib/projects"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
@@ -15,8 +10,7 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import DateRange from "@/components/projects/DateRange.astro"
 
 export async function getStaticPaths() {
-  // Filter at collection level for better performance
-  const projects = await getProjectsWithContent(hasProjectContent)
+  const projects = await getProjects((project) => !!project.body?.trim())
 
   return projects.map((project) => ({
     params: { id: project.id },

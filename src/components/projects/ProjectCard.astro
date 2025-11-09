@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content"
 
-import { getContextVariant, getProjectDescription, getProjectLinks } from "@/lib/projects"
+import { getContextVariant, getProjectLinks } from "@/lib/projects"
 import { cn } from "@/lib/utils"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
@@ -19,10 +19,23 @@ const { title, isHighlighted, fromDate, toDate, repo, doc, url, release, context
   project.data
 
 const links = getProjectLinks(repo, doc, url, release)
+
 const contextVariant = getContextVariant(context)
 
-const descriptionData = getProjectDescription(project)
-const hasDetailPage = project.body && project.body.trim().length > 0
+const descriptionData = project.data.description
+  ? { text: project.data.description, needsReadMore: false }
+  : project.body?.trim()
+    ? (() => {
+        const bodyText = project.body.trim()
+        const needsTruncation = bodyText.length > 150
+        return {
+          text: needsTruncation ? bodyText.substring(0, 150) + "..." : bodyText,
+          needsReadMore: needsTruncation
+        }
+      })()
+    : null
+
+const hasDetailPage = !!project.body?.trim()
 
 const cardClasses = cn(
   "card card-content",

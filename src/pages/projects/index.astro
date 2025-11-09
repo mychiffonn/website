@@ -1,17 +1,19 @@
 ---
 import { PROFILE } from "@site-config"
-import { getProjectsForIndex } from "@/lib/projects"
+import { getProjects } from "@/lib/projects"
 import CommonLayout from "@/layouts/CommonLayout.astro"
 import Section from "@/components/layout/Section.astro"
 import { GithubActivity, ProjectCard } from "@/components/projects"
 
-const { featuredProjects, otherProjects } = await getProjectsForIndex()
+// Fetch and categorize projects in single operation
+const allProjects = await getProjects()
+const featuredProjects = allProjects.filter((project) => project.data.isHighlighted)
+const otherProjects = allProjects.filter((project) => !project.data.isHighlighted)
 
 // Get GitHub URL for GithubActivity
 const githubUrl =
-  typeof PROFILE.links.github === "string"
-    ? PROFILE.links.github
-    : PROFILE.links.github?.href || "https://github.com"
+  (typeof PROFILE.links.github === "object" ? PROFILE.links.github?.href : PROFILE.links.github) ||
+  "https://github.com"
 ---
 
 <CommonLayout
