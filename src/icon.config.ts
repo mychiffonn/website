@@ -144,6 +144,7 @@ export const PUBLICATION_LINK_TYPES = {
   code: { label: "Code", iconName: "mingcute:code-line" },
   demo: { label: "Demo", iconName: "mingcute:play-circle-line" },
   draft: { label: "Draft", iconName: "mingcute:flask-line" },
+  proposal: { label: "Proposal", iconName: "mingcute:file-text-line" },
   resources: { label: "Resources", iconName: "mingcute:folder-zip-line" },
 
   // Presentation & discussion

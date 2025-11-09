@@ -34,7 +34,6 @@ const { pub } = Astro.props
       pub.authorData.hasMore && (
         <>
           <button
-            type="button"
             class="author-toggle"
             data-hidden-authors={pub.authorData.hiddenAuthors}
             data-hidden-count={pub.authorData.hiddenCount}
@@ -50,8 +49,8 @@ const { pub } = Astro.props
     }
     {
       pub.authorData.displayLastAuthors && pub.authorData.hasMore && (
-        <span class="last-authors">
-          <span>, </span>
+        <span>
+          ,
           <span set:html={pub.authorData.displayLastAuthors} />
         </span>
       )
