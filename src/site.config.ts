@@ -58,7 +58,6 @@ export const PROFILE: ProfileConfig = {
     github: "https://github.com/mychiffonn",
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
     cv: "/doc/cv.pdf",
-    resume: "/doc/resume.pdf",
     bluesky: "https://bsky.app/profile/mychiffonn.bsky.social",
     discord: "https://discordapp.com/users/mychiffonn"
   }
