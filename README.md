@@ -1,12 +1,12 @@
 # My (Chiffon) Nguyen's Academic Website
 
-[![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
+[![Version](https://img.shields.io/badge/version-v0.9.0-blue?style=for-the-badge)](https://github.com/mychiffonn/website/releases) [![License](https://img.shields.io/badge/License-Apache%202.0-blue?style=for-the-badge)](LICENSE) [![Astro 5](https://img.shields.io/badge/Astro_5-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![MDX](https://img.shields.io/badge/MDX-1B1F24?style=for-the-badge&logo=mdx&logoColor=white)](https://mdxjs.com/) [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![TailwindCSS 4](https://img.shields.io/badge/TailwindCSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/) [![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)](https://ui.shadcn.com/) [![Catppuccin](https://img.shields.io/badge/Catppuccin-F5E0DC?style=for-the-badge&logo=catppuccin&logoColor=11111b)](https://catppuccin.com/palette/) [![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://prettier.io/) [![oxlint](https://img.shields.io/badge/oxlint-000000?style=for-the-badge&logo=rust&logoColor=white)](https://oxc-project.github.io/docs/guide/usage/linter.html)
 
 ![](public/img/social-preview.png)
 
 This website serves as a digital portfolio and blog where I share my work, insights, and journey in academia (NLP+HCI), technology, and anything I'm interested in. Co-created with Claude Code.
 
-> ⚠️ Warning: Unstable. Theme will be refactored to "astro-academic" and posted to Astro community once all features are complete.
+> ⚠️ Warning: Somewhat stable. Theme will be refactored to "astro-academic" and posted to Astro community once all features are complete.
 
 ## Features
 
@@ -24,13 +24,7 @@ This website serves as a digital portfolio and blog where I share my work, insig
 
 ## Built With
 
-This website is built on enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite) template and references from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s digital garden:
-
-- [Astro](https://astro.build/) - Modern content-driven web framework
-- [TailwindCSS 4](https://tailwindcss.com/) - Utility-first CSS framework
-- Markdown and [MDX](https://mdxjs.com/) (the latter uses [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) to inject astro components in markdown)
-- shadcn/ui - Customizable React components, with Radix primitives and TailwindCSS for styling
-- [Catpuccin color palettes](https://catppuccin.com/palette/)
+This website is built on enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite) template and references from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s digital garden.
 
 Other inspirations:
 
@@ -39,7 +33,7 @@ Other inspirations:
 
 ## Getting Started
 
-Have Node.js >= 20 (tested with Node 24) and pnpm installed:
+Have Node.js >= 22 (tested with Node 24) and pnpm installed:
 
 1. Clone the repository
 2. Install dependencies: `pnpm install`
@@ -47,7 +41,3 @@ Have Node.js >= 20 (tested with Node 24) and pnpm installed:
 4. Visit `http://localhost:4321`
 5. Read docs or search `TODO` across the codebase to complete setup
 6. Search `OPTIONAL` to customize as needed (color themes, icons, etc)
-
-## License
-
-[Apache License 2.0](LICENSE).
