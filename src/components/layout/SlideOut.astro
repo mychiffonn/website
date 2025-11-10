@@ -1,0 +1,55 @@
+---
+import { cn } from "@/lib/utils"
+
+interface Props {
+  position: "left" | "right"
+  class?: string
+}
+
+const { position, class: className } = Astro.props
+
+const positionClasses = {
+  left: "left-0",
+  right: "right-0"
+}
+
+const borderClasses = {
+  left: "border-r",
+  right: "border-l"
+}
+
+const summaryPositionClasses = {
+  left: "left-2",
+  right: "right-2"
+}
+---
+
+<aside
+  class={cn(
+    "group fixed z-40 hidden w-8 transition-all duration-200 hover:w-80 xl:block",
+    positionClasses[position],
+    className
+  )}
+  style="top: var(--header-height, 5rem); height: calc(100vh - var(--header-height, 5rem));"
+>
+  <div
+    class={cn(
+      "bg-background/95 border-border h-full shadow-lg backdrop-blur-sm",
+      borderClasses[position]
+    )}
+  >
+    <div
+      class="flex h-full flex-col p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+    >
+      <slot name="main" />
+    </div>
+    <div
+      class={cn(
+        "absolute top-1/2 -translate-y-1/2 opacity-100 transition-opacity duration-200 group-hover:opacity-0",
+        summaryPositionClasses[position]
+      )}
+    >
+      <slot name="summary" />
+    </div>
+  </div>
+</aside>
