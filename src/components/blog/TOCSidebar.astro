@@ -1,5 +1,4 @@
 ---
-import { PostManager, tocUtils } from "@/lib/blog"
 import type { TOCSection } from "@/lib/blog/types"
 import TOCSectionComponent from "@/components/blog/TOCSection.astro"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -12,9 +11,6 @@ interface Props {
 
 const { sections, currentPostId, class: className } = Astro.props
 
-const postManager = PostManager.getInstance()
-const isSubpost = postManager.isSubpost(currentPostId)
-const parentId = isSubpost ? postManager.getParentId(currentPostId) : currentPostId
 const hasSections = sections.length > 0
 ---
 
@@ -26,94 +22,73 @@ const hasSections = sections.length > 0
       aria-labelledby="toc-heading"
       class={className}
     >
+      <header class="border-border sticky top-0 mb-2 border-b pb-1">
+        <h2 id="toc-heading" class="text-foreground/80 text-sm font-semibold">
+          Table of Contents
+        </h2>
+      </header>
       <ScrollArea
         client:load
-        className="flex max-h-[calc(100vh-8rem)] flex-col overflow-y-auto"
+        className="flex max-h-[calc(100vh-8rem)] flex-col overflow-y-auto gap-2 p-2"
         type="hover"
         data-scroll-area
       >
-        <div class="flex flex-col gap-2 p-2">
-          <header>
-            <h2
-              id="toc-heading"
-              class="text-foreground/80 border-border/50 mb-2 border-b pb-1 text-sm font-semibold"
-            >
-              Table of Contents
-            </h2>
-          </header>
-          <nav aria-labelledby="toc-heading">
-            <ol class="space-y-2">
-              {sections.map((section: TOCSection, index: number) => {
-                const isFirstSubpost = tocUtils.isFirstSubpostSection(sections, index)
+        <ol class="space-y-2" role="navigation" aria-labelledby="toc-heading">
+          {sections.map((section: TOCSection, index: number) => {
+            const isFirstSubpost = section.isSubpost && !sections[index - 1]?.isSubpost
 
-                return (
-                  <li>
-                    {isFirstSubpost && (
-                      <div
-                        class="mb-4 flex items-center gap-3"
-                        role="separator"
-                        aria-label="Subposts section"
-                      >
-                        <div class="bg-border h-px flex-1" />
-                        <span class="text-muted-foreground px-2 text-xs font-semibold tracking-wider uppercase">
-                          Subposts
-                        </span>
-                        <div class="bg-border h-px flex-1" />
-                      </div>
-                    )}
-                    <TOCSectionComponent
-                      section={section}
-                      currentPostId={currentPostId}
-                      isSubpost={isSubpost}
-                      parentId={parentId}
-                    />
-                  </li>
-                )
-              })}
-            </ol>
-          </nav>
-        </div>
+            return (
+              <li>
+                {isFirstSubpost && (
+                  <div
+                    class="mb-4 flex items-center gap-3"
+                    role="separator"
+                    aria-label="Subposts section"
+                  >
+                    <div class="bg-border h-px flex-1" />
+                    <span class="text-muted-foreground px-2 text-xs font-semibold tracking-wider uppercase">
+                      Subposts
+                    </span>
+                    <div class="bg-border h-px flex-1" />
+                  </div>
+                )}
+                <TOCSectionComponent
+                  id={section.postId}
+                  title={section.postTitle}
+                  isActive={section.postId === currentPostId}
+                  headings={section.headings}
+                />
+              </li>
+            )
+          })}
+        </ol>
       </ScrollArea>
     </aside>
   )
 }
 
 <script>
-  import { BaseTOCController } from "@/lib/blog/scroll"
+  import { SITE } from "@site-config"
+  import { UnifiedTOCController } from "@/lib/blog/scroll"
 
-  // Sidebar TOC Controller - extends BaseTOCController directly
-  class SidebarTOCController extends BaseTOCController {
-    private static instance: SidebarTOCController | null = null
+  let controller: UnifiedTOCController | null = null
 
-    static getInstance(): SidebarTOCController {
-      return (this.instance ??= new SidebarTOCController())
-    }
-
-    static resetInstance(): void {
-      this.instance?.cleanup()
-      this.instance = null
-    }
-
-    getContainerSelector() {
-      return "#toc-sidebar-container"
-    }
-
-    getLinkSelector() {
-      return "#toc-sidebar-container [data-heading-link]"
-    }
-
-    protected getScrollAreaSelector() {
-      return "[data-radix-scroll-area-viewport]"
-    }
+  function initController() {
+    controller?.cleanup()
+    controller = new UnifiedTOCController(
+      "#toc-sidebar-container",
+      "#toc-sidebar-container [data-heading-link]",
+      { tocMaxDepth: SITE.tocMaxDepth }
+    )
+    controller.init()
   }
 
-  // Initialize controller
-  const controller = SidebarTOCController.getInstance()
+  function cleanupController() {
+    controller?.cleanup()
+    controller = null
+  }
 
-  document.addEventListener("astro:page-load", () => controller.init())
-  document.addEventListener("astro:after-swap", () => {
-    SidebarTOCController.resetInstance()
-    SidebarTOCController.getInstance().init()
-  })
-  document.addEventListener("astro:before-swap", () => SidebarTOCController.resetInstance())
+  document.addEventListener("astro:page-load", initController)
+  document.addEventListener("astro:after-swap", initController)
+  document.addEventListener("astro:before-swap", cleanupController)
 </script>
