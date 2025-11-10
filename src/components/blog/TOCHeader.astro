@@ -1,7 +1,7 @@
 ---
 import type { MarkdownHeading } from "astro"
 
-import { tocUtils } from "@/lib/blog"
+import { getHeadingMargin } from "@/lib/blog/toc"
 import { cn } from "@/lib/utils"
 import Icon from "@/components/base/Icon.astro"
 import TOCHeadingLink from "@/components/blog/TOCHeadingLink.astro"
@@ -17,12 +17,7 @@ const hasHeadings = headings && headings.length > 0
 
 {
   hasHeadings && (
-    <nav
-      id="mobile-toc-container"
-      class="w-full xl:hidden"
-      role="navigation"
-      aria-label="Table of contents"
-    >
+    <nav id="mobile-toc-container" class="w-full xl:hidden" aria-label="Table of contents">
       <details class="group overflow-x-hidden" aria-expanded="false">
         <summary
           class={cn(
@@ -31,11 +26,11 @@ const hasHeadings = headings && headings.length > 0
           )}
         >
           <div
-            class="relative flex flex-shrink-0 items-center justify-center"
+            class="relative flex shrink-0 items-center justify-center"
             role="img"
             aria-label="Reading progress indicator"
           >
-            <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="size-5" viewBox="0 0 24 24" aria-hidden="true">
               <circle
                 class="text-primary/20"
                 cx="12"
@@ -68,7 +63,7 @@ const hasHeadings = headings && headings.length > 0
           </span>
           <Icon
             name="mingcute:down-line"
-            class="text-muted-foreground ml-auto flex-shrink-0 transition-transform duration-200 group-open:rotate-180"
+            class="text-muted-foreground ml-auto shrink-0 transition-transform duration-200 group-open:rotate-180"
             aria-hidden="true"
           />
         </summary>
@@ -79,20 +74,14 @@ const hasHeadings = headings && headings.length > 0
             className="flex max-h-[30vh] flex-col overflow-y-auto"
             data-scroll-area
           >
-            <nav aria-labelledby="mobile-toc-heading" class="px-3 py-2">
-              <span id="mobile-toc-heading" class="sr-only">
-                Table of Contents
-              </span>
-              <ul class="flex list-none flex-col gap-y-1" id="mobile-toc" role="list">
-                {headings.map((heading) => (
-                  <TOCHeadingLink
-                    heading={heading}
-                    href={`#${heading.slug}`}
-                    class={cn("text-foreground/70", tocUtils.getHeadingMargin(heading.depth))}
-                  />
-                ))}
-              </ul>
-            </nav>
+            <ul class="flex list-none flex-col gap-y-1 px-3 py-2" id="mobile-toc">
+              {headings.map((heading) => (
+                <TOCHeadingLink
+                  heading={heading}
+                  class={cn("text-foreground/70", getHeadingMargin(heading.depth))}
+                />
+              ))}
+            </ul>
           </ScrollArea>
         </div>
       </details>
@@ -102,109 +91,26 @@ const hasHeadings = headings && headings.length > 0
 
 <script>
   import { SITE } from "@site-config"
-  import { BaseTOCController, MobileTOCUtils } from "@/lib/blog/scroll"
+  import { UnifiedTOCController } from "@/lib/blog/scroll"
 
-  // Mobile TOC Controller - extends BaseTOCController with mobile-specific features
-  class MobileTOCController extends BaseTOCController {
-    private static instance: MobileTOCController | null = null
-    private markdownHeadings: Array<{ slug: string; text: string; depth: number }> | null = null
+  let controller: UnifiedTOCController | null = null
 
-    private progressCircle: SVGCircleElement | null = null
-    private currentSectionText: HTMLElement | null = null
-    private detailsElement: HTMLDetailsElement | null = null
-    private progressScrollHandler: (() => void) | null = null
-
-    static getInstance(): MobileTOCController {
-      return (this.instance ??= new MobileTOCController())
-    }
-
-    static resetInstance(): void {
-      this.instance?.cleanup()
-      this.instance = null
-    }
-
-    getContainerSelector() {
-      return "#mobile-toc-container"
-    }
-
-    getLinkSelector() {
-      return "#mobile-toc-container .toc-item"
-    }
-
-    protected setupCustomBehavior() {
-      // Extract headings with maxDepth from config
-      this.markdownHeadings = MobileTOCUtils.extractMarkdownHeadings(
-        "#mobile-toc",
-        SITE.tocMaxDepth
-      )
-
-      this.setupMobileElements()
-      this.setupInteraction()
-      this.setupProgressHandler()
-
-      // Initial updates
-      MobileTOCUtils.updateProgress(this.progressCircle)
-      MobileTOCUtils.updateCurrentSection(
-        this.currentSectionText,
-        this.state.activeIds,
-        this.markdownHeadings
-      )
-    }
-
-    cleanup() {
-      if (this.progressScrollHandler) {
-        window.removeEventListener("scroll", this.progressScrollHandler)
-        this.progressScrollHandler = null
-      }
-      super.cleanup()
-    }
-
-    private setupMobileElements() {
-      this.progressCircle = document.querySelector<SVGCircleElement>("#mobile-toc-progress-circle")
-      this.currentSectionText = document.getElementById("mobile-toc-current-section")
-      this.detailsElement = document.querySelector<HTMLDetailsElement>(
-        "#mobile-toc-container details"
-      )
-
-      // Initialize progress circle
-      MobileTOCUtils.initProgressCircle(this.progressCircle)
-    }
-
-    private setupInteraction() {
-      // Setup standard interactions
-      MobileTOCUtils.setupInteractions("#mobile-toc", this.detailsElement)
-
-      // Scroll to active item when details opens
-      this.detailsElement?.addEventListener("toggle", () => {
-        const activeId = this.state.activeIds?.[0]
-        if (this.detailsElement?.open && activeId) {
-          requestAnimationFrame(() => {
-            this.tocLinks.scrollToActive(activeId)
-          })
-        }
-      })
-    }
-
-    private setupProgressHandler() {
-      this.progressScrollHandler = () => {
-        MobileTOCUtils.updateProgress(this.progressCircle)
-        MobileTOCUtils.updateCurrentSection(
-          this.currentSectionText,
-          this.state.activeIds,
-          this.markdownHeadings
-        )
-      }
-      window.addEventListener("scroll", this.progressScrollHandler, { passive: true })
-    }
+  function initController() {
+    controller?.cleanup()
+    controller = new UnifiedTOCController(
+      "#mobile-toc-container",
+      "#mobile-toc-container [data-heading-link]",
+      { isMobile: true, tocMaxDepth: SITE.tocMaxDepth }
+    )
+    controller.init()
   }
 
-  // Initialize controller
-  const controller = MobileTOCController.getInstance()
+  function cleanupController() {
+    controller?.cleanup()
+    controller = null
+  }
 
-  document.addEventListener("astro:page-load", () => controller.init())
-  document.addEventListener("astro:after-swap", () => {
-    MobileTOCController.resetInstance()
-    MobileTOCController.getInstance().init()
-  })
-  document.addEventListener("astro:before-swap", () => MobileTOCController.resetInstance())
+  document.addEventListener("astro:page-load", initController)
+  document.addEventListener("astro:after-swap", initController)
+  document.addEventListener("astro:before-swap", cleanupController)
 </script>
