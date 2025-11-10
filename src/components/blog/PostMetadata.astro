@@ -1,24 +1,28 @@
 ---
 import type { PostMeta } from "@/lib/blog/types"
+import { formatSubpostCount } from "@/lib/blog/utils"
 import FormattedDate from "@/components/base/FormattedDate.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import ReadingTime from "@/components/base/ReadingTime.astro"
 import AuthorAvatar from "@/components/people/AuthorAvatar.astro"
 
-interface Props {
-  metadata: PostMeta
-  variant: "card" | "full"
+interface Props extends PostMeta {
+  variant?: "card" | "full"
   class?: string
 }
 
-const { metadata, variant = "full", class: className } = Astro.props
-
-const wordCount =
-  metadata.hasSubposts && metadata.combinedWordCount
-    ? metadata.combinedWordCount
-    : metadata.wordCount
-
+const {
+  authors,
+  createdAt,
+  updatedAt,
+  wordCount,
+  combinedWordCount,
+  hasSubposts,
+  subpostCount,
+  variant = "full",
+  class: className
+} = Astro.props
 const isCard = variant === "card"
 ---
 
@@ -31,15 +35,15 @@ const isCard = variant === "card"
   ]}
 >
   {
-    metadata.authors.length > 0 && (
+    authors.length > 0 && (
       <div class="flex items-center gap-1.5">
-        {metadata.authors.map((author) => (
+        {authors.map((author) => (
           <div class="flex items-center gap-1">
             <AuthorAvatar author={author} class="size-5" />
             {isCard ? (
               <span>{author.name}</span>
             ) : (
-              <Link href={`/authors/${author.id}`} underline class="text-foreground">
+              <Link href={`/people/${author.id}`} underline class="text-foreground">
                 {author.name}
               </Link>
             )}
@@ -51,25 +55,23 @@ const isCard = variant === "card"
 
   <div class="flex items-center gap-1">
     <Icon name="publish" title="Published" />
-    <FormattedDate date={metadata.createdAt} />
+    <FormattedDate date={createdAt} />
   </div>
 
   {
-    metadata.updatedAt && (
+    updatedAt && (
       <div class="flex items-center gap-1">
         <Icon name="edit" title="Updated" />
-        <FormattedDate date={metadata.updatedAt} />
+        <FormattedDate date={updatedAt} />
       </div>
     )
   }
 
   {
-    metadata.hasSubposts && (
+    hasSubposts && subpostCount && (
       <div class="flex items-center gap-1">
         <Icon name="subposts" />
-        <span>
-          {metadata.subpostCount} subpost{metadata.subpostCount === 1 ? "" : "s"}
-        </span>
+        <span>{formatSubpostCount(subpostCount)}</span>
       </div>
     )
   }
@@ -79,8 +81,8 @@ const isCard = variant === "card"
       <div class="flex items-center gap-1">
         <Icon name="reading-time" />
         <ReadingTime
-          wordCount={isCard ? wordCount : metadata.wordCount}
-          combinedWordCount={!isCard ? metadata.combinedWordCount : undefined}
+          wordCount={isCard && combinedWordCount ? combinedWordCount : wordCount}
+          combinedWordCount={!isCard ? combinedWordCount : undefined}
         />
       </div>
     )
