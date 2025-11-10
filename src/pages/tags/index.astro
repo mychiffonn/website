@@ -1,11 +1,13 @@
 ---
 import { PostManager } from "@/lib/blog"
+import { getSortedTags } from "@/lib/blog/tag"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
-const sortedTags = await PostManager.getInstance().getSortedTags()
+const postManager = PostManager.getInstance()
+const sortedTags = await getSortedTags(() => postManager.getMainPosts())
 ---
 
 <Layout title="Tags">

@@ -1,10 +1,10 @@
 ---
-import PostManager from "@/lib/blog"
+import { getAllAuthors } from "@/lib/blog/author"
 import Layout from "@/layouts/Layout.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import AuthorCard from "@/components/people/AuthorCard.astro"
 
-const authors = await PostManager.getInstance().getAllAuthors()
+const authors = await getAllAuthors()
 ---
 
 <Layout title="People">
