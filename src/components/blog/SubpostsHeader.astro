@@ -1,55 +1,62 @@
 ---
-import type { Post, PostMeta } from "@/lib/blog/types"
+import type { Post, PostNavItem as PostNavItemType } from "@/lib/blog/types"
 import Icon from "@/components/base/Icon.astro"
+import PostNavItem from "@/components/blog/PostNavItem.astro"
 import SubpostCountBadge from "@/components/blog/SubpostCountBadge.astro"
-import SubpostNavItem from "@/components/blog/SubpostNavItem.astro"
 import SubpostsList from "@/components/blog/SubpostsList.astro"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Props {
   currentPost: Post
   parentPost?: Post | null
-  subposts?: PostMeta[]
+  postNavItems: PostNavItemType[]
   isSubpost?: boolean
-  activePost: PostMeta
+  activePostNavItem: PostNavItemType
 }
 
-const { currentPost, parentPost, subposts = [], isSubpost = false, activePost } = Astro.props
+const {
+  currentPost,
+  parentPost,
+  postNavItems = [],
+  isSubpost = false,
+  activePostNavItem
+} = Astro.props
 
 const activePostData = parentPost || currentPost
-const isActivePost = activePostData.id === currentPost.id
 const currentSubpostDetails = isSubpost
-  ? subposts.find((subpost) => subpost.id === currentPost.id) || null
+  ? postNavItems.find((item) => item.id === currentPost.id) || null
   : null
 const currentTitle = currentSubpostDetails?.title || activePostData.data.title
-const subpostCount = subposts.length
+const subpostCount = postNavItems.length
 ---
 
 {
-  activePost && subpostCount > 0 && (
+  activePostNavItem && subpostCount > 0 && (
     <nav id="mobile-subposts-container" class="w-full xl:hidden" aria-label="Subposts navigation">
       <details class="group" aria-expanded="false">
         <summary class="flex w-full cursor-pointer items-center justify-between p-3">
           <div class="flex flex-1 items-center gap-2">
             <Icon
               name="post-active"
-              class="text-primary"
+              class="text-primary size-5 shrink-0"
               aria-label={isSubpost ? "Active subpost" : "Active post"}
             />
             <span class="text-foreground flex-1 truncate text-sm leading-tight font-medium">
               {currentTitle}
             </span>
-            {subpostCount && !isSubpost && (
-              <SubpostCountBadge count={subpostCount} variant="full" class="flex-shrink-0" />
-            )}
           </div>
-          <Icon
-            name="chevron-down"
-            class:list={[
-              "text-muted-foreground ml-2 flex-shrink-0",
-              "transition-transform duration-200 group-open:rotate-180"
-            ]}
-          />
+          <div class="flex shrink-0 items-center gap-2">
+            {subpostCount > 0 && !isSubpost && (
+              <SubpostCountBadge count={subpostCount} variant="full" />
+            )}
+            <Icon
+              name="chevron-down"
+              class:list={[
+                "text-muted-foreground",
+                "transition-transform duration-200 group-open:rotate-180"
+              ]}
+            />
+          </div>
         </summary>
 
         <div class="border-border/50 border-t" data-scroll-container>
@@ -59,11 +66,9 @@ const subpostCount = subposts.length
             data-scroll-area
           >
             <div class="flex list-none flex-col gap-y-1 px-3 py-2">
-              {activePost && (
-                <SubpostNavItem post={activePost} isActive={isActivePost} isSubpost={false} />
-              )}
+              {activePostNavItem && <PostNavItem {...activePostNavItem} />}
 
-              <SubpostsList subposts={subposts} currentPostId={currentPost.id} />
+              <SubpostsList items={postNavItems} />
             </div>
           </ScrollArea>
         </div>
@@ -73,80 +78,43 @@ const subpostCount = subposts.length
 }
 
 <script>
-  import { BaseTOCController } from "@/lib/blog/scroll"
-  import type { ScrollMaskConfig } from "@/lib/blog/types"
+  function initHeader() {
+    const container = document.getElementById("mobile-subposts-container")
+    if (!container) return
 
-  class SubpostsHeaderController extends BaseTOCController {
-    private detailsElement: HTMLDetailsElement | null = null
+    const detailsElement = container.querySelector("details")
+    const links = container.querySelectorAll("a")
+    const scrollArea = container.querySelector<HTMLElement>("[data-radix-scroll-area-viewport]")
 
-    getContainerSelector() {
-      return "#mobile-subposts-container"
-    }
+    if (detailsElement) {
+      // This logic should only be attached once.
+      // A simple check to prevent duplicate listeners after HMR or swaps.
+      if (detailsElement.dataset.initialized) return
+      detailsElement.dataset.initialized = "true"
 
-    getLinkSelector() {
-      return "#mobile-subposts-container a"
-    }
-
-    // Override for Radix ScrollArea (uses ScrollArea like sidebars)
-    protected getScrollAreaSelector(): string {
-      return "[data-radix-scroll-area-viewport]"
-    }
-
-    // Override mask classes for different fade effect
-    protected getMaskClasses(): ScrollMaskConfig {
-      return { top: "mask-t-from-80%", bottom: "mask-b-from-80%" }
-    }
-
-    getActiveItemSelector() {
-      return "[aria-current='page']"
-    }
-
-    protected setupCustomBehavior() {
-      const container = document.querySelector(this.getContainerSelector())
-      if (!container) return
-
-      this.detailsElement = container.querySelector("details")
-      const links = container.querySelectorAll("a")
-
-      if (this.detailsElement) {
-        this.detailsElement.addEventListener("toggle", () => {
-          if (this.detailsElement?.open) {
-            requestAnimationFrame(() => {
-              // Find active item and scroll to it
-              const activeItem = this.state.scrollArea?.querySelector(this.getActiveItemSelector())
-              if (activeItem && this.state.scrollArea) {
-                const areaRect = this.state.scrollArea.getBoundingClientRect()
-                const itemRect = activeItem.getBoundingClientRect()
-                const currentItemTop = itemRect.top - areaRect.top + this.state.scrollArea.scrollTop
-                const targetScroll = Math.max(
-                  0,
-                  Math.min(
-                    currentItemTop - (areaRect.height - itemRect.height) / 2,
-                    this.state.scrollArea.scrollHeight - this.state.scrollArea.clientHeight
-                  )
-                )
-                this.state.scrollArea.scrollTop = targetScroll
-              }
-              setTimeout(() => this.tocScrollMask.update(this.getMaskClasses()), 100)
-            })
-          }
-        })
-      }
-
-      links.forEach((link) => {
-        link.addEventListener("click", () => {
-          if (this.detailsElement) this.detailsElement.open = false
-        })
+      detailsElement.addEventListener("toggle", () => {
+        if (detailsElement.open && scrollArea) {
+          requestAnimationFrame(() => {
+            const activeItem = scrollArea.querySelector<HTMLElement>("[aria-current='page']")
+            if (activeItem) {
+              const areaRect = scrollArea.getBoundingClientRect()
+              const itemRect = activeItem.getBoundingClientRect()
+              const itemTop = itemRect.top - areaRect.top + scrollArea.scrollTop
+              const targetScroll = Math.max(0, itemTop - (areaRect.height - itemRect.height) / 2)
+              scrollArea.scrollTop = targetScroll
+            }
+          })
+        }
       })
     }
+
+    links.forEach((link) => {
+      link.addEventListener("click", () => {
+        if (detailsElement) detailsElement.open = false
+      })
+    })
   }
 
-  const controller = new SubpostsHeaderController()
-
-  document.addEventListener("astro:page-load", () => controller.init())
-  document.addEventListener("astro:after-swap", () => {
-    controller.cleanup()
-    controller.init()
-  })
-  document.addEventListener("astro:before-swap", () => controller.cleanup())
+  document.addEventListener("astro:page-load", initHeader)
+  document.addEventListener("astro:after-swap", initHeader)
 </script>
