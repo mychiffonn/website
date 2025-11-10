@@ -24,6 +24,7 @@ import tailwindcss from "@tailwindcss/vite"
 export default defineConfig({
   site: "https://mychiffonn.com",
   trailingSlash: "never",
+  output: "static",
   image: {
     responsiveStyles: true,
     layout: "constrained"

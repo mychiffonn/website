@@ -1,10 +1,10 @@
 ---
 title: My motivation to do AI research
 description: Evolving thoughts so I can write my SOP better
-createdAt: 2025-11-07T12:00:00
+createdAt: 2025-11-09T17:00:00
 tags: [research, motivation]
 authors: ["mychiffon"]
-draft: false
+draft: true
 ---
 
 ## Why AI research?
@@ -18,5 +18,3 @@ draft: false
 #### Pluralistic alignment
 
 ### Catastrophic risks
-
-####

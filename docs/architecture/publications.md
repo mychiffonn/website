@@ -77,8 +77,7 @@ export const PUBLICATIONS: PublicationConfig = {
     firstName: "My Chiffon",
     lastName: "Nguyen",
     aliases: ["My Nguyen", "M. Nguyen", "Chiffon Nguyen"]
-  },
-  sortOrder: "reverse-chronological" // or "chronological"
+  }
 }
 ```
 
