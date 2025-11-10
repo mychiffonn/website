@@ -265,33 +265,54 @@ export class PostManagerImpl implements PostManagerInterface {
       : null
 
     // Create navigation items for subpost components
-    const postNavItems: PostNavItem[] = subpostIds.map((subpostId) => {
-      const subpostSection = tocSections.find((section) => section.postId === subpostId)
-      return {
-        id: subpostId,
-        title: subpostSection?.postTitle || "",
-        isActive: subpostId === postId,
-        isSubpost: true,
-        wordCount: 0, // Could be populated if needed
-        combinedWordCount: undefined,
-        subpostCount: 0,
-        href: `/blog/${subpostId}`
-      }
-    })
+    const postNavItems: PostNavItem[] = await Promise.all(
+      subpostIds.map(async (subpostId) => {
+        const subpostSection = tocSections.find((section) => section.postId === subpostId)
+        const subpostMetadata = await this.getMetadata(subpostId)
+        return {
+          id: subpostId,
+          title: subpostSection?.postTitle || "",
+          isActive: subpostId === postId,
+          isSubpost: true,
+          wordCount: subpostMetadata.wordCount,
+          combinedWordCount: undefined,
+          subpostCount: 0,
+          href: `/blog/${subpostId}`
+        }
+      })
+    )
 
     // Create active post navigation item
     const activePostNavItem: PostNavItem | null =
       hasSubposts || isSubpost
-        ? {
-            id: isSubpost ? parentPost!.id : postId,
-            title: isSubpost ? parentPost!.title : metadata.title,
-            isActive: !isSubpost,
-            isSubpost: false,
-            wordCount: metadata.wordCount,
-            combinedWordCount: metadata.combinedWordCount ?? undefined,
-            subpostCount: metadata.subpostCount,
-            href: `/blog/${isSubpost ? parentPost!.id : postId}`
-          }
+        ? await (async () => {
+            if (isSubpost && parentPost) {
+              // When on subpost page, show parent post metadata
+              const parentMetadata = await this.getMetadata(parentPost.id)
+              return {
+                id: parentPost.id,
+                title: parentPost.title,
+                isActive: false,
+                isSubpost: false,
+                wordCount: parentMetadata.wordCount,
+                combinedWordCount: parentMetadata.combinedWordCount ?? undefined,
+                subpostCount: parentMetadata.subpostCount,
+                href: `/blog/${parentPost.id}`
+              }
+            } else {
+              // When on parent post page, show current metadata
+              return {
+                id: postId,
+                title: metadata.title,
+                isActive: true,
+                isSubpost: false,
+                wordCount: metadata.wordCount,
+                combinedWordCount: metadata.combinedWordCount ?? undefined,
+                subpostCount: metadata.subpostCount,
+                href: `/blog/${postId}`
+              }
+            }
+          })()
         : null
 
     return {
