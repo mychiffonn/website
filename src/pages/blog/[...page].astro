@@ -3,6 +3,7 @@ import type { PaginateFunction } from "astro"
 
 import { SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
+import { getSortedTags } from "@/lib/blog/tag"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
@@ -25,7 +26,7 @@ const hasNoPosts = currentPagePosts.length === 0
 
 let postsMetadata: Awaited<ReturnType<typeof postManager.getMetadata>>[] = []
 let postsByYear: { year: number; posts: typeof postsMetadata }[] = []
-let sortedTags: Awaited<ReturnType<typeof postManager.getSortedTags>> = []
+let sortedTags: Awaited<ReturnType<typeof getSortedTags>> = []
 let displayTags: typeof sortedTags = []
 let numTags = 0
 let moreTagsButton = false
@@ -50,7 +51,7 @@ if (!hasNoPosts) {
     .map(([year, posts]) => ({ year: parseInt(year), posts }))
     .sort((a, b) => b.year - a.year)
 
-  sortedTags = await postManager.getSortedTags()
+  sortedTags = await getSortedTags(() => postManager.getMainPosts())
   displayTags = sortedTags.slice(0, 15)
   numTags = sortedTags.length
   moreTagsButton = numTags > 15

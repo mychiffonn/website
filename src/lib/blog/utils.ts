@@ -11,7 +11,7 @@
 
 import { SITE } from "@site-config"
 
-import type { Post, PostUtils as PostUtilsInterface } from "./types"
+import type { Post } from "./types"
 
 /**
  * Calculates word count from HTML content, excluding code blocks and math expressions.
@@ -80,85 +80,89 @@ export function calculateWordCountFromPost(post: Post): number {
 }
 
 /**
- * Utility class implementing common post operations.
+ * Determines if a post ID represents a subpost.
  *
- * This class contains pure functions that operate on post data without
- * requiring external dependencies. It implements the PostUtils interface
- * and can be easily tested and reused across the system.
+ * Subposts are identified by having a forward slash in their ID,
+ * indicating they belong to a parent post directory.
+ *
+ * @param postId - Post ID to check
+ * @returns True if the post is a subpost
+ *
+ * @example
+ * ```typescript
+ * console.log(isSubpost('parent-post/subpost')) // true
+ * console.log(isSubpost('main-post')) // false
+ * ```
  */
-export class PostUtils implements PostUtilsInterface {
-  /**
-   * Determines if a post ID represents a subpost.
-   *
-   * Subposts are identified by having a forward slash in their ID,
-   * indicating they belong to a parent post directory.
-   *
-   * @param postId - Post ID to check
-   * @returns True if the post is a subpost
-   *
-   * @example
-   * ```typescript
-   * const utils = new PostUtils()
-   * console.log(utils.isSubpost('parent-post/subpost')) // true
-   * console.log(utils.isSubpost('main-post')) // false
-   * ```
-   */
-  isSubpost(postId: string): boolean {
-    return postId.includes("/")
-  }
+export function isSubpost(postId: string): boolean {
+  return postId.includes("/")
+}
 
-  /**
-   * Extracts the parent post ID from a subpost ID.
-   *
-   * Takes the first part before the first forward slash as the parent ID.
-   *
-   * @param subpostId - Subpost ID in format "parent/subpost"
-   * @returns Parent post ID
-   *
-   * @example
-   * ```typescript
-   * const utils = new PostUtils()
-   * const parentId = utils.getParentId('parent-post/my-subpost')
-   * console.log(parentId) // 'parent-post'
-   * ```
-   */
-  getParentId(subpostId: string): string {
-    return subpostId.split("/")[0]
-  }
+/**
+ * Extracts the parent post ID from a subpost ID.
+ *
+ * Takes the first part before the first forward slash as the parent ID.
+ *
+ * @param subpostId - Subpost ID in format "parent/subpost"
+ * @returns Parent post ID
+ *
+ * @example
+ * ```typescript
+ * const parentId = getParentId('parent-post/my-subpost')
+ * console.log(parentId) // 'parent-post'
+ * ```
+ */
+export function getParentId(subpostId: string): string {
+  return subpostId.split("/")[0]
+}
 
-  /**
-   * Sorts an array of posts by publication date in descending order (newest first).
-   *
-   * Uses the createdAt field from the post's data object and sorts by
-   * numeric timestamp value for consistent ordering.
-   *
-   * @param items - Array of objects with createdAt in their data
-   * @returns New sorted array (does not mutate original)
-   *
-   * @example
-   * ```typescript
-   * const utils = new PostUtils()
-   * const sortedPosts = utils.sortByDateDesc(posts)
-   * // Posts are now ordered newest to oldest
-   * ```
-   */
-  sortByDateDesc<T extends { data: { createdAt: Date } }>(items: T[]): T[] {
-    return [...items].sort((a, b) => b.data.createdAt.valueOf() - a.data.createdAt.valueOf())
-  }
+/**
+ * Sorts an array of posts by publication date in descending order (newest first).
+ *
+ * Uses the createdAt field from the post's data object and sorts by
+ * numeric timestamp value for consistent ordering.
+ *
+ * @param items - Array of objects with createdAt in their data
+ * @returns New sorted array (does not mutate original)
+ *
+ * @example
+ * ```typescript
+ * const sortedPosts = sortByDateDesc(posts)
+ * // Posts are now ordered newest to oldest
+ * ```
+ */
+export function sortByDateDesc<T extends { data: { createdAt: Date } }>(items: T[]): T[] {
+  return [...items].sort((a, b) => b.data.createdAt.valueOf() - a.data.createdAt.valueOf())
+}
 
-  /**
-   * Calculates word count from HTML content.
-   * Delegates to the standalone function for consistency.
-   */
-  calculateWordCountFromHtml(html: string | null | undefined): number {
-    return calculateWordCountFromHtml(html)
-  }
+// ============================================================================
+// Display Formatting Utils
+// ============================================================================
 
-  /**
-   * Calculates word count from a post object.
-   * Delegates to the standalone function for consistency.
-   */
-  calculateWordCountFromPost(post: Post): number {
-    return calculateWordCountFromPost(post)
-  }
+/**
+ * Format subpost count display text
+ * Handles singular/plural formatting consistently
+ */
+export function formatSubpostCount(count: number): string {
+  return `${count} subpost${count === 1 ? "" : "s"}`
+}
+
+/**
+ * Generate navigation href for posts
+ * Centralizes URL generation logic
+ */
+export function generatePostHref(postId: string, baseUrl: string): string {
+  return `${baseUrl}/${postId}`
+}
+
+/**
+ * Determine icon name based on post state
+ * Eliminates inline icon selection logic in components
+ */
+export function getPostIconName(
+  isActive: boolean,
+  isSubpost: boolean
+): "post-active" | "subpost" | "parent-post" {
+  if (isActive) return "post-active"
+  return isSubpost ? "subpost" : "parent-post"
 }

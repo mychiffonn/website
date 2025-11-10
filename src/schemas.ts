@@ -200,10 +200,7 @@ export const PublicationConfigSchema = z.object({
     firstName: z.string(),
     lastName: z.string(),
     aliases: z.array(z.string()).optional() // Handle name variations
-  }),
-
-  // Display settings
-  sortOrder: z.enum(["chronological", "reverse-chronological"]).default("reverse-chronological")
+  })
 })
 
 /**

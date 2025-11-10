@@ -24,37 +24,25 @@ const {
 const calculateMinutes = (words: number) => Math.max(1, Math.round(words / 220))
 
 const primaryMinutes = calculateMinutes(wordCount)
-const primaryDuration = `PT${primaryMinutes}M`
-
-// Format primary reading time
 const primaryText = customSuffix ? `${primaryMinutes} min ${customSuffix}` : `${primaryMinutes} min`
 
-// Handle combined word count if provided
-const combinedData = (() => {
-  if (!combinedWordCount || combinedWordCount <= 0 || combinedWordCount <= wordCount) {
-    return null
-  }
+// Check if we should show combined time
+const shouldShowCombined =
+  combinedWordCount &&
+  combinedWordCount > wordCount &&
+  calculateMinutes(combinedWordCount) > primaryMinutes
 
-  const combinedMinutes = calculateMinutes(combinedWordCount)
-  if (combinedMinutes <= 0) {
-    return null
-  }
-
-  return {
-    duration: `PT${combinedMinutes}M`,
-    text: `${combinedMinutes} min total`
-  }
-})()
+const combinedMinutes = shouldShowCombined ? calculateMinutes(combinedWordCount) : 0
 ---
 
 {
   wordCount > 0 && (
     <span class={className}>
-      <time datetime={primaryDuration}>{primaryText}</time>
-      {combinedData && (
+      <time datetime={`PT${primaryMinutes}M`}>{primaryText}</time>
+      {shouldShowCombined && (
         <>
           <span>{separator}</span>
-          <time datetime={combinedData.duration}>{combinedData.text}</time>
+          <time datetime={`PT${combinedMinutes}M`}>{combinedMinutes} min total</time>
         </>
       )}
     </span>

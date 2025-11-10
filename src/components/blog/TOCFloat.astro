@@ -1,0 +1,57 @@
+---
+import type { MarkdownHeading } from "astro"
+
+import { getHeadingWidth } from "@/lib/blog/toc"
+import { cn } from "@/lib/utils"
+
+interface Props {
+  headings: MarkdownHeading[]
+  class?: string
+}
+
+const { headings, class: className } = Astro.props
+---
+
+<div class={cn("toc-summary-container flex flex-col gap-1", className)}>
+  {
+    headings.map((heading) => {
+      const widthClass = getHeadingWidth(heading.depth)
+
+      return (
+        <a
+          href={`#${heading.slug}`}
+          class={`${widthClass} bg-muted-foreground/50 data-active:bg-accent h-0.5 transition-colors duration-200`}
+          data-heading-link={heading.slug}
+        />
+      )
+    })
+  }
+</div>
+
+<script>
+  import { UnifiedTOCController } from "@/lib/blog/scroll"
+
+  let controller: UnifiedTOCController | null = null
+
+  function initController() {
+    // astro:after-swap can run before the new content is fully ready.
+    // A small delay ensures the container is present.
+    requestAnimationFrame(() => {
+      if (controller) {
+        controller.cleanup()
+      }
+
+      controller = new UnifiedTOCController(".toc-summary-container", "[data-heading-link]")
+      controller.init()
+    })
+  }
+
+  function cleanupController() {
+    controller?.cleanup()
+    controller = null
+  }
+
+  document.addEventListener("astro:page-load", initController)
+  document.addEventListener("astro:after-swap", initController)
+  document.addEventListener("astro:before-swap", cleanupController)
+</script>

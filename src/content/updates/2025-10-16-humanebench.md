@@ -1,1 +1,1 @@
-Helping build [HumaneBench](https://humanebench.ai), human-friendly eval dataset, with Inspect Evals framework.
+Helping build [HumaneBench](https://humanebench.ai), human-friendly eval dataset, with [Inspect](https://inspect.aisi.org.uk/) framework.

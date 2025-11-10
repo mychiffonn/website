@@ -1,25 +1,20 @@
 ---
-import type { PostMeta } from "@/lib/blog/types"
+import type { PostNavItem as PostNavItemData } from "@/lib/blog/types"
+import { getPostIconName } from "@/lib/blog/utils"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import ReadingTime from "@/components/base/ReadingTime.astro"
 import SubpostCountBadge from "@/components/blog/SubpostCountBadge.astro"
 
-interface Props {
-  post: PostMeta
-  isActive: boolean
-  isSubpost: boolean
-}
+interface Props extends PostNavItemData {}
 
-const { post, isActive, isSubpost = false } = Astro.props
+const { title, isActive, isSubpost, wordCount, combinedWordCount, subpostCount, href } = Astro.props
 
-const actualWordCount = post.wordCount
-const combinedWordCount = post.combinedWordCount
-const subpostCount = post.subpostCount
+const iconName = getPostIconName(isActive, isSubpost)
 
-const iconName = isActive ? "post-active" : isSubpost ? "subpost" : "parent-post"
-
-const linkHref = `/blog/${post.id}`
+// For subposts, don't use combinedWordCount - only show individual reading time
+// For parent posts, show both individual and combined times
+const effectiveCombinedWordCount = isSubpost ? undefined : combinedWordCount
 ---
 
 {
@@ -37,20 +32,22 @@ const linkHref = `/blog/${post.id}`
         aria-label={isSubpost ? "Current subpost" : "Current post"}
       />
       <div class="flex min-w-0 flex-col gap-0.5">
-        <span class="text-foreground line-clamp-2 leading-tight font-medium">{post.title}</span>
-        {subpostCount && !isSubpost && <SubpostCountBadge count={subpostCount} variant="full" />}
-        {(actualWordCount > 0 || (subpostCount && !isSubpost)) && (
-          <div class="text-muted-foreground flex items-center gap-2 text-xs">
-            {actualWordCount > 0 && (
-              <ReadingTime wordCount={actualWordCount} combinedWordCount={combinedWordCount} />
-            )}
-          </div>
+        <span class="text-foreground line-clamp-2 leading-tight font-medium">{title}</span>
+        {!isSubpost && !!subpostCount && subpostCount > 0 && (
+          <SubpostCountBadge count={subpostCount} variant="full" />
+        )}
+        {wordCount > 0 && (
+          <ReadingTime
+            wordCount={wordCount}
+            combinedWordCount={effectiveCombinedWordCount}
+            class="text-muted-foreground flex items-center gap-2 text-xs"
+          />
         )}
       </div>
     </div>
   ) : (
     <Link
-      href={linkHref}
+      href={href}
       class:list={[
         "group/post flex items-center gap-2 rounded-md px-2 py-2 text-sm",
         "hover:bg-accent/50 transition-all duration-200",
@@ -69,14 +66,14 @@ const linkHref = `/blog/${post.id}`
             "group-hover/post:text-accent-foreground transition-colors"
           ]}
         >
-          {post.title}
+          {title}
         </span>
-        {(actualWordCount > 0 || (subpostCount && !isSubpost)) && (
+        {(wordCount > 0 || (!!subpostCount && subpostCount > 0 && !isSubpost)) && (
           <div class="text-muted-foreground/60 group-hover/post:text-accent-foreground/50 flex items-center gap-2 text-xs transition-colors">
-            {actualWordCount > 0 && (
-              <ReadingTime wordCount={actualWordCount} combinedWordCount={combinedWordCount} />
+            {wordCount > 0 && (
+              <ReadingTime wordCount={wordCount} combinedWordCount={effectiveCombinedWordCount} />
             )}
-            {subpostCount && !isSubpost && (
+            {!!subpostCount && subpostCount > 0 && !isSubpost && (
               <SubpostCountBadge count={subpostCount} variant="compact" />
             )}
           </div>

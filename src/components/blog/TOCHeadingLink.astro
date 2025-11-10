@@ -1,25 +1,29 @@
 ---
 import type { MarkdownHeading } from "astro"
 
+import type { TOCHeadingItem } from "@/lib/blog/types"
 import { cn } from "@/lib/utils"
 
 interface Props {
-  heading: MarkdownHeading
-  href: string
+  heading: MarkdownHeading | TOCHeadingItem
+  href?: string
   class?: string
 }
 
-const { heading, href, class: className } = Astro.props
+const { heading, href: propHref, class: className } = Astro.props
+
+// Use heading.href if it exists (TOCHeadingItem), otherwise use prop href or construct from slug
+const href = "href" in heading ? heading.href : propHref || `#${heading.slug}`
 ---
 
 <li>
   <a
     href={href}
     class={cn(
-      "toc-item block px-2 py-1 text-sm text-muted-foreground",
-      "hover:bg-accent/50 hover:text-accent-foreground/50 hover:rounded-sm transition-all duration-200",
+      "toc-item block px-2 py-1 text-sm text-muted-foreground rounded-sm",
+      "hover:bg-accent/50 hover:text-accent-foreground/50 transition-all duration-200",
       "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-      "[&[data-active]]:text-foreground [&[data-active]]:font-medium",
+      "data-active:text-foreground data-active:font-medium data-active:bg-accent/30",
       className
     )}
     data-heading-link={heading.slug}

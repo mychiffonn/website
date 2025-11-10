@@ -1,0 +1,103 @@
+---
+import type { PostNavItem } from "@/lib/blog/types"
+import { cn } from "@/lib/utils"
+
+interface Props {
+  postNavItems: PostNavItem[]
+  activePostNavItem?: PostNavItem
+  class?: string
+}
+
+const { postNavItems, activePostNavItem, class: className } = Astro.props
+
+// Combine active post and subposts for the summary
+const allItems = [
+  ...(activePostNavItem
+    ? [
+        {
+          ...activePostNavItem,
+          type: "parent" as const,
+          isSubpost: false
+        }
+      ]
+    : []),
+  ...postNavItems
+]
+---
+
+<aside class={cn("flex flex-col gap-1", className)}>
+  {
+    allItems.map((item) => {
+      const widthClass = item.isSubpost ? "w-3" : "w-4"
+      const stateClass = item.isActive ? "bg-primary" : "bg-muted-foreground/50"
+
+      return (
+        <span
+          class={`${widthClass} h-0.5 ${stateClass} transition-colors duration-200`}
+          data-post-id={item.id}
+        />
+      )
+    })
+  }
+</aside>
+
+<script>
+  class SubpostsFloatController {
+    private static instance: SubpostsFloatController | null = null
+
+    static getInstance(): SubpostsFloatController {
+      return (this.instance ??= new SubpostsFloatController())
+    }
+
+    static resetInstance(): void {
+      this.instance = null
+    }
+
+    init() {
+      // Update indicators based on current URL
+      this.updateActiveIndicators()
+
+      // Listen for navigation changes
+      document.addEventListener("astro:page-load", () => {
+        this.updateActiveIndicators()
+      })
+    }
+
+    private updateActiveIndicators() {
+      const currentPath = window.location.pathname
+      const indicators = document.querySelectorAll<HTMLElement>("[data-post-id]")
+
+      let longestMatchId = ""
+      indicators.forEach((indicator) => {
+        const postId = indicator.dataset.postId
+        if (postId && currentPath.endsWith(postId)) {
+          if (postId.length > longestMatchId.length) {
+            longestMatchId = postId
+          }
+        }
+      })
+
+      indicators.forEach((indicator) => {
+        const postId = indicator.dataset.postId
+        const isActive = postId === longestMatchId
+
+        if (isActive) {
+          indicator.classList.remove("bg-muted-foreground/30")
+          indicator.classList.add("bg-primary")
+        } else {
+          indicator.classList.remove("bg-primary")
+          indicator.classList.add("bg-muted-foreground/30")
+        }
+      })
+    }
+  }
+
+  // Initialize controller
+  const controller = SubpostsFloatController.getInstance()
+
+  document.addEventListener("astro:page-load", () => controller.init())
+  document.addEventListener("astro:after-swap", () => {
+    SubpostsFloatController.resetInstance()
+    SubpostsFloatController.getInstance().init()
+  })
+</script>

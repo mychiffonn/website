@@ -4,6 +4,7 @@ description: Minimalist Llama2 implementation using PyTorch, exploring LLM compo
 repo: https://github.com/mychiffonn/cmu-advanced-nlp-minllama-assignment
 toDate: 2024-07-15
 context: personal
+isHighlighted: true
 tags:
   - Large Language Model (LLM)
   - PyTorch

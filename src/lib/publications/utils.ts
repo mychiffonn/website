@@ -37,6 +37,8 @@ interface CitationEntry {
   pdf?: string
   code?: string
   demo?: string
+  draft?: string
+  proposal?: string
   post?: string
   poster?: string
   resources?: string
@@ -68,6 +70,8 @@ export interface Publication {
   pdf?: string
   code?: string
   demo?: string
+  draft?: string
+  proposal?: string
   post?: string
   poster?: string
   resources?: string
@@ -110,6 +114,8 @@ const configureCustomFields = (): void => {
   config.constants.fieldTypes.award = ["field", "literal"]
   config.constants.fieldTypes.code = ["field", "uri"]
   config.constants.fieldTypes.demo = ["field", "uri"]
+  config.constants.fieldTypes.draft = ["field", "uri"]
+  config.constants.fieldTypes.proposal = ["field", "uri"]
   config.constants.fieldTypes.pdf = ["field", "uri"]
   config.constants.fieldTypes.post = ["field", "uri"]
   config.constants.fieldTypes.poster = ["field", "uri"]
@@ -193,6 +199,8 @@ export function parseBibTeX(bibContent: string): Publication[] {
         pdf: entry.pdf || customFields.pdf,
         code: entry.code || customFields.code,
         demo: entry.demo || customFields.demo,
+        draft: entry.draft || customFields.draft,
+        proposal: entry.proposal || customFields.proposal,
         post: entry.post || customFields.post,
         poster: entry.poster || customFields.poster,
         resources: entry.resources || customFields.resources,
@@ -207,7 +215,7 @@ export function parseBibTeX(bibContent: string): Publication[] {
         eprint: entry.eprint || customFields.eprint
       }
     })
-  } catch (error) {
+  } catch (_error) {
     return []
   }
 }
@@ -226,7 +234,7 @@ export function formatCitation(entry: Publication, style: string = "apa"): strin
       template: `${style}`,
       lang: "en-US"
     })
-  } catch (error) {
+  } catch (_error) {
     return `${entry.authors.join(", ")}. (${entry.year}). ${entry.title}.`
   }
 }
@@ -242,6 +250,8 @@ export function highlightAuthorName(
   highlightConfig: PublicationConfig["highlightAuthor"]
 ): string[] {
   const { firstName, lastName, aliases = [] } = highlightConfig
+
+  // Create exact name patterns to match
   const namesToHighlight = [
     `${firstName} ${lastName}`,
     `${lastName}, ${firstName}`,
@@ -251,16 +261,23 @@ export function highlightAuthorName(
   ]
 
   return authors.map((author) => {
-    const authorLower = author.toLowerCase()
+    const authorTrimmed = author.trim()
     const shouldHighlight = namesToHighlight.some((name) => {
+      // Exact match (case-insensitive)
+      if (authorTrimmed.toLowerCase() === name.toLowerCase()) {
+        return true
+      }
+
+      // For aliases that might be shorter, check if author starts/ends with the alias
+      // but only if it's a complete word boundary
       const nameLower = name.toLowerCase()
-      // Check for exact match or partial match that includes both first and last name
-      return (
-        authorLower.includes(nameLower) ||
-        nameLower.includes(authorLower) ||
-        (authorLower.includes(firstName.toLowerCase()) &&
-          authorLower.includes(lastName.toLowerCase()))
+
+      // Word boundary regex - matches only complete words
+      const wordBoundaryRegex = new RegExp(
+        `\\b${nameLower.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
+        "i"
       )
+      return wordBoundaryRegex.test(authorTrimmed)
     })
 
     return shouldHighlight ? `<strong>${author}</strong>` : author
@@ -316,6 +333,8 @@ export function getPublicationLinks(entry: Publication): PublicationLink[] {
     "pdf",
     "code",
     "demo",
+    "draft",
+    "proposal",
     "website",
     "slides",
     "video",
@@ -349,19 +368,12 @@ export function getPublicationLinks(entry: Publication): PublicationLink[] {
  * @param config - Publication configuration
  * @returns Sorted array of publications
  */
-export function sortPublications(
-  publications: Publication[],
-  config: PublicationConfig
-): Publication[] {
+export function sortPublications(publications: Publication[]): Publication[] {
   const sorted = [...publications].sort((a, b) => {
     const yearA = a.year || 0
     const yearB = b.year || 0
 
-    if (config.sortOrder === "chronological") {
-      return yearA - yearB
-    } else {
-      return yearB - yearA
-    }
+    return yearB - yearA
   })
 
   return sorted
@@ -379,27 +391,6 @@ export function getSelectedPublications(
 ): Publication[] {
   const selected = publications.filter((pub) => pub.selected === true)
   return limit ? selected.slice(0, limit) : selected
-}
-
-/**
- * Group publications by year
- * @param publications - Array of publications
- * @returns Object with years as keys and publication arrays as values
- */
-export function groupPublicationsByYear(
-  publications: Publication[]
-): Record<string, Publication[]> {
-  const grouped: Record<string, Publication[]> = {}
-
-  for (const pub of publications) {
-    const year = pub.year || 0
-    if (!grouped[year]) {
-      grouped[year] = []
-    }
-    grouped[year].push(pub)
-  }
-
-  return grouped
 }
 
 /**

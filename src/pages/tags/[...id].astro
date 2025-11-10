@@ -1,12 +1,13 @@
 ---
-import { PostManager } from "@/lib/blog"
+import { PostManager, type PostMeta } from "@/lib/blog"
+import { getAllTags } from "@/lib/blog/tag"
 import Layout from "@/layouts/Layout.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
 export async function getStaticPaths() {
-  const tagMap = await PostManager.getInstance().getAllTags()
-  const uniqueTags = Array.from(tagMap.keys())
+  const postManager = PostManager.getInstance()
+  const uniqueTags = await getAllTags(() => postManager.getMainPosts())
 
   return uniqueTags.map((tag) => ({
     params: { id: tag },
@@ -16,8 +17,7 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.props
 const postManager = PostManager.getInstance()
-const posts = await postManager.getPostsByTag(tag)
-const postsMetadata = await Promise.all(posts.map((post) => postManager.getMetadata(post.id)))
+const batchMetadata: PostMeta[] = await postManager.getPostsByTag(tag)
 ---
 
 <Layout
@@ -34,7 +34,7 @@ const postsMetadata = await Promise.all(posts.map((post) => postManager.getMetad
 
   <ul class="flex flex-col gap-y-4">
     {
-      postsMetadata.map((metadata) => (
+      batchMetadata.map((metadata) => (
         <li>
           <PreviewCard metadata={metadata} />
         </li>

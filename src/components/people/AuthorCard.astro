@@ -13,7 +13,7 @@ interface Props {
 
 const { author } = Astro.props
 const { id, name, bio, pronouns, links } = author
-const isAuthorPage = Astro.url.pathname === `/authors/${id}`
+const isAuthorPage = Astro.url.pathname === `/people/${id}`
 
 const cardClasses = cn(
   "card relative flex flex-wrap gap-4 py-4",
@@ -25,7 +25,7 @@ const cardClasses = cn(
   {
     !isAuthorPage && (
       <a
-        href={`/authors/${id}`}
+        href={`/people/${id}`}
         class="absolute inset-0 z-20"
         aria-label={`View profile for ${name}`}
       />

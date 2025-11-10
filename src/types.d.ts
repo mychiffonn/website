@@ -22,6 +22,4 @@ export type ProfileConfig = z.infer<typeof ProfileConfigSchema>
 
 export type FooterConfig = z.infer<typeof FooterConfigSchema>
 
-export type Tool = z.infer<typeof ToolSchema>
-
 export type PublicationConfig = z.infer<typeof PublicationConfigSchema>

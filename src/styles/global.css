@@ -149,7 +149,7 @@
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   }
 
-  html, body {
+  body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     padding-left: 8px;

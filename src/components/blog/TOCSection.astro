@@ -1,73 +1,57 @@
 ---
-import { tocUtils } from "@/lib/blog"
-import type { TOCSection } from "@/lib/blog/types"
+import { getHeadingMargin } from "@/lib/blog/toc"
+import type { TOCHeadingItem } from "@/lib/blog/types"
 import { cn } from "@/lib/utils"
+import Icon from "@/components/base/Icon.astro"
 import TOCHeadingLink from "@/components/blog/TOCHeadingLink.astro"
 
 interface Props {
-  section: TOCSection
-  currentPostId: string
-  isSubpost: boolean
-  parentId?: string
+  id: string
+  title: string
+  isActive: boolean
+  headings: TOCHeadingItem[]
 }
 
-const { section, currentPostId, isSubpost, parentId } = Astro.props
-
-const isActiveSection = section.subpostId === currentPostId
+const { id, title, isActive, headings } = Astro.props
 ---
 
-{
-  section.type === "parent" ? (
-    <div
-      class={cn(
-        "border-border/20 border-t border-b border-l-2 py-1 pl-2",
-        !isSubpost ? "border-l-accent bg-accent/10" : "border-l-border/30"
-      )}
-    >
-      <ul class="space-y-1">
-        {section.headings.map((heading) => (
-          <TOCHeadingLink
-            heading={heading}
-            href={tocUtils.getTOCUrl({ heading, isSubpost, parentId })}
-            class={cn("text-foreground/70", tocUtils.getHeadingMargin(heading.depth))}
-          />
-        ))}
-      </ul>
-    </div>
-  ) : (
-    <div
-      class={cn(
-        "border-border/20 space-y-1 border-t border-b border-l-2 py-1 pl-2",
-        isActiveSection ? "border-l-accent bg-accent/15" : "border-l-border/30"
-      )}
-    >
-      <a
-        href={tocUtils.getTOCUrl({ section, isActiveSection })}
-        class={cn(
-          "block rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
-          "hover:bg-accent/50 hover:text-accent-foreground",
-          "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-          isActiveSection ? "text-foreground" : "text-foreground/70"
-        )}
-        data-heading-link={isActiveSection ? "top" : `${section.subpostId}-top`}
-        aria-current={isActiveSection ? "page" : undefined}
-      >
-        {section.title}
-      </a>
-      {section.headings.length > 0 && (
-        <ul class="ml-2 space-y-0.5">
-          {section.headings.map((heading) => (
+<details class={cn("border-border/20 border-t border-b py-1 group")} open={isActive}>
+  <summary
+    class={cn(
+      "list-none cursor-pointer rounded-md px-1 py-1.5 text-sm font-medium transition-colors",
+      "hover:bg-accent/50 hover:text-accent-foreground",
+      "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+      "flex items-center gap-2",
+      "text-foreground/70"
+    )}
+    data-heading-link={isActive ? "top" : `${id}-top`}
+  >
+    <span class="min-w-0 flex-1">
+      {title}
+    </span>
+    {
+      headings.length > 0 && (
+        <Icon
+          name="mingcute:down-line"
+          class="text-muted-foreground shrink-0 transition-transform duration-200 group-open:rotate-180"
+          aria-hidden="true"
+        />
+      )
+    }
+  </summary>
+  {
+    headings.length > 0 && (
+      <div class="border-border/50 mt-1 border-l-2 pl-2">
+        <ul class="space-y-0.5">
+          {headings.map((heading) => (
             <TOCHeadingLink
               heading={heading}
-              href={tocUtils.getTOCUrl({ heading, section, isActiveSection })}
-              class={cn(
-                isActiveSection ? "text-foreground/70" : "text-foreground/40",
-                tocUtils.getHeadingMargin(heading.depth)
-              )}
+              class={cn("text-foreground/70", getHeadingMargin(heading.depth))}
+              data-heading-link={heading.slug}
             />
           ))}
         </ul>
-      )}
-    </div>
-  )
-}
+      </div>
+    )
+  }
+</details>

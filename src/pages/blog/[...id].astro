@@ -6,18 +6,20 @@ import { render } from "astro:content"
 
 import { SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
-import type { PostMeta } from "@/lib/blog/types"
 import Layout from "@/layouts/Layout.astro"
 import BackToTop from "@/components/base/BackToTop.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
-import PostNavigation from "@/components/blog/PostNavigation.astro"
+import PostNav from "@/components/blog/PostNavigation.astro"
+import SubpostsFloat from "@/components/blog/SubpostsFloat.astro"
 import SubpostsHeader from "@/components/blog/SubpostsHeader.astro"
 import SubpostsSidebar from "@/components/blog/SubpostsSidebar.astro"
+import TOCFloat from "@/components/blog/TOCFloat.astro"
 import TOCHeader from "@/components/blog/TOCHeader.astro"
 import TOCSidebar from "@/components/blog/TOCSidebar.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import SlideOut from "@/components/layout/SlideOut.astro"
 
 export async function getStaticPaths() {
   const posts = await PostManager.getInstance().getAllPostsAndSubposts()
@@ -34,53 +36,24 @@ if (!post) {
 
 const postManager = PostManager.getInstance()
 const currentPostId = post.id
-const isSubpost = postManager.isSubpost(currentPostId)
 
-// Fetch all data in parallel
-const [{ Content }, metadata, navigation, tocSections, activePostHeadings] = await Promise.all([
+// Get complete optimized context with minimal queries
+const [{ Content }, context] = await Promise.all([
   render(post),
-  postManager.getMetadata(currentPostId),
-  postManager.getNavigation(currentPostId),
-  postManager.getTOCSections(currentPostId, SITE.tocMaxDepth),
-  postManager.getCurrentPostHeadings(currentPostId, SITE.tocMaxDepth)
+  postManager.getPostContext(currentPostId, SITE.tocMaxDepth)
 ])
 
-const { hasSubposts } = metadata
-const parentPost = navigation.parent
-
-// Get subpost data if needed (for subpost navigation)
-let subposts: PostMeta[] = []
-let activePostMetadata: PostMeta | null = null
-if (hasSubposts || isSubpost) {
-  const parentId = isSubpost ? postManager.getParentId(currentPostId) : currentPostId
-  const [parentPostData, subpostsList] = await Promise.all([
-    isSubpost ? postManager.getPostById(parentId) : Promise.resolve(null),
-    postManager.getSubpostsByParent(parentId)
-  ])
-
-  // Create PostMeta objects for all subposts
-  subposts = await Promise.all(
-    subpostsList.map(async (subpost): Promise<PostMeta> => {
-      const meta = await postManager.getMetadata(subpost.id)
-      return {
-        ...meta,
-        id: subpost.id
-      }
-    })
-  )
-
-  // Set active post data
-  const activePostData = parentPostData || post
-  const activePostMeta = await postManager.getMetadata(activePostData.id)
-  activePostMetadata = {
-    ...activePostMeta,
-    id: activePostData.id
-  }
-}
-
-// Calculate isActivePost for SubpostsSidebar
-const activePostData = parentPost || post
-const isActivePost = activePostMetadata ? activePostData.id === post.id : false
+const {
+  metadata,
+  navigation,
+  tocSections,
+  headings,
+  parentPost,
+  isSubpost,
+  hasSubposts,
+  postNavItems,
+  activePostNavItem
+} = context
 ---
 
 <Layout
@@ -95,144 +68,123 @@ const isActivePost = activePostMetadata ? activePostData.id === post.id : false
   section="Blog"
 >
   {
-    (hasSubposts || isSubpost) && activePostMetadata && (
+    (hasSubposts || isSubpost) && activePostNavItem && (
       <SubpostsHeader
         slot="subposts-navigation-header"
         currentPost={post}
-        parentPost={parentPost}
-        subposts={subposts}
+        parentPost={navigation.parent}
+        postNavItems={postNavItems}
         isSubpost={isSubpost}
-        activePost={activePostMetadata}
+        activePostNavItem={activePostNavItem}
       />
     )
   }
-  {
-    activePostHeadings?.length > 0 &&
-      !(
-        isSubpost &&
-        activePostHeadings.length === 1 &&
-        activePostHeadings[0].text === post.data.title
-      ) && <TOCHeader slot="toc-header" headings={activePostHeadings} />
-  }
+  {headings.length > 1 && <TOCHeader slot="toc-header" headings={headings} />}
   <Breadcrumbs
     slot="breadcrumb"
     items={[
-      { href: `/${post.collection}`, label: "Blog", icon: "blog" },
+      { href: "/blog", label: "Blog", icon: "blog" },
       ...(isSubpost && parentPost
         ? [
             {
-              href: `/${post.collection}/${parentPost.id}`,
-              label: parentPost.data.title,
+              href: `/blog/${parentPost.id}`,
+              label: parentPost.title,
               icon: "parent-post"
             },
             {
-              href: `/${post.collection}/${currentPostId}`,
+              href: `/blog/${currentPostId}`,
               label: post.data.title,
               icon: "subpost"
             }
           ]
         : [
             {
-              href: `/${post.collection}/${currentPostId}`,
+              href: `/blog/${currentPostId}`,
               label: post.data.title,
               icon: "post-active"
             }
           ])
     ]}
   />
-  <div
-    class="grid grid-cols-[minmax(0px,1fr)_min(calc(var(--breakpoint-md)-2rem),100%)_minmax(0px,1fr)] gap-y-6"
-  >
-    {/** Hero image */}
+  {/** Hero image */}
+  {
+    post.data.image && (
+      <Image
+        src={post.data.image}
+        alt={post.data.title}
+        width={1200}
+        height={630}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+        class="mx-auto w-full object-cover"
+        loading="lazy"
+      />
+    )
+  }
+
+  {/** Post header */}
+  <header class="flex flex-col gap-y-4 text-center">
+    <h1 id="post-title" class="scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl">
+      {post.data.title}
+    </h1>
+
+    {/** Post metadata */}
+    <PostMetadata {...metadata} variant="full" />
+
+    {/** Tags */}
     {
-      post.data.image && (
-        <Image
-          src={post.data.image}
-          alt={post.data.title}
-          width={1200}
-          height={630}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-          class="col-span-full mx-auto w-full object-cover"
-          loading="eager"
-        />
+      post.data.tags?.length > 0 && (
+        <ul class="flex flex-wrap justify-center gap-2" aria-label="Post tags">
+          {post.data.tags.map((tag: string) => (
+            <li role="listitem">
+              <Badge href={`/tags/${tag}`} variant="muted">
+                <Icon name="hashtag" class="size-3" />
+                {tag}
+              </Badge>
+            </li>
+          ))}
+        </ul>
       )
     }
+  </header>
 
-    {/** Post header */}
-    <header class="col-start-2 flex flex-col gap-y-4 text-center">
-      <h1 id="post-title" class="scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl">
-        {post.data.title}
-      </h1>
+  {/** Top navigation */}
+  <PostNav prevPost={navigation.newer} nextPost={navigation.older} parentPost={navigation.parent} />
 
-      {/** Post metadata */}
-      <PostMetadata metadata={metadata} variant="full" />
-
-      {/** Tags */}
-      {
-        post.data.tags?.length > 0 && (
-          <ul class="flex list-none flex-wrap justify-center gap-2" aria-label="Post tags">
-            {post.data.tags.map((tag: string) => (
-              <li role="listitem">
-                <Badge href={`/tags/${tag}`} variant="muted">
-                  <Icon name="hashtag" class="size-3" />
-                  {tag}
-                </Badge>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-    </header>
-
-    {/** Top navigation */}
-    <PostNavigation
-      prevPost={navigation.newer}
-      nextPost={navigation.older}
-      parentPost={navigation.parent}
-    />
-    {/** Left sidebar - Subposts */}
-    {
-      activePostMetadata && (
-        <SubpostsSidebar
-          currentPost={post}
-          parentPost={parentPost}
-          subposts={subposts}
-          activePost={activePostMetadata}
-          isActivePost={isActivePost}
-          class:list={[
-            "sticky top-20 col-start-1 row-span-1 xl:block",
-            "mr-8 ml-auto hidden h-[calc(100vh-5rem)] min-w-64"
-          ]}
-        />
-      )
-    }
-
-    {/** Main article content */}
-    <article id="post-content" class="prose lg:prose-lg col-start-2">
-      <Content />
-    </article>
-
-    {/** Right sidebar - TOC */}
+  {/** Left sidebar - TOC */}
+  <SlideOut position="left">
     {
       tocSections.length > 0 && (
-        <TOCSidebar
-          sections={tocSections}
-          currentPostId={currentPostId}
-          class:list={[
-            "sticky top-20 col-start-3 row-span-1 xl:block",
-            "mr-auto ml-8 hidden h-[calc(100vh-5rem)] min-w-64"
-          ]}
-        />
+        <TOCSidebar slot="main" sections={tocSections} currentPostId={currentPostId} />
       )
     }
+    {headings.length > 0 && <TOCFloat slot="summary" headings={headings} />}
+  </SlideOut>
 
-    {/** Bottom navigation */}
-    <PostNavigation
-      prevPost={navigation.newer}
-      nextPost={navigation.older}
-      parentPost={navigation.parent}
-    />
-  </div>
+  {/** Right sidebar - Subposts */}
+  {
+    (hasSubposts || isSubpost) && activePostNavItem && (
+      <SlideOut position="right">
+        <SubpostsSidebar
+          slot="main"
+          postNavItems={postNavItems}
+          activePostNavItem={activePostNavItem}
+        />
+        <SubpostsFloat
+          slot="summary"
+          postNavItems={postNavItems}
+          activePostNavItem={activePostNavItem}
+        />
+      </SlideOut>
+    )
+  }
 
-  <BackToTop />
+  {/** Main article content */}
+  <article class="post-content prose lg:prose-lg">
+    <Content />
+  </article>
+
+  {/** Bottom navigation */}
+  <PostNav prevPost={navigation.newer} nextPost={navigation.older} parentPost={navigation.parent} />
 </Layout>
+
+<BackToTop />

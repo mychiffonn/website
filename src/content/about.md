@@ -2,7 +2,7 @@ I'm interested in researching **human-AI systems that reflect and support divers
 
 - Multilingual & multicultural AI: understand and improve cross-lingual and -cultural understanding and representation
 - AI Alignment: [pluralistic alignment](https://arxiv.org/abs/2402.05070), scalable oversight, evaluation, cooperative AI.
-- Socially aware AI: social intelligence, human-AI collaboration
+- Socially aware & personalizable AI: social intelligence, human-AI collaboration, personalization
 
 To support my vertical research work, I'm learning about mechanistic interpretability and representation engineering. I broadly care about AI ethics and impacts of AI on humans, society, and [more-than-human world](https://www.youtube.com/watch?v=vakQsLYp4F0).
 

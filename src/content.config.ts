@@ -3,6 +3,7 @@ import { file, glob } from "astro/loaders"
 
 import { ProfileLinkConfigSchema } from "@/schemas"
 
+import { createLocalDate } from "@/lib/date-utils"
 import { dedupLowerCase, dedupPreserveCase, slugify } from "@/lib/string-manipulation"
 
 /**
@@ -15,7 +16,7 @@ const yearMonthDateSchema = z
 
 /** Accepts YYYY-MM-DD and ISO datetime formats */
 const dateSchema = z
-  .union([z.date(), z.coerce.date()])
+  .union([z.date(), z.string().transform(createLocalDate)])
   .refine((date) => !Number.isNaN(date.getTime()), {
     message:
       "Invalid date format. Must be YYYY-MM-DD or ISO datetime format.\n For more, see https://zod.dev/api#datetimes"
@@ -36,7 +37,7 @@ const blog = defineCollection({
           .array(z.string())
           .default([])
           .transform((arr) => dedupLowerCase(arr).map((tag) => slugify(tag))),
-        authors: z.array(reference("authors")).default([]),
+        authors: z.array(reference("people")).default([]),
         draft: z.boolean().default(false)
       })
       .refine(
@@ -50,8 +51,8 @@ const blog = defineCollection({
       )
 })
 
-const authors = defineCollection({
-  loader: file("./src/content/authors.toml"),
+const people = defineCollection({
+  loader: file("./src/content/people.toml"),
   schema: z.object({
     id: z.string(),
     name: z.string(),
@@ -66,7 +67,7 @@ const authors = defineCollection({
       .or(z.string().startsWith("/"))
       .optional()
       .describe(
-        "This author's avatar field only deal with image under /public/ directory or a remote image"
+        "This people's avatar field only deal with image under /public/ directory or a remote image"
       ),
     bio: z.string().max(200).optional(),
     affiliation: z.string().max(100).optional(),
@@ -86,7 +87,7 @@ const projects = defineCollection({
       doc: z.string().url().optional(),
       url: z.string().url().optional(),
       release: z.string().url().optional(),
-      context: z.enum(["school", "personal", "work", "community"]).optional(),
+      context: z.enum(["community", "personal", "research", "school", "work"]).optional(),
       description: z.string().max(150).optional(),
       tags: z
         .array(z.string())
@@ -110,4 +111,4 @@ const updates = defineCollection({
   schema: z.object({})
 })
 
-export const collections = { blog, authors, projects, updates }
+export const collections = { blog, people, projects, updates }
