@@ -1,97 +1,73 @@
 ---
-import type { Post, PostMeta } from "@/lib/blog/types"
-import SubpostNavItem from "@/components/blog/SubpostNavItem.astro"
+import type { PostNavItem as PostNavItemType } from "@/lib/blog/types"
+import PostNavItem from "@/components/blog/PostNavItem.astro"
 import SubpostsList from "@/components/blog/SubpostsList.astro"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Props {
-  currentPost: Post
-  parentPost?: Post | null
-  subposts?: PostMeta[]
-  activePost: PostMeta
-  isActivePost: boolean
+  postNavItems: PostNavItemType[]
+  activePostNavItem: PostNavItemType | null
   class?: string
 }
 
-const {
-  currentPost,
-  parentPost,
-  subposts = [],
-  activePost,
-  isActivePost,
-  class: className
-} = Astro.props
+const { postNavItems = [], activePostNavItem, class: className } = Astro.props
 
-// Only render if there's meaningful content (has parent OR has subposts)
-const hasParent = !!parentPost
-const hasSubposts = subposts.length > 0
-const shouldRender = hasParent || hasSubposts
+// Only render if there's meaningful content
+const shouldRender = postNavItems.length > 0 || !!activePostNavItem
 ---
 
 {
-  shouldRender && activePost && (
+  shouldRender && activePostNavItem && (
     <aside
       id="subposts-sidebar-container"
       class={className}
       role="complementary"
       aria-label="Subposts navigation"
     >
+      <header class="border-border sticky top-0 mb-2 border-b pb-1">
+        <h2 id="subposts-heading" class="text-foreground/80 text-sm font-semibold">
+          Post Navigation
+        </h2>
+      </header>
       <ScrollArea
         client:load
         className="flex max-h-[calc(100vh-8rem)] flex-col overflow-y-auto"
         data-scroll-container
       >
-        <div class="p-2">
-          <nav aria-label="Post and subposts">
-            <div class="space-y-1">
-              <SubpostNavItem post={activePost} isActive={isActivePost} isSubpost={false} />
-              <h4
-                id="subposts-heading"
-                class="text-muted-foreground my-1 text-xs font-semibold tracking-wider uppercase"
-              >
-                Subposts
-              </h4>
-              <SubpostsList subposts={subposts} currentPostId={currentPost.id} />
-            </div>
-          </nav>
-        </div>
+        <nav aria-label="Post and subposts" class="space-y-1 p-2">
+          <PostNavItem {...activePostNavItem} />
+          <h3
+            id="subposts-heading"
+            class="text-muted-foreground my-1 text-xs font-semibold tracking-wider uppercase"
+          >
+            Subposts
+          </h3>
+          <SubpostsList items={postNavItems} />
+        </nav>
       </ScrollArea>
     </aside>
   )
 }
 
 <script>
-  import { BaseScrollController } from "@/lib/blog/scroll"
+  function initSidebar() {
+    const container = document.getElementById("subposts-sidebar-container")
+    if (!container) return
 
-  class SubpostsSidebarController extends BaseScrollController {
-    getContainerSelector() {
-      return "#subposts-sidebar-container"
-    }
+    const scrollArea = container.querySelector<HTMLElement>("[data-radix-scroll-area-viewport]")
+    if (!scrollArea) return
 
-    // Override for Radix ScrollArea (sidebar uses ScrollArea)
-    protected getScrollAreaSelector(): string {
-      return "[data-radix-scroll-area-viewport]"
-    }
+    const activeItem = scrollArea.querySelector<HTMLElement>("[aria-current='page']")
+    if (!activeItem) return
 
-    protected getContainerAttribute(): string {
-      return "data-scroll-container"
-    }
-
-    getActiveItemSelector() {
-      return "[aria-current='page']"
-    }
-
-    getMaskClasses() {
-      return { top: "mask-t-from-90%", bottom: "mask-b-from-90%" }
-    }
+    // Scroll active item into view
+    const areaRect = scrollArea.getBoundingClientRect()
+    const itemRect = activeItem.getBoundingClientRect()
+    const itemTop = itemRect.top - areaRect.top + scrollArea.scrollTop
+    const targetScroll = Math.max(0, itemTop - (areaRect.height - itemRect.height) / 2)
+    scrollArea.scrollTop = targetScroll
   }
 
-  const controller = new SubpostsSidebarController()
-
-  document.addEventListener("astro:page-load", () => controller.init())
-  document.addEventListener("astro:after-swap", () => {
-    controller.cleanup()
-    controller.init()
-  })
-  document.addEventListener("astro:before-swap", () => controller.cleanup())
+  document.addEventListener("astro:page-load", initSidebar)
+  document.addEventListener("astro:after-swap", initSidebar)
 </script>

@@ -1,21 +1,20 @@
 ---
-import type { PostMeta } from "@/lib/blog/types"
-import SubpostNavItem from "@/components/blog/SubpostNavItem.astro"
+import { type PostNavItem as PostNavItemData } from "@/lib/blog/types"
+import PostNavItem from "@/components/blog/PostNavItem.astro"
 
 interface Props {
-  subposts: PostMeta[]
-  currentPostId: string
+  items: PostNavItemData[]
 }
 
-const { subposts, currentPostId } = Astro.props
+const { items } = Astro.props
 ---
 
 {
-  subposts.length > 0 && (
-    <ul class="ml-4 space-y-1">
-      {subposts.map((subpost) => (
+  items.length > 0 && (
+    <ul class="gap-y-1">
+      {items.map((item) => (
         <li>
-          <SubpostNavItem post={subpost} isActive={currentPostId === subpost.id} isSubpost={true} />
+          <PostNavItem {...item} />
         </li>
       ))}
     </ul>
