@@ -31,7 +31,8 @@ const ghUser = username || githubUrl?.split("/").pop() || ""
         <Image
           src={`https://ghchart.rshah.org/659eb9/${ghUser}`}
           alt="GitHub contribution chart"
-          inferSize
+          width={896}
+          height={128}
           loading="lazy"
           class="w-full p-4"
         />
