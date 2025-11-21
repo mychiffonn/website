@@ -189,11 +189,11 @@ const structuredData = {
   {/* Medium Zoom CSS and JS - non-blocking load */}
   <link
     rel="preload"
-    href="/src/styles/zoom.css"
+    href="/styles/zoom.css"
     as="style"
     onload={`this.onload=null;this.rel='stylesheet'`}
   />
-  <noscript><link rel="stylesheet" href="/src/styles/zoom.css" /></noscript>
+  <noscript><link rel="stylesheet" href="/styles/zoom.css" /></noscript>
   <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script>
 
   {/* Site locale configuration for client-side date formatting */}
