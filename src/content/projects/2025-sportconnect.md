@@ -1,14 +1,18 @@
 ---
 title: SportConnect
 description: Event management platform connecting sporty people locally. CodePath Web 103 Project.
-repo: https://github.com/mychiffonn/sport-event-management
-fromDate: 2025-11-05
+repo: https://github.com/mychiffonn/sport-connect
+doc: https://github.com/mychiffonn/sport-connect/blob/main/README.md
+url: https://sport-connect-ccmg.onrender.com/
+fromDate: 2025-11-10
 toDate: 2025-11-19
 context: personal
+isHighlighted: true
 tags:
   - React
   - Express
-  - Supabase
+  - PostgreSQL
   - TailwindCSS
+  - DaisyUI
   - BetterAuth
 ---
