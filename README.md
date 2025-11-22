@@ -20,7 +20,6 @@ This website serves as a digital portfolio and blog where I share my work, insig
 - 🔧 Easily configure [theme](src/styles/global.css), [page & personal information](src/config.ts), [content](src/content)
 - [UPCOMING] Show mentions of a post across the web in lieu of comment section
 - [UPCOMING] Search with pagefind/typesense
-- [UPCOMING] /media library. Planned support: scraped Storygraph, Spotify API.
 
 ## Built With
 
