@@ -11,6 +11,7 @@ const renderedUpdates = await getLatestUpdates(10)
 <CommonLayout
   title="What I'm doing now"
   description={nowDescription}
+  modifiedTime={new Date()}
   breadcrumbs={[{ label: "Now", icon: "timeline" }]}
 >
   {

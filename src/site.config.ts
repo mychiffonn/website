@@ -49,11 +49,11 @@ export const SITE: SiteConfig = {
 export const PROFILE: ProfileConfig = {
   name: SITE.author,
   othernames: "Nguyễn Trà My / 阮沐茶 / 윈자미",
-  tagline: "NLP+HCI Researcher & Life-long Learner",
+  tagline: "AI Researcher & Life-long Learner",
   email: "hi@mychiffonn.com",
   location: "San Francisco, CA, USA",
   pronouns: "she/her/hers",
-  pronunciation: "My = /me/, Chiffon = /shif-ON/, Nguyen = /ngwen/",
+  pronunciation: "My = /me/, Chiffon = /shi-FON/. I'm Chiffon in English-speaking context.",
   links: {
     github: "https://github.com/mychiffonn",
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",

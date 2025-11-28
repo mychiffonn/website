@@ -1,10 +1,10 @@
 ---
 title: Text classification using SVM and Naive Bayes
-description: Text classification system to automatically organize notes using SVM and Naive Bayes with 87% accuracy.
+description: Text classification system to automatically classify notes and assignments using SVM and Naive Bayes with 87% accuracy.
 toDate: 2023-10
 context: school
 tags:
-  - traditional machine learning
+  - statistical machine learning
   - scikit-learn
   - Support Vector Machine (SVM)
   - Support Vector Classifier (SVC)

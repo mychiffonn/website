@@ -5,7 +5,6 @@ toDate: 2023-12
 repo: https://github.com/mychiffonn/synthetic-control-rep
 doc: https://github.com/mychiffonn/synthetic-control-rep/blob/main/CS130%20Final%20Assignment.pdf
 context: school
-isHighlighted: true
 tags:
   - R
   - rmarkdown
