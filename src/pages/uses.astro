@@ -14,6 +14,7 @@ const usesDescription =
   description={usesDescription}
   modifiedTime={new Date()}
   breadcrumbs={[{ label: "Uses", icon: "tool" }]}
+  prose={false}
 >
   <ToolSection
     title="Workstation (+Operating System)"
@@ -192,6 +193,6 @@ const usesDescription =
   />
   <p class="text-muted-foreground text-sm">
     Discover other developers' setups at
-    <Link href="https://uses.tech/" external underline>uses.tech</Link>.
+    <Link href="https://uses.tech/" external underline class="text-foreground">uses.tech</Link>.
   </p>
 </CommonLayout>

@@ -29,12 +29,11 @@ const sourceLinks = [
           <>
             {`Unless otherwise stated, all content is licensed under `}
             <Link class="text-foreground" href={SITE.license.href} external>
-              {SITE.license.label}
+              {SITE.license.label}.
             </Link>
-            {`. Other rights reserved.`}
           </>
         ) : (
-          ` All rights reserved.`
+          `All rights reserved.`
         )
       }
     </p>
@@ -44,7 +43,7 @@ const sourceLinks = [
       sourceLinks.length > 0 && (
         <p class="text-xs">
           {sourceLinks.map((link, index) => [
-            <Link href={link.href} class="text-muted-foreground" external>
+            <Link href={link.href} class="text-muted-foreground" external underline>
               {link.label}
             </Link>,
             index < sourceLinks.length - 1 && " / "

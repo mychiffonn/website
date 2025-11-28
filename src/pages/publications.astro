@@ -1,20 +1,41 @@
 ---
 import type { ProcessedPublication } from "@/schemas"
 
+import { PROFILE } from "@site-config"
 import { loadAllPublications } from "@/lib/publications/loader"
-import CommonLayout from "@/layouts/CommonLayout.astro"
+import Layout from "@/layouts/Layout.astro"
+import Link from "@/components/base/Link.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import Section from "@/components/layout/Section.astro"
 import PubCard from "@/components/publications/PubCard.astro"
+
+const ggScholarUrl =
+  typeof PROFILE.links.googleScholar === "object"
+    ? PROFILE.links.googleScholar?.href
+    : PROFILE.links.googleScholar
 
 const { publicationsByYear, years } = await loadAllPublications()
 ---
 
-<CommonLayout
-  title="Publications"
-  description="Publications, preprints, and conference tutorials"
-  breadcrumbs={[{ label: "Publications", icon: "research" }]}
-  prose={false}
->
+<Layout title="Publications" description="Publications, preprints, and conference tutorials">
+  <Breadcrumbs slot="breadcrumb" items={[{ label: "Publications", icon: "research" }]} />
+
+  <Section title="Publications">
+    <p class="text-muted-foreground">
+      Publications, preprints, and conference tutorials.{
+        ggScholarUrl && (
+          <>
+            {" See my full publication list on "}
+            <Link href={ggScholarUrl} external underline class="text-foreground">
+              {"Google Scholar"}
+            </Link>
+            {"."}
+          </>
+        )
+      }
+    </p>
+  </Section>
+
   {
     years.length > 0 ? (
       years.map((year) => (
@@ -27,10 +48,8 @@ const { publicationsByYear, years } = await loadAllPublications()
     ) : (
       <div class="py-12 text-center">
         <h2 class="text-muted-foreground mb-2 text-xl font-medium">No publications found</h2>
-        <p class="text-muted-foreground">
-          Publications will appear here once they are added to the bibliography.
-        </p>
+        <p class="text-muted-foreground">No publications yet.</p>
       </div>
     )
   }
-</CommonLayout>
+</Layout>
