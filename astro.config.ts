@@ -27,7 +27,12 @@ export default defineConfig({
   output: "static",
   image: {
     responsiveStyles: true,
-    layout: "constrained"
+    layout: "constrained",
+    remotePatterns: [
+      {
+        protocol: "data"
+      }
+    ]
   },
   integrations: [
     expressiveCode({
@@ -128,6 +133,7 @@ export default defineConfig({
   experimental: {
     contentIntellisense: true,
     headingIdCompat: true,
-    preserveScriptOrder: true
+    preserveScriptOrder: true,
+    svgo: true
   }
 })
