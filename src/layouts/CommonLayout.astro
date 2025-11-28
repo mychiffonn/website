@@ -24,6 +24,7 @@ const { title, description, modifiedTime, prose = true, breadcrumbs, ...layoutPr
 
   <section class="mb-4">
     <h1 class="mb-2 text-3xl font-bold">{title}</h1>
+    {description && <p class="text-muted-foreground">{description}</p>}
     {
       modifiedTime && (
         <FormattedDate
@@ -32,7 +33,6 @@ const { title, description, modifiedTime, prose = true, breadcrumbs, ...layoutPr
         />
       )
     }
-    {description && <p class="text-muted-foreground">{description}</p>}
   </section>
 
   {

@@ -5,12 +5,12 @@ import MobileMenu from "@/components/layout/MobileMenu.astro"
 import ThemeToggle from "@/components/layout/ThemeToggle.astro"
 ---
 
-<header class="flex items-center justify-between gap-4 py-3">
-  <Link href="/" class="flex shrink-0 items-center justify-center gap-3" transition:persist>
+<header class="flex items-center justify-between py-3">
+  <Link href="/" class="flex shrink-0 items-center justify-center gap-x-2" transition:persist>
     <span class="hidden h-full text-lg font-medium min-[300px]:block">{SITE.title}</span>
   </Link>
-  <div class="flex items-center sm:gap-4">
-    <nav class="hidden items-center gap-2 text-sm sm:flex sm:gap-3" aria-label="Site navigation">
+  <div class="flex items-center sm:gap-1">
+    <nav class="hidden items-center gap-1 text-sm sm:flex" aria-label="Site navigation">
       {
         NAV_LINKS.map((item) => {
           const isActive =
