@@ -38,19 +38,6 @@ export const SiteConfigSchema = z.object({
         year: z.enum(["numeric", "2-digit"]).optional(),
         timeZone: z.string().optional()
       })
-      .default({}),
-
-    /** Whether to enable relative dates across your site, e.g. 2 weeks ago */
-    relative: z
-      .object({
-        enabled: z.boolean().default(false),
-
-        /**
-         * Threshold in days, under which the dates on your website will use relative dates.
-         * Default is 30 days
-         */
-        maxDaysThreshold: z.number().default(30)
-      })
       .default({})
   }),
 

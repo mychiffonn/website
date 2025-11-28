@@ -20,10 +20,6 @@ export const SITE: SiteConfig = {
       month: "short",
       year: "numeric",
       timeZone: "America/Los_Angeles" // or your preferred timezone
-    },
-    relative: {
-      enabled: true,
-      maxDaysThreshold: 30 // relative date for dates less than 30 days ago
     }
   },
 

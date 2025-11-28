@@ -1,12 +1,5 @@
 import { tz, TZDate } from "@date-fns/tz"
-import {
-  differenceInCalendarDays,
-  format,
-  intlFormat,
-  intlFormatDistance,
-  isValid,
-  parseISO
-} from "date-fns"
+import { format, intlFormat, isValid, parseISO } from "date-fns"
 
 import { SITE } from "@site-config"
 
@@ -81,40 +74,27 @@ export function createLocalDate(dateInput: string | number | Date): Date {
 }
 
 /**
- * Formats a date, automatically switching between relative and absolute formats.
- * Uses the site's locale configuration by default.
+ * Formats a date using the site's locale configuration.
+ * Uses the site's default date format options if none provided.
  *
  * @param date - Date to format (Date object, timestamp number, or ISO string)
  * @param locale - BCP 47 language tag (defaults to site locale)
- * @param options - Formatting options including relative date settings
+ * @param options - Formatting options (defaults to site's locale.options)
  * @returns Formatted date string
  */
 export function formatDate(
   date: string | number | Date,
   locale = SITE.locale.lang,
-  options?: Intl.DateTimeFormatOptions & {
-    relative?: boolean
-    maxDaysThreshold?: number
-  }
+  options?: Intl.DateTimeFormatOptions
 ): string {
   const dateObj = createLocalDate(date)
-  const useRelative = options?.relative ?? SITE.locale.relative.enabled
 
-  if (useRelative) {
-    const threshold = options?.maxDaysThreshold ?? SITE.locale.relative.maxDaysThreshold
-    const diffInDays = Math.abs(differenceInCalendarDays(dateObj, new Date()))
+  // Use site's default options if none provided, excluding timeZone from display options
+  const { timeZone, ...displayOptions } = SITE.locale.options
+  const formatOptions = options ?? displayOptions
 
-    if (diffInDays <= threshold) {
-      // Use intlFormatDistance, which leverages Intl.RelativeTimeFormat under the hood.
-      // It correctly uses the locale string from SITE.locale without extra imports.
-      return intlFormatDistance(dateObj, new Date(), { locale })
-    }
-  }
-
-  // Use intlFormat for absolute dates. It's a clean wrapper around Intl.DateTimeFormat.
-  const { relative: _relative, maxDaysThreshold: _maxDaysThreshold, ...intlOptions } = options || {}
-  const finalOptions = { ...SITE.locale.options, ...intlOptions }
-  return intlFormat(dateObj, finalOptions, { locale })
+  // Use intlFormat for date formatting. It's a clean wrapper around Intl.DateTimeFormat.
+  return intlFormat(dateObj, formatOptions, { locale })
 }
 
 /**
@@ -166,10 +146,7 @@ export interface DateRangeResult {
 export function createDateRange(
   fromDate?: Date,
   toDate?: Date,
-  options?: Intl.DateTimeFormatOptions & {
-    relative?: boolean
-    maxDaysThreshold?: number
-  }
+  options?: Intl.DateTimeFormatOptions
 ): DateRangeResult | null {
   if (!fromDate && !toDate) return null
 
