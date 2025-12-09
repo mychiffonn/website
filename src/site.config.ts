@@ -48,7 +48,7 @@ export const PROFILE: ProfileConfig = {
   tagline: "AI Researcher & Life-long Learner",
   email: "hi@mychiffonn.com",
   location: "San Francisco, CA, USA",
-  pronouns: "she/her/hers",
+  pronouns: "she/her",
   pronunciation: "My = /me/, Chiffon = /shi-FON/. I'm Chiffon in English-speaking context.",
   links: {
     github: "https://github.com/mychiffonn",
