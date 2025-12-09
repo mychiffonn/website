@@ -7,8 +7,8 @@ url: https://sport-connect-ccmg.onrender.com/
 fromDate: 2025-11-10
 toDate: 2025-11-19
 context: personal
-isHighlighted: true
 tags:
+  - TypeScript
   - React
   - Express
   - PostgreSQL

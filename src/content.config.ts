@@ -79,7 +79,7 @@ const projects = defineCollection({
   loader: glob({ base: "./src/content/projects", pattern: "**/!(*README).{md,mdx}" }),
   schema: z
     .object({
-      title: z.string(),
+      title: z.string().max(75),
       isHighlighted: z.boolean().default(false),
       fromDate: yearMonthDateSchema.optional(),
       toDate: yearMonthDateSchema.optional(),
@@ -88,7 +88,7 @@ const projects = defineCollection({
       url: z.string().url().optional(),
       release: z.string().url().optional(),
       context: z.enum(["community", "personal", "research", "school", "work"]).optional(),
-      description: z.string().max(150).optional(),
+      description: z.string().max(200).optional(),
       tags: z
         .array(z.string())
         .default([])
@@ -98,10 +98,10 @@ const projects = defineCollection({
       // Validate that toDate is after fromDate
       (data) => {
         if (!data.fromDate || !data.toDate) return true
-        return data.toDate > data.fromDate
+        return data.toDate >= data.fromDate
       },
       {
-        message: "End date must be after start date"
+        message: "End date must be on or after start date"
       }
     )
 })

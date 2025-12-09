@@ -8,6 +8,6 @@ context: community
 tags:
   - Jekyll
   - Bootstrap
-  - Javascript
-  - Saas/Scss
+  - JavaScript
+  - SCSS
 ---

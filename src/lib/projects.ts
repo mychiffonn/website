@@ -26,6 +26,7 @@ export const getProjectLinks = (repo?: string, doc?: string, url?: string, relea
     }))
 }
 
+/** Use with badge components to get variant based on project context */
 export const getContextVariant = (context?: string) => {
   switch (context) {
     case "personal":

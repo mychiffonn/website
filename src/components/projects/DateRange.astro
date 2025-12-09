@@ -15,26 +15,34 @@ interface Props {
 
 const { fromDate, toDate, class: className, showIcon = false } = Astro.props
 
-const dateRangeData = createDateRange(fromDate, toDate)
+const data = createDateRange(fromDate, toDate)
+if (!data) return null
+
+// Determine if we should show both dates (when displays differ)
+const showBoth = data.fromDate && data.toDate && data.fromDateDisplay !== data.toDateDisplay
+// Determine what to show: only toDate, or fromDate with optional range/Present
+const showOnlyToDate = !data.fromDate && data.toDate
 ---
 
-{
-  dateRangeData && (
-    <span class={className}>
-      {showIcon && <Icon name="calendar" class="size-3" />}
-      {dateRangeData.fromDate && (
-        <time datetime={formatDateTimeISO(dateRangeData.fromDate)}>
-          {dateRangeData.fromDateDisplay}
-        </time>
-      )}
-      {dateRangeData.fromDate && dateRangeData.toDate && <span> - </span>}
-      {dateRangeData.toDate ? (
-        <time datetime={formatDateTimeISO(dateRangeData.toDate)}>
-          {dateRangeData.toDateDisplay}
-        </time>
-      ) : (
-        dateRangeData.fromDate && <span>- Present</span>
-      )}
-    </span>
-  )
-}
+<span class={className}>
+  {showIcon && <Icon name="calendar" class="size-3" />}
+
+  {
+    showOnlyToDate ? (
+      <time datetime={formatDateTimeISO(data.toDate!)}>{data.toDateDisplay}</time>
+    ) : (
+      <>
+        {data.fromDate && (
+          <time datetime={formatDateTimeISO(data.fromDate)}>{data.fromDateDisplay}</time>
+        )}
+        {showBoth && (
+          <>
+            <span> - </span>
+            <time datetime={formatDateTimeISO(data.toDate!)}>{data.toDateDisplay}</time>
+          </>
+        )}
+        {!data.toDate && data.fromDate && <span>- Present</span>}
+      </>
+    )
+  }
+</span>
