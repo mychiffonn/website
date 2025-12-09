@@ -1,7 +1,7 @@
 /**
  * Custom configuration schemas for the theme, with zod validation
  */
-import { z } from "astro/zod"
+import { z } from "astro:content"
 
 import type { ProfileLinkType } from "@icon-config"
 
@@ -230,12 +230,3 @@ export const ProcessedPublicationSchema = z.object({
     })
   )
 })
-
-// Type exports
-export type SiteConfig = z.infer<typeof SiteConfigSchema>
-export type ProfileLinkConfig = z.infer<typeof ProfileLinkConfigSchema>
-export type ProfileConfig = z.infer<typeof ProfileConfigSchema>
-export type FooterConfig = z.infer<typeof FooterConfigSchema>
-export type Tool = z.infer<typeof ToolSchema>
-export type PublicationConfig = z.infer<typeof PublicationConfigSchema>
-export type ProcessedPublication = z.infer<typeof ProcessedPublicationSchema>

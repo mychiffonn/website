@@ -6,24 +6,165 @@ import pkg from "@citation-js/core"
 
 import "@citation-js/plugin-bibtex"
 
-import type { ProcessedPublication } from "@/schemas"
-import type { PublicationConfig } from "@/types"
+import type { ProcessedPublication, PublicationConfig } from "@/types"
 
 import { PUBLICATION_LINK_TYPES } from "@/icon.config"
 
 // @ts-ignore - citation-js doesn't have types
 const { Cite, plugins } = pkg
 
+/**
+ * Valid field types for BibTeX plugin configuration
+ * @see https://citation.js.org/api/0.7/module-@citation-js_plugin-bibtex.config.html
+ */
+type BibTeXFieldType = "field" | "list" | "separated"
+
+/**
+ * Valid value types for BibTeX plugin configuration
+ * - literal: Normal text or numeric content
+ * - title: Like literal but responsive to sentenceCase config
+ * - name: Personal or organizational names
+ * - date: An EDTF Level 1 date
+ * - verbatim: Unaltered text (no expansion of commands)
+ * - uri: Same as verbatim but URL-encoded if needed
+ * - other: No special behavior, treated like literal
+ * @see https://citation.js.org/api/0.7/module-@citation-js_plugin-bibtex.config.html
+ */
+type BibTeXValueType = "literal" | "title" | "name" | "date" | "verbatim" | "uri" | "other"
+
+/**
+ * Central configuration for all custom publication fields
+ *
+ * Add the field to CUSTOM_FIELDS_CONFIG with its configuration (fieldType, valueType, category)
+ *
+ * @see https://citation.js.org/api/0.7/module-@citation-js_plugin-bibtex.config.html
+ * @see also PUBLICATION_LINK_TYPES in @link {src/icon.config.ts} for link field icons/labels
+ */
+const CUSTOM_FIELDS_CONFIG = {
+  abstract: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "literal" as BibTeXValueType,
+    category: "metadata"
+  },
+  arxiv: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "literal" as BibTeXValueType,
+    category: "metadata"
+  },
+  award: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "literal" as BibTeXValueType,
+    category: "metadata"
+  },
+  eprint: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "literal" as BibTeXValueType,
+    category: "metadata"
+  },
+  venue: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "literal" as BibTeXValueType,
+    category: "metadata"
+  },
+  selected: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "literal" as BibTeXValueType,
+    category: "metadata"
+  },
+
+  // Link fields (to appear as action buttons - must also be in PUBLICATION_LINK_TYPES)
+  pdf: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  code: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  data: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  demo: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  draft: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  models: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  post: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  poster: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  proposal: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  resources: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  slides: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  talk: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  thread: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  video: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  },
+  website: {
+    fieldType: "field" as BibTeXFieldType,
+    valueType: "uri" as BibTeXValueType,
+    category: "link"
+  }
+} as const
+
+type CustomFieldName = keyof typeof CUSTOM_FIELDS_CONFIG
+
+// Auto-generate type for custom fields based on CUSTOM_FIELDS_CONFIG
+type CustomFields = {
+  [K in CustomFieldName]?: K extends "selected" ? string | boolean : string
+}
+
 // Types for citation-js
-interface CitationEntry {
+interface CitationEntry extends CustomFields {
   id?: string
   label?: string
   title?: string
   author?: Array<string | { given?: string; family?: string }>
   issued?: { "date-parts"?: number[][] }
   year?: number
-  abstract?: string
-  venue?: string
   "container-title"?: string
   journal?: string
   booktitle?: string
@@ -33,56 +174,26 @@ interface CitationEntry {
   doi?: string
   URL?: string
   url?: string
-  arxiv?: string
-  pdf?: string
-  code?: string
-  demo?: string
-  draft?: string
-  proposal?: string
-  post?: string
-  poster?: string
-  resources?: string
-  selected?: string | boolean
-  slides?: string
-  talk?: string
-  threads?: string
-  video?: string
-  website?: string
-  award?: string
-  eprint?: string
   _graph?: Array<{ data?: string }>
 }
 
-export interface Publication {
+// Auto-generate type for Publication custom fields (normalized to proper types)
+type PublicationCustomFields = {
+  [K in CustomFieldName]: K extends "selected" ? boolean : string | undefined
+}
+
+/** Publication return type - automatically includes all custom fields from CUSTOM_FIELDS_CONFIG */
+export interface Publication extends PublicationCustomFields {
   id: string
   title: string
   authors: string[]
   year?: number
-  abstract?: string
-  venue?: string
   journal?: string
   booktitle?: string
   series?: string
   publisher?: string
   doi?: string
   url?: string
-  arxiv?: string
-  pdf?: string
-  code?: string
-  demo?: string
-  draft?: string
-  proposal?: string
-  post?: string
-  poster?: string
-  resources?: string
-  selected: boolean
-  slides?: string
-  talk?: string
-  threads?: string
-  video?: string
-  website?: string
-  award?: string
-  eprint?: string
 }
 
 interface AuthorData {
@@ -100,33 +211,20 @@ interface PublicationLink {
   type: string
 }
 
-// Configure custom field types for academic publications using the plugin's configuration API
+/**
+ * Configure custom field types for academic publications using the plugin's configuration API
+ * Automatically configures all fields from CUSTOM_FIELDS_CONFIG
+ * @see https://www.npmjs.com/package/@citation-js/plugin-bibtex
+ */
 const configureCustomFields = (): void => {
   const config = plugins.config.get("@bibtex")
 
-  // Add custom academic field types following the documentation format
+  // Automatically configure all custom fields from CUSTOM_FIELDS_CONFIG
   // Format: config.constants.fieldTypes.fieldname = [fieldType, valueType]
-  // fieldType: 'field', 'list', or 'separated'
-  // valueType: 'literal', 'title', 'name', 'date', 'verbatim', 'uri', 'other'
+  for (const [fieldName, fieldConfig] of Object.entries(CUSTOM_FIELDS_CONFIG)) {
+    config.constants.fieldTypes[fieldName] = [fieldConfig.fieldType, fieldConfig.valueType]
+  }
 
-  config.constants.fieldTypes.abstract = ["field", "literal"]
-  config.constants.fieldTypes.arxiv = ["field", "literal"]
-  config.constants.fieldTypes.award = ["field", "literal"]
-  config.constants.fieldTypes.code = ["field", "uri"]
-  config.constants.fieldTypes.demo = ["field", "uri"]
-  config.constants.fieldTypes.draft = ["field", "uri"]
-  config.constants.fieldTypes.proposal = ["field", "uri"]
-  config.constants.fieldTypes.pdf = ["field", "uri"]
-  config.constants.fieldTypes.post = ["field", "uri"]
-  config.constants.fieldTypes.poster = ["field", "uri"]
-  config.constants.fieldTypes.resources = ["field", "uri"]
-  config.constants.fieldTypes.selected = ["field", "literal"]
-  config.constants.fieldTypes.slides = ["field", "uri"]
-  config.constants.fieldTypes.talk = ["field", "uri"]
-  config.constants.fieldTypes.threads = ["field", "uri"]
-  config.constants.fieldTypes.venue = ["field", "literal"]
-  config.constants.fieldTypes.video = ["field", "uri"]
-  config.constants.fieldTypes.website = ["field", "uri"]
   config.parse.strict = false
 }
 
@@ -176,7 +274,11 @@ export function parseBibTeX(bibContent: string): Publication[] {
     return publications.map((entry) => {
       const customFields = extractCustomFields(entry)
 
-      return {
+      // Helper to get field value (entry field takes precedence over customFields)
+      const getField = (fieldName: string) => (entry as any)[fieldName] || customFields[fieldName]
+
+      // Build publication object with core fields + all custom fields
+      const publication: any = {
         id: entry.id || entry.label || `pub-${Math.random().toString(36).substring(2, 11)}`,
         title: entry.title || customFields.title || "",
         authors: entry.author
@@ -187,33 +289,27 @@ export function parseBibTeX(bibContent: string): Publication[] {
             )
           : [],
         year: entry.issued?.["date-parts"]?.[0]?.[0] || entry.year || parseInt(customFields.year),
-        abstract: entry.abstract || customFields.abstract,
-        venue: entry.venue || customFields.venue,
+        // Standard BibTeX fields
         journal: entry["container-title"] || entry.journal || customFields.journal,
         booktitle: entry.booktitle || customFields.booktitle,
         series: entry.series || customFields.series,
         publisher: entry.publisher || customFields.publisher,
         doi: entry.DOI || entry.doi || customFields.doi,
-        url: entry.URL || entry.url || customFields.url,
-        arxiv: entry.arxiv || customFields.arxiv,
-        pdf: entry.pdf || customFields.pdf,
-        code: entry.code || customFields.code,
-        demo: entry.demo || customFields.demo,
-        draft: entry.draft || customFields.draft,
-        proposal: entry.proposal || customFields.proposal,
-        post: entry.post || customFields.post,
-        poster: entry.poster || customFields.poster,
-        resources: entry.resources || customFields.resources,
-        selected:
-          entry.selected === "true" || entry.selected === true || customFields.selected === "true",
-        slides: entry.slides || customFields.slides,
-        talk: entry.talk || customFields.talk,
-        threads: entry.threads || customFields.threads,
-        video: entry.video || customFields.video,
-        website: entry.website || customFields.website,
-        award: entry.award || customFields.award,
-        eprint: entry.eprint || customFields.eprint
+        url: entry.URL || entry.url || customFields.url
       }
+
+      // Automatically add all custom fields from CUSTOM_FIELDS_CONFIG
+      for (const fieldName of Object.keys(CUSTOM_FIELDS_CONFIG) as CustomFieldName[]) {
+        const value = getField(fieldName)
+        // Handle 'selected' field specially (convert to boolean)
+        if (fieldName === "selected") {
+          publication[fieldName] = value === "true" || value === true
+        } else {
+          publication[fieldName] = value
+        }
+      }
+
+      return publication as Publication
     })
   } catch (_error) {
     return []
@@ -323,34 +419,25 @@ export function truncateAuthors(
 
 /**
  * Extract publication action links (excluding doi, url, arxiv which go on title)
+ * Automatically includes all fields marked as 'link' category in CUSTOM_FIELDS_CONFIG
  * @param entry - Publication entry
  * @returns Array of action link objects with proper icon names
  */
 export function getPublicationLinks(entry: Publication): PublicationLink[] {
   const links: PublicationLink[] = []
 
-  const actionFields = [
-    "pdf",
-    "code",
-    "demo",
-    "draft",
-    "proposal",
-    "website",
-    "slides",
-    "video",
-    "poster",
-    "resources",
-    "talk",
-    "post",
-    "threads"
-  ] as const
+  // Automatically get all link fields from CUSTOM_FIELDS_CONFIG
+  const linkFields = Object.keys(CUSTOM_FIELDS_CONFIG).filter(
+    (field) => CUSTOM_FIELDS_CONFIG[field as CustomFieldName].category === "link"
+  ) as CustomFieldName[]
 
-  for (const field of actionFields) {
-    if (entry[field]) {
-      const linkConfig = PUBLICATION_LINK_TYPES[field]
+  for (const field of linkFields) {
+    const fieldValue = (entry as any)[field]
+    if (fieldValue) {
+      const linkConfig = (PUBLICATION_LINK_TYPES as any)[field]
       if (linkConfig) {
         links.push({
-          href: entry[field]!,
+          href: fieldValue,
           icon: linkConfig.iconName,
           label: linkConfig.label,
           type: field
@@ -424,9 +511,9 @@ export function getPublicationData(
   // Format venue/publication info
   const getPublisher = (): string => {
     if (publication.venue) return publication.venue
+    if (publication.series) return publication.series
     if (publication.journal) return publication.journal
     if (publication.booktitle) return publication.booktitle
-    if (publication.series) return publication.series
     if (publication.eprint) return "Preprint"
     if (publication.publisher) return publication.publisher
     return ""

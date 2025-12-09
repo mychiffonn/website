@@ -142,8 +142,10 @@ export const PUBLICATION_LINK_TYPES = {
 
   // Interactive & supplementary materials
   code: { label: "Code", iconName: "mingcute:code-line" },
+  data: { label: "Data", iconName: "mingcute:coin-2-line" },
   demo: { label: "Demo", iconName: "mingcute:play-circle-line" },
   draft: { label: "Draft", iconName: "mingcute:flask-line" },
+  models: { label: "Models", iconName: "mingcute:box-3-line" },
   proposal: { label: "Proposal", iconName: "mingcute:file-text-line" },
   resources: { label: "Resources", iconName: "mingcute:folder-zip-line" },
 
@@ -153,7 +155,7 @@ export const PUBLICATION_LINK_TYPES = {
   slides: { label: "Slides", iconName: "mingcute:presentation-line" },
   poster: { label: "Poster", iconName: "mingcute:image-line" },
   post: { label: "Post", iconName: "mingcute:pen-line" },
-  threads: { label: "Thread", iconName: "mingcute:comment-line" },
+  thread: { label: "Thread", iconName: "mingcute:comment-line" },
 
   // Metadata & accolades
   award: { label: "Award", iconName: "mingcute:trophy-line" },

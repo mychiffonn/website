@@ -30,7 +30,9 @@ The following custom fields are supported beyond standard BibTeX:
 - `eprint` and `archivePrefix` - arXiv preprint fields (standard BibTeX for arXiv)
 - `award` - Award/honor received
 - `code` - Source code repository URL
+- `data` - Dataset URL
 - `demo` - Live demo URL
+- `models` - Model artifact URL
 - `pdf` - PDF file path or URL
 - `post` - Blog post URL
 - `poster` - Poster file path or URL
@@ -38,7 +40,7 @@ The following custom fields are supported beyond standard BibTeX:
 - `selected` - Boolean for featured publications (`selected={true}` or `selected="true"`)
 - `slides` - Presentation slides URL
 - `talk` - Talk/presentation URL
-- `threads` - Social media threads URL
+- `thread` - Social media thread URL, such as X/Twitter/BlueSky summary or discussion thread
 - `venue` - Publication venue (overrides journal/booktitle)
 - `video` - Video URL
 - `website` - Project website URL
