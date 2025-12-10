@@ -1,5 +1,5 @@
 ---
-title: Replicate Counterfactual Test for Faithfulness from Atanasova et.al. (2023)
+title: Replicate Counterfactual Test for Faithfulness from Atanasova et. al (2023)
 description: Pivotal Fellowship Spring 2026 Project Trial. Evaluate whether language model explanations are faithful by checking if perturbing input features leads to changes in model output and explanations.
 fromDate: 2025-12-08
 toDate: 2025-12-08
