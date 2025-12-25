@@ -2,7 +2,7 @@
 title: Synthetic Control Replication and Extension
 description: Replication study of Philadelphia's excise tax impact on beverages using synthetic control methods in R with causal inference.
 toDate: 2023-12
-repo: https://github.com/mychiffonn/synthetic-control-rep
+code: https://github.com/mychiffonn/synthetic-control-rep
 doc: https://github.com/mychiffonn/synthetic-control-rep/blob/main/CS130%20Final%20Assignment.pdf
 context: research
 tags:

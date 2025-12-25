@@ -3,7 +3,7 @@ title: PWA SeizureSavvy
 description: Full-stack Progressive Web App for seizure tracking with predictive warnings using XGBoost and LSTM models, built with React and Flask.
 fromDate: 2024-02-01
 toDate: 2024-04-19
-repo: https://github.com/mychiffonn/cs162-SeisureSavvy
+code: https://github.com/mychiffonn/cs162-SeisureSavvy
 doc: https://github.com/mychiffonn/cs162-SeisureSavvy
 context: school
 tags:

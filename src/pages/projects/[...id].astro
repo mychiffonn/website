@@ -24,10 +24,10 @@ type Props = {
 
 const { project } = Astro.props
 const { Content } = await render(project)
-const { title, isHighlighted, fromDate, toDate, repo, doc, url, release, context, tags } =
+const { title, isHighlighted, fromDate, toDate, code, doc, url, release, context, tags } =
   project.data
 
-const links = getProjectLinks(repo, doc, url, release)
+const links = getProjectLinks(code, doc, url, release)
 
 const contextVariant = getContextVariant(context)
 ---

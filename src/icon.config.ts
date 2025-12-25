@@ -126,7 +126,7 @@ export const PROFILE_ICON_MAP = {
 }
 
 export const PROJECT_LINK_TYPES = {
-  repo: { label: "Code", iconName: "mingcute:code-line" },
+  code: { label: "Code", iconName: "mingcute:code-line" },
   doc: { label: "Documentation", iconName: "mingcute:document-line" },
   url: { label: "Website", iconName: "mingcute:globe-2-line" },
   release: { label: "Release", iconName: "mingcute:download-line" }

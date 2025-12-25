@@ -83,7 +83,7 @@ const projects = defineCollection({
       isHighlighted: z.boolean().default(false),
       fromDate: yearMonthDateSchema.optional(),
       toDate: yearMonthDateSchema.optional(),
-      repo: z.string().url().optional(),
+      code: z.string().url().optional(),
       doc: z.string().url().optional(),
       url: z.string().url().optional(),
       release: z.string().url().optional(),

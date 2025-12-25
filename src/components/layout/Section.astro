@@ -15,7 +15,7 @@ const { class: className, title, moreLink, moreText = "see all →" } = Astro.pr
 
 <section class:list={["mt-2 flex flex-col gap-y-1", className]}>
   <div class={moreLink && "flex items-baseline gap-x-3"}>
-    <h2 id={title.toLowerCase()} class="mt-4 mb-4 text-2xl font-medium">
+    <h2 id={title.toLowerCase()} class="mt-4 text-2xl font-medium">
       {title}
     </h2>
     {

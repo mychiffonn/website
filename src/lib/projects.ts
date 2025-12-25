@@ -8,9 +8,9 @@ export type Project = CollectionEntry<"projects">
 // Project Utilities
 // ========================================
 
-export const getProjectLinks = (repo?: string, doc?: string, url?: string, release?: string) => {
+export const getProjectLinks = (code?: string, doc?: string, url?: string, release?: string) => {
   const linkData = [
-    { type: "repo" as const, href: repo },
+    { type: "code" as const, href: code },
     { type: "doc" as const, href: doc },
     { type: "url" as const, href: url },
     { type: "release" as const, href: release }

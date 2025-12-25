@@ -10,7 +10,7 @@ Simple frontmatter
 ---
 title: "Synthetic Control Analysis"
 description: "Replication study of Philadelphia excise tax impact using synthetic control methods in R with causal inference."
-repo: "https://github.com/username/synthetic-control"
+code: "https://github.com/username/synthetic-control"
 context: "school"
 ---
 ```
@@ -23,7 +23,7 @@ title: "Synthetic Control Analysis"
 description: "Replication study of Philadelphia excise tax impact using synthetic control methods in R with causal inference."
 fromDate: "2023-10"
 toDate: "2023-12"
-repo: "https://github.com/username/synthetic-control"
+code: "https://github.com/username/synthetic-control"
 doc: "https://docs.example.com/synthetic-control"
 url: "https://synthetic-control.example.com"
 context: "work"
@@ -44,7 +44,7 @@ tags:
 | `description` | String | ❌ | Brief project description (max 100 characters) | Used in project cards; falls back to content |
 | `fromDate` | Date | ❌ | Start date of the project | YYYY-MM or YYYY-MM-DD format |
 | `toDate` | Date | ❌ | End date of the project | YYYY-MM or YYYY-MM-DD format. Must be ≥ fromDate |
-| `repo` | URL | ❌ | Link to source code repository | Must be a valid URL |
+| `code` | URL | ❌ | Link to source code repository | Must be a valid URL |
 | `doc` | URL | ❌ | Link to project documentation | Must be a valid URL |
 | `url` | URL | ❌ | Link to live site or demo | Must be a valid URL |
 | `context` | Enum | ❌ | One of: `school`, `personal`, `work`, `community` |  |
