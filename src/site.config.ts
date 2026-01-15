@@ -75,7 +75,7 @@ export const NAV_LINKS: LinkConfig[] = [
   },
   {
     href: "/uses",
-    label: "Uses"
+    label: "Tech"
   },
   {
     href: "/now",

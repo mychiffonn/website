@@ -59,10 +59,17 @@ export function sortProjects(projects: Project[]): Project[] {
     if (a.data.isHighlighted && !b.data.isHighlighted) return -1
     if (!a.data.isHighlighted && b.data.isHighlighted) return 1
 
-    // Then sort by date (most recent first)
-    const dateA = a.data.toDate || a.data.fromDate || new Date(0)
-    const dateB = b.data.toDate || b.data.fromDate || new Date(0)
-    return dateB.getTime() - dateA.getTime()
+    // Then sort by end date (most recent first); ongoing projects rank highest.
+    const ongoingSentinel = new Date(8640000000000000)
+    const endDateA = a.data.toDate ?? (a.data.fromDate ? ongoingSentinel : new Date(0))
+    const endDateB = b.data.toDate ?? (b.data.fromDate ? ongoingSentinel : new Date(0))
+    const endDelta = endDateB.getTime() - endDateA.getTime()
+    if (endDelta !== 0) return endDelta
+
+    // Fall back to start date for consistent ordering among ongoing projects.
+    const startDateA = a.data.fromDate || new Date(0)
+    const startDateB = b.data.fromDate || new Date(0)
+    return startDateB.getTime() - startDateA.getTime()
   })
 }
 
