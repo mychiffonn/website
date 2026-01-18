@@ -32,10 +32,10 @@ As LLMs grow more capable, oversight is essential for ensuring safe and reliable
 
 A scaling curve showing how monitor performance degrades or holds as capability gap grows, with each point representing PR-AUC for a monitor-target pair.
 
-- **Y-axis:** Monitor success rate measured by PR-AUC (sandbagger = positive, genuine incapability = negative).
+- **Y-axis:** Monitor success rate measured by ROC-AUC (sandbagger = positive, genuine incapability = negative).
 - **X-axis:** Capability gap between monitor and target model.
 
-It should curve downward as gap widens, with potential thresholds where monitoring fails.
+It should curve upward as gap widens, with potential thresholds where monitoring fails.
 
 ## Methodology
 
@@ -68,18 +68,15 @@ Given a target model $T$, we create an incapable version $T'$ by
 
 For general capability, we use the Epoch Capabilities Index (ECI) from [Epoch's model benchmarks](https://epoch.ai/models/search).
 
-For models without published ECI, we estimate using
+For models without published ECI, we estimate using regression based on model size and known ECI values `ECI = m * log(params) + b`, where `b` accounts for thinking boost. We caliberate the results by known ECI scores of models within the same series (Qwen3) and of models with similar capability.
 
-- regression based on model size and known ECI values `ECI = m * log(params) + b`, where `b` accounts for thinking boost
-- empirical evaluation on the benchmarks we use (e.g., WMDP, BigCodeBench; see below)
-
-As a start, within-family comparisons **temporarily** use model size as a proxy (e.g., Qwen3-30B-A3B vs Qwen3-80B on WMDP).
+As a start, within-family comparisons **temporarily** use model size as a proxy.
 
 ### Task selection
 
 To make models use chain-of-thought reasoning ([Emmons et al., 2025](https://arxiv.org/abs/2507.05246)), we select tasks known to benefit from CoT prompting and proxy for real world, safety-relevant scenarios.
 
-And since we pick sandbagging as case study, we choose tasks where models can plausibly sandbag: models (as small as 14B) need to perform at >= 40% task accuracy as a baseline. Furthermore, models should have reasons to sandbag on these tasks (e.g., safety concerns, uncertainty).
+And since we pick sandbagging as case study, we choose tasks where models can plausibly sandbag: models (as small as 14B) need to perform at >= 40% task accuracy as a baseline. Furthermore, models **should have some motivation/reasons to sandbag on these tasks** (e.g., safety concerns, risks against self-preservation).
 
 We select two main tasks:
 
@@ -95,7 +92,7 @@ We elicit sandbagging behavior via prompts that instruct the target model $T$ to
 
 ### Monitoring setup
 
-We implement chain-of-thought monitoring following [Inspect AI's framework](https://inspectai.github.io/inspectai/).
+We implement chain-of-thought monitoring with [Inspect AI](https://inspect.aisi.org.uk/) and [ControlArena](https://control-arena.aisi.org.uk)
 
 - **Monitor input:** The full CoT reasoning trace from a model (either $T$ or $T'$), actions taken, final answer, and whether the answer is correct. Each sample is labeled as sandbagging (if from $T$) or genuine incapability (if from $T'$ without any system prompt).
 
@@ -105,7 +102,7 @@ We implement chain-of-thought monitoring following [Inspect AI's framework](http
 
 ## Evaluation
 
-We evaluate monitor success rate using precision-recall AUC (PR-AUC) for distinguishing sandbagging from genuine incapability across varying capability gaps $\Delta_C$. We plot PR-AUC (y-axis) against $\Delta_C$ (x-axis) to visualize scaling behavior.
+We evaluate monitor success rate using ROC-AUC for distinguishing sandbagging from genuine incapability across varying capability gaps $\Delta_C$. We plot ROC-AUC (y-axis) against $\Delta_C$ (x-axis) to visualize scaling behavior.
 
 Results will be aggregated over multiple runs with different random seeds to ensure robustness, and confidence intervals will be reported.
 
