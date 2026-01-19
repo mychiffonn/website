@@ -30,7 +30,7 @@ As LLMs grow more capable, oversight is essential for ensuring safe and reliable
 
 ## Expected result
 
-A scaling curve showing how monitor performance degrades or holds as capability gap grows, with each point representing PR-AUC for a monitor-target pair.
+A scaling curve showing how monitor performance degrades or holds as capability gap grows, with each point representing ROC-AUC for a monitor-target pair.
 
 - **Y-axis:** Monitor success rate measured by ROC-AUC (sandbagger = positive, genuine incapability = negative).
 - **X-axis:** Capability gap between monitor and target model.

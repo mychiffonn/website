@@ -1,7 +1,7 @@
-I'm interested in **current and future AI systems that reflect and support diverse human experiences** across languages, cultures, values, and social contexts, through AI evals and scaling environment (data, RL env, agent harness, etc):
+I'm interested in **current and future AI systems that reflect and support diverse human experiences** across languages, cultures, values, and social contexts, through **AI evals** and **scaling environment** (data, agent harness, etc):
 
-- Socio-technical AI Alignment: pluralistic alignment, evaluation (capabilities, propensities, safeguards), scalable oversight,
-- Multilingual & multicultural AI: investigate and improve cross-lingual and -cultural understanding in AI systems
+- Socio-technical AI Alignment: pluralistic alignment, evaluation (capabilities, propensities, safeguards), scalable oversight
+- Multilingual & multicultural AI: evaluate and improve cross-lingual and -cultural understanding in AI systems
 
 I broadly care about AI Safety, AI ethics and impacts of AI on humans, society, and [more-than-human world](https://www.youtube.com/watch?v=vakQsLYp4F0).
 
