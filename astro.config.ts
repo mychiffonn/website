@@ -31,6 +31,10 @@ export default defineConfig({
     remotePatterns: [
       {
         protocol: "data"
+      },
+      {
+        protocol: "https",
+        hostname: "gravatar.com"
       }
     ]
   },
