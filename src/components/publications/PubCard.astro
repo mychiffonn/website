@@ -1,6 +1,7 @@
 ---
 import type { ProcessedPublication } from "@/types"
 
+import { slugify } from "@/lib/string-manipulation"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 
@@ -13,7 +14,13 @@ interface Props {
 const { pub } = Astro.props
 ---
 
-<article class="card card-content">
+<article
+  class="card card-content"
+  data-pub-year={pub.year ?? ""}
+  data-pub-selected={pub.selected ? "true" : "false"}
+  data-pub-author-position={pub.authorPosition ?? Infinity}
+  data-pub-keywords={pub.keywords?.map((k: string) => slugify(k)).join(",") ?? ""}
+>
   {pub.award && <span class="text-accent items-center text-sm font-bold">🏆 {pub.award}</span>}
 
   <span class="bibliography-title">
@@ -60,7 +67,7 @@ const { pub } = Astro.props
   {
     (pub.publisher || pub.year) && (
       <div class="bibliography-details text-muted-foreground text-sm">
-        {pub.publisher && <span class="publication-type">{pub.publisher}</span>}
+        {pub.publisher && <span class="font-bold">{pub.publisher}</span>}
         {pub.publisher && pub.year && <span> • </span>}
         {pub.year && <span>{pub.year}</span>}
       </div>
@@ -88,6 +95,18 @@ const { pub } = Astro.props
       ))
     }
   </div>
+
+  {
+    pub.keywords && pub.keywords.length > 0 && (
+      <div class="card-tags">
+        {pub.keywords.map((keyword: string) => (
+          <button class="pub-tag-badge" data-pub-tag={slugify(keyword)} aria-pressed="false">
+            {keyword}
+          </button>
+        ))}
+      </div>
+    )
+  }
 </article>
 
 <style>
@@ -135,6 +154,43 @@ const { pub } = Astro.props
   .expanded-authors:hover {
     text-decoration: underline;
     text-decoration-style: dotted;
+  }
+
+  .bibliography-authors :global(.author-highlight) {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: 0.5rem;
+  }
+
+  .pub-tag-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .pub-tag-badge:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .pub-tag-badge[aria-pressed="true"] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
   }
 </style>
 <script>

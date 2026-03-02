@@ -228,5 +228,10 @@ export const ProcessedPublicationSchema = z.object({
       icon: z.string(),
       label: z.string()
     })
-  )
+  ),
+
+  // Sorting & filtering metadata
+  keywords: z.array(z.string()).default([]),
+  selected: z.boolean().default(false),
+  authorPosition: z.number().default(Infinity)
 })

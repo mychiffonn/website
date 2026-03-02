@@ -3,7 +3,13 @@
  */
 import { PUB_CONFIG } from "@site-config"
 
-import { getPublicationData, getSelectedPublications, parseBibTeX, sortPublications } from "./utils"
+import {
+  getPublicationData,
+  getSelectedPublications,
+  parseBibTeX,
+  sortPublications,
+  sortPublicationsByRelevance
+} from "./utils"
 import bibContent from "/src/content/publications/main.bib?raw"
 
 /**
@@ -13,12 +19,13 @@ import bibContent from "/src/content/publications/main.bib?raw"
 export async function loadAllPublications() {
   try {
     const allPublications = parseBibTeX(bibContent)
+    const sorted = sortPublications(allPublications, PUB_CONFIG)
 
-    // Group publications by year and process in a single pass
     const processedPublicationsByYear: Record<string, any[]> = {}
     const yearsSet = new Set<number>()
+    const keywordCounts = new Map<string, number>()
 
-    for (const pub of allPublications) {
+    for (const pub of sorted) {
       const year = pub.year || 0
       const yearStr = year.toString()
 
@@ -28,20 +35,45 @@ export async function loadAllPublications() {
 
       processedPublicationsByYear[yearStr].push(getPublicationData(pub, PUB_CONFIG))
       yearsSet.add(year)
+
+      if (pub.keywords) {
+        for (const kw of pub.keywords
+          .split(",")
+          .map((k) => k.trim())
+          .filter(Boolean)) {
+          keywordCounts.set(kw, (keywordCounts.get(kw) || 0) + 1)
+        }
+      }
     }
 
-    // Sort publications within each year (reverse chronological by default)
-    for (const yearStr of Object.keys(processedPublicationsByYear)) {
-      processedPublicationsByYear[yearStr].sort((a, b) => (b.year || 0) - (a.year || 0))
-    }
-
-    // Convert set to sorted array (newest first)
     const years = Array.from(yearsSet).sort((a, b) => b - a)
 
-    return { publicationsByYear: processedPublicationsByYear, years }
+    // Flat list sorted by relevance
+    const relevanceSorted = sortPublicationsByRelevance(allPublications, PUB_CONFIG)
+    const allPublicationsFlat = relevanceSorted.map((pub) => getPublicationData(pub, PUB_CONFIG))
+
+    // Sort keywords by count (descending) then name (ascending), like blog tags
+    const allKeywords = [...keywordCounts.entries()]
+      .map(([keyword, count]) => ({ keyword, count }))
+      .sort((a, b) => {
+        const countDiff = b.count - a.count
+        return countDiff !== 0 ? countDiff : a.keyword.localeCompare(b.keyword)
+      })
+
+    return {
+      publicationsByYear: processedPublicationsByYear,
+      years,
+      allPublicationsFlat,
+      allKeywords
+    }
   } catch (error) {
     console.error("Error loading publications:", error)
-    return { publicationsByYear: {}, years: [] }
+    return {
+      publicationsByYear: {},
+      years: [],
+      allPublicationsFlat: [],
+      allKeywords: [] as { keyword: string; count: number }[]
+    }
   }
 }
 
@@ -53,7 +85,7 @@ export async function loadSelectedPublications() {
   try {
     const allPublications = parseBibTeX(bibContent)
     const selectedPublications = getSelectedPublications(allPublications)
-    const sortedPublications = sortPublications(selectedPublications)
+    const sortedPublications = sortPublications(selectedPublications, PUB_CONFIG)
 
     return sortedPublications.map((pub) => getPublicationData(pub, PUB_CONFIG))
   } catch (error) {

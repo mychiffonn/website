@@ -3,7 +3,10 @@ import type { ProcessedPublication } from "@/types"
 
 import { PROFILE } from "@site-config"
 import { loadAllPublications } from "@/lib/publications/loader"
+import { slugify } from "@/lib/string-manipulation"
 import Layout from "@/layouts/Layout.astro"
+import Dropdown from "@/components/base/Dropdown.astro"
+import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import Section from "@/components/layout/Section.astro"
@@ -14,7 +17,7 @@ const ggScholarUrl =
     ? PROFILE.links.googleScholar?.href
     : PROFILE.links.googleScholar
 
-const { publicationsByYear, years } = await loadAllPublications()
+const { publicationsByYear, years, allPublicationsFlat, allKeywords } = await loadAllPublications()
 ---
 
 <Layout title="Publications" description="Publications, preprints, and conference tutorials">
@@ -36,20 +39,325 @@ const { publicationsByYear, years } = await loadAllPublications()
     </p>
   </Section>
 
-  {
-    years.length > 0 ? (
-      years.map((year) => (
-        <Section title={year.toString()}>
-          {publicationsByYear[year].map((pub: ProcessedPublication) => (
-            <PubCard pub={pub} />
+  <!-- Controls: sort dropdown + tag filter bar -->
+  <div class="pub-controls">
+    <div class="pub-sort">
+      <Dropdown align="start" id="pub-sort-dropdown">
+        <button
+          slot="trigger"
+          data-dropdown-trigger
+          class="pub-sort-trigger"
+          aria-label="Sort publications"
+        >
+          <Icon name="mingcute:sort-descending-line" size={16} />
+          <span data-sort-label>By Relevance</span>
+          <Icon name="chevron-down" size={14} />
+        </button>
+        <button data-dropdown-item="relevance" class="pub-sort-option" aria-selected="true">
+          By Relevance
+        </button>
+        <button data-dropdown-item="year" class="pub-sort-option" aria-selected="false">
+          By Year
+        </button>
+      </Dropdown>
+    </div>
+
+    {
+      allKeywords.length > 0 && (
+        <div class="pub-tag-bar">
+          {allKeywords.map(({ keyword, count }) => (
+            <button
+              class="pub-tag-filter-badge"
+              data-pub-tag-filter={slugify(keyword)}
+              aria-pressed="false"
+            >
+              {keyword}
+              <span class="pub-tag-count">({count})</span>
+            </button>
           ))}
-        </Section>
-      ))
-    ) : (
-      <div class="py-12 text-center">
-        <h2 class="text-muted-foreground mb-2 text-xl font-medium">No publications found</h2>
-        <p class="text-muted-foreground">No publications yet.</p>
-      </div>
-    )
-  }
+          <span class="pub-active-filter hidden" data-active-filter>
+            <button class="pub-clear-filter" data-clear-filter aria-label="Clear filter">
+              <Icon name="close" size={12} />
+              Clear
+            </button>
+          </span>
+        </div>
+      )
+    }
+  </div>
+
+  <!-- Relevance view (default visible) -->
+  <div data-pub-view="relevance">
+    {
+      allPublicationsFlat.length > 0 ? (
+        allPublicationsFlat.map((pub: ProcessedPublication) => <PubCard pub={pub} />)
+      ) : (
+        <div class="py-12 text-center">
+          <h2 class="text-muted-foreground mb-2 text-xl font-medium">No publications found</h2>
+          <p class="text-muted-foreground">No publications yet.</p>
+        </div>
+      )
+    }
+  </div>
+
+  <!-- Year view (hidden by default) -->
+  <div data-pub-view="year" class="hidden">
+    {
+      years.length > 0 ? (
+        years.map((year) => (
+          <div data-pub-year-section={year}>
+            <Section title={year.toString()}>
+              {publicationsByYear[year].map((pub: ProcessedPublication) => (
+                <PubCard pub={pub} />
+              ))}
+            </Section>
+          </div>
+        ))
+      ) : (
+        <div class="py-12 text-center">
+          <h2 class="text-muted-foreground mb-2 text-xl font-medium">No publications found</h2>
+          <p class="text-muted-foreground">No publications yet.</p>
+        </div>
+      )
+    }
+  </div>
 </Layout>
+
+<script>
+  function initPublicationControls() {
+    const relevanceView = document.querySelector<HTMLElement>('[data-pub-view="relevance"]')
+    const yearView = document.querySelector<HTMLElement>('[data-pub-view="year"]')
+    const sortLabel = document.querySelector<HTMLElement>("[data-sort-label]")
+    const sortOptions = document.querySelectorAll<HTMLElement>(
+      "#pub-sort-dropdown [data-dropdown-item]"
+    )
+    const tagFilterButtons = document.querySelectorAll<HTMLButtonElement>("[data-pub-tag-filter]")
+    const activeFilterIndicator = document.querySelector<HTMLElement>("[data-active-filter]")
+    const clearFilterButton = document.querySelector<HTMLButtonElement>("[data-clear-filter]")
+
+    if (!relevanceView || !yearView) return
+
+    let currentSort = "relevance"
+    let activeTag: string | null = null
+
+    function switchSort(mode: string) {
+      currentSort = mode
+
+      if (mode === "relevance") {
+        relevanceView!.classList.remove("hidden")
+        yearView!.classList.add("hidden")
+      } else {
+        relevanceView!.classList.add("hidden")
+        yearView!.classList.remove("hidden")
+      }
+
+      if (sortLabel) {
+        sortLabel.textContent = mode === "relevance" ? "By Relevance" : "By Year"
+      }
+
+      sortOptions.forEach((opt) => {
+        opt.setAttribute("aria-selected", opt.dataset.dropdownItem === mode ? "true" : "false")
+      })
+
+      applyTagFilter()
+    }
+
+    function applyTagFilter() {
+      const activeView = currentSort === "relevance" ? relevanceView! : yearView!
+      const cards = activeView.querySelectorAll<HTMLElement>("[data-pub-keywords]")
+
+      cards.forEach((card) => {
+        if (!activeTag) {
+          card.style.display = ""
+          return
+        }
+        const keywords = (card.dataset.pubKeywords || "").split(",").map((k) => k.trim())
+        card.style.display = keywords.includes(activeTag) ? "" : "none"
+      })
+
+      // Hide empty year sections in year view
+      if (currentSort === "year") {
+        const yearSections = yearView!.querySelectorAll<HTMLElement>("[data-pub-year-section]")
+        yearSections.forEach((section) => {
+          const visibleCards = section.querySelectorAll<HTMLElement>(
+            '[data-pub-keywords]:not([style*="display: none"])'
+          )
+          section.style.display = visibleCards.length === 0 ? "none" : ""
+        })
+      }
+
+      // Update filter indicator
+      if (activeFilterIndicator) {
+        if (activeTag) {
+          activeFilterIndicator.classList.remove("hidden")
+        } else {
+          activeFilterIndicator.classList.add("hidden")
+        }
+      }
+
+      // Update tag badge buttons in the filter bar
+      tagFilterButtons.forEach((btn) => {
+        btn.setAttribute("aria-pressed", btn.dataset.pubTagFilter === activeTag ? "true" : "false")
+      })
+
+      // Update tag badges on cards in both views
+      document.querySelectorAll<HTMLButtonElement>("[data-pub-tag]").forEach((badge) => {
+        badge.setAttribute("aria-pressed", badge.dataset.pubTag === activeTag ? "true" : "false")
+      })
+    }
+
+    function setActiveTag(tag: string | null) {
+      activeTag = activeTag === tag ? null : tag
+      applyTagFilter()
+    }
+
+    // Sort dropdown clicks
+    sortOptions.forEach((opt) => {
+      opt.addEventListener("click", () => {
+        const value = opt.dataset.dropdownItem
+        if (value) switchSort(value)
+      })
+    })
+
+    // Tag filter bar clicks
+    tagFilterButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tag = btn.dataset.pubTagFilter
+        if (tag) setActiveTag(tag)
+      })
+    })
+
+    // Tag badge clicks on cards (delegate from both views)
+    ;[relevanceView, yearView].forEach((view) => {
+      view!.addEventListener("click", (e) => {
+        const badge = (e.target as Element).closest<HTMLButtonElement>("[data-pub-tag]")
+        if (badge?.dataset.pubTag) {
+          setActiveTag(badge.dataset.pubTag)
+        }
+      })
+    })
+
+    // Clear filter
+    clearFilterButton?.addEventListener("click", () => {
+      setActiveTag(null)
+    })
+  }
+
+  document.addEventListener("astro:page-load", initPublicationControls)
+  document.addEventListener("astro:after-swap", initPublicationControls)
+</script>
+
+<style>
+  .pub-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .pub-sort-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    background: var(--background);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .pub-sort-trigger:hover {
+    border-color: var(--primary);
+  }
+
+  #pub-sort-dropdown {
+    background: var(--background);
+  }
+
+  .pub-sort-option {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    text-align: left;
+    background: inherit;
+    border: none;
+    color: var(--foreground);
+    cursor: pointer;
+  }
+
+  .pub-sort-option[aria-selected="true"] {
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  .pub-tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .pub-tag-filter-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .pub-tag-count {
+    opacity: 0.6;
+    margin-left: 0.125rem;
+  }
+
+  .pub-tag-filter-badge:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .pub-tag-filter-badge[aria-pressed="true"] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+  }
+
+  .pub-active-filter {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .pub-clear-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .pub-clear-filter:hover {
+    border-color: var(--destructive);
+    color: var(--destructive);
+  }
+
+  .hidden {
+    display: none !important;
+  }
+</style>

@@ -188,12 +188,15 @@ export interface Publication extends PublicationCustomFields {
   title: string
   authors: string[]
   year?: number
+  month?: number
+  entryType?: string
   journal?: string
   booktitle?: string
   series?: string
   publisher?: string
   doi?: string
   url?: string
+  keywords?: string
 }
 
 interface AuthorData {
@@ -262,6 +265,106 @@ function extractCustomFields(entry: CitationEntry): Record<string, string> {
 }
 
 /**
+ * Extract the BibTeX entry type (e.g., "article", "inproceedings", "misc") from raw data
+ */
+function extractEntryType(entry: CitationEntry): string | undefined {
+  if (entry._graph?.[0]?.data) {
+    const rawBib = entry._graph[0].data
+    const typeMatch = rawBib.match(new RegExp(`@(\\w+)\\{${entry.id}`, "i"))
+    if (typeMatch) {
+      return typeMatch[1].toLowerCase()
+    }
+  }
+  return undefined
+}
+
+/**
+ * Venue inference patterns: match booktitle/journal substrings to short venue names.
+ * Ordered by specificity — first match wins.
+ */
+const VENUE_BOOKTITLE_PATTERNS: [RegExp, string][] = [
+  [/Findings of the Association for Computational Linguistics:\s*ACL/i, "Findings of ACL"],
+  [/Findings of the Association for Computational Linguistics:\s*EMNLP/i, "Findings of EMNLP"],
+  [/Findings of the Association for Computational Linguistics:\s*NAACL/i, "Findings of NAACL"],
+  [/Findings of the Association for Computational Linguistics:\s*EACL/i, "Findings of EACL"],
+  [/Findings of the Association for Computational Linguistics/i, "Findings of ACL"],
+  [/Annual Meeting of the Association for Computational Linguistics/i, "ACL"],
+  [/Conference on Empirical Methods in Natural Language Processing/i, "EMNLP"],
+  [/North American Chapter/i, "NAACL"],
+  [/European Chapter.*Association for Computational Linguistics/i, "EACL"],
+  [/Asian Chapter|AACL/i, "AACL"],
+  [/Computational Natural Language Learning/i, "CoNLL"],
+  [/International Conference on Learning Representations/i, "ICLR"],
+  [/Advances in Neural Information Processing Systems/i, "NeurIPS"],
+  [/International Conference on Machine Learning/i, "ICML"],
+  [/Computer Vision and Pattern Recognition.*Workshop/i, "CVPR Workshop"],
+  [/Computer Vision and Pattern Recognition/i, "CVPR"],
+  [/International Conference on Computer Vision.*Workshop/i, "ICCV Workshop"],
+  [/International Conference on Computer Vision/i, "ICCV"],
+  [/European Conference on Computer Vision.*Workshop/i, "ECCV Workshop"],
+  [/European Conference on Computer Vision/i, "ECCV"],
+  [/Computer Vision\s*[-–]+\s*ECCV.*Workshop/i, "ECCV Workshop"],
+  [/Computer Vision\s*[-–]+\s*ECCV/i, "ECCV"],
+  [/AAAI Conference on Artificial Intelligence/i, "AAAI"],
+  [/International Joint Conference on Artificial Intelligence/i, "IJCAI"],
+  [/COLM/i, "COLM"],
+  [/COLING/i, "COLING"],
+  [/LREC/i, "LREC"]
+]
+
+const VENUE_URL_PATTERNS: [RegExp, string][] = [
+  [/aclanthology\.org/i, "ACL Anthology"],
+  [/proceedings\.neurips\.cc|papers\.nips\.cc/i, "NeurIPS"],
+  [/proceedings\.mlr\.press/i, "PMLR"],
+  [/openaccess\.thecvf\.com.*CVPR/i, "CVPR"],
+  [/openaccess\.thecvf\.com.*ICCV/i, "ICCV"],
+  [/openaccess\.thecvf\.com.*ECCV/i, "ECCV"],
+  [/ecva\.net/i, "ECCV"],
+  [/ojs\.aaai\.org/i, "AAAI"]
+]
+
+const VENUE_DOI_PATTERNS: [RegExp, string][] = [
+  [/10\.18653\/v1/i, "ACL Anthology"],
+  [/10\.1609\/aaai/i, "AAAI"]
+]
+
+/**
+ * Infer a short venue name from publication metadata.
+ * Priority: explicit venue > booktitle > journal > URL > DOI > series > publisher > eprint fallback
+ */
+function inferVenue(pub: Publication): string {
+  if (pub.venue) return pub.venue
+
+  const booktitle = pub.booktitle || ""
+  for (const [pattern, venue] of VENUE_BOOKTITLE_PATTERNS) {
+    if (pattern.test(booktitle)) return venue
+  }
+
+  const journal = pub.journal || ""
+  for (const [pattern, venue] of VENUE_BOOKTITLE_PATTERNS) {
+    if (pattern.test(journal)) return venue
+  }
+  if (journal) return journal
+
+  const url = pub.url || ""
+  for (const [pattern, venue] of VENUE_URL_PATTERNS) {
+    if (pattern.test(url)) return venue
+  }
+
+  const doi = pub.doi || ""
+  for (const [pattern, venue] of VENUE_DOI_PATTERNS) {
+    if (pattern.test(doi)) return venue
+  }
+
+  if (pub.series) return pub.series
+  if (pub.booktitle) return pub.booktitle
+  if (pub.publisher) return pub.publisher
+  if (pub.eprint) return "Preprint"
+
+  return ""
+}
+
+/**
  * Parse BibTeX content using citation-js
  * @param bibContent - Raw BibTeX file content
  * @returns Array of parsed publication objects
@@ -278,6 +381,9 @@ export function parseBibTeX(bibContent: string): Publication[] {
       const getField = (fieldName: string) => (entry as any)[fieldName] || customFields[fieldName]
 
       // Build publication object with core fields + all custom fields
+      const entryType = extractEntryType(entry)
+      const month = entry.issued?.["date-parts"]?.[0]?.[1]
+
       const publication: any = {
         id: entry.id || entry.label || `pub-${Math.random().toString(36).substring(2, 11)}`,
         title: entry.title || customFields.title || "",
@@ -289,6 +395,8 @@ export function parseBibTeX(bibContent: string): Publication[] {
             )
           : [],
         year: entry.issued?.["date-parts"]?.[0]?.[0] || entry.year || parseInt(customFields.year),
+        month,
+        entryType,
         // Standard BibTeX fields
         journal: entry["container-title"] || entry.journal || customFields.journal,
         booktitle: entry.booktitle || customFields.booktitle,
@@ -308,6 +416,9 @@ export function parseBibTeX(bibContent: string): Publication[] {
           publication[fieldName] = value
         }
       }
+
+      // keywords is a standard BibTeX field — citation-js parses it as entry.keyword
+      publication.keywords = (entry as any).keyword || customFields.keywords || undefined
 
       return publication as Publication
     })
@@ -376,7 +487,7 @@ export function highlightAuthorName(
       return wordBoundaryRegex.test(authorTrimmed)
     })
 
-    return shouldHighlight ? `<strong>${author}</strong>` : author
+    return shouldHighlight ? `<strong class="author-highlight">${author}</strong>` : author
   })
 }
 
@@ -450,20 +561,80 @@ export function getPublicationLinks(entry: Publication): PublicationLink[] {
 }
 
 /**
- * Sort publications by year and date
+ * Get the position of the highlighted author in the author list (0-indexed)
+ * Returns Infinity if not found
+ */
+function getHighlightedAuthorPosition(
+  authors: string[],
+  highlightConfig: PublicationConfig["highlightAuthor"]
+): number {
+  const { firstName, lastName, aliases = [] } = highlightConfig
+  const namesToMatch = [
+    `${firstName} ${lastName}`,
+    `${lastName}, ${firstName}`,
+    `${firstName.split(" ")[0]} ${lastName}`,
+    `${lastName}, ${firstName.split(" ")[0]}`,
+    ...aliases
+  ].map((n) => n.toLowerCase())
+
+  for (let i = 0; i < authors.length; i++) {
+    const authorLower = authors[i].trim().toLowerCase()
+    if (namesToMatch.some((name) => authorLower === name || authorLower.includes(name))) {
+      return i
+    }
+  }
+  return Infinity
+}
+
+/**
+ * Sort publications by year (descending) with configurable within-year ordering
  * @param publications - Array of publications
- * @param config - Publication configuration
+ * @param config - Publication configuration (optional, for within-year sort)
  * @returns Sorted array of publications
  */
-export function sortPublications(publications: Publication[]): Publication[] {
-  const sorted = [...publications].sort((a, b) => {
+export function sortPublications(
+  publications: Publication[],
+  _config?: PublicationConfig
+): Publication[] {
+  return [...publications].sort((a, b) => {
     const yearA = a.year || 0
     const yearB = b.year || 0
+    if (yearA !== yearB) return yearB - yearA
 
-    return yearB - yearA
+    const monthA = a.month ?? 0
+    const monthB = b.month ?? 0
+    return monthB - monthA
   })
+}
 
-  return sorted
+/**
+ * Sort publications by relevance: selected first, then author position ascending, then year descending, then month descending
+ */
+export function sortPublicationsByRelevance(
+  publications: Publication[],
+  config: PublicationConfig
+): Publication[] {
+  return [...publications].sort((a, b) => {
+    // selected=true first
+    const selA = a.selected ? 0 : 1
+    const selB = b.selected ? 0 : 1
+    if (selA !== selB) return selA - selB
+
+    // author position ascending
+    const posA = getHighlightedAuthorPosition(a.authors, config.highlightAuthor)
+    const posB = getHighlightedAuthorPosition(b.authors, config.highlightAuthor)
+    if (posA !== posB) return posA - posB
+
+    // year descending
+    const yearA = a.year || 0
+    const yearB = b.year || 0
+    if (yearA !== yearB) return yearB - yearA
+
+    // month descending
+    const monthA = a.month ?? 0
+    const monthB = b.month ?? 0
+    return monthB - monthA
+  })
 }
 
 /**
@@ -508,16 +679,12 @@ export function getPublicationData(
       ? `https://arxiv.org/abs/${publication.arxiv}`
       : publication.url || ""
 
-  // Format venue/publication info
-  const getPublisher = (): string => {
-    if (publication.venue) return publication.venue
-    if (publication.series) return publication.series
-    if (publication.journal) return publication.journal
-    if (publication.booktitle) return publication.booktitle
-    if (publication.eprint) return "Preprint"
-    if (publication.publisher) return publication.publisher
-    return ""
-  }
+  const venue = inferVenue(publication)
+
+  const authorPosition = getHighlightedAuthorPosition(
+    publication.authors || [],
+    config.highlightAuthor
+  )
 
   return {
     title: publication.title || "",
@@ -532,7 +699,15 @@ export function getPublicationData(
       hiddenCount: authorData.hiddenCount,
       hiddenAuthors: authorData.hiddenAuthors
     },
-    publisher: getPublisher() || undefined,
-    links
+    publisher: venue || undefined,
+    links,
+    keywords: publication.keywords
+      ? publication.keywords
+          .split(",")
+          .map((k: string) => k.trim())
+          .filter(Boolean)
+      : [],
+    selected: publication.selected,
+    authorPosition
   }
 }

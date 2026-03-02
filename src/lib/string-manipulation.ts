@@ -10,6 +10,7 @@
 export const slugify = (text: string): string => {
   return text
     .trim()
+    .toLowerCase()
     .replace(/\s+/g, "-") // Replace spaces with dashes
     .replace(/[^\w-]+/g, "") // Remove non-word characters except dashes
     .replace(/--+/g, "-") // Replace multiple dashes with single dash
