@@ -36,7 +36,7 @@
     "@types/mdast": "^4.0.4",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
-    "astro": "^5.17.3",
+    "astro": "^5.18.0",
     "astro-expressive-code": "^0.40.2",
     "astro-icon": "^1.1.5",
     "class-variance-authority": "^0.7.1",
