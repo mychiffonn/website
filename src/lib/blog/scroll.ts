@@ -1,9 +1,3 @@
-/**
- * @fileoverview Unified scroll management for the blog
- * @author My (Chiffon) Nguyen, Claude Code
- * @version 4.0.0
- */
-
 import type { HeadingRegion } from "./types"
 
 function arraysEqual(a: string[], b: string[]): boolean {

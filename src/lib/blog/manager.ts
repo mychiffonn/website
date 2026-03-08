@@ -1,11 +1,4 @@
-/**
- * @fileoverview Implementation of the PostManager interface,
- * with singleton pattern.
- *
- * @author My (Chiffon) Nguyen, Claude Code
- * @version 3.0.0
- */
-
+import type { MarkdownHeading } from "astro"
 import { getCollection, getEntry } from "astro:content"
 
 import * as authorModule from "./author"
@@ -22,44 +15,21 @@ import type {
 } from "./types"
 import { calculateWordCountFromPost, getParentId, isSubpost, sortByDateDesc } from "./utils"
 
-/**
- * Implementation of the PostManager interface with all functionality consolidated.
- *
- * This class provides a simplified interface to all post management
- * functionality with consolidated repository and service logic.
- * It implements the Singleton pattern to ensure consistent state across
- * the application.
- */
-export class PostManagerImpl implements PostManagerInterface {
-  private static instance: PostManagerImpl | null = null
+export class PostManager implements PostManagerInterface {
+  private static instance: PostManager | null = null
 
-  /**
-   * Private constructor to enforce singleton pattern.
-   */
-  private constructor() {
-    // All functionality is now consolidated directly in this class
-  }
+  private constructor() {}
 
-  /**
-   * Gets the singleton instance of the PostManager.
-   */
-  static getInstance(): PostManagerImpl {
-    if (!PostManagerImpl.instance) {
-      PostManagerImpl.instance = new PostManagerImpl()
+  static getInstance(): PostManager {
+    if (!PostManager.instance) {
+      PostManager.instance = new PostManager()
     }
-    return PostManagerImpl.instance
+    return PostManager.instance
   }
 
-  /**
-   * Resets the singleton instance (mainly for testing).
-   */
   static resetInstance(): void {
-    PostManagerImpl.instance = null
+    PostManager.instance = null
   }
-
-  // ========================================
-  // Core Post Operations
-  // ========================================
 
   async getAllPostsAndSubposts(): Promise<Post[]> {
     return await getCollection("blog", (post) => !post.data.draft)
@@ -183,48 +153,19 @@ export class PostManagerImpl implements PostManagerInterface {
     }
   }
 
-  // ========================================
-  // Author Operations
-  // ========================================
-
   async resolveAuthors(authorRefs: AuthorReference[]): Promise<AuthorData[]> {
     return authorModule.resolveAuthors(authorRefs)
   }
 
-  // ========================================
-  // TOC Operations
-  // ========================================
-
-  async getTOCSections(postId: string, tocMaxDepth: number = 6): Promise<TOCSection[]> {
-    if (tocMaxDepth <= 0) return []
-    // Lazy import for better tree-shaking and reduced initial bundle size
-    const { getTOCSections } = await import("./toc")
-    return getTOCSections(postId, this, tocMaxDepth)
-  }
-
-  async getCurrentPostHeadings(
+  async getTOCSections(
     postId: string,
-    tocMaxDepth: number = 6
-  ): Promise<import("astro").MarkdownHeading[]> {
+    tocMaxDepth: number = 6,
+    preRenderedHeadings?: MarkdownHeading[]
+  ): Promise<TOCSection[]> {
     if (tocMaxDepth <= 0) return []
-
-    const post = await this.getPostById(postId)
-    if (!post) return []
-
-    try {
-      // Lazy import of Astro render function for better performance
-      const { render } = await import("astro:content")
-      const { headings } = await render(post)
-      return headings.filter((heading) => heading.depth <= tocMaxDepth)
-    } catch (error) {
-      console.warn(`Failed to render headings for post ${postId}:`, error)
-      return []
-    }
+    const { getTOCSections } = await import("./toc")
+    return getTOCSections(postId, this, tocMaxDepth, preRenderedHeadings)
   }
-
-  // ========================================
-  // Utility Operations
-  // ========================================
 
   isSubpost(postId: string): boolean {
     return isSubpost(postId)
@@ -234,29 +175,30 @@ export class PostManagerImpl implements PostManagerInterface {
     return getParentId(subpostId)
   }
 
-  // ========================================
-  // Optimized Composite Methods
-  // ========================================
-
-  async getPostContext(postId: string, tocMaxDepth: number = 6): Promise<PostContext> {
-    // Fetch only the essential data in parallel (3 queries)
+  /**
+   * Gets complete context for rendering an individual post page.
+   * When `preRenderedHeadings` is provided, avoids a redundant `render()` call in TOC generation.
+   */
+  async getPostContext(
+    postId: string,
+    tocMaxDepth: number = 6,
+    preRenderedHeadings?: MarkdownHeading[]
+  ): Promise<PostContext> {
     const [metadata, navigation, tocSections] = await Promise.all([
       this.getMetadata(postId),
       this.getNavigation(postId),
-      this.getTOCSections(postId, tocMaxDepth)
+      this.getTOCSections(postId, tocMaxDepth, preRenderedHeadings)
     ])
 
-    // Derive information internally to minimize component logic
     const headings = tocSections.find((section) => section.postId === postId)?.headings || []
 
     const subpostIds = tocSections
       .filter((section) => section.isSubpost)
       .map((section) => section.postId)
 
-    const isSubpost = metadata.isSubpost === true
+    const isSubpostFlag = metadata.isSubpost === true
     const hasSubposts = metadata.hasSubposts === true
 
-    // Extract parent info from navigation and tocSections
     const parentPost = navigation.parent
       ? {
           id: navigation.parent.id,
@@ -264,7 +206,6 @@ export class PostManagerImpl implements PostManagerInterface {
         }
       : null
 
-    // Create navigation items for subpost components
     const postNavItems: PostNavItem[] = await Promise.all(
       subpostIds.map(async (subpostId) => {
         const subpostSection = tocSections.find((section) => section.postId === subpostId)
@@ -282,12 +223,10 @@ export class PostManagerImpl implements PostManagerInterface {
       })
     )
 
-    // Create active post navigation item
     const activePostNavItem: PostNavItem | null =
-      hasSubposts || isSubpost
+      hasSubposts || isSubpostFlag
         ? await (async () => {
-            if (isSubpost && parentPost) {
-              // When on subpost page, show parent post metadata
+            if (isSubpostFlag && parentPost) {
               const parentMetadata = await this.getMetadata(parentPost.id)
               return {
                 id: parentPost.id,
@@ -300,7 +239,6 @@ export class PostManagerImpl implements PostManagerInterface {
                 href: `/blog/${parentPost.id}`
               }
             } else {
-              // When on parent post page, show current metadata
               return {
                 id: postId,
                 title: metadata.title,
@@ -322,7 +260,7 @@ export class PostManagerImpl implements PostManagerInterface {
       headings,
       subpostIds,
       parentPost,
-      isSubpost,
+      isSubpost: isSubpostFlag,
       hasSubposts,
       postNavItems,
       activePostNavItem
@@ -330,10 +268,8 @@ export class PostManagerImpl implements PostManagerInterface {
   }
 
   async getBatchMetadata(postIds: string[]): Promise<Map<string, PostMeta>> {
-    // Early return for empty arrays to avoid unnecessary processing
     if (!postIds.length) return new Map()
 
-    // Optimized batch processing with error handling
     const metadataResults = await Promise.allSettled(
       postIds.map(async (postId) => {
         const metadata = await this.getMetadata(postId)
@@ -341,7 +277,6 @@ export class PostManagerImpl implements PostManagerInterface {
       })
     )
 
-    // Filter successful results only
     const validMetadata = metadataResults
       .filter(
         (result): result is PromiseFulfilledResult<readonly [string, PostMeta]> =>
@@ -352,14 +287,9 @@ export class PostManagerImpl implements PostManagerInterface {
     return new Map(validMetadata)
   }
 
-  // ========================================
-  // Post Filtering Operations
-  // ========================================
-
   async getPostsByAuthor(authorId: string): Promise<PostMeta[]> {
     try {
       const posts = await getCollection("blog", (post) => {
-        // Early returns for better performance
         if (post.data.draft || isSubpost(post.id)) return false
         return post.data.authors?.some((authorRef) => authorRef.id === authorId) ?? false
       })
@@ -382,7 +312,6 @@ export class PostManagerImpl implements PostManagerInterface {
 
   async getPostsByTag(tag: string): Promise<PostMeta[]> {
     try {
-      // Parallel fetch of main posts and subposts with the tag
       const [mainPostsWithTag, subpostsWithTag] = await Promise.all([
         getCollection(
           "blog",
@@ -394,26 +323,20 @@ export class PostManagerImpl implements PostManagerInterface {
         )
       ])
 
-      // Get parent IDs (use Set only to avoid duplicate API calls for same parent)
       const parentIds = new Set(subpostsWithTag.map((subpost) => getParentId(subpost.id)))
 
-      // Combine all unique post IDs
       const allPostIds = [...mainPostsWithTag.map((post) => post.id), ...parentIds]
 
-      // Early return if no posts
       if (allPostIds.length === 0) {
         return []
       }
 
-      // Get batch metadata for all posts
       const metadataMap = await this.getBatchMetadata(allPostIds)
 
-      // Convert to sorted array, filtering out any missing metadata
       const postsMetadata = allPostIds
         .map((postId) => metadataMap.get(postId))
         .filter((metadata): metadata is PostMeta => metadata !== undefined)
 
-      // Sort by date (most recent first)
       return postsMetadata.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
     } catch (error) {
       console.warn(`Failed to retrieve posts by tag ${tag}:`, error)

@@ -9,6 +9,7 @@ import { PostManager } from "@/lib/blog"
 import Layout from "@/layouts/Layout.astro"
 import BackToTop from "@/components/base/BackToTop.astro"
 import Badge from "@/components/base/Badge.astro"
+import CopyMarkdown from "@/components/base/CopyMarkdown.astro"
 import Icon from "@/components/base/Icon.astro"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
 import PostNav from "@/components/blog/PostNavigation.astro"
@@ -37,11 +38,9 @@ if (!post) {
 const postManager = PostManager.getInstance()
 const currentPostId = post.id
 
-// Get complete optimized context with minimal queries
-const [{ Content }, context] = await Promise.all([
-  render(post),
-  postManager.getPostContext(currentPostId, SITE.tocMaxDepth)
-])
+// Render first, then pass headings to context to avoid double render() in TOC generation
+const { Content, headings: rawHeadings } = await render(post)
+const context = await postManager.getPostContext(currentPostId, SITE.tocMaxDepth, rawHeadings)
 
 const {
   metadata,
@@ -54,6 +53,8 @@ const {
   postNavItems,
   activePostNavItem
 } = context
+
+const rawMarkdown = post.body ?? null
 ---
 
 <Layout
@@ -135,7 +136,7 @@ const {
       post.data.tags?.length > 0 && (
         <ul class="flex flex-wrap justify-center gap-2" aria-label="Post tags">
           {post.data.tags.map((tag: string) => (
-            <li role="listitem">
+            <li>
               <Badge href={`/tags/${tag}`} variant="muted">
                 <Icon name="hashtag" class="size-3" />
                 {tag}
@@ -182,6 +183,8 @@ const {
   <article class="post-content prose lg:prose-lg">
     <Content />
   </article>
+
+  {rawMarkdown && <CopyMarkdown markdown={rawMarkdown} class="flex justify-end" />}
 
   {/** Bottom navigation */}
   <PostNav prevPost={navigation.newer} nextPost={navigation.older} parentPost={navigation.parent} />
