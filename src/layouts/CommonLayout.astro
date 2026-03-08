@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro"
+import CopyMarkdown from "@/components/base/CopyMarkdown.astro"
 import FormattedDate from "@/components/base/FormattedDate.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
@@ -8,6 +9,7 @@ interface Props {
   description?: string
   modifiedTime?: Date
   prose?: boolean
+  markdown?: string
   breadcrumbs?: Array<{
     href?: string
     label: string
@@ -16,7 +18,15 @@ interface Props {
   [key: string]: any // Allow any additional props to pass through to Layout
 }
 
-const { title, description, modifiedTime, prose = true, breadcrumbs, ...layoutProps } = Astro.props
+const {
+  title,
+  description,
+  modifiedTime,
+  prose = true,
+  markdown,
+  breadcrumbs,
+  ...layoutProps
+} = Astro.props
 ---
 
 <Layout title={title} description={description} modifiedTime={modifiedTime} {...layoutProps}>
@@ -35,6 +45,7 @@ const { title, description, modifiedTime, prose = true, breadcrumbs, ...layoutPr
     }
   </section>
 
+  {prose && markdown && <CopyMarkdown markdown={markdown} class="flex justify-end" />}
   {
     prose ? (
       <div class="prose lg:prose-lg">

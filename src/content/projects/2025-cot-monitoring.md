@@ -91,7 +91,7 @@ We elicit sandbagging behavior via prompts that instruct the target model $T$ to
 
 ### Monitoring setup
 
-We implement chain-of-thought monitoring with [Inspect AI](https://inspect.aisi.org.uk/) and [ControlArena](https://control-arena.aisi.org.uk)
+We implement chain-of-thought monitoring with [Inspect AI](https://inspect.aisi.org.uk/).
 
 - **Monitor input:** The full CoT reasoning trace from a model (either $T$ or $T'$), actions taken, final answer, and whether the answer is correct. Each sample is labeled as sandbagging (if from $T$) or genuine incapability (if from $T'$ without any system prompt).
 

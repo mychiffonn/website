@@ -26,7 +26,8 @@ const badgeVariants = cva(
           "border-transparent bg-yellow-500 text-white [a&]:hover:bg-yellow-600 focus-visible:ring-yellow-500/20 dark:focus-visible:ring-yellow-500/40 dark:bg-yellow-600",
         danger:
           "border-transparent bg-red-500 text-white [a&]:hover:bg-red-600 focus-visible:ring-red-500/20 dark:focus-visible:ring-red-500/40 dark:bg-red-600",
-        info: "border-transparent bg-blue-500 text-white [a&]:hover:bg-blue-600 focus-visible:ring-blue-500/20 dark:focus-visible:ring-blue-500/40 dark:bg-blue-600"
+        info: "border-transparent bg-blue-500 text-white [a&]:hover:bg-blue-600 focus-visible:ring-blue-500/20 dark:focus-visible:ring-blue-500/40 dark:bg-blue-600",
+        tag: "bg-transparent border-border text-muted-foreground cursor-pointer transition-all hover:border-accent hover:text-accent aria-[pressed=true]:bg-primary aria-[pressed=true]:text-primary-foreground aria-[pressed=true]:border-primary"
       }
     },
     defaultVariants: {
@@ -40,9 +41,10 @@ export type BadgeVariant = VariantProps<typeof badgeVariants>["variant"]
 export interface Props extends astroHTML.JSX.HTMLAttributes {
   variant?: BadgeVariant
   href?: string
+  as?: "button"
 }
 
-const { variant = "default", class: className, href, ...rest } = Astro.props
+const { variant = "default", class: className, href, as, ...rest } = Astro.props
 ---
 
 {
@@ -50,6 +52,10 @@ const { variant = "default", class: className, href, ...rest } = Astro.props
     <Link href={href} data-slot="badge" class={cn(badgeVariants({ variant }), className)} {...rest}>
       <slot />
     </Link>
+  ) : as === "button" ? (
+    <button data-slot="badge" class={cn(badgeVariants({ variant }), className)} {...rest}>
+      <slot />
+    </button>
   ) : (
     <span data-slot="badge" class={cn(badgeVariants({ variant }), className)} {...rest}>
       <slot />

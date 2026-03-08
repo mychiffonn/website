@@ -2,6 +2,7 @@
 import type { ProcessedPublication } from "@/types"
 
 import { slugify } from "@/lib/string-manipulation"
+import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 
@@ -100,9 +101,9 @@ const { pub } = Astro.props
     pub.keywords && pub.keywords.length > 0 && (
       <div class="card-tags">
         {pub.keywords.map((keyword: string) => (
-          <button class="pub-tag-badge" data-pub-tag={slugify(keyword)} aria-pressed="false">
+          <Badge variant="tag" as="button" data-pub-tag={slugify(keyword)} aria-pressed="false">
             {keyword}
-          </button>
+          </Badge>
         ))}
       </div>
     )
@@ -159,38 +160,6 @@ const { pub } = Astro.props
   .bibliography-authors :global(.author-highlight) {
     color: var(--accent);
     font-weight: 700;
-  }
-
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.375rem;
-    margin-top: 0.5rem;
-  }
-
-  .pub-tag-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.125rem 0.5rem;
-    font-size: 0.75rem;
-    line-height: 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: 9999px;
-    background: transparent;
-    color: var(--muted-foreground);
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .pub-tag-badge:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .pub-tag-badge[aria-pressed="true"] {
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border-color: var(--primary);
   }
 </style>
 <script>
