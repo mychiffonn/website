@@ -100,7 +100,7 @@ export const FOOTER: FooterConfig = {
   footerLinks: []
 }
 
-if (import.meta.env.DEV) {
+if (import.meta.env.DEV && typeof window === "undefined") {
   const { FooterConfigSchema, ProfileConfigSchema, PublicationConfigSchema, SiteConfigSchema } =
     await import("@/schemas")
   SiteConfigSchema.parse(SITE)
