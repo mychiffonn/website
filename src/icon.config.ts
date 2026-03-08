@@ -40,6 +40,7 @@ export const SEMANTIC_ICONS = {
   "external-link": "mingcute:external-link-line",
   star: "mingcute:star-line",
   "to-top": "mingcute:arrow-to-up-line",
+  monitor: "mingcute:computer-line",
 
   // Content & actions
   calendar: "mingcute:calendar-line",
