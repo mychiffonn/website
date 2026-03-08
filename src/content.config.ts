@@ -38,7 +38,9 @@ const blog = defineCollection({
           .default([])
           .transform((arr) => dedupLowerCase(arr).map((tag) => slugify(tag))),
         authors: z.array(reference("people")).default([]),
-        draft: z.boolean().default(false)
+        draft: z.boolean().default(false),
+        stage: z.enum(["seedling", "budding", "evergreen"]).optional(),
+        audience: z.string().max(300).optional()
       })
       .refine(
         (data) => {

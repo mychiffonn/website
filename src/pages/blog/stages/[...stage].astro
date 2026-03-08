@@ -1,0 +1,63 @@
+---
+import { PostManager, type PostMeta } from "@/lib/blog"
+import { getStageConfig } from "@/lib/blog/stage"
+import Layout from "@/layouts/Layout.astro"
+import Icon from "@/components/base/Icon.astro"
+import PreviewCard from "@/components/blog/PreviewCard.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+
+export async function getStaticPaths() {
+  const { STAGE_NAMES } = await import("@/lib/blog/stage")
+  return STAGE_NAMES.map((stage) => ({
+    params: { stage },
+    props: { stage }
+  }))
+}
+
+const { stage } = Astro.props
+const stageConfig = getStageConfig(stage)!
+const postManager = PostManager.getInstance()
+const allPosts = await postManager.getMainPosts()
+const filteredPosts = allPosts.filter((post) => post.data.stage === stage)
+
+const postsMetadata: PostMeta[] = await Promise.all(
+  filteredPosts.map((post) => postManager.getMetadata(post.id))
+)
+---
+
+<Layout
+  title={`${stage} posts`}
+  description={`Blog posts at the ${stage} stage of growth.`}
+  noindex
+>
+  <Breadcrumbs
+    items={[
+      { href: "/blog", label: "Blog", icon: "blog" },
+      { href: "/blog/stages", label: "Stages", icon: "seedling" },
+      { label: stage, icon: stage }
+    ]}
+  />
+
+  <div class="mb-6">
+    <div class="flex items-center gap-2">
+      <Icon name={stage} class="size-5" />
+      <h1 class="text-2xl font-medium capitalize">{stage} posts</h1>
+      <span class="text-muted-foreground text-sm">({postsMetadata.length})</span>
+    </div>
+    <p class="text-muted-foreground mt-2 text-sm">{stageConfig.description}</p>
+  </div>
+
+  {
+    postsMetadata.length === 0 ? (
+      <p class="text-muted-foreground">No posts at this stage yet.</p>
+    ) : (
+      <ul class="flex flex-col gap-y-4">
+        {postsMetadata.map((metadata) => (
+          <li>
+            <PreviewCard metadata={metadata} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Layout>

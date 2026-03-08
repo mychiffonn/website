@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets"
 
+import { getStageVariant } from "@/lib/blog/stage"
 import type { PostMeta } from "@/lib/blog/types"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
@@ -44,10 +45,20 @@ const tags = metadata.tags
       metadata.image && "max-md:pt-24 md:max-w-[80%]"
     ]}
   >
-    {/** Row 1: Title */}
-    <h3 class="card-title group-hover:text-primary transition-colors duration-300">
-      {metadata.title}
-    </h3>
+    {/** Row 1: Title + stage badge */}
+    <div class="flex items-center gap-2">
+      <h3 class="card-title group-hover:text-primary transition-colors duration-300">
+        {metadata.title}
+      </h3>
+      {
+        metadata.stage && (
+          <Badge variant={getStageVariant(metadata.stage)} class="text-[0.65rem]">
+            <Icon name={metadata.stage} />
+            {metadata.stage}
+          </Badge>
+        )
+      }
+    </div>
 
     {/** Row 2: Desc */}
     <p class="card-description">

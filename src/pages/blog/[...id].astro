@@ -6,6 +6,7 @@ import { render } from "astro:content"
 
 import { SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
+import { getStageVariant } from "@/lib/blog/stage"
 import Layout from "@/layouts/Layout.astro"
 import BackToTop from "@/components/base/BackToTop.astro"
 import Badge from "@/components/base/Badge.astro"
@@ -131,13 +132,24 @@ const rawMarkdown = post.body ?? null
     {/** Post metadata */}
     <PostMetadata {...metadata} variant="full" />
 
-    {/** Tags */}
+    {/** Stage + Tags */}
     {
-      post.data.tags?.length > 0 && (
+      (post.data.stage || post.data.tags?.length > 0) && (
         <ul class="flex flex-wrap justify-center gap-2" aria-label="Post tags">
+          {post.data.stage && (
+            <li>
+              <Badge
+                href={`/blog/stages/${post.data.stage}`}
+                variant={getStageVariant(post.data.stage)}
+              >
+                <Icon name={post.data.stage} class="size-3" />
+                {post.data.stage}
+              </Badge>
+            </li>
+          )}
           {post.data.tags.map((tag: string) => (
             <li>
-              <Badge href={`/tags/${tag}`} variant="muted">
+              <Badge href={`/blog/tags/${tag}`} variant="muted">
                 <Icon name="hashtag" class="size-3" />
                 {tag}
               </Badge>
@@ -150,6 +162,14 @@ const rawMarkdown = post.body ?? null
 
   {/** Top navigation */}
   <PostNav prevPost={navigation.newer} nextPost={navigation.older} parentPost={navigation.parent} />
+
+  {
+    post.data.audience && (
+      <aside class="border-primary/40 bg-muted/30 rounded-r-lg border-l-4 px-4 py-3 text-sm">
+        <span class="font-medium">Assumed audience:</span> {post.data.audience}
+      </aside>
+    )
+  }
 
   {/** Left sidebar - TOC */}
   <SlideOut position="left">

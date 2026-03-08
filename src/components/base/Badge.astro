@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import Link from "./Link.astro"
 
 const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
+  "inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow,background-color] [a&]:cursor-pointer overflow-hidden",
   {
     variants: {
       variant: {
@@ -21,12 +21,12 @@ const badgeVariants = cva(
         muted:
           "border-transparent bg-muted text-muted-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         success:
-          "border-transparent bg-green-500 text-white [a&]:hover:bg-green-600 focus-visible:ring-green-500/20 dark:focus-visible:ring-green-500/40 dark:bg-green-600",
+          "border-transparent bg-green-500 text-white [a&]:hover:bg-green-500/20 [a&]:hover:text-green-700 dark:[a&]:hover:text-green-400 focus-visible:ring-green-500/20 dark:focus-visible:ring-green-500/40 dark:bg-green-600",
         warning:
-          "border-transparent bg-yellow-500 text-white [a&]:hover:bg-yellow-600 focus-visible:ring-yellow-500/20 dark:focus-visible:ring-yellow-500/40 dark:bg-yellow-600",
+          "border-transparent bg-yellow-500 text-white [a&]:hover:bg-yellow-500/20 [a&]:hover:text-yellow-700 dark:[a&]:hover:text-yellow-400 focus-visible:ring-yellow-500/20 dark:focus-visible:ring-yellow-500/40 dark:bg-yellow-600",
         danger:
-          "border-transparent bg-red-500 text-white [a&]:hover:bg-red-600 focus-visible:ring-red-500/20 dark:focus-visible:ring-red-500/40 dark:bg-red-600",
-        info: "border-transparent bg-blue-500 text-white [a&]:hover:bg-blue-600 focus-visible:ring-blue-500/20 dark:focus-visible:ring-blue-500/40 dark:bg-blue-600",
+          "border-transparent bg-red-500 text-white [a&]:hover:bg-red-500/20 [a&]:hover:text-red-700 dark:[a&]:hover:text-red-400 focus-visible:ring-red-500/20 dark:focus-visible:ring-red-500/40 dark:bg-red-600",
+        info: "border-transparent bg-blue-500 text-white [a&]:hover:bg-blue-500/20 [a&]:hover:text-blue-700 dark:[a&]:hover:text-blue-400 focus-visible:ring-blue-500/20 dark:focus-visible:ring-blue-500/40 dark:bg-blue-600",
         tag: "bg-transparent border-border text-muted-foreground cursor-pointer transition-all hover:border-accent hover:text-accent aria-[pressed=true]:bg-primary aria-[pressed=true]:text-primary-foreground aria-[pressed=true]:border-primary"
       }
     },

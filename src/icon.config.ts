@@ -15,6 +15,11 @@ export const SEMANTIC_ICONS = {
   tool: "mingcute:tool-line",
   research: "mingcute:mortarboard-line",
 
+  // Growth stages
+  seedling: "mingcute:leaf-line",
+  budding: "mingcute:flowerpot-line",
+  evergreen: "mingcute:tree-line",
+
   // Meta information
   hashtag: "mingcute:hashtag-line",
   tags: "mingcute:tag-2-line",

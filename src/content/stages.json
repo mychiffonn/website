@@ -1,0 +1,17 @@
+[
+  {
+    "name": "seedling",
+    "description": "Early-stage ideas and rough notes. These posts are exploratory and may be incomplete, but they capture the spark of a thought worth developing.",
+    "variant": "info"
+  },
+  {
+    "name": "budding",
+    "description": "Posts that have grown past the initial idea. They have clearer structure and stronger arguments, but are still being refined.",
+    "variant": "warning"
+  },
+  {
+    "name": "evergreen",
+    "description": "Mature, well-developed posts. These have been revisited and polished over time and represent my most considered thinking.",
+    "variant": "success"
+  }
+]

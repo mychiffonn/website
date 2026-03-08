@@ -1,0 +1,39 @@
+---
+import { PostManager } from "@/lib/blog"
+import { STAGES } from "@/lib/blog/stage"
+import Layout from "@/layouts/Layout.astro"
+import Badge from "@/components/base/Badge.astro"
+import Icon from "@/components/base/Icon.astro"
+import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+
+const postManager = PostManager.getInstance()
+const allPosts = await postManager.getMainPosts()
+
+const stageCounts = STAGES.map((s) => ({
+  ...s,
+  count: allPosts.filter((p) => p.data.stage === s.name).length
+}))
+---
+
+<Layout title="Growth Stages">
+  <Breadcrumbs
+    items={[
+      { href: "/blog", label: "Blog", icon: "blog" },
+      { label: "Stages", icon: "seedling" }
+    ]}
+  />
+
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-wrap gap-2">
+      {
+        stageCounts.map(({ name, variant, count }) => (
+          <Badge href={`/blog/stages/${name}`} variant={variant}>
+            <Icon name={name} class="size-3" />
+            {name}
+            <span class="ml-1.5 opacity-70">({count})</span>
+          </Badge>
+        ))
+      }
+    </div>
+  </div>
+</Layout>

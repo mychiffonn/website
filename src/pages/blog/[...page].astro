@@ -3,10 +3,10 @@ import type { PaginateFunction } from "astro"
 
 import { SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
+import { getStageVariant, STAGES } from "@/lib/blog/stage"
 import { getSortedTags } from "@/lib/blog/tag"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
-import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
 import Pagination from "@/components/base/Pagination.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
@@ -30,6 +30,7 @@ let sortedTags: Awaited<ReturnType<typeof getSortedTags>> = []
 let displayTags: typeof sortedTags = []
 let numTags = 0
 let moreTagsButton = false
+let stageCounts: { name: string; count: number }[] = []
 
 if (!hasNoPosts) {
   // Get metadata for all posts in parallel
@@ -55,6 +56,12 @@ if (!hasNoPosts) {
   displayTags = sortedTags.slice(0, 15)
   numTags = sortedTags.length
   moreTagsButton = numTags > 15
+
+  const allMainPosts = await postManager.getMainPosts()
+  stageCounts = STAGES.map((s) => ({
+    name: s.name,
+    count: allMainPosts.filter((p) => p.data.stage === s.name).length
+  })).filter((s) => s.count > 0)
 }
 ---
 
@@ -67,67 +74,80 @@ if (!hasNoPosts) {
     ]}
   />
 
+  {/** Browse filters */}
   {
-    numTags > 0 && (
-      <section class="mb-8">
-        <h2 class="mb-4 text-lg font-medium">Browse by Tags</h2>
-        <div class="flex flex-col gap-4">
-          <div class="flex flex-wrap gap-2">
-            {displayTags.map(({ tag, count }) => (
-              <Badge href={`/tags/${tag}`} variant="muted">
-                <Icon name="hashtag" class="size-3" />
-                {tag}
-                <span class="text-muted-foreground ml-1">({count})</span>
-              </Badge>
-            ))}
-          </div>
-          {moreTagsButton && (
-            <div class="flex justify-end">
-              <Button href="/tags" variant="outline" class="group">
-                <span>View all {sortedTags.length} tags</span>
-                <Icon
-                  name="arrow-right"
-                  class="size-4 transition-transform group-hover:translate-x-0.5"
-                />
-              </Button>
+    (stageCounts.length > 0 || numTags > 0) && (
+      <nav class="mb-6 flex flex-col gap-4" aria-label="Browse posts">
+        {stageCounts.length > 0 && (
+          <div class="flex flex-col gap-2">
+            <h2 class="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+              Browse by Stages
+            </h2>
+            <div class="flex flex-wrap gap-2">
+              {stageCounts.map(({ name, count }) => (
+                <Badge href={`/blog/stages/${name}`} variant={getStageVariant(name)}>
+                  <Icon name={name} class="size-3" />
+                  {name}
+                  <span class="ml-1 opacity-70">({count})</span>
+                </Badge>
+              ))}
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        )}
+        {numTags > 0 && (
+          <div class="flex flex-col gap-2">
+            <h2 class="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+              Browse by Tags
+            </h2>
+            <div class="flex flex-wrap gap-2">
+              {displayTags.map(({ tag, count }) => (
+                <Badge href={`/blog/tags/${tag}`} variant="muted">
+                  <Icon name="hashtag" class="size-3" />
+                  {tag}
+                  <span class="text-muted-foreground ml-1">({count})</span>
+                </Badge>
+              ))}
+              {moreTagsButton && (
+                <Badge href="/blog/tags" variant="outline">
+                  all {sortedTags.length} tags
+                  <Icon name="arrow-right" class="size-3" />
+                </Badge>
+              )}
+            </div>
+          </div>
+        )}
+      </nav>
     )
   }
 
-  {/** Showing x-x of X posts */}
-  {
-    !hasNoPosts && (
-      <p class="text-muted-foreground text-sm">
-        Showing {page.start + 1}-{page.end + 1} of {page.total} posts
-      </p>
-    )
-  }
-
+  {/** Post listing */}
   <div class="flex min-h-[calc(100vh-18rem)] flex-col gap-y-8">
     {
       hasNoPosts ? (
         <section class="flex flex-col items-center justify-center gap-y-4 text-center">
           <div class="max-w-md">
-            <h2 class="mb-4 text-2xl font-medium">No posts yet</h2>
-            <p class="text-muted-foreground">Check back later for new content!</p>
+            <h2 class="text-2xl font-medium">No posts yet</h2>
+            <p class="text-muted-foreground mt-2">Check back later for new content!</p>
           </div>
         </section>
       ) : (
-        postsByYear.map(({ year, posts }) => (
-          <section class="flex flex-col gap-y-4">
-            <div class="font-medium">{year}</div>
-            <ul class="flex flex-col gap-4">
-              {posts.map((metadata) => (
-                <li>
-                  <PreviewCard metadata={metadata} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
+        <>
+          <p class="text-muted-foreground text-sm">
+            Showing {page.start + 1}–{page.end + 1} of {page.total} posts
+          </p>
+          {postsByYear.map(({ year, posts }) => (
+            <section class="flex flex-col gap-y-4">
+              <h2 class="text-xl font-semibold">{year}</h2>
+              <ul class="flex flex-col gap-4">
+                {posts.map((metadata) => (
+                  <li>
+                    <PreviewCard metadata={metadata} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </>
       )
     }
   </div>
