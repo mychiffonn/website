@@ -1,16 +1,15 @@
 ---
-title: Scaling Behavior of Chain-of-thought Monitoring
+title: Behavior of Chain-of-thought Monitorability
 fromDate: 2025-10-05
 context: research
 isHighlighted: true
-description: Studying how monitor effectiveness scales with the capability gap between monitor and target models.
+description: Studying how monitor effectiveness changes as the capability gap between monitor and target models widens, with a case study on distinguishing sandbagging from genuine incapability.
 code: https://github.com/yoenoo/algoverse_nacm
 tags:
   - Chain of Thought
   - Sandbagging
   - Inspect AI
   - OpenRouter API
-  - HuggingFace Inference Providers
 ---
 
 ## Overview

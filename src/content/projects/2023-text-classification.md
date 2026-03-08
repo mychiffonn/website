@@ -7,7 +7,6 @@ tags:
   - statistical machine learning
   - scikit-learn
   - Support Vector Machine (SVM)
-  - Support Vector Classifier (SVC)
   - Naive Bayes
 ---
 

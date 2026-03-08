@@ -1,0 +1,51 @@
+---
+import type { Project } from "@/lib/projects"
+import { cn } from "@/lib/utils"
+import Button from "@/components/base/Button.astro"
+import Icon from "@/components/base/Icon.astro"
+
+interface Props {
+  prev?: Project | null
+  next?: Project | null
+}
+
+const { prev, next } = Astro.props
+---
+
+<nav class="col-start-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
+  <Button
+    href={prev ? `/projects/${prev.id}` : undefined}
+    variant="outline"
+    class={cn(
+      "rounded-lg group flex items-center justify-start size-full",
+      !prev && "pointer-events-none opacity-50 cursor-not-allowed"
+    )}
+    aria-disabled={!prev}
+  >
+    <Icon name="arrow-left" class="mr-2 transition-transform group-hover:-translate-x-1" />
+    <div class="flex flex-col items-start overflow-hidden text-wrap">
+      <span class="text-muted-foreground text-left text-xs">Previous Project</span>
+      <span class="line-clamp-2 w-full text-left text-sm text-balance text-ellipsis">
+        {prev?.data.title || "You're at the first project!"}
+      </span>
+    </div>
+  </Button>
+
+  <Button
+    href={next ? `/projects/${next.id}` : undefined}
+    variant="outline"
+    class={cn(
+      "rounded-lg group flex items-center justify-end size-full",
+      !next && "pointer-events-none opacity-50 cursor-not-allowed"
+    )}
+    aria-disabled={!next}
+  >
+    <div class="flex flex-col items-end overflow-hidden text-wrap">
+      <span class="text-muted-foreground text-right text-xs">Next Project</span>
+      <span class="line-clamp-2 w-full text-right text-sm text-balance text-ellipsis">
+        {next?.data.title || "You're at the last project!"}
+      </span>
+    </div>
+    <Icon name="arrow-right" class="ml-1 transition-transform group-hover:translate-x-1" />
+  </Button>
+</nav>

@@ -7,8 +7,7 @@ code: https://github.com/mychiffonn/icm
 context: work
 isHighlighted: true
 tags:
-  - Python
   - Replication
   - AI Safety
-  - Elicitation
+  - Unsupervised Elicitation
 ---

@@ -1,12 +1,18 @@
 ---
 import { render, type CollectionEntry } from "astro:content"
 
-import { getContextVariant, getProjectLinks, getProjects } from "@/lib/projects"
+import {
+  getContextVariant,
+  getProjectLinks,
+  getProjectNavigation,
+  getProjects
+} from "@/lib/projects"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import { ProjectNavigation } from "@/components/projects"
 import DateRange from "@/components/projects/DateRange.astro"
 
 export async function getStaticPaths() {
@@ -23,7 +29,10 @@ type Props = {
 }
 
 const { project } = Astro.props
-const { Content } = await render(project)
+const [{ Content }, navigation] = await Promise.all([
+  render(project),
+  getProjectNavigation(project.id)
+])
 const { title, isHighlighted, fromDate, toDate, code, doc, url, release, context, tags } =
   project.data
 
@@ -102,4 +111,6 @@ const contextVariant = getContextVariant(context)
   <article class="prose lg:prose-lg">
     <Content />
   </article>
+
+  <ProjectNavigation prev={navigation.prev} next={navigation.next} />
 </Layout>

@@ -87,3 +87,18 @@ export async function getProjects(filter?: (project: Project) => boolean): Promi
 
   return sortProjects(projects)
 }
+
+export interface ProjectNavigation {
+  prev: Project | null
+  next: Project | null
+}
+
+export async function getProjectNavigation(currentId: string): Promise<ProjectNavigation> {
+  const projects = await getProjects((project) => !!project.body?.trim())
+  const currentIndex = projects.findIndex((p) => p.id === currentId)
+  if (currentIndex === -1) return { prev: null, next: null }
+  return {
+    prev: currentIndex > 0 ? projects[currentIndex - 1] : null,
+    next: currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null
+  }
+}

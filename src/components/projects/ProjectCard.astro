@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content"
 
-import { getContextVariant, getProjectLinks } from "@/lib/projects"
+import { getProjectLinks } from "@/lib/projects"
 import { cn } from "@/lib/utils"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
@@ -15,25 +15,9 @@ interface Props {
 }
 
 const { project } = Astro.props
-const { title, isHighlighted, fromDate, toDate, code, doc, url, release, context, tags } =
-  project.data
+const { title, isHighlighted, fromDate, toDate, code, doc, url, release, tags } = project.data
 
 const links = getProjectLinks(code, doc, url, release)
-
-const contextVariant = getContextVariant(context)
-
-const descriptionData = project.data.description
-  ? { text: project.data.description, needsReadMore: false }
-  : project.body?.trim()
-    ? (() => {
-        const bodyText = project.body.trim()
-        const needsTruncation = bodyText.length > 150
-        return {
-          text: needsTruncation ? bodyText.substring(0, 150) + "..." : bodyText,
-          needsReadMore: needsTruncation
-        }
-      })()
-    : null
 
 const hasDetailPage = !!project.body?.trim()
 
@@ -56,44 +40,21 @@ const cardClasses = cn(
   }
 
   <div class="card-header relative">
-    {
-      isHighlighted && (
-        <>
-          <Icon name="star" class="text-primary" />
-          <span class="sr-only">Featured</span>
-        </>
-      )
-    }
-    <h3 class="card-title">{title}</h3>
+    <h3 class="card-title text-base">{title}</h3>
   </div>
 
-  {/* Context and Date */}
-  <div class="card-meta text-muted-foreground relative">
-    {
-      context && (
-        <Badge variant={contextVariant}>{context.charAt(0).toUpperCase() + context.slice(1)}</Badge>
-      )
-    }
+  <div class="card-meta relative text-base">
     <DateRange fromDate={fromDate} toDate={toDate} class="flex gap-1" />
   </div>
 
-  {
-    descriptionData && (
-      <p class="card-description relative">
-        {descriptionData.text}
-        {descriptionData.needsReadMore && hasDetailPage && (
-          <span class="text-primary ml-1">Read more →</span>
-        )}
-      </p>
-    )
-  }
+  {project.data.description && <p class="card-description relative">{project.data.description}</p>}
 
   {/* Tags */}
   {
     tags && tags.length > 0 && (
       <div class="card-tags relative">
         {tags.map((tag: string) => (
-          <Badge variant="muted" class="text-xs">
+          <Badge variant="muted" class="px-1.5 py-0.5 text-xs leading-tight">
             {tag}
           </Badge>
         ))}
