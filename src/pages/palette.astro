@@ -1,0 +1,123 @@
+---
+import CommonLayout from "@/layouts/CommonLayout.astro"
+import Icon from "@/components/base/Icon.astro"
+
+const colorGroups = [
+  {
+    label: "Core",
+    tokens: ["background", "foreground"]
+  },
+  {
+    label: "Brand",
+    tokens: ["primary", "primary-foreground", "accent", "accent-foreground"]
+  },
+  {
+    label: "UI",
+    tokens: ["muted", "muted-foreground", "border", "ring", "destructive"]
+  }
+]
+---
+
+<CommonLayout
+  title="Colors Palette"
+  description="Palette with live previews, computed by theme. Click to copy the CSS variable value."
+  breadcrumbs={[{ label: "Palette", icon: "mingcute:palette-line" }]}
+  prose={false}
+>
+  {
+    colorGroups.map((group) => (
+      <section class="mb-8">
+        <h2 class="text-foreground mb-3 text-xl font-semibold">{group.label}</h2>
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          {group.tokens.map((token) => (
+            <button
+              type="button"
+              class="group border-border cursor-pointer overflow-hidden rounded-lg border text-left"
+              data-copy-color={token}
+              title={`Click to copy ${token} value`}
+            >
+              <div class="relative" style={`height:10rem;background-color:var(--${token})`}>
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                  <span
+                    class="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 font-mono text-xs"
+                    data-overlay={token}
+                  >
+                    <Icon name="copy" size="0.75rem" class="copy-icon" />
+                    <Icon name="check" size="0.75rem" class="check-icon hidden" />
+                    <code data-value={token}>…</code>
+                  </span>
+                </div>
+              </div>
+              <div class="px-3 py-2">
+                <p class="text-foreground text-sm font-semibold">{token}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</CommonLayout>
+
+<script>
+  function isLight(el: Element): boolean {
+    const rgb = getComputedStyle(el).backgroundColor
+    const m = rgb.match(/[\d.]+/g)
+    if (!m || m.length < 3) return true
+    const [r, g, b] = m.map(Number)
+    return r * 0.299 + g * 0.587 + b * 0.114 > 150
+  }
+
+  function updateColorValues() {
+    const style = getComputedStyle(document.documentElement)
+    document.querySelectorAll<HTMLElement>("[data-value]").forEach((el) => {
+      const token = el.dataset.value!
+      const value = style.getPropertyValue(`--${token}`).trim()
+      el.textContent = value || "–"
+    })
+    document.querySelectorAll<HTMLElement>("[data-overlay]").forEach((pill) => {
+      const swatch = pill
+        .closest("[data-copy-color]")
+        ?.querySelector<HTMLElement>("[style*=background-color]")
+      if (!swatch) return
+      const light = isLight(swatch)
+      pill.style.backgroundColor = light ? "rgba(0,0,0,0.75)" : "rgba(255,255,255,0.85)"
+      pill.style.color = light ? "#fff" : "#000"
+    })
+  }
+
+  function initCopyButtons() {
+    document.querySelectorAll<HTMLButtonElement>("[data-copy-color]").forEach((btn) => {
+      if (btn.hasAttribute("data-bound")) return
+      btn.setAttribute("data-bound", "")
+
+      btn.addEventListener("click", () => {
+        const token = btn.dataset.copyColor!
+        const value = getComputedStyle(document.documentElement)
+          .getPropertyValue(`--${token}`)
+          .trim()
+        if (!value) return
+
+        navigator.clipboard.writeText(value).then(() => {
+          const copyIcon = btn.querySelector(".copy-icon") as HTMLElement
+          const checkIcon = btn.querySelector(".check-icon") as HTMLElement
+          copyIcon?.classList.add("hidden")
+          checkIcon?.classList.remove("hidden")
+
+          setTimeout(() => {
+            copyIcon?.classList.remove("hidden")
+            checkIcon?.classList.add("hidden")
+          }, 1500)
+        })
+      })
+    })
+  }
+
+  updateColorValues()
+  initCopyButtons()
+
+  new MutationObserver(updateColorValues).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"]
+  })
+</script>
