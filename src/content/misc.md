@@ -1,4 +1,4 @@
-- I love teaching and other activities that involve explaining (e.g., writing, science communication). I TAed 2.5 years for CS courses in undergrad and am still mentoring students through [Curious Cardinals](https://curiouscardinals.com/).
+- I love teaching and activities that involve explaining (e.g., writing, science communication). I TAed 2.5 years for CS courses in undergrad and am mentoring students at [Curious Cardinals](https://curiouscardinals.com/).
 
 - I'm an event planner and organizer. In high school, I led Vietcode (19-20) and Developh Vietnam (20-21), and wore many hats at SheCodes Vietnam (18-19) and AngelHack Vietnam (2020), planning and organizing tech talks, webinars, hackathons, and meetups. On smaller scales, I'm responsible for family travel planning and friend hangouts.
 
