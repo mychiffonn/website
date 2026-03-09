@@ -1,4 +1,5 @@
 ---
+import { PROFILE } from "@site-config"
 import { cn } from "@/lib/utils"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
@@ -8,7 +9,7 @@ import { getProcessedProfileLinks, type ProfileLinkConfig } from "./helper"
 interface Props {
   links?: ProfileLinkConfig | Record<string, string>
   class?: string
-  includeLabel?: boolean
+  highlight?: boolean
   includeEmail?: boolean
   includeRss?: boolean
 }
@@ -16,39 +17,39 @@ interface Props {
 const {
   links,
   class: className = "",
-  includeLabel = false,
+  highlight = false,
   includeEmail = false,
   includeRss = false
 } = Astro.props
 
+const highlightKeys = new Set(PROFILE.highlightLinks)
 const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
 ---
 
 <ul class={`flex flex-wrap gap-x-2 gap-y-1 ${className}`}>
   {
-    processedLinks.map(({ href, isExternal, label, iconName }) => (
-      <li>
-        <Link
-          href={href}
-          aria-label={label}
-          title={label}
-          rel="me"
-          class={cn(
-            "text-muted-foreground flex touch-manipulation items-center transition-colors",
-            "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-            includeLabel
-              ? [
-                  "hover:text-accent-foreground hover:bg-accent size-10 justify-center rounded-md border",
-                  "sm:hover:text-accent sm:size-auto sm:gap-x-1 sm:border-0 sm:p-1 sm:hover:bg-transparent"
-                ]
-              : "hover:text-accent-foreground hover:bg-accent size-10 justify-center rounded-md border"
-          )}
-          external={isExternal}
-        >
-          <Icon name={iconName} class="size-5" />
-          {includeLabel ? <span class="hidden sm:inline" set:html={label} /> : null}
-        </Link>
-      </li>
-    ))
+    processedLinks.map(({ key, href, isExternal, label, iconName }) => {
+      const isPrimary = highlight && highlightKeys.has(key)
+      return (
+        <li>
+          <Link
+            href={href}
+            title={label}
+            rel="me"
+            class={cn(
+              "flex touch-manipulation items-center justify-center rounded-md border transition-colors",
+              "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+              isPrimary
+                ? "border-primary bg-primary text-primary-foreground hover:bg-background hover:text-primary hover:border-primary size-10"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground size-10"
+            )}
+            external={isExternal}
+          >
+            <Icon name={iconName} class="size-5" />
+            <span class="sr-only" set:html={label} />
+          </Link>
+        </li>
+      )
+    })
   }
 </ul>

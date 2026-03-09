@@ -47,17 +47,18 @@ export const PROFILE: ProfileConfig = {
   othernames: "Nguyễn Trà My / 阮沐茶 / 윈자미",
   tagline: "AI Researcher & Life-long Learner",
   email: "hi@mychiffonn.com",
-  location: "San Francisco, CA, USA",
+  // location: "San Francisco, CA, USA",
   pronouns: "she/her",
   pronunciation: "My = /me/, Chiffon = /shi-FON/. I'm Chiffon in English-speaking context.",
   links: {
+    cv: "/doc/cv.pdf",
     github: "https://github.com/mychiffonn",
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
-    cv: "/doc/cv.pdf",
     x: "https://x.com/chiffonng",
     bluesky: "https://bsky.app/profile/mychiffonn.bsky.social",
     discord: "https://discordapp.com/users/mychiffonn"
-  }
+  },
+  highlightLinks: ["cv", "resume"]
 }
 
 export const NAV_LINKS: LinkConfig[] = [

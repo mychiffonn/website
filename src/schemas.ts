@@ -130,7 +130,9 @@ export const ProfileConfigSchema = z.object({
   pronunciation: z.string().optional(),
   // pronunciationAudioPath: z.string().optional(),
   /** Social media and professional platform links */
-  links: ProfileLinkConfigSchema
+  links: ProfileLinkConfigSchema,
+  /** Link keys (e.g., "cv", "resume") to highlight with primary color in profile */
+  highlightLinks: z.array(z.string()).optional().default([])
 })
 
 /**
