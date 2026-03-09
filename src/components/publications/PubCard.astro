@@ -22,7 +22,7 @@ const { pub } = Astro.props
   data-pub-author-position={pub.authorPosition ?? Infinity}
   data-pub-keywords={pub.keywords?.map((k: string) => slugify(k)).join(",") ?? ""}
 >
-  {pub.award && <span class="text-accent items-center text-sm font-bold">🏆 {pub.award}</span>}
+  {pub.award && <span class="text-primary items-center text-sm font-bold">🏆 {pub.award}</span>}
 
   <span class="bibliography-title">
     {
@@ -42,7 +42,7 @@ const { pub } = Astro.props
       pub.authorData.hasMore && (
         <>
           <button
-            class="author-toggle"
+            class="author-toggle text-accent"
             data-hidden-authors={pub.authorData.hiddenAuthors}
             data-hidden-count={pub.authorData.hiddenCount}
             data-last-authors={pub.authorData.displayLastAuthors || ""}
@@ -135,7 +135,6 @@ const { pub } = Astro.props
   }
 
   .author-toggle {
-    color: var(--primary);
     cursor: pointer;
     transition: text-decoration 0.2s;
     display: inline-flex;
@@ -158,7 +157,7 @@ const { pub } = Astro.props
   }
 
   .bibliography-authors :global(.author-highlight) {
-    color: var(--accent);
+    color: var(--primary);
     font-weight: 700;
   }
 </style>
