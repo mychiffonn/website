@@ -27,6 +27,7 @@ const batchMetadata: PostMeta[] = await postManager.getPostsByTag(tag)
 >
   <Breadcrumbs
     items={[
+      { href: "/blog", label: "Blog", icon: "blog" },
       { href: "/blog/tags", label: "Tags", icon: "tags" },
       { label: tag, icon: "hashtag" }
     ]}

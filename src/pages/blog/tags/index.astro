@@ -11,7 +11,12 @@ const sortedTags = await getSortedTags(() => postManager.getMainPosts())
 ---
 
 <Layout title="Tags">
-  <Breadcrumbs items={[{ label: "Tags", icon: "tags" }]} />
+  <Breadcrumbs
+    items={[
+      { label: "Blog", icon: "blog", href: "/blog" },
+      { label: "Tags", icon: "tags", href: "/blog/tags" }
+    ]}
+  />
 
   <div class="flex flex-col gap-4">
     <div class="flex flex-wrap gap-2">
