@@ -1,6 +1,5 @@
 ---
-import Button from "./Button.astro"
-import Icon from "./Icon.astro"
+import CopyButton from "./CopyButton.astro"
 
 interface Props {
   markdown: string
@@ -11,47 +10,11 @@ const { markdown, class: className } = Astro.props
 ---
 
 <div class:list={["copy-markdown-wrapper", className]}>
-  <Button variant="ghost" size="default" data-copy-markdown title="Copy as Markdown">
-    <Icon name="copy" size="1rem" class="copy-icon" />
-    <Icon name="check" size="1rem" class="check-icon hidden" />
-    <span class="copy-label">Copy Markdown</span>
-  </Button>
-  <div hidden data-markdown-source>{JSON.stringify(markdown)}</div>
+  <CopyButton
+    text={markdown}
+    label="Copy Markdown"
+    title="Copy as Markdown"
+    size="1rem"
+    class="hover:bg-accent hover:text-accent-foreground active:bg-accent/80 inline-flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-all select-none"
+  />
 </div>
-
-<script is:inline data-astro-rerun>
-  ;(function () {
-    function initCopyMarkdown() {
-      document.querySelectorAll("[data-copy-markdown]").forEach(function (btn) {
-        if (btn.hasAttribute("data-copy-bound")) return
-        btn.setAttribute("data-copy-bound", "")
-
-        btn.addEventListener("click", function () {
-          var wrapper = btn.closest(".copy-markdown-wrapper")
-          var source = wrapper && wrapper.querySelector("[data-markdown-source]")
-          if (!source || !source.textContent) return
-
-          var md = JSON.parse(source.textContent)
-          navigator.clipboard.writeText(md).then(function () {
-            var copyIcon = btn.querySelector(".copy-icon")
-            var checkIcon = btn.querySelector(".check-icon")
-            var label = btn.querySelector(".copy-label")
-
-            if (copyIcon) copyIcon.classList.add("hidden")
-            if (checkIcon) checkIcon.classList.remove("hidden")
-            if (label) label.textContent = "Copied!"
-
-            setTimeout(function () {
-              if (copyIcon) copyIcon.classList.remove("hidden")
-              if (checkIcon) checkIcon.classList.add("hidden")
-              if (label) label.textContent = "Copy Markdown"
-            }, 2000)
-          })
-        })
-      })
-    }
-
-    initCopyMarkdown()
-    document.addEventListener("astro:after-swap", initCopyMarkdown)
-  })()
-</script>

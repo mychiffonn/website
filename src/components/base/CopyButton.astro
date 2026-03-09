@@ -1,0 +1,80 @@
+---
+import { cn } from "@/lib/utils"
+
+import Icon from "./Icon.astro"
+
+interface Props {
+  /** Static text to copy */
+  text?: string
+  /** CSS selector resolved relative to parentElement to get text at click time */
+  selector?: string
+  /** Visible label next to icon (swaps to "Copied!" on success) */
+  label?: string
+  /** Icon size */
+  size?: string
+  /** Button title / tooltip */
+  title?: string
+  class?: string
+}
+
+const { text, selector, label, size = "0.875rem", title, class: className } = Astro.props
+---
+
+<button
+  type="button"
+  data-copy-btn
+  data-copy-text={text}
+  data-copy-selector={selector}
+  class={cn("inline-flex cursor-pointer items-center gap-1", className)}
+  title={title}
+>
+  <Icon name="copy" size={size} class="copy-icon" />
+  <Icon name="check" size={size} class="check-icon hidden" />
+  {label && <span class="copy-label">{label}</span>}
+</button>
+
+<script is:inline data-astro-rerun>
+  ;(function () {
+    function initCopyButtons() {
+      document.querySelectorAll("[data-copy-btn]").forEach(function (btn) {
+        if (btn.hasAttribute("data-copy-bound")) return
+        btn.setAttribute("data-copy-bound", "")
+
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation()
+          var text
+          var sel = btn.getAttribute("data-copy-selector")
+          if (sel) {
+            var parent = btn.parentElement
+            var target = parent && parent.querySelector(sel)
+            text = target ? target.textContent.trim() : ""
+          }
+          if (!text) {
+            text = btn.getAttribute("data-copy-text") || ""
+          }
+          if (!text) return
+
+          navigator.clipboard.writeText(text).then(function () {
+            var copyIcon = btn.querySelector(".copy-icon")
+            var checkIcon = btn.querySelector(".check-icon")
+            var label = btn.querySelector(".copy-label")
+            var origLabel = label ? label.textContent : ""
+
+            if (copyIcon) copyIcon.classList.add("hidden")
+            if (checkIcon) checkIcon.classList.remove("hidden")
+            if (label) label.textContent = "Copied!"
+
+            setTimeout(function () {
+              if (copyIcon) copyIcon.classList.remove("hidden")
+              if (checkIcon) checkIcon.classList.add("hidden")
+              if (label) label.textContent = origLabel
+            }, 1500)
+          })
+        })
+      })
+    }
+
+    initCopyButtons()
+    document.addEventListener("astro:after-swap", initCopyButtons)
+  })()
+</script>

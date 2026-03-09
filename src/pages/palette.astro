@@ -1,6 +1,6 @@
 ---
 import CommonLayout from "@/layouts/CommonLayout.astro"
-import Icon from "@/components/base/Icon.astro"
+import CopyButton from "@/components/base/CopyButton.astro"
 
 const colorGroups = [
   {
@@ -20,7 +20,7 @@ const colorGroups = [
 
 <CommonLayout
   title="Colors Palette"
-  description="Palette with live previews, computed by theme. Click to copy the CSS variable value."
+  description="Palette with live previews, computed by theme."
   breadcrumbs={[{ label: "Palette", icon: "mingcute:palette-line" }]}
   prose={false}
 >
@@ -28,30 +28,45 @@ const colorGroups = [
     colorGroups.map((group) => (
       <section class="mb-8">
         <h2 class="text-foreground mb-3 text-xl font-semibold">{group.label}</h2>
-        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div class="grid grid-cols-2 gap-4">
           {group.tokens.map((token) => (
-            <button
-              type="button"
-              class="group border-border cursor-pointer overflow-hidden rounded-lg border text-left"
-              data-copy-color={token}
-              title={`Click to copy ${token} value`}
+            <div
+              class="group border-border overflow-hidden rounded-lg border"
+              data-palette-card={token}
             >
-              <div class="relative" style={`height:10rem;background-color:var(--${token})`}>
+              <div class="relative" style={`height:8rem;background-color:var(--${token})`}>
                 <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
-                  <span
-                    class="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 font-mono text-xs"
-                    data-overlay={token}
-                  >
-                    <Icon name="copy" size="0.75rem" class="copy-icon" />
-                    <Icon name="check" size="0.75rem" class="check-icon hidden" />
-                    <code data-value={token}>…</code>
+                  <span class="rounded-md px-3 py-2 font-mono text-xs" data-overlay={token}>
+                    {token}
                   </span>
                 </div>
               </div>
-              <div class="px-3 py-2">
-                <p class="text-foreground text-sm font-semibold">{token}</p>
+              <div class="flex flex-col gap-1 p-2">
+                <p class="text-foreground mb-1 text-sm font-semibold">{token}</p>
+                <div class="flex items-center justify-between gap-1">
+                  <code class="oklch-value text-muted-foreground text-xs" data-value={token}>
+                    …
+                  </code>
+                  <CopyButton
+                    selector=".oklch-value"
+                    title={`Copy ${token} OKLCH value`}
+                    size="1rem"
+                    class="text-muted-foreground hover:text-foreground shrink-0"
+                  />
+                </div>
+                <div class="flex items-center justify-between gap-1">
+                  <code class="hex-value text-muted-foreground text-xs" data-hex={token}>
+                    …
+                  </code>
+                  <CopyButton
+                    selector=".hex-value"
+                    title={`Copy ${token} hex value`}
+                    size="1rem"
+                    class="text-muted-foreground hover:text-foreground shrink-0"
+                  />
+                </div>
               </div>
-            </button>
+            </div>
           ))}
         </div>
       </section>
@@ -59,65 +74,77 @@ const colorGroups = [
   }
 </CommonLayout>
 
-<script>
-  function isLight(el: Element): boolean {
-    const rgb = getComputedStyle(el).backgroundColor
-    const m = rgb.match(/[\d.]+/g)
-    if (!m || m.length < 3) return true
-    const [r, g, b] = m.map(Number)
-    return r * 0.299 + g * 0.587 + b * 0.114 > 150
-  }
+<script is:inline data-astro-rerun>
+  ;(function () {
+    var hexCtx = document.createElement("canvas").getContext("2d")
 
-  function updateColorValues() {
-    const style = getComputedStyle(document.documentElement)
-    document.querySelectorAll<HTMLElement>("[data-value]").forEach((el) => {
-      const token = el.dataset.value!
-      const value = style.getPropertyValue(`--${token}`).trim()
-      el.textContent = value || "–"
-    })
-    document.querySelectorAll<HTMLElement>("[data-overlay]").forEach((pill) => {
-      const swatch = pill
-        .closest("[data-copy-color]")
-        ?.querySelector<HTMLElement>("[style*=background-color]")
-      if (!swatch) return
-      const light = isLight(swatch)
-      pill.style.backgroundColor = light ? "rgba(0,0,0,0.75)" : "rgba(255,255,255,0.85)"
-      pill.style.color = light ? "#fff" : "#000"
-    })
-  }
+    function colorToHex(color) {
+      if (!color) return ""
+      hexCtx.fillStyle = "#000"
+      hexCtx.fillStyle = color
+      var resolved = hexCtx.fillStyle
+      if (resolved.charAt(0) === "#") return resolved
+      var m = resolved.match(/[\d.]+/g)
+      if (!m || m.length < 3) return ""
+      return (
+        "#" +
+        [m[0], m[1], m[2]]
+          .map(function (v) {
+            var h = Math.round(Number(v)).toString(16)
+            return h.length === 1 ? "0" + h : h
+          })
+          .join("")
+      )
+    }
 
-  function initCopyButtons() {
-    document.querySelectorAll<HTMLButtonElement>("[data-copy-color]").forEach((btn) => {
-      if (btn.hasAttribute("data-bound")) return
-      btn.setAttribute("data-bound", "")
+    function isLight(el) {
+      var color = getComputedStyle(el).backgroundColor
+      hexCtx.fillStyle = "#000"
+      hexCtx.fillStyle = color
+      var resolved = hexCtx.fillStyle
+      var m = resolved.match(/[\d.]+/g)
+      if (!m || m.length < 3) {
+        var hex = resolved.replace("#", "")
+        var r = parseInt(hex.substring(0, 2), 16)
+        var g = parseInt(hex.substring(2, 4), 16)
+        var b = parseInt(hex.substring(4, 6), 16)
+        return r * 0.299 + g * 0.587 + b * 0.114 > 150
+      }
+      return Number(m[0]) * 0.299 + Number(m[1]) * 0.587 + Number(m[2]) * 0.114 > 150
+    }
 
-      btn.addEventListener("click", () => {
-        const token = btn.dataset.copyColor!
-        const value = getComputedStyle(document.documentElement)
-          .getPropertyValue(`--${token}`)
-          .trim()
-        if (!value) return
+    function updateColorValues() {
+      var style = getComputedStyle(document.documentElement)
 
-        navigator.clipboard.writeText(value).then(() => {
-          const copyIcon = btn.querySelector(".copy-icon") as HTMLElement
-          const checkIcon = btn.querySelector(".check-icon") as HTMLElement
-          copyIcon?.classList.add("hidden")
-          checkIcon?.classList.remove("hidden")
-
-          setTimeout(() => {
-            copyIcon?.classList.remove("hidden")
-            checkIcon?.classList.add("hidden")
-          }, 1500)
-        })
+      document.querySelectorAll("[data-value]").forEach(function (el) {
+        var token = el.getAttribute("data-value")
+        var value = style.getPropertyValue("--" + token).trim()
+        el.textContent = value || "–"
       })
+
+      document.querySelectorAll("[data-hex]").forEach(function (el) {
+        var token = el.getAttribute("data-hex")
+        var value = style.getPropertyValue("--" + token).trim()
+        el.textContent = value ? colorToHex(value) : "–"
+      })
+
+      document.querySelectorAll("[data-overlay]").forEach(function (pill) {
+        var card = pill.closest("[data-palette-card]")
+        if (!card) return
+        var swatchEl = card.querySelector("[style*=background-color]")
+        if (!swatchEl) return
+        var light = isLight(swatchEl)
+        pill.style.backgroundColor = light ? "rgba(0,0,0,0.75)" : "rgba(255,255,255,0.85)"
+        pill.style.color = light ? "#fff" : "#000"
+      })
+    }
+
+    updateColorValues()
+    document.addEventListener("astro:after-swap", updateColorValues)
+
+    new MutationObserver(updateColorValues).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"]
     })
-  }
-
-  updateColorValues()
-  initCopyButtons()
-
-  new MutationObserver(updateColorValues).observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["data-theme"]
-  })
+  })()
 </script>
