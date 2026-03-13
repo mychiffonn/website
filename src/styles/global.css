@@ -12,8 +12,8 @@
 }
 
 @font-face {
-  font-family: 'Zed Plex Mono';
-  src: url('/fonts/ZedPlexMono.woff2') format('woff2-variations');
+  font-family: 'Lilex';
+  src: url('/fonts/Lilex[wght].woff2') format('woff2-variations');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -32,7 +32,7 @@
     'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji';
 
   --font-mono:
-    'Zed Plex Mono',
+    'Lilex',
     /* System monospace fonts */
     'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono',
     /* Generic fallbacks */
