@@ -1,19 +1,19 @@
 export const SEMANTIC_ICONS = {
   // Navigation & Breadcrumbs
   blog: "mingcute:book-5-line",
-  "post-active": "mingcute:book-line", // Used for both active parent posts and active subposts
-  post: "mingcute:book-2-line",
-  "parent-post": "mingcute:documents-line",
-  subpost: "mingcute:document-line",
+  copy: "mingcute:copy-line",
+  file: "mingcute:file-line",
   folder: "mingcute:folder-line",
   "folder-open": "mingcute:folder-open-line",
-  file: "mingcute:file-line",
-  copy: "mingcute:copy-line",
   group: "mingcute:group-line",
+  "parent-post": "mingcute:documents-line",
   person: "mingcute:user-1-line",
+  post: "mingcute:book-2-line",
+  "post-active": "mingcute:book-line",
   question: "mingcute:question-line",
-  tool: "mingcute:tool-line",
   research: "mingcute:mortarboard-line",
+  subpost: "mingcute:document-line",
+  tool: "mingcute:tool-line",
 
   // Growth stages
   seedling: "mingcute:leaf-line",
@@ -22,128 +22,129 @@ export const SEMANTIC_ICONS = {
 
   // Meta information
   hashtag: "mingcute:hashtag-line",
-  tags: "mingcute:tag-2-line",
   publish: "mingcute:calendar-line",
   "reading-time": "mingcute:time-duration-line",
-  update: "mingcute:edit-line",
   subposts: "mingcute:documents-line",
+  tags: "mingcute:tag-2-line",
+  update: "mingcute:edit-line",
 
   // Common UI icons
-  home: "mingcute:home-4-line",
-  menu: "mingcute:menu-line",
-  close: "mingcute:close-line",
-  "chevron-right": "mingcute:right-line",
-  "chevron-down": "mingcute:down-line",
-  "chevron-up": "mingcute:up-line",
-  "arrow-up": "mingcute:up-line",
   "arrow-left": "mingcute:arrow-left-line",
-  "arrow-right": "mingcute:arrow-right-line",
   "arrow-left-up": "mingcute:arrow-left-up-line",
-  "more-horizontal": "mingcute:more-1-line",
-  left: "mingcute:left-line",
-  right: "mingcute:right-line",
+  "arrow-right": "mingcute:arrow-right-line",
+  "arrow-up": "mingcute:up-line",
+  "chevron-down": "mingcute:down-line",
+  "chevron-right": "mingcute:right-line",
+  "chevron-up": "mingcute:up-line",
+  close: "mingcute:close-line",
   "external-link": "mingcute:external-link-line",
+  home: "mingcute:home-4-line",
+  left: "mingcute:left-line",
+  menu: "mingcute:menu-line",
+  monitor: "mingcute:computer-line",
+  "more-horizontal": "mingcute:more-1-line",
+  right: "mingcute:right-line",
   star: "mingcute:star-line",
   "to-top": "mingcute:arrow-to-up-line",
-  monitor: "mingcute:computer-line",
 
   // Content & actions
   calendar: "mingcute:calendar-line",
+  check: "mingcute:check-line",
+  edit: "mingcute:edit-line",
+  error: "mingcute:close-circle-line",
+  info: "mingcute:information-line",
   time: "mingcute:time-line",
   timeline: "mingcute:time-line",
-  edit: "mingcute:edit-line",
-  check: "mingcute:check-line",
-  info: "mingcute:information-line",
-  warning: "mingcute:alert-triangle-line",
-  error: "mingcute:close-circle-line"
+  warning: "mingcute:alert-triangle-line"
 }
 
-// Official platform icon mapping with camelCase keys and object values
 export const PROFILE_ICON_MAP = {
   // Email & Communication
-  skype: { label: "Skype", iconName: "mingcute:skype-line" },
-  telegram: { label: "Telegram", iconName: "mingcute:telegram-line" },
-  whatsapp: { label: "WhatsApp", iconName: "mingcute:whatsapp-line" },
   discord: { label: "Discord", iconName: "mingcute:discord-line" },
-  slack: { label: "Slack", iconName: "mingcute:slack-line" },
-  wechat: { label: "Wechat", iconName: "mingcute:wechat-line" },
   kakaotalk: { label: "Kakao Talk", iconName: "mingcute:kakao-talk-line" },
   line: { label: "Line", iconName: "mingcute:line-app-line" },
+  skype: { label: "Skype", iconName: "mingcute:skype-line" },
+  slack: { label: "Slack", iconName: "mingcute:slack-line" },
+  telegram: { label: "Telegram", iconName: "mingcute:telegram-line" },
+  wechat: { label: "Wechat", iconName: "mingcute:wechat-line" },
+  whatsapp: { label: "WhatsApp", iconName: "mingcute:whatsapp-line" },
 
   // Social Media
-  x: { label: "X", iconName: "mingcute:social-x-line" },
-  twitter: { label: "Twitter", iconName: "mingcute:twitter-line" },
-  linkedin: { label: "LinkedIn", iconName: "mingcute:linkedin-line" },
+  bluesky: { label: "Bluesky", iconName: "mingcute:bluesky-social-line" },
   facebook: { label: "Facebook", iconName: "mingcute:facebook-line" },
   instagram: { label: "Instagram", iconName: "mingcute:instagram-line" },
-  bluesky: { label: "Bluesky", iconName: "mingcute:bluesky-social-line" },
+  linkedin: { label: "LinkedIn", iconName: "mingcute:linkedin-line" },
   mastodon: { label: "Mastodon", iconName: "mingcute:mastodon-line" },
-  threads: { label: "Threads", iconName: "mingcute:threads-line" },
-  youtube: { label: "YouTube", iconName: "mingcute:youtube-line" },
-  twitch: { label: "Twitch", iconName: "mingcute:twitch-line" },
-  tiktok: { label: "TikTok", iconName: "mingcute:tiktok-line" },
-  snapchat: { label: "Snapchat", iconName: "mingcute:snapchat-line" },
+  medium: { label: "Medium", iconName: "mingcute:medium-line" },
   pinterest: { label: "Pinterest", iconName: "mingcute:pinterest-line" },
   reddit: { label: "Reddit", iconName: "mingcute:reddit-line" },
-  medium: { label: "Medium", iconName: "mingcute:medium-line" },
+  snapchat: { label: "Snapchat", iconName: "mingcute:snapchat-line" },
+  threads: { label: "Threads", iconName: "mingcute:threads-line" },
+  tiktok: { label: "TikTok", iconName: "mingcute:tiktok-line" },
+  twitch: { label: "Twitch", iconName: "mingcute:twitch-line" },
+  twitter: { label: "Twitter", iconName: "mingcute:twitter-line" },
   weibo: { label: "Weibo", iconName: "mingcute:weibo-line" },
+  x: { label: "X", iconName: "mingcute:social-x-line" },
+  youtube: { label: "YouTube", iconName: "mingcute:youtube-line" },
 
   // Academic & Research
-  googleScholar: { label: "Google Scholar", iconName: "academicons:google-scholar" },
-  orcid: { label: "ORCID", iconName: "academicons:orcid" },
-  researchgate: { label: "ResearchGate", iconName: "academicons:researchgate" },
   academia: { label: "Academia.edu", iconName: "academicons:academia" },
-  pubmed: { label: "PubMed", iconName: "academicons:pubmed" },
   arXiv: { label: "arXiv", iconName: "academicons:arxiv" },
-  ssrn: { label: "SSRN", iconName: "academicons:ssrn" },
-  scopus: { label: "Scopus", iconName: "academicons:scopus" },
-  mendeley: { label: "Mendeley", iconName: "academicons:mendeley" },
-  zotero: { label: "Zotero", iconName: "academicons:zotero" },
-  figshare: { label: "Figshare", iconName: "academicons:figshare" },
   dblp: { label: "DBLP", iconName: "academicons:dblp" },
-  semanticScholar: { label: "Semantic Scholar", iconName: "academicons:semantic-scholar" },
+  figshare: { label: "Figshare", iconName: "academicons:figshare" },
+  googleScholar: { label: "Google Scholar", iconName: "academicons:google-scholar" },
   inspire: { label: "Inspire", iconName: "academicons:inspire" },
+  mendeley: { label: "Mendeley", iconName: "academicons:mendeley" },
+  openreview: { label: "Open Review", iconName: "mingcute:document-2-line" },
+  orcid: { label: "ORCID", iconName: "academicons:orcid" },
+  pubmed: { label: "PubMed", iconName: "academicons:pubmed" },
+  researchgate: { label: "ResearchGate", iconName: "academicons:researchgate" },
+  scopus: { label: "Scopus", iconName: "academicons:scopus" },
+  semanticScholar: { label: "Semantic Scholar", iconName: "academicons:semantic-scholar" },
+  ssrn: { label: "SSRN", iconName: "academicons:ssrn" },
+  zenodo: { label: "Zenodo", iconName: "academicons:zenodo" },
+  zotero: { label: "Zotero", iconName: "academicons:zotero" },
 
   // Developer Platforms
-  github: { label: "GitHub", iconName: "mingcute:github-line" },
-  gitlab: { label: "GitLab", iconName: "mingcute:git-lab-line" },
   bitbucket: { label: "Bitbucket", iconName: "mingcute:git-branch-line" },
   codepen: { label: "CodePen", iconName: "mingcute:code-line" },
   codesandbox: { label: "CodeSandbox", iconName: "mingcute:code-line" },
-  stackoverflow: { label: "Stack Overflow", iconName: "academicons:stackoverflow" },
   figma: { label: "Figma", iconName: "mingcute:figma-line" },
+  github: { label: "GitHub", iconName: "mingcute:github-line" },
+  gitlab: { label: "GitLab", iconName: "mingcute:git-lab-line" },
+  stackoverflow: { label: "Stack Overflow", iconName: "academicons:stackoverflow" },
 
   // Professional & Portfolio
-  website: { label: "Website", iconName: "mingcute:globe-2-line" },
-  portfolio: { label: "Portfolio", iconName: "mingcute:briefcase-line" },
   blog: { label: "Blog", iconName: "mingcute:pen-line" },
-  cv: { label: "CV", iconName: "academicons:cv" },
-  resume: { label: "Resume", iconName: "mingcute:briefcase-line" },
   calendar: { label: "Calendar", iconName: "mingcute:calendar-line" },
+  cv: { label: "CV", iconName: "academicons:cv" },
+  portfolio: { label: "Portfolio", iconName: "mingcute:briefcase-line" },
+  resume: { label: "Resume", iconName: "mingcute:briefcase-line" },
+  website: { label: "Website", iconName: "mingcute:globe-2-line" },
 
   // Other
-  rss: { label: "RSS", iconName: "mingcute:rss-line" },
-  patreon: { label: "Patreon", iconName: "mingcute:heart-line" },
-  kofi: { label: "Ko-fi", iconName: "mingcute:coffee-line" },
   buymeacoffee: { label: "Buy me a coffee", iconName: "mingcute:coffee-line" },
+  cashapp: { label: "Cash App", iconName: "mingcute:currency-dollar-line" },
+  kofi: { label: "Ko-fi", iconName: "mingcute:coffee-line" },
+  patreon: { label: "Patreon", iconName: "mingcute:heart-line" },
   paypal: { label: "PayPal", iconName: "mingcute:paypal-line" },
-  venmo: { label: "Venmo", iconName: "mingcute:wallet-4-line" },
-  cashapp: { label: "Cash App", iconName: "mingcute:currency-dollar-line" }
+  rss: { label: "RSS", iconName: "mingcute:rss-line" },
+  venmo: { label: "Venmo", iconName: "mingcute:wallet-4-line" }
 }
 
 export const PROJECT_LINK_TYPES = {
   code: { label: "Code", iconName: "mingcute:code-line" },
   doc: { label: "Documentation", iconName: "mingcute:document-line" },
-  url: { label: "Website", iconName: "mingcute:globe-2-line" },
-  release: { label: "Release", iconName: "mingcute:download-line" }
+  release: { label: "Release", iconName: "mingcute:download-line" },
+  url: { label: "Website", iconName: "mingcute:globe-2-line" }
 } as const
 
 export const PUBLICATION_LINK_TYPES = {
   // Core content & identifiers
   abstract: { label: "Abstract", iconName: "mingcute:align-justify-line" },
-  pdf: { label: "PDF", iconName: "mingcute:pdf-line" },
-  doi: { label: "DOI", iconName: "academicons:doi" },
   arxiv: { label: "arXiv", iconName: "academicons:arxiv" },
+  doi: { label: "DOI", iconName: "academicons:doi" },
+  pdf: { label: "PDF", iconName: "mingcute:pdf-line" },
   website: { label: "Website", iconName: "mingcute:globe-2-line" },
 
   // Interactive & supplementary materials
@@ -156,12 +157,12 @@ export const PUBLICATION_LINK_TYPES = {
   resources: { label: "Resources", iconName: "mingcute:folder-zip-line" },
 
   // Presentation & discussion
-  video: { label: "Video", iconName: "mingcute:video-line" },
-  talk: { label: "Talk", iconName: "mingcute:mic-line" },
-  slides: { label: "Slides", iconName: "mingcute:presentation-line" },
-  poster: { label: "Poster", iconName: "mingcute:image-line" },
   post: { label: "Post", iconName: "mingcute:pen-line" },
+  poster: { label: "Poster", iconName: "mingcute:image-line" },
+  slides: { label: "Slides", iconName: "mingcute:presentation-line" },
+  talk: { label: "Talk", iconName: "mingcute:mic-line" },
   thread: { label: "Thread", iconName: "mingcute:comment-line" },
+  video: { label: "Video", iconName: "mingcute:video-line" },
 
   // Metadata & accolades
   award: { label: "Award", iconName: "mingcute:trophy-line" },

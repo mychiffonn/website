@@ -8,8 +8,7 @@ import type {
 
 export const SITE: SiteConfig = {
   title: "My Chiffon N.",
-  description:
-    "AI researcher, working towards safer, more inclusive, interactive and collaborative AI",
+  description: "AI researcher, working towards safer, more inclusive, and collaborative AI",
   href: "https://mychiffonn.com",
   author: "My (Chiffon) Nguyen",
 
@@ -52,11 +51,14 @@ export const PROFILE: ProfileConfig = {
   pronunciation: "My = /me/, Chiffon = /shi-FON/. I'm Chiffon in English-speaking context.",
   links: {
     cv: "/doc/cv.pdf",
+    // resume: "/doc/resume.pdf",
     github: "https://github.com/mychiffonn",
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
-    x: "https://x.com/chiffonng",
-    bluesky: "https://bsky.app/profile/mychiffonn.bsky.social",
-    discord: "https://discordapp.com/users/mychiffonn"
+    orcid: "https://orcid.org/0009-0002-5787-3948",
+    openreview: "https://openreview.net/profile?id=~My_Chiffon_Nguyen1",
+    x: "https://x.com/chiffonng"
+    // bluesky: "https://bsky.app/profile/mychiffonn.bsky.social",
+    // discord: "https://discordapp.com/users/mychiffonn",
   },
   highlightLinks: ["cv", "resume"]
 }
