@@ -18,7 +18,7 @@ export type ProcessedProfileLink = {
   label: string
   /** IconName from PROFILE_ICON_MAP */
   iconName: string
-  /** Normalized and absolute URL */
+  /** Normalized URL (relative for internal, absolute for external) */
   href: string
   /** Whether the link is external */
   isExternal: boolean
@@ -113,7 +113,7 @@ export const getTransformedEmail = (email: string, variant: EmailVariant = "disp
 const normalizeHref = (href: string): { href: string; isExternal: boolean } => {
   const normalized = href.startsWith("/public/") ? href.replace("/public", "") : href
   return {
-    href: new URL(normalized, SITE.href).toString(),
+    href: normalized,
     isExternal: !normalized.startsWith("/")
   }
 }
