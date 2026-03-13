@@ -1,4 +1,5 @@
 ---
+import CopyButton from "@/components/base/CopyButton.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 
@@ -15,7 +16,7 @@ const displayEmail = getTransformedEmail(email, "display")
 ---
 
 <span class="flex items-center gap-2">
-  {showIcon && <Icon name="mingcute:mail-line" class="size-5" />}
+  {showIcon && <Icon name="mingcute:mail-line" class="size-5.5" />}
   <Link
     href={`mailto:${email}`}
     aria-label={`Send email to ${displayEmail}`}
@@ -26,45 +27,12 @@ const displayEmail = getTransformedEmail(email, "display")
   </Link>
   {
     showCopyButton && (
-      <button
-        type="button"
-        class="copy-email-btn hover:text-accent-foreground focus:ring-ring rounded p-1 transition-colors focus:ring-2 focus:outline-none"
-        aria-label="Copy email address"
+      <CopyButton
+        text={email}
         title="Copy email address"
-      >
-        <Icon name="mingcute:copy-line" class="size-5" />
-      </button>
+        size="1.5rem"
+        class="hover:text-accent hover:ring-ring rounded p-1 transition-colors hover:ring-2"
+      />
     )
   }
 </span>
-
-<script is:inline define:vars={{ email: email }}>
-  function initCopyButtons() {
-    const copyButtons = document.querySelectorAll(".copy-email-btn")
-
-    copyButtons.forEach((button) => {
-      // Remove existing listeners to prevent duplicates
-      button.removeEventListener("click", handleCopyClick)
-      button.addEventListener("click", handleCopyClick)
-    })
-  }
-
-  async function handleCopyClick(event) {
-    const button = event.currentTarget
-
-    try {
-      await navigator.clipboard.writeText(email)
-
-      // Show visual feedback
-      const originalContent = button.innerHTML
-      button.innerHTML = `<svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`
-
-      setTimeout(() => {
-        button.innerHTML = originalContent
-      }, 1000)
-    } catch (err) {}
-  }
-
-  document.addEventListener("DOMContentLoaded", initCopyButtons)
-  document.addEventListener("astro:page-load", initCopyButtons)
-</script>
