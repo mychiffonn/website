@@ -50,7 +50,7 @@
     }
 
     :where(a):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-      @apply text-primary visited:text-foreground hover:text-accent decoration-muted-foreground hover:decoration-accent font-medium wrap-break-word underline underline-offset-[3px] transition-colors;
+      @apply text-primary visited:text-foreground hover:text-accent hover:visited:text-accent decoration-muted-foreground hover:decoration-accent font-medium wrap-break-word underline underline-offset-[3px] transition-[text-decoration-color] duration-150;
     }
 
     :where(strong):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
