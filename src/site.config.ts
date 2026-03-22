@@ -50,7 +50,7 @@ export const PROFILE: ProfileConfig = {
   pronouns: "she/her",
   pronunciation: "My = /me/, Chiffon = /shi-FON/. I'm Chiffon in English-speaking context.",
   links: {
-    cv: "/doc/cv.pdf",
+    cv: "/doc/My_Chiffon_Nguyen_CV.pdf",
     // resume: "/doc/resume.pdf",
     github: "https://github.com/mychiffonn",
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",

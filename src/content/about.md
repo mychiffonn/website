@@ -1,11 +1,12 @@
-I'm interested in **diverse human experiences across languages, cultures, values, and social contexts** reflected and supported in **current and future AI systems**, through **AI evals** and **scaling environment** (data, agent harness, etc):
+I'm doing CoT monitoring research at [Algoverse](https://algoverseairesearch.org/) and multilingual agentic eval at [SEACrowd](https://seacrowd.org/).
 
-- Socio-technical AI Alignment: pluralistic alignment, evaluation (capabilities, propensities, safeguards), scalable oversight
-- Multilingual & multicultural AI: evaluate and improve cross-lingual and -cultural understanding
-- AI, internet, and critical thinking: misinformation, disinformation, and content moderation; AI literacy and education; human-AI interaction and co-evolution
+I research how to ensure that **current and future AI systems** reflect and support **pluralism across languages, cultures, and social contexts**, through **robust AI evals** and **realistic environment** (data, agent harness, system, etc):
 
-I broadly care about AI Safety, AI ethics and impacts of AI on humans, society, and [more-than-human world](https://www.youtube.com/watch?v=vakQsLYp4F0). I'm doing CoT monitoring research at [Algoverse](https://algoverseairesearch.org/) and multilingual agentic eval at [SEACrowd](https://seacrowd.org/).
+- Socio-technical AI Alignment: pluralistic alignment, evaluation (capabilities, propensities, safeguards), (mis)generalization, cooperative AI
+- Multilingual & multicultural AI: evaluate and improve cross-lingual and -cultural understanding, representation and alignment
 
-I am **applying to Master's with thesis/research in Computer Science, AI, NLP, or related fields for Fall 2026 intake** and seeking research opportunities (internships, research assistantships, collaborations) for Spring/Summer 2026 and beyond. See my [CV](/doc/cv.pdf) and [projects](/projects) for more details.
+I broadly care about AI Safety, AI ethics and impacts of AI on humans, society, and [more-than-human world](https://www.youtube.com/watch?v=vakQsLYp4F0).
 
-Previously, I graduated in May 2025 from [Minerva University](https://minerva.edu/) studying Machine Learning & Statistics, while living with peers from 50+ countries and engaging civically in 6 cities as part of its [global rotation program](https://www.minerva.edu/global-immersion/): Seoul (South Korea), Chinese Taipei, Hyderabad (India), Buenos Aires (Argentina), Berlin (Germany).
+Previously, I graduated in May 2025 from [Minerva University](https://minerva.edu/) studying Machine Learning & Statistics, with peers from 50+ countries and living in 6 cities as part of its [global rotation program](https://www.minerva.edu/global-immersion/): Seoul (South Korea), Chinese Taipei, Hyderabad (India), Buenos Aires (Argentina), Berlin (Germany).
+
+I am **applying to research-oriented Master's in Computer Science, AI, NLP, or related fields for Fall 2026/Spring 2027** and seeking research opportunities (internships, research assistantships, collaborations) for Spring/Summer 2026 and beyond. See my [CV](/doc/cv.pdf) and [projects](/projects) for more details.
