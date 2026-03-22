@@ -1,11 +1,10 @@
 import { getCollection, render } from "astro:content"
-import type { AstroComponentFactory } from "astro/runtime/server/index.js"
 
 import { createLocalDate, extractDateFromStr } from "./date-utils"
 
 export interface RenderedUpdate {
   date: Date // from update id
-  Content: AstroComponentFactory
+  Content: Awaited<ReturnType<typeof render>>["Content"]
 }
 
 /**

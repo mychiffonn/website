@@ -53,7 +53,10 @@ export const getProcessedProfileLinks = (
     const iconConfig = PROFILE_ICON_MAP[key as ProfileLinkType]
     if (!iconConfig) continue
 
-    const linkData = processProfileLink(value, iconConfig)
+    const linkData = processProfileLink(
+      value as string | { href: string; label?: string },
+      iconConfig
+    )
 
     const { href, isExternal } = normalizeHref(linkData.href)
 

@@ -133,11 +133,5 @@ export default defineConfig({
       remarkNormalizeHeadings,
       remarkSectionize
     ]
-  },
-  experimental: {
-    contentIntellisense: true,
-    headingIdCompat: true,
-    preserveScriptOrder: true,
-    svgo: true
   }
 })

@@ -1,7 +1,7 @@
 /**
  * Custom configuration schemas for the theme, with zod validation
  */
-import { z } from "astro:content"
+import { z } from "astro/zod"
 
 import type { ProfileLinkType } from "@icon-config"
 
@@ -13,7 +13,7 @@ export const SiteConfigSchema = z.object({
   title: z.string(),
   /** To be used as meta description or description tag in head. <= 100 characters */
   description: z.string().max(100),
-  href: z.string().url(),
+  href: z.url(),
   author: z.string(),
 
   /** Locale settings for date time */
@@ -52,7 +52,7 @@ export const SiteConfigSchema = z.object({
   // Theme settings
   favicon: z.string().default("/favicon.ico"),
   prerender: z.boolean().default(true),
-  npmCDN: z.string().url().default("https://cdn.jsdelivr.net/npm"),
+  npmCDN: z.url().default("https://cdn.jsdelivr.net/npm"),
 
   // Content license
   license: z
@@ -86,7 +86,7 @@ export const SiteConfigSchema = z.object({
  * ```
  */
 export const ProfileLinkConfigSchema = z
-  .record(
+  .partialRecord(
     z.custom<ProfileLinkType>((val) => typeof val === "string"),
     z.union([
       z.string(),
@@ -116,7 +116,7 @@ export const ProfileConfigSchema = z.object({
    */
   tagline: z.string().max(50),
   /** required: Main email address */
-  email: z.string().email(),
+  email: z.email(),
   /** optional: Geographic location (city, state, country) */
   location: z.string().max(50).optional(),
   /** Phone number, accepting international format */
@@ -142,15 +142,15 @@ export const FooterConfigSchema = z.object({
   /** Whether to show "Built with" credits in footer */
   credits: z.boolean().default(true),
   /** URL to source code repository, optional */
-  sourceCode: z.string().url().optional(),
+  sourceCode: z.url().optional(),
   /** URL to content source repository, optional */
-  sourceContent: z.string().url().optional(),
+  sourceContent: z.url().optional(),
   /** Additional links to display in footer */
   footerLinks: z
     .array(
       z.object({
         /** URL for the footer link */
-        href: z.string().url(),
+        href: z.url(),
         /** Display text for the footer link */
         label: z.string()
       })
@@ -167,7 +167,7 @@ export const ToolSchema = z.object({
   /** Brief description of what the tool does */
   description: z.string(),
   /** Official website or documentation URL */
-  href: z.string().url(),
+  href: z.url(),
   /** Icon identifier for the tool */
   icon: z.string(),
   /** Categorization tags for filtering and organization */

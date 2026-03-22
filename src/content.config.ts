@@ -1,5 +1,6 @@
-import { defineCollection, reference, z } from "astro:content"
+import { defineCollection, reference } from "astro:content"
 import { file, glob } from "astro/loaders"
+import { z } from "astro/zod"
 
 import { ProfileLinkConfigSchema } from "@/schemas"
 
@@ -18,7 +19,7 @@ const yearMonthDateSchema = z
 const dateSchema = z
   .union([z.date(), z.string().transform(createLocalDate)])
   .refine((date) => !Number.isNaN(date.getTime()), {
-    message:
+    error:
       "Invalid date format. Must be YYYY-MM-DD or ISO datetime format.\n For more, see https://zod.dev/api#datetimes"
   })
 
@@ -48,7 +49,7 @@ const blog = defineCollection({
           return data.updatedAt > data.createdAt
         },
         {
-          message: "Modified date must be after published date"
+          error: "Modified date must be after published date"
         }
       )
 })
@@ -64,7 +65,6 @@ const people = defineCollection({
      * The latter renders to /path/to/image.jpg, which you should use
      */
     avatar: z
-      .string()
       .url()
       .or(z.string().startsWith("/"))
       .optional()
@@ -85,10 +85,10 @@ const projects = defineCollection({
       isHighlighted: z.boolean().default(false),
       fromDate: yearMonthDateSchema.optional(),
       toDate: yearMonthDateSchema.optional(),
-      code: z.string().url().optional(),
-      doc: z.string().url().optional(),
-      url: z.string().url().optional(),
-      release: z.string().url().optional(),
+      code: z.url().optional(),
+      doc: z.url().optional(),
+      url: z.url().optional(),
+      release: z.url().optional(),
       context: z.enum(["community", "personal", "research", "school", "work"]).optional(),
       description: z.string().max(200).optional(),
       tags: z
@@ -103,7 +103,7 @@ const projects = defineCollection({
         return data.toDate >= data.fromDate
       },
       {
-        message: "End date must be on or after start date"
+        error: "End date must be on or after start date"
       }
     )
 })

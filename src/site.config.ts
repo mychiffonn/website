@@ -49,6 +49,7 @@ export const PROFILE: ProfileConfig = {
   // location: "San Francisco, CA, USA",
   pronouns: "she/her",
   pronunciation: "My = /me/, Chiffon = /shi-FON/. I'm Chiffon in English-speaking context.",
+  // hover or click on "links" to see all profile links supported. or search PROFILE_ICON_MAP in icon.config.ts, the keys are what used here
   links: {
     cv: "/doc/My_Chiffon_Nguyen_CV.pdf",
     // resume: "/doc/resume.pdf",
