@@ -58,11 +58,11 @@
     }
 
     :where(ul):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-      @apply marker:text-foreground/30 my-5 ml-6 list-disc [&>li]:mt-2;
+      @apply marker:text-primary/50 my-5 ml-6 list-disc [&>li]:mt-2;
     }
 
     :where(ol):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-      @apply marker:text-foreground/30 my-5 ml-6 list-decimal [&>li]:mt-2;
+      @apply marker:text-primary/50 my-5 ml-6 list-decimal [&>li]:mt-2;
       @apply [&[type='A']]:list-[upper-alpha] [[type='I']]:list-[upper-roman] [[type='a']]:list-[lower-alpha] [[type='i']]:list-[lower-roman];
     }
 
@@ -80,11 +80,11 @@
     }
 
     :where(blockquote):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-      @apply **:text-muted-foreground text-sm leading-6 my-6 border-l-2 pl-6;
+      @apply **:text-muted-foreground text-sm leading-6 my-6 border-l-2 border-l-primary/40 pl-6 italic;
     }
 
     :where(hr):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-      @apply my-8 border-t;
+      @apply my-10 border-t border-border/60;
     }
 
     :where(table):not(:where([class~='not-prose'], [class~='not-prose'] *)) {

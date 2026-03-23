@@ -1,13 +1,31 @@
 import { getCollection, getEntry } from "astro:content"
 
+import { PROFILE, SITE } from "@site-config"
+
 import type { AuthorData, AuthorReference } from "./types"
+
+/**
+ * Build an AuthorData object from site config as a fallback
+ * when no authors are defined or people.toml is missing/empty.
+ */
+export function getSiteAuthor(): AuthorData {
+  return {
+    id: PROFILE.name.toLowerCase().replace(/\s+/g, "-"),
+    name: SITE.author,
+    pronouns: PROFILE.pronouns,
+    avatar: undefined,
+    bio: SITE.description,
+    affiliation: undefined,
+    links: PROFILE.links ?? {}
+  }
+}
 
 export async function getAllAuthors(): Promise<AuthorData[]> {
   try {
     const authors = await getCollection("people")
     return authors.map((author) => author.data)
   } catch (error) {
-    console.warn("Failed to retrieve all authors:", error)
+    console.warn("Failed to retrieve authors from people collection:", error)
     return []
   }
 }

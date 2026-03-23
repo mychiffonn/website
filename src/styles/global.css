@@ -121,13 +121,20 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    padding-left: 8px;
-    padding-right: 8px;
-    max-width: 48rem; /* Corresponds to '3xl' in Tailwind */
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 48rem;
     margin-left: auto;
     margin-right: auto;
     overflow-wrap: break-word;
     overflow-x: hidden;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
   }
 
   ::selection {

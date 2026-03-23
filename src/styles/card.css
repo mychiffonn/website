@@ -18,9 +18,9 @@
 }
 
 .card-clickable:hover {
-  border-color: oklch(from var(--accent) l c h / 0.8);
-  box-shadow: 0 20px 25px -5px oklch(from var(--ring) l c h / 0.1), 0 10px 10px -5px oklch(from var(--ring) l c h / 0.04);
-  transform: translateY(-2px);
+  border-color: oklch(from var(--primary) l c h / 0.3);
+  box-shadow: 0 8px 24px -4px oklch(from var(--ring) l c h / 0.08);
+  transform: translateY(-1px);
 }
 
 .card-clickable:active,

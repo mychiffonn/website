@@ -110,7 +110,8 @@ export class PostManager implements PostManagerInterface {
       throw new Error(`Post not found: ${postId}`)
     }
 
-    const authors = await this.resolveAuthors(post.data.authors || [])
+    const resolvedAuthors = await this.resolveAuthors(post.data.authors || [])
+    const authors = resolvedAuthors.length > 0 ? resolvedAuthors : [authorModule.getSiteAuthor()]
 
     if (isSubpost(postId)) {
       const wordCount = calculateWordCountFromPost(post)
