@@ -1,5 +1,5 @@
 {
-  "name": "mychiffonn",
+  "name": "My Chiffon N.",
   "short_name": "mychiffonn",
   "icons": [
     {
@@ -15,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#fceeca",
-  "background_color": "#fceeca",
+  "theme_color": "#9bc567",
+  "background_color": "#9bc567",
   "display": "standalone"
 }
