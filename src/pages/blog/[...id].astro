@@ -5,12 +5,14 @@ import { Image } from "astro:assets"
 import { render } from "astro:content"
 
 import { SITE } from "@site-config"
+import { WEBMENTION } from "@/integrations/webmention/config"
 import { PostManager } from "@/lib/blog"
 import { getStageVariant } from "@/lib/blog/stage"
 import Layout from "@/layouts/Layout.astro"
 import BackToTop from "@/components/base/BackToTop.astro"
 import Badge from "@/components/base/Badge.astro"
 import CopyMarkdown from "@/components/base/CopyMarkdown.astro"
+import Webmentions from "@/integrations/webmention/Webmentions.astro"
 import Icon from "@/components/base/Icon.astro"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
 import PostNav from "@/components/blog/PostNavigation.astro"
@@ -205,6 +207,8 @@ const rawMarkdown = post.body ?? null
   </article>
 
   {rawMarkdown && <CopyMarkdown markdown={rawMarkdown} class="flex justify-end" />}
+
+  {WEBMENTION.enabled && <Webmentions postUrl={new URL(`/blog/${currentPostId}`, Astro.site).href} />}
 
   {/** Bottom navigation */}
   <PostNav prevPost={navigation.newer} nextPost={navigation.older} parentPost={navigation.parent} />
