@@ -6,6 +6,24 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro"
 ---
 
 <header class="flex items-center justify-between py-3">
+
+<style>
+  .nav-active {
+    position: relative;
+  }
+
+  .nav-active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--primary);
+  }
+</style>
   <Link href="/" class="flex shrink-0 items-center justify-center gap-x-2" transition:persist>
     <span class="hidden h-full text-lg font-medium min-[300px]:block">{SITE.title}</span>
   </Link>
@@ -22,7 +40,7 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro"
               class:list={[
                 "relative px-2 py-1 capitalize transition-colors duration-300 ease-in-out",
                 isActive
-                  ? "text-foreground after:bg-primary font-medium after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:rounded-full"
+                  ? "text-foreground font-medium nav-active"
                   : "text-foreground/60 hover:text-accent"
               ]}
             >

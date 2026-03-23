@@ -85,16 +85,11 @@ const tags = metadata.tags
 </article>
 
 <style>
-  .card {
-    --card-highlight: hsl(var(--primary));
-    --card-highlight-bg: hsl(var(--muted) / 50%);
-  }
-
   .card:hover {
-    background-color: var(--card-highlight-bg);
+    background-color: oklch(from var(--muted) l c h / 0.5);
 
     & .tag-badge {
-      background-color: var(--card-highlight-bg);
+      background-color: oklch(from var(--muted) l c h / 0.5);
     }
   }
 
