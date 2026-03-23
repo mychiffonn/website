@@ -1,12 +1,12 @@
 # My (Chiffon) Nguyen's Academic Website
 
-[![Version](https://img.shields.io/badge/version-v1.0.6-blue?style=for-the-badge)](https://github.com/mychiffonn/website/releases) [![License](https://img.shields.io/badge/License-Apache%202.0-blue?style=for-the-badge)](LICENSE) [![Astro 5](https://img.shields.io/badge/Astro_5-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![MDX](https://img.shields.io/badge/MDX-1B1F24?style=for-the-badge&logo=mdx&logoColor=white)](https://mdxjs.com/) [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![TailwindCSS 4](https://img.shields.io/badge/TailwindCSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/) [![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)](https://ui.shadcn.com/) [![Catppuccin](https://img.shields.io/badge/Catppuccin-F5E0DC?style=for-the-badge&logo=catppuccin&logoColor=11111b)](https://catppuccin.com/palette/) [![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://prettier.io/) [![oxlint](https://img.shields.io/badge/oxlint-000000?style=for-the-badge&logo=rust&logoColor=white)](https://oxc-project.github.io/docs/guide/usage/linter.html)
+[![Version](https://img.shields.io/badge/version-v1.1.2-blue?style=for-the-badge)](https://github.com/mychiffonn/website/releases) [![License](https://img.shields.io/badge/License-Apache%202.0-blue?style=for-the-badge)](LICENSE) [![Astro 6](https://img.shields.io/badge/Astro_6-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![MDX](https://img.shields.io/badge/MDX-1B1F24?style=for-the-badge&logo=mdx&logoColor=white)](https://mdxjs.com/) [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![TailwindCSS 4](https://img.shields.io/badge/TailwindCSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/) [![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)](https://ui.shadcn.com/) [![Catppuccin](https://img.shields.io/badge/Catppuccin-F5E0DC?style=for-the-badge&logo=catppuccin&logoColor=11111b)](https://catppuccin.com/palette/) [![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://prettier.io/) [![oxlint](https://img.shields.io/badge/oxlint-000000?style=for-the-badge&logo=rust&logoColor=white)](https://oxc-project.github.io/docs/guide/usage/linter.html)
 
 ![](public/img/social-preview.png)
 
 This website serves as a digital portfolio and blog where I share my work, insights, and journey in academia (NLP+HCI), technology, and anything I'm interested in. Co-created with Claude Code.
 
-> ⚠️ Warning: Somewhat stable. Theme will be refactored to "astro-academic" and posted to Astro community once all features are complete.
+> 🌱 Theme will be refactored to "astro-scholar" and posted to Astro community once all features are complete.
 
 ## Features
 
@@ -18,7 +18,7 @@ This website serves as a digital portfolio and blog where I share my work, insig
 - 👩‍💻 Developer experience: type-safe with zod-first schema and TypeScript
 - 🔎 SEO friendly and ARIA accessibility compliant
 - 🔧 Easily configure [theme](src/styles/global.css), [page & personal information](src/config.ts), [content](src/content)
-- [UPCOMING] Show mentions of a post across the web in lieu of comment section
+- 💬 Show mentions of a post across the web (via [webmention.io](https://webmention.io)) in lieu of comment section
 - [UPCOMING] Search with pagefind/typesense
 
 ## Built With
