@@ -3,6 +3,24 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans-latin[wght].woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans-latin-ext[wght].woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
   font-family: 'Noto Sans CJK SC';
   src: url('/fonts/NotoSansSC.woff2') format('woff2-variations');
   font-weight: 100 900;
@@ -21,15 +39,14 @@
 
 @theme inline {
   --font-sans:
-    /* System fonts (instant rendering, native feel) */
-    -apple-system, BlinkMacSystemFont,
-    /* Chinese system fonts (excellent CJK support) */
-    'PingFang SC', 'PingFang TC', 'Hiragino Sans GB', 'Hiragino Kaku Gothic Pro',
+    /* Primary web font */
+    -apple-system, BlinkMacSystemFont, 'DM Sans',
+    /* Chinese fonts (excellent CJK support) */
+    'Noto Sans CJK SC', 'PingFang SC', 'PingFang TC', 'Hiragino Sans GB',
     /* Windows system fonts */
-    'Microsoft YaHei', 'Segoe UI',
-    'Noto Sans CJK SC', ui-sans-serif, system-ui, sans-serif,
+    'Microsoft YaHei', 'Segoe UI', ui-sans-serif, system-ui, sans-serif,
     /* Emoji fonts */
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji';
+    'Apple Color Emoji', 'Segoe UI Emoji';
 
   --font-mono:
     'Lilex',
@@ -115,7 +132,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures contextual;
   }
 
   body {
@@ -123,7 +141,7 @@
     color: var(--color-foreground);
     padding-left: 1rem;
     padding-right: 1rem;
-    max-width: 48rem;
+    max-width: 70ch;
     margin-left: auto;
     margin-right: auto;
     overflow-wrap: break-word;
