@@ -1,0 +1,184 @@
+---
+import { WEBMENTION, fetchWebmentions, getMentionSourceName, groupMentions } from "./index"
+
+interface Props {
+  postUrl: string
+}
+
+const { postUrl } = Astro.props
+
+const entries = WEBMENTION.enabled ? await fetchWebmentions(postUrl) : []
+const grouped = groupMentions(entries)
+const totalCount = entries.length
+
+const platformCounts = new Map<string, number>()
+for (const entry of entries) {
+  const source = getMentionSourceName(entry["wm-source"])
+  platformCounts.set(source, (platformCounts.get(source) ?? 0) + 1)
+}
+const platformSummary = [...platformCounts.entries()]
+  .sort(([, a], [, b]) => b - a)
+  .map(([name, count]) => `${name} (${count})`)
+  .join(", ")
+
+function formatDate(dateStr: string | null): string {
+  if (!dateStr) return ""
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  })
+}
+
+function truncate(text: string, max: number): string {
+  if (text.length <= max) return text
+  return text.slice(0, max).trimEnd() + "…"
+}
+
+const MAX_REPLIES = 4
+const webmentionDomain = "webmention.io"
+---
+
+{
+  totalCount > 0 && (
+    <section class="mt-8 border-t pt-6">
+      <h2 class="mb-4 text-xl font-semibold">Mentions across the web</h2>
+
+      <p class="text-muted-foreground mb-4 text-sm">
+        {totalCount} {totalCount === 1 ? "mention" : "mentions"} from {platformSummary}
+      </p>
+
+      {/* Interaction counts */}
+      <div class="mb-6 flex flex-wrap gap-4 text-sm">
+        {grouped.likes.count > 0 && (
+          <span class="flex items-center gap-1" title="Likes">
+            <svg
+              class="size-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            {grouped.likes.count}
+            <span class="-ml-0.5 flex">
+              {grouped.likes.entries.slice(0, 5).map((like) => (
+                <a
+                  href={like.url}
+                  target="_blank"
+                  rel="nofollow noreferrer noopener"
+                  title={like.author?.name || "Anonymous"}
+                >
+                  {like.author?.photo ? (
+                    <img
+                      src={like.author.photo}
+                      alt={like.author.name || ""}
+                      class="ring-background -ml-1 size-5 rounded-full ring-2"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span class="ring-background bg-muted text-muted-foreground -ml-1 flex size-5 items-center justify-center rounded-full text-xs ring-2">
+                      ?
+                    </span>
+                  )}
+                </a>
+              ))}
+            </span>
+          </span>
+        )}
+        {grouped.reposts.count > 0 && (
+          <span class="flex items-center gap-1" title="Reposts">
+            <svg
+              class="size-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M17 1l4 4-4 4" />
+              <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+              <path d="M7 23l-4-4 4-4" />
+              <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+            </svg>
+            {grouped.reposts.count}
+          </span>
+        )}
+        {grouped.bookmarks.count > 0 && (
+          <span class="flex items-center gap-1" title="Bookmarks">
+            <svg
+              class="size-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
+            {grouped.bookmarks.count}
+          </span>
+        )}
+      </div>
+
+      {/* Replies */}
+      {grouped.replies.count > 0 && (
+        <div class="space-y-4">
+          {grouped.replies.entries.slice(0, MAX_REPLIES).map((reply) => (
+            <div class="bg-muted/30 rounded-lg p-4">
+              <div class="mb-2 flex items-center gap-2">
+                {reply.author?.photo ? (
+                  <img
+                    src={reply.author.photo}
+                    alt={reply.author.name || ""}
+                    class="size-8 rounded-full"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span class="bg-muted text-muted-foreground flex size-8 items-center justify-center rounded-full text-sm">
+                    ?
+                  </span>
+                )}
+                <div class="flex flex-col">
+                  <a
+                    href={reply.author?.url || reply.url}
+                    target="_blank"
+                    rel="nofollow noreferrer noopener"
+                    class="text-sm font-medium hover:underline"
+                  >
+                    {reply.author?.name || "Anonymous"}
+                  </a>
+                  <span class="text-muted-foreground flex items-center gap-1.5 text-xs">
+                    {formatDate(reply.published || reply["wm-received"])}
+                    <span class="text-muted-foreground/60">·</span>
+                    <a
+                      href={reply.url}
+                      target="_blank"
+                      rel="nofollow noreferrer noopener"
+                      class="hover:underline"
+                    >
+                      View on {getMentionSourceName(reply["wm-source"])}
+                    </a>
+                  </span>
+                </div>
+              </div>
+              {reply.content?.text && (
+                <p class="text-sm">{truncate(reply.content.text, 280)}</p>
+              )}
+            </div>
+          ))}
+          {grouped.replies.count > MAX_REPLIES && (
+            <a
+              href={`https://${webmentionDomain}`}
+              target="_blank"
+              rel="nofollow noreferrer noopener"
+              class="text-muted-foreground block text-sm hover:underline"
+            >
+              View {grouped.replies.count - MAX_REPLIES} more{" "}
+              {grouped.replies.count - MAX_REPLIES === 1 ? "reply" : "replies"} on webmention.io
+            </a>
+          )}
+        </div>
+      )}
+    </section>
+  )
+}
