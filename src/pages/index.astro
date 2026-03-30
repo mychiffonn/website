@@ -12,6 +12,7 @@ import PubCard from "@/components/publications/PubCard.astro"
 import UpdateTimeline from "@/components/updates/UpdateTimeline.astro"
 
 import { Content as MiscContent } from "@/content/misc.md"
+import { Content as ServicesContent } from "@/content/services.md"
 
 const renderedUpdates = await getLatestUpdates(3)
 const selectedPublications = await loadSelectedPublications()
@@ -50,37 +51,46 @@ const recentPostsMetadata = await Promise.all(
       </Section>
     )
   }
+  {
+    recentPostsMetadata.length > 0 && (
+      <Section title="Latest posts">
+        <ul class="flex flex-col gap-y-2">
+          {recentPostsMetadata.map((metadata) => (
+            <li>
+              <PreviewCard metadata={metadata} />
+            </li>
+          ))}
+        </ul>
+        <div class="mt-4 flex justify-center gap-2">
+          <Button href="/blog" variant="default" class="group">
+            See all posts <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+          </Button>
+          <Button href="/blog/tags" variant="ghost" class="group">
+            Browse by tags{" "}
+            <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+          </Button>
+        </div>
+      </Section>
+    )
+  }
 
-  <Section title="Latest posts">
-    {
-      recentPostsMetadata.length > 0 ? (
-        <>
-          <ul class="flex flex-col gap-y-2">
-            {recentPostsMetadata.map((metadata) => (
-              <li>
-                <PreviewCard metadata={metadata} />
-              </li>
-            ))}
-          </ul>
-          <div class="mt-4 flex justify-center gap-2">
-            <Button href="/blog" variant="default" class="group">
-              See all posts{" "}
-              <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
-            </Button>
-            <Button href="/blog/tags" variant="ghost" class="group">
-              Browse by tags{" "}
-              <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
-            </Button>
-          </div>
-        </>
-      ) : (
-        <p class="text-muted-foreground py-8 text-center">
-          No posts yet. Check back later for updates!
-        </p>
-      )
-    }
-  </Section>
-  <Section title="Miscellaneous">
-    <div class="prose"><MiscContent /></div>
-  </Section>
+  {
+    ServicesContent && (
+      <Section title="Services">
+        <div class="prose">
+          <ServicesContent />
+        </div>
+      </Section>
+    )
+  }
+
+  {
+    MiscContent && (
+      <Section title="Miscellaneous">
+        <div class="prose">
+          <MiscContent />
+        </div>
+      </Section>
+    )
+  }
 </Layout>
