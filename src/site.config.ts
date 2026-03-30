@@ -23,11 +23,12 @@ export const SITE: SiteConfig = {
   },
 
   // Blog settings
-  featuredPostCount: 3,
-  postsPerPage: 8,
-
-  // TOC settings
-  tocMaxDepth: 3,
+  blog: {
+    featuredPostCount: 3,
+    postsPerPage: 8,
+    tocMaxDepth: 3,
+    shareActions: ["x"]
+  },
 
   // Theme settings
   favicon: "/favicon.ico",

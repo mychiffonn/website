@@ -100,7 +100,7 @@ const hasHeadings = headings && headings.length > 0
     controller = new UnifiedTOCController(
       "#mobile-toc-container",
       "#mobile-toc-container [data-heading-link]",
-      { isMobile: true, tocMaxDepth: SITE.tocMaxDepth }
+      { isMobile: true, tocMaxDepth: SITE.blog.tocMaxDepth }
     )
     controller.init()
   }
