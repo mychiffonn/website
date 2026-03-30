@@ -48,6 +48,7 @@ export const SEMANTIC_ICONS = {
   "to-top": "mingcute:arrow-to-up-line",
 
   // Content & actions
+  "mail-send": "mingcute:mail-send-line",
   calendar: "mingcute:calendar-line",
   check: "mingcute:check-line",
   edit: "mingcute:edit-line",
