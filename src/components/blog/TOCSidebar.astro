@@ -78,7 +78,7 @@ const hasSections = sections.length > 0
     controller = new UnifiedTOCController(
       "#toc-sidebar-container",
       "#toc-sidebar-container [data-heading-link]",
-      { tocMaxDepth: SITE.tocMaxDepth }
+      { tocMaxDepth: SITE.blog.tocMaxDepth }
     )
     controller.init()
   }

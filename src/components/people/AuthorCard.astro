@@ -9,21 +9,24 @@ import "@/styles/card.css"
 
 interface Props {
   author: AuthorData
+  variant?: "full" | "compact"
 }
 
-const { author } = Astro.props
+const { author, variant = "full" } = Astro.props
 const { id, name, bio, pronouns, links } = author
 const isAuthorPage = Astro.url.pathname === `/people/${id}`
+const isCompact = variant === "compact"
 
 const cardClasses = cn(
-  "card relative flex flex-wrap gap-4 py-4",
-  !isAuthorPage && "card-clickable group"
+  "author-card card relative flex",
+  isCompact ? "items-start gap-2 py-2" : "flex-wrap gap-4 py-4",
+  !isCompact && !isAuthorPage && "card-clickable group"
 )
 ---
 
 <article class={cardClasses}>
   {
-    !isAuthorPage && (
+    !isCompact && !isAuthorPage && (
       <a
         href={`/people/${id}`}
         class="absolute inset-0 z-20"
@@ -32,17 +35,34 @@ const cardClasses = cn(
     )
   }
 
-  <AuthorAvatar author={author} fallbackStyle="all-initials" class="relative z-10 size-40" />
+  <AuthorAvatar
+    author={author}
+    fallbackStyle="all-initials"
+    class={cn("relative z-10 shrink-0", isCompact ? "size-12" : "size-40")}
+  />
 
-  <div class="relative z-10 flex grow flex-col justify-between gap-y-4">
+  <div
+    class={cn(
+      "relative z-10 flex grow flex-col",
+      isCompact ? "gap-y-1" : "justify-between gap-y-4"
+    )}
+  >
     <div>
       <div class="flex flex-wrap items-center gap-x-2">
-        <h3 class="text-lg font-medium">{name}</h3>
+        {
+          isCompact ? (
+            <a href={`/people/${id}`} class="text-sm font-medium hover:underline">
+              {name}
+            </a>
+          ) : (
+            <h3 class="text-lg font-medium">{name}</h3>
+          )
+        }
         {pronouns && <span class="text-muted-foreground text-sm">({pronouns})</span>}
       </div>
-      <p class="text-muted-foreground text-sm">{bio}</p>
+      {bio && <p class={cn("text-muted-foreground text-sm", isCompact && "line-clamp-2")}>{bio}</p>}
     </div>
 
-    <ProfileLinks links={links} class="relative z-30" />
+    {!isCompact && <ProfileLinks links={links} class="relative z-30" />}
   </div>
 </article>

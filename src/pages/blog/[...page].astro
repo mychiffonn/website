@@ -14,7 +14,7 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
 export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
   const allPosts = await PostManager.getInstance().getMainPosts()
-  return paginate(allPosts, { pageSize: SITE.postsPerPage })
+  return paginate(allPosts, { pageSize: SITE.blog.postsPerPage })
 }
 
 const { page } = Astro.props

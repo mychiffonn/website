@@ -19,7 +19,7 @@ const selectedPublications = await loadSelectedPublications()
 
 // Blog
 const postManager = PostManager.getInstance()
-const recentPosts = await postManager.getMainPosts(SITE.featuredPostCount)
+const recentPosts = await postManager.getMainPosts(SITE.blog.featuredPostCount)
 const recentPostsMetadata = await Promise.all(
   recentPosts.map((post) => postManager.getMetadata(post.id))
 )

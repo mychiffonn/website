@@ -41,13 +41,20 @@ export const SiteConfigSchema = z.object({
       .default({})
   }),
 
-  /** Number of featured posts on home page. Default is 3 */
-  featuredPostCount: z.number().positive().default(3),
-  /** Number of posts per pagination page. Default is 8. */
-  postsPerPage: z.number().positive().default(8),
-
-  /** TOC max depth of markdown headings, between 1 and 6 */
-  tocMaxDepth: z.number().min(1).max(6).default(3),
+  /** Blog-specific settings */
+  blog: z
+    .object({
+      /** Number of featured posts on home page. Default is 3 */
+      featuredPostCount: z.number().positive().default(3),
+      /** Number of posts per pagination page. Default is 8. */
+      postsPerPage: z.number().positive().default(8),
+      /** TOC max depth of markdown headings, between 1 and 6 */
+      tocMaxDepth: z.number().min(1).max(6).default(3),
+      /** Share action buttons on blog posts */
+      shareActions: z
+        .array(z.enum(["email", "x", "linkedin", "facebook", "bluesky", "mastodon", "reddit"]))
+        .default(["email", "x"])
+    }),
 
   // Theme settings
   favicon: z.string().default("/favicon.ico"),

@@ -1,0 +1,55 @@
+---
+import { SITE } from "@site-config"
+import { getShareActions } from "@/lib/blog/share"
+import type { AuthorData } from "@/lib/blog/types"
+import { cn } from "@/lib/utils"
+import CopyButton from "@/components/base/CopyButton.astro"
+import Icon from "@/components/base/Icon.astro"
+
+interface Props {
+  title: string
+  url: string
+  authors: AuthorData[]
+  /** Raw markdown to offer a "Copy Markdown" button */
+  markdown?: string | null
+  class?: string
+}
+
+const { title, url, authors, markdown, class: className } = Astro.props
+const shareActions = getShareActions(SITE.blog.shareActions, title, url, authors)
+
+const btnClass =
+  "hover:bg-accent hover:text-accent-foreground active:bg-accent/80 inline-flex cursor-pointer items-center rounded-md p-2 gap-1 text-sm font-medium transition-all select-none"
+---
+
+<div class={cn("flex flex-wrap items-center gap-2", className)} aria-label="Post actions">
+  {/** Copy actions */}
+  {
+    markdown && (
+      <CopyButton
+        text={markdown}
+        label="Copy Markdown"
+        title="Copy as Markdown"
+        size="1rem"
+        class={btnClass}
+      />
+    )
+  }
+  <CopyButton text={url} label="Copy URL" title="Copy post URL" size="1rem" class={btnClass} />
+
+  {/** Share actions */}
+  {
+    shareActions.map((action) => (
+      <a
+        href={action.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={btnClass}
+        title={action.label}
+      >
+        <Icon name={action.icon} size="1rem" />
+        <span>{action.label}</span>
+      </a>
+    ))
+  }
+</div>
