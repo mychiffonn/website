@@ -12,6 +12,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeExternalLinks from "rehype-external-links"
 import rehypeKatex from "rehype-katex"
 import rehypePrettyCode from "rehype-pretty-code"
+import rehypeSidenotes from "./src/plugins/rehype-sidenotes"
 
 import remarkNormalizeHeadings from "./src/plugins/remark-normalize-headings"
 import remarkCallout from "@r4ai/remark-callout"
@@ -124,7 +125,8 @@ export default defineConfig({
             dark: "catppuccin-macchiato"
           }
         }
-      ]
+      ],
+      rehypeSidenotes
     ],
     remarkPlugins: [
       remarkMath,

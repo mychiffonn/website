@@ -11,8 +11,13 @@ import Profile from "@/components/profile/Profile.astro"
 import PubCard from "@/components/publications/PubCard.astro"
 import UpdateTimeline from "@/components/updates/UpdateTimeline.astro"
 
-import { Content as MiscContent } from "@/content/misc.md"
-import { Content as ServicesContent } from "@/content/services.md"
+import { Content as MiscContent, rawContent as miscRaw } from "@/content/misc.md"
+import { Content as ServicesContent, rawContent as servicesRaw } from "@/content/services.md"
+
+import "@/styles/sidenote.css"
+
+const hasServices = servicesRaw().trim().length > 0
+const hasMisc = miscRaw().trim().length > 0
 
 const renderedUpdates = await getLatestUpdates(3)
 const selectedPublications = await loadSelectedPublications()
@@ -75,7 +80,7 @@ const recentPostsMetadata = await Promise.all(
   }
 
   {
-    ServicesContent && (
+    hasServices && (
       <Section title="Services">
         <div class="prose">
           <ServicesContent />
@@ -85,7 +90,7 @@ const recentPostsMetadata = await Promise.all(
   }
 
   {
-    MiscContent && (
+    hasMisc && (
       <Section title="Miscellaneous">
         <div class="prose">
           <MiscContent />

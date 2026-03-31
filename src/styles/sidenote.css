@@ -1,0 +1,151 @@
+@import './global.css';
+@import './typography.css';
+
+@layer components {
+  /* Hidden checkbox that powers the toggle */
+  .sidenote-toggle-checkbox {
+    display: none;
+  }
+
+  /* Footnote number — superscript, clickable */
+  .sidenote-toggle.sidenote-number {
+    display: inline;
+    font-size: 0.8em;
+    vertical-align: super;
+    line-height: 0;
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0.125rem;
+    padding: 0 0.1em;
+    scroll-margin-top: 8rem;
+    transition: background-color 0.15s ease;
+  }
+
+  .sidenote-toggle.sidenote-number::before {
+    content: "[";
+  }
+
+  .sidenote-toggle.sidenote-number::after {
+    content: "]";
+  }
+
+  /* Sidenote content — base styles */
+  .sidenote {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--muted-foreground);
+    border-radius: 0.25rem;
+    padding: 0.2rem 0.35rem;
+    transition: background-color 0.15s ease;
+  }
+
+  /* Footnote number indicator inside the sidenote */
+  .sidenote::before {
+    content: attr(data-sidenote-number) ". ";
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  /* Backref icon (shared by sidenote and bottom footnotes) */
+  .sidenote-backref,
+  .footnote-backref {
+    color: var(--muted-foreground);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: baseline;
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    justify-content: center;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+
+  .sidenote-backref:hover,
+  .footnote-backref:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
+  }
+
+  .sidenote-backref-icon {
+    display: inline-block;
+    vertical-align: text-bottom;
+    width: 1.25em;
+    height: 1.25em;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.5;
+  }
+
+  /* Highlight sidenote when hovering its footnote number */
+  .sidenote-toggle:hover ~ .sidenote {
+    background-color: color-mix(in oklab, var(--primary) 20%, transparent);
+  }
+
+  /* Reverse: highlight footnote number when hovering the sidenote */
+  .sidenote-wrapper:has(.sidenote:hover) > .sidenote-toggle {
+    background-color: color-mix(in oklab, var(--primary) 15%, transparent);
+  }
+
+  /* Bottom footnotes section */
+  .footnotes ol {
+    padding-left: 1.5rem;
+  }
+
+  .footnotes li {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+  }
+
+  .footnotes li::marker {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  /* Desktop: margin notes in the right column */
+  @media (min-width: 1200px) {
+    .sidenote-wrapper {
+      position: static;
+    }
+
+    .sidenote {
+      float: right;
+      clear: right;
+      width: 15rem;
+      margin-right: -17rem;
+      margin-bottom: 0.75rem;
+      padding-left: 1rem;
+    }
+  }
+
+  /* Mobile: hidden by default, floating popup on toggle */
+  @media (max-width: 1199px) {
+    .sidenote-wrapper {
+      position: relative;
+    }
+
+    .sidenote {
+      display: none;
+    }
+
+    .sidenote-toggle-checkbox:checked + .sidenote {
+      display: block;
+      position: absolute;
+      z-index: 20;
+      top: 1.5em;
+      left: 0;
+      width: max(60vw, 15rem);
+      max-width: 20rem;
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      box-shadow:
+        0 4px 6px -1px rgb(0 0 0 / 0.1),
+        0 2px 4px -2px rgb(0 0 0 / 0.1);
+      padding: 0.75rem 1rem;
+    }
+  }
+}

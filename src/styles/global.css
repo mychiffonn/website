@@ -155,6 +155,16 @@
     }
   }
 
+  @media (min-width: 1200px) {
+    html:has(.sidenote-wrapper) {
+      overflow-x: clip;
+    }
+
+    body:has(.sidenote-wrapper) {
+      overflow-x: visible;
+    }
+  }
+
   ::selection {
     background-color: var(--color-accent);
     color: var(--color-accent-foreground);
