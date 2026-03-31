@@ -1,0 +1,57 @@
+---
+interface Props {
+  class?: string
+  [key: string]: unknown
+}
+
+const { class: className, ...rest } = Astro.props
+---
+
+<div class:list={["scroll-area scroll-area-viewport", className]} {...rest}>
+  <slot />
+</div>
+
+<style>
+  .scroll-area {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scroll-area-viewport {
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+
+    /* Lea Verou scroll shadow trick using background-attachment: local */
+    background:
+      /* Shadow covers (stay fixed) */
+      linear-gradient(var(--background) 30%, transparent) center top,
+      linear-gradient(transparent, var(--background) 70%) center bottom,
+      /* Shadow reveals (scroll with content) */
+      radial-gradient(farthest-side at 50% 0, oklch(0 0 0 / 0.15), transparent) center top,
+      radial-gradient(farthest-side at 50% 100%, oklch(0 0 0 / 0.15), transparent) center bottom;
+
+    background-repeat: no-repeat;
+    background-size:
+      100% 2.5rem,
+      100% 2.5rem,
+      100% 0.75rem,
+      100% 0.75rem;
+    background-attachment: local, local, scroll, scroll;
+  }
+
+  .scroll-area-viewport::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scroll-area-viewport::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-area-viewport::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 9999px;
+  }
+</style>

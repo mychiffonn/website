@@ -4,8 +4,8 @@ import type { MarkdownHeading } from "astro"
 import { getHeadingMargin } from "@/lib/blog/toc"
 import { cn } from "@/lib/utils"
 import Icon from "@/components/base/Icon.astro"
+import ScrollArea from "@/components/blog/ScrollArea.astro"
 import TOCHeadingLink from "@/components/blog/TOCHeadingLink.astro"
-import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Props {
   headings: MarkdownHeading[]
@@ -69,11 +69,7 @@ const hasHeadings = headings && headings.length > 0
         </summary>
 
         <div class="border-border/50 border-t" data-scroll-container>
-          <ScrollArea
-            client:load
-            className="flex max-h-[30vh] flex-col overflow-y-auto"
-            data-scroll-area
-          >
+          <ScrollArea class="flex max-h-[30vh] flex-col" data-scroll-area>
             <ul class="flex list-none flex-col gap-y-1 px-3 py-2" id="mobile-toc">
               {headings.map((heading) => (
                 <TOCHeadingLink

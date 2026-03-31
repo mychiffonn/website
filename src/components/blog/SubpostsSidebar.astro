@@ -1,8 +1,8 @@
 ---
 import type { PostNavItem as PostNavItemType } from "@/lib/blog/types"
 import PostNavItem from "@/components/blog/PostNavItem.astro"
+import ScrollArea from "@/components/blog/ScrollArea.astro"
 import SubpostsList from "@/components/blog/SubpostsList.astro"
-import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Props {
   postNavItems: PostNavItemType[]
@@ -29,11 +29,7 @@ const shouldRender = postNavItems.length > 0 || !!activePostNavItem
           Post Navigation
         </h2>
       </header>
-      <ScrollArea
-        client:load
-        className="flex max-h-[calc(100vh-8rem)] flex-col overflow-y-auto"
-        data-scroll-container
-      >
+      <ScrollArea class="flex max-h-[calc(100vh-8rem)] flex-col" data-scroll-container>
         <nav aria-label="Post and subposts" class="space-y-1 p-2">
           <PostNavItem {...activePostNavItem} />
           <h3
@@ -54,7 +50,7 @@ const shouldRender = postNavItems.length > 0 || !!activePostNavItem
     const container = document.getElementById("subposts-sidebar-container")
     if (!container) return
 
-    const scrollArea = container.querySelector<HTMLElement>("[data-radix-scroll-area-viewport]")
+    const scrollArea = container.querySelector<HTMLElement>(".scroll-area-viewport")
     if (!scrollArea) return
 
     const activeItem = scrollArea.querySelector<HTMLElement>("[aria-current='page']")

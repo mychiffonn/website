@@ -5,13 +5,12 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro build",
     "check": "astro check",
     "preview": "astro preview",
     "sync": "astro sync",
     "astro": "astro",
     "format": "prettier --write **/*.{astro,ts,tsx,css,mjs,md,mdx} --ignore-path .gitignore",
-    "postinstall": "patch-package",
     "lint": "pnpm dlx oxlint --type-aware",
     "routine": "pnpm lint && pnpm sync && pnpm format",
     "clean": "rm -rf dist/ .astro/ node_modules/.astro/data-store.json",
@@ -21,7 +20,6 @@
     "@astrojs/check": "^0.9.8",
     "@astrojs/markdown-remark": "^7.1.0",
     "@astrojs/mdx": "^5.0.3",
-    "@astrojs/react": "^5.0.2",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
     "@citation-js/core": "^0.7.21",
@@ -34,23 +32,15 @@
     "@r4ai/remark-callout": "^0.6.2",
     "@tailwindcss/vite": "^4.2.2",
     "@types/mdast": "^4.0.4",
-    "@types/react": "19.0.0",
-    "@types/react-dom": "19.0.0",
     "astro": "6.1.2",
     "astro-expressive-code": "^0.41.7",
     "astro-icon": "^1.1.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "patch-package": "^8.0.1",
-    "radix-ui": "^1.4.3",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-external-links": "^3.0.0",
     "rehype-katex": "^7.0.1",
-    "rehype-pretty-code": "^0.14.3",
-    "remark-emoji": "^5.0.2",
     "remark-math": "^6.0.0",
     "remark-sectionize": "^2.1.0",
     "sharp": "^0.34.5",
@@ -73,6 +63,9 @@
     "prettier-plugin-tailwindcss": "^0.6.14"
   },
   "lint-staged": {
+    "*.{astro,md,mdx}": [
+      "astro check"
+    ],
     "*.{astro,ts,tsx,js,jsx,mjs}": [
       "prettier --write",
       "pnpm dlx oxlint --type-aware"

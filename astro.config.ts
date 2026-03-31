@@ -1,7 +1,6 @@
 import { defineConfig } from "astro/config"
 import { rehypeHeadingIds } from "@astrojs/markdown-remark"
 import mdx from "@astrojs/mdx"
-import react from "@astrojs/react"
 import sitemap from "@astrojs/sitemap"
 import expressiveCode from "astro-expressive-code"
 import icon from "astro-icon"
@@ -11,16 +10,15 @@ import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 import rehypeExternalLinks from "rehype-external-links"
 import rehypeKatex from "rehype-katex"
-import rehypePrettyCode from "rehype-pretty-code"
-import rehypeSidenotes from "./src/plugins/rehype-sidenotes"
 
 import remarkNormalizeHeadings from "./src/plugins/remark-normalize-headings"
 import remarkCallout from "@r4ai/remark-callout"
-import remarkEmoji from "remark-emoji"
 import remarkMath from "remark-math"
 import remarkSectionize from "remark-sectionize"
 
 import tailwindcss from "@tailwindcss/vite"
+
+import rehypeSidenotes from "./src/plugins/rehype-sidenotes"
 
 export default defineConfig({
   site: "https://mychiffonn.com",
@@ -80,14 +78,16 @@ export default defineConfig({
       }
     }),
     mdx(),
-    react(),
     sitemap(),
     icon({
       iconDir: "src/assets/icons/"
     })
   ],
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    build: {
+      reportCompressedSize: false
+    }
   },
   server: {
     port: 4321,
@@ -117,23 +117,8 @@ export default defineConfig({
         }
       ],
       rehypeKatex,
-      [
-        rehypePrettyCode,
-        {
-          theme: {
-            light: "catppuccin-latte",
-            dark: "catppuccin-macchiato"
-          }
-        }
-      ],
       rehypeSidenotes
     ],
-    remarkPlugins: [
-      remarkMath,
-      remarkEmoji,
-      remarkCallout,
-      remarkNormalizeHeadings,
-      remarkSectionize
-    ]
+    remarkPlugins: [remarkMath, remarkCallout, remarkNormalizeHeadings, remarkSectionize]
   }
 })
