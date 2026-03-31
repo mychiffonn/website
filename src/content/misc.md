@@ -8,4 +8,4 @@
 
 - I'm agnostic, with wonderful friends that are [Christian](https://www.linkedin.com/in/candace-lee-/), [Buddhist](https://www.linkedin.com/in/teapq/), and [Muslim](https://www.linkedin.com/in/alinasalman/).
 
-- This website's color [palette](/palette) reuses [Catppuccin Mocha & Latte](https://catppuccin.com/palette/) themes and [Zed](https://zed.dev/) fonts, to replicate my code environment.
+- I'm on no-meat diet at least 4 days/week, and trying to transition to vegetarian diet.

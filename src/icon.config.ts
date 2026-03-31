@@ -98,7 +98,7 @@ export const PROFILE_ICON_MAP = {
   mendeley: { label: "Mendeley", iconName: "academicons:mendeley" },
   openreview: { label: "Open Review", iconName: "mingcute:document-2-line" },
   orcid: { label: "ORCID", iconName: "academicons:orcid" },
-  osf: { label: "Open Science Framework", iconName: "academicons:osf"},
+  osf: { label: "Open Science Framework", iconName: "academicons:osf" },
   pubmed: { label: "PubMed", iconName: "academicons:pubmed" },
   researchgate: { label: "ResearchGate", iconName: "academicons:researchgate" },
   scopus: { label: "Scopus", iconName: "academicons:scopus" },
