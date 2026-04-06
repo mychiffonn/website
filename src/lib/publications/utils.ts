@@ -422,7 +422,7 @@ export function parseBibTeX(bibContent: string): Publication[] {
 
       return publication as Publication
     })
-  } catch (_error) {
+  } catch {
     return []
   }
 }
@@ -441,7 +441,7 @@ export function formatCitation(entry: Publication, style: string = "apa"): strin
       template: `${style}`,
       lang: "en-US"
     })
-  } catch (_error) {
+  } catch {
     return `${entry.authors.join(", ")}. (${entry.year}). ${entry.title}.`
   }
 }

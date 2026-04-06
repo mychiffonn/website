@@ -90,7 +90,7 @@ export function formatDate(
   const dateObj = createLocalDate(date)
 
   // Use site's default options if none provided, excluding timeZone from display options
-  const { timeZone, ...displayOptions } = SITE.locale.options
+  const { timeZone: _timeZone, ...displayOptions } = SITE.locale.options
   const formatOptions = options ?? displayOptions
 
   // Use intlFormat for date formatting. It's a clean wrapper around Intl.DateTimeFormat.
