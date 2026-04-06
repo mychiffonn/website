@@ -6,8 +6,10 @@ import Icon from "@/components/base/Icon.astro"
 
 <Dropdown align="end" id="theme-dropdown">
   <Button slot="trigger" variant="ghost" size="square" title="Theme" data-dropdown-trigger>
-    <Icon name="mingcute:sun-line" size="1.5rem" class="theme-icon-light" />
-    <Icon name="mingcute:moon-line" size="1.5rem" class="theme-icon-dark" />
+    <div class="theme-icon-stack" aria-hidden="true">
+      <Icon name="mingcute:sun-line" size="1.5rem" class="theme-icon-light" />
+      <Icon name="mingcute:moon-line" size="1.5rem" class="theme-icon-dark" />
+    </div>
     <span class="sr-only">Toggle theme</span>
   </Button>
 
@@ -28,9 +30,14 @@ import Icon from "@/components/base/Icon.astro"
 </Dropdown>
 
 <style>
+  /* Stack both icons in the same grid cell so they size the button identically to a single icon */
+  .theme-icon-stack {
+    display: grid;
+    place-items: center;
+  }
   .theme-icon-light,
   .theme-icon-dark {
-    position: absolute;
+    grid-area: 1 / 1;
     transition:
       transform 0.2s ease,
       opacity 0.2s ease;
@@ -53,7 +60,8 @@ import Icon from "@/components/base/Icon.astro"
     align-items: center;
     gap: 0.5rem;
     width: 100%;
-    padding: 0.5rem;
+    min-height: 2.75rem; /* 44px */
+    padding: 0.5rem 0.75rem;
     border-radius: 0.375rem;
     border: 1px solid transparent;
     white-space: nowrap;
