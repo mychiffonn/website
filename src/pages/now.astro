@@ -2,7 +2,10 @@
 import { getLatestUpdates } from "@/lib/updates"
 import CommonLayout from "@/layouts/CommonLayout.astro"
 import Link from "@/components/base/Link.astro"
-import UpdateTimeline from "@/components/updates/UpdateTimeline.astro"
+import Section from "@/components/layout/Section.astro"
+import UpdatesTimeline from "@/components/timeline/UpdatesTimeline.astro"
+
+import { Content as NowContent } from "@/content/now.md"
 
 const nowDescription = "A sporadically updated log of what I am doing, thinking, and exploring."
 const renderedUpdates = await getLatestUpdates(10)
@@ -14,9 +17,14 @@ const renderedUpdates = await getLatestUpdates(10)
   modifiedTime={new Date()}
   breadcrumbs={[{ label: "Now", icon: "timeline" }]}
 >
+  <section id="now-content">
+    <NowContent />
+  </section>
   {
     renderedUpdates.length > 0 && (
-      <UpdateTimeline renderedUpdates={renderedUpdates} variant="stacked" />
+      <Section title="Timeline" class="not-prose">
+        <UpdatesTimeline renderedUpdates={renderedUpdates} />
+      </Section>
     )
   }
 

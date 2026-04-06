@@ -1,0 +1,22 @@
+---
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<li class:list={["group relative flex gap-3", className]}>
+  <div class="relative flex flex-col items-center">
+    <div class="border-primary relative z-10 mt-1 h-2 w-2 rounded-full border-2"></div>
+    <div
+      class="border-muted absolute top-4 bottom-4 left-1 -translate-x-px border-l-2 border-dashed group-last:hidden"
+    >
+    </div>
+  </div>
+
+  <div class="min-w-0 flex-1 pb-4">
+    <slot name="date" />
+    <slot />
+  </div>
+</li>

@@ -1,0 +1,3 @@
+- [Scaling behavior of chain-of-thought monitoring in open-weight models](/projects/2025-cot-monitoring) at Algoverse AI research
+- Multilingual agentic evaluation by experimenting with Tau3-Bench in multilingual & cross-lingual settings, at SEACrowd, targeting EMNLP 2026
+- Collaborating with ETH Zurich researchers on [CroissantMiner](https://github.com/berkearda/croissantminer), targeting NeurIPS 2026 D&B track

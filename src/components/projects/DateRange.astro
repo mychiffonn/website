@@ -41,7 +41,7 @@ const showOnlyToDate = !data.fromDate && data.toDate
             <time datetime={formatDateTimeISO(data.toDate!)}>{data.toDateDisplay}</time>
           </>
         )}
-        {!data.toDate && data.fromDate && <span>- Present</span>}
+        {!data.toDate && data.fromDate && <span> - Present</span>}
       </>
     )
   }

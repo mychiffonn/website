@@ -1,4 +1,6 @@
 ---
+import { getCollection } from "astro:content"
+
 import { PROFILE, SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
 import { loadSelectedPublications } from "@/lib/publications/loader"
@@ -9,7 +11,8 @@ import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Section from "@/components/layout/Section.astro"
 import Profile from "@/components/profile/Profile.astro"
 import PubCard from "@/components/publications/PubCard.astro"
-import UpdateTimeline from "@/components/updates/UpdateTimeline.astro"
+import ExperienceTimeline from "@/components/timeline/ExperienceTimeline.astro"
+import UpdatesInline from "@/components/timeline/UpdatesInline.astro"
 
 import { Content as MiscContent, rawContent as miscRaw } from "@/content/misc.md"
 import { Content as ServicesContent, rawContent as servicesRaw } from "@/content/services.md"
@@ -19,6 +22,7 @@ import "@/styles/sidenote.css"
 const hasServices = servicesRaw().trim().length > 0
 const hasMisc = miscRaw().trim().length > 0
 
+const careerHighlights = await getCollection("experience")
 const renderedUpdates = await getLatestUpdates(3)
 const selectedPublications = await loadSelectedPublications()
 
@@ -34,13 +38,21 @@ const recentPostsMetadata = await Promise.all(
   <Profile profile={PROFILE} />
 
   {
+    careerHighlights.length > 0 && (
+      <Section
+        title="Career highlights"
+        moreLink="/doc/My_Chiffon_Nguyen_CV.pdf"
+        moreText="see CV →"
+      >
+        <ExperienceTimeline entries={careerHighlights} />
+      </Section>
+    )
+  }
+
+  {
     renderedUpdates.length > 0 && (
       <Section title="Latest updates" moreLink="/now">
-        <UpdateTimeline
-          renderedUpdates={renderedUpdates}
-          itemClass="line-clamp-4 md:line-clamp-3"
-          variant="inline"
-        />
+        <UpdatesInline renderedUpdates={renderedUpdates} itemClass="line-clamp-4 md:line-clamp-3" />
       </Section>
     )
   }

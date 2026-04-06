@@ -113,4 +113,18 @@ const updates = defineCollection({
   schema: z.object({})
 })
 
-export const collections = { blog, people, projects, updates }
+const experience = defineCollection({
+  loader: file("./src/content/experience.json"),
+  schema: z.object({
+    category: z.enum(["research", "education", "teaching"]),
+    title: z.string(),
+    org: z.string(),
+    orgUrl: z.url().optional(),
+    startDate: yearMonthDateSchema,
+    endDate: yearMonthDateSchema.optional(),
+    location: z.string().optional(),
+    description: z.string().optional()
+  })
+})
+
+export const collections = { blog, experience, people, projects, updates }

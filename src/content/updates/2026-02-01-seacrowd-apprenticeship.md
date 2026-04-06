@@ -1,1 +1,1 @@
-[Till Jun 2026] Working on extending Tau2 Bench for low-resource languages and underrepresented regions as a mentee at [SEACrowd 2026 Apprentice Program](https://seacrowd.org/apprenticeship).
+[Till Jun 2026] Working on extending Tau3-Bench for low-resource languages as a mentee at [SEACrowd 2026 Apprentice Program](https://seacrowd.org/apprenticeship).
