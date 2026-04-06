@@ -38,10 +38,10 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
             rel="me"
             class={cn(
               "flex touch-manipulation items-center justify-center rounded-md border transition-colors",
-              "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+              "focus-visible:ring-ring size-11 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
               isPrimary
-                ? "border-primary bg-primary text-primary-foreground hover:bg-background hover:text-primary hover:border-primary size-10"
-                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground size-10"
+                ? "border-primary bg-primary text-primary-foreground hover:bg-background hover:text-primary hover:border-primary"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )}
             external={isExternal}
           >
