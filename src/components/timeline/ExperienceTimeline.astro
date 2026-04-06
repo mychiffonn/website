@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from "astro:content"
+
+import Link from "@/components/base/Link.astro"
+import DateRange from "@/components/projects/DateRange.astro"
+
+import Timeline from "./Timeline.astro"
+import TimelineItem from "./TimelineItem.astro"
+
+interface Props {
+  entries: CollectionEntry<"experience">[]
+}
+
+const { entries } = Astro.props
+
+const sorted = [...entries].sort((a, b) => {
+  const endA = a.data.endDate?.getTime() ?? Infinity
+  const endB = b.data.endDate?.getTime() ?? Infinity
+  if (endB !== endA) return endB - endA
+  return b.data.startDate.getTime() - a.data.startDate.getTime()
+})
+---
+
+<Timeline>
+  {
+    sorted.map((entry) => (
+      <TimelineItem>
+        <DateRange
+          slot="date"
+          fromDate={entry.data.startDate}
+          toDate={entry.data.endDate}
+          class="text-muted-foreground mb-1 block text-xs font-medium tracking-wide uppercase"
+        />
+        <p class="text-sm leading-snug">
+          <span class="font-medium">{entry.data.title}</span>
+          {" @ "}
+          {entry.data.orgUrl ? (
+            <Link href={entry.data.orgUrl} external underline>
+              {entry.data.org}
+            </Link>
+          ) : (
+            <span>{entry.data.org}</span>
+          )}
+          {entry.data.location && (
+            <span class="text-muted-foreground"> · {entry.data.location}</span>
+          )}
+        </p>
+        {entry.data.description && (
+          <p class="text-muted-foreground mt-1 text-sm leading-relaxed">{entry.data.description}</p>
+        )}
+      </TimelineItem>
+    ))
+  }
+</Timeline>

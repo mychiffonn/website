@@ -1,0 +1,43 @@
+[
+  {
+    "id": "seacrowd-2026",
+    "category": "research",
+    "title": "AI Research Mentee (Multilingual Agentic Evaluation)",
+    "org": "SEACrowd",
+    "orgUrl": "https://seacrowd.github.io",
+    "startDate": "2026-02",
+    "location": "Remote",
+    "description": "Extending Tau3-Bench for multilingual agentic evaluation across 5 settings. Mentors: Dr. Samuel Cahyawijaya (Cohere) & Patomporn Payoungkhamdee (VISTEC). Target: EMNLP 2026."
+  },
+  {
+    "id": "algoverse-2025",
+    "category": "research",
+    "title": "AI Research Mentee (Chain-of-thought Monitoring)",
+    "org": "Algoverse AI Research",
+    "orgUrl": "https://algoverseairesearch.org/",
+    "startDate": "2025-10",
+    "location": "Remote",
+    "description": "Lead project investigating whether weaker models can detect sandbagging in stronger models on safety evals. Evaluated 20 open-weight reasoning model pairs."
+  },
+  {
+    "id": "landshut-2025",
+    "category": "research",
+    "title": "ML Research Assistant",
+    "org": "Landshut University of Applied Sciences",
+    "startDate": "2025-06",
+    "endDate": "2025-08",
+    "location": "Landshut, Bavaria, Germany",
+    "description": "3D object detection in point clouds and point cloud registration, supervised by Prof. Eduard Kromer and Prof Sandra Eisenreich"
+  },
+  {
+    "id": "minerva-2025",
+    "category": "education",
+    "title": "B.Sc in Computational Sciences (ML & Statistics)",
+    "org": "Minerva University",
+    "orgUrl": "https://minerva.edu",
+    "startDate": "2021-09",
+    "endDate": "2025-05",
+    "location": "San Francisco, CA, USA (+ Seoul, Taipei, Hyderabad, Buenos Aires, Berlin)",
+    "description": "GPA 3.67/4.00. Relevant: Machine Learning, Bayesian Modeling, Statistical Modeling & Causal Inference, Optimization Methods."
+  }
+]
