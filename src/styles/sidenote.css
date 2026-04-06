@@ -19,7 +19,7 @@
     text-decoration: none;
     border-radius: 0.125rem;
     padding: 0 0.1em;
-    scroll-margin-top: 8rem;
+    scroll-margin-top: var(--header-height, 4rem);
     transition: background-color 0.15s ease;
   }
 

@@ -27,7 +27,10 @@ const hasSections = sections.length > 0
           Table of Contents
         </h2>
       </header>
-      <ScrollArea class="flex max-h-[calc(100vh-8rem)] flex-col gap-2 p-2" data-scroll-area>
+      <ScrollArea
+        class="flex max-h-[calc(100vh_-_var(--header-height,4rem))] flex-col gap-2 p-2"
+        data-scroll-area
+      >
         <ol class="space-y-2" role="navigation" aria-labelledby="toc-heading">
           {sections.map((section: TOCSection, index: number) => {
             const isFirstSubpost = section.isSubpost && !sections[index - 1]?.isSubpost

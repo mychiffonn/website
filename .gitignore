@@ -12,6 +12,9 @@ pnpm-debug.log*
 teaser.pptx
 ~$teaser.pptx
 
+# Claude worktrees (temporary, not tracked)
+.claude/worktrees/
+
 # Writing
 .obsidian
 .logseq

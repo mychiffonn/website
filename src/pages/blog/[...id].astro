@@ -127,7 +127,10 @@ const rawMarkdown = post.body ?? null
 
   {/** Post header */}
   <header class="flex flex-col gap-y-4 text-center">
-    <h1 id="post-title" class="scroll-mt-31 text-3xl leading-tight font-medium sm:text-4xl">
+    <h1
+      id="post-title"
+      class="[scroll-margin-top:var(--header-height)] text-3xl leading-tight font-medium sm:text-4xl"
+    >
       {post.data.title}
     </h1>
 

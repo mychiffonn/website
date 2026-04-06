@@ -29,7 +29,10 @@ const shouldRender = postNavItems.length > 0 || !!activePostNavItem
           Post Navigation
         </h2>
       </header>
-      <ScrollArea class="flex max-h-[calc(100vh-8rem)] flex-col" data-scroll-container>
+      <ScrollArea
+        class="flex max-h-[calc(100vh_-_var(--header-height,4rem))] flex-col"
+        data-scroll-container
+      >
         <nav aria-label="Post and subposts" class="space-y-1 p-2">
           <PostNavItem {...activePostNavItem} />
           <h3
