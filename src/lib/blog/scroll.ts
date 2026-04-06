@@ -47,7 +47,7 @@ export class UnifiedTOCController {
     const headerHeight = getComputedStyle(document.documentElement).getPropertyValue(
       "--header-height"
     )
-    return parseInt(headerHeight, 10) || 80
+    return parseInt(headerHeight, 10) || 64
   }
 
   private buildHeadingRegions(): void {

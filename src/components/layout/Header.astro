@@ -5,7 +5,7 @@ import MobileMenu from "@/components/layout/MobileMenu.astro"
 import ThemeToggle from "@/components/layout/ThemeToggle.astro"
 ---
 
-<header class="flex items-center justify-between py-3">
+<header class="flex items-center justify-between py-2">
   <style>
     .nav-active {
       position: relative;
@@ -37,7 +37,7 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro"
             <Link
               href={item.href}
               class:list={[
-                "relative px-2 py-1 capitalize transition-colors duration-300 ease-in-out",
+                "relative inline-flex min-h-[44px] items-center px-2 capitalize transition-colors duration-300 ease-in-out",
                 isActive
                   ? "text-foreground nav-active font-medium"
                   : "text-foreground/60 hover:text-accent"
