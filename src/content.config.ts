@@ -12,7 +12,7 @@ import { dedupLowerCase, dedupPreserveCase, slugify } from "@/lib/string-manipul
  * @returns Date object with year and month (defaults to first day of month)
  */
 const yearMonthDateSchema = z
-  .union([z.date(), z.coerce.date()])
+  .union([z.date(), z.string().transform(createLocalDate)])
   .describe("Should be valid YYYY-MM format.")
 
 /** Accepts YYYY-MM-DD and ISO datetime formats */
