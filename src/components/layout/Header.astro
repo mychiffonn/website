@@ -6,23 +6,6 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro"
 ---
 
 <header class="flex items-center justify-between py-2">
-  <style>
-    .nav-active {
-      position: relative;
-    }
-
-    .nav-active::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background-color: var(--primary);
-    }
-  </style>
   <Link href="/" class="flex shrink-0 items-center justify-center gap-x-2" transition:persist>
     <span class="hidden h-full text-lg font-medium min-[300px]:block">{SITE.title}</span>
   </Link>
@@ -37,7 +20,7 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro"
             <Link
               href={item.href}
               class:list={[
-                "relative inline-flex min-h-[44px] items-center px-2 capitalize transition-colors duration-300 ease-in-out",
+                "relative inline-flex min-h-11 items-center px-2 capitalize transition-colors duration-300 ease-in-out",
                 isActive
                   ? "text-foreground nav-active font-medium"
                   : "text-foreground/60 hover:text-accent"
@@ -49,7 +32,25 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro"
         })
       }
     </nav>
+
     <MobileMenu transition:persist />
     <ThemeToggle transition:persist />
   </div>
 </header>
+<style>
+  .nav-active {
+    position: relative;
+  }
+
+  .nav-active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--primary);
+  }
+</style>

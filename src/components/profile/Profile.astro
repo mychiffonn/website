@@ -19,7 +19,7 @@ const { profile } = Astro.props
 ---
 
 <article id="profile">
-  <header class="flex flex-col items-center gap-4 p-4 sm:flex-row sm:items-start">
+  <header class="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
     <Avatar
       src={avatar}
       alt={profile.name}
@@ -58,7 +58,7 @@ const { profile } = Astro.props
   </header>
 </article>
 
-<section class="prose px-4">
+<section class="prose">
   <AboutContent />
 </section>
 

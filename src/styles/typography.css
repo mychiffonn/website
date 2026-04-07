@@ -153,9 +153,3 @@
     @apply [&>*:first-child]:mt-0! [&>*:last-child]:mb-0!;
   }
 }
-
-@layer utilities {
-  .small {
-    @apply text-sm leading-6 [&_code]:text-xs [&_img]:my-4 [&_video]:my-4 [&_figure]:my-4 [&_details]:my-4 [&_blockquote]:my-4 [&_.katex-display]:my-4 [&_.expressive-code]:my-4 [&_li]:mt-0 [&_ol]:mt-0 [&_p]:my-2! [&_ul]:my-0;
-  }
-}

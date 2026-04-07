@@ -20,7 +20,7 @@ const { renderedUpdates, class: className, itemClass } = Astro.props
             date={item.date}
             class="text-muted-foreground shrink-0 text-xs font-medium uppercase"
           />
-          <div class:list={["prose prose-sm", itemClass]}>
+          <div class:list={["prose", itemClass]}>
             <item.Content />
           </div>
         </div>
