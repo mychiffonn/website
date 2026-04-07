@@ -21,7 +21,7 @@
     @apply [&>link[rel="stylesheet"]+*]:mt-0! [&>link[rel="stylesheet"]+*>*]:mt-0;
 
     :where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-      @apply text-foreground my-3;
+      @apply text-foreground my-2;
     }
 
     :where(h1, h2, h3, h4, h5, h6):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
@@ -132,6 +132,18 @@
 
     :where(.katex-display):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
       @apply text-foreground/80 my-6 overflow-x-auto overflow-y-hidden py-2 tracking-normal;
+    }
+  }
+
+  .prose.prose-sm {
+    @apply text-sm leading-6;
+
+    :where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      @apply my-1;
+    }
+
+    :where(ul, ol):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+      @apply ml-3;
     }
   }
 }
