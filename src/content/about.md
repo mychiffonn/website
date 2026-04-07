@@ -10,4 +10,4 @@ I broadly care about AI Safety, AI ethics and impacts of AI on humans, society, 
 
 Previously, I graduated in May 2025 from [Minerva University](https://minerva.edu/) studying Machine Learning & Statistics, with peers from 50+ countries and living in 6 cities as part of its [global immersion program](https://www.minerva.edu/global-immersion/): Seoul (South Korea), Chinese Taipei, Hyderabad (India), Buenos Aires (Argentina), Berlin (Germany).
 
-I am **applying to research-oriented Master's in Computer Science, AI, NLP, or related fields for Fall 2026/Spring 2027** and seeking research opportunities (internships, research assistantships, collaborations). See my [CV](/doc/My_Chiffon_Nguyen_CV.pdf) and [projects](/projects) for more details.
+I am **applying to research-oriented Master's in Computer Science, AI, NLP, or related fields for Fall 2026/Spring 2027** and seeking research opportunities (internships, research assistantships, collaborations).

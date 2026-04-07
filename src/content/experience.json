@@ -24,6 +24,7 @@
     "category": "research",
     "title": "ML Research Assistant",
     "org": "Landshut University of Applied Sciences",
+    "orgUrl": "https://www.haw-landshut.de/en",
     "startDate": "2024-06",
     "endDate": "2024-08",
     "location": "Landshut, Bavaria, Germany",
@@ -32,12 +33,12 @@
   {
     "id": "minerva-2025",
     "category": "education",
-    "title": "B.Sc in Computational Sciences (ML & Statistics)",
+    "title": "B.Sc in Computational Sciences",
     "org": "Minerva University",
     "orgUrl": "https://minerva.edu",
     "startDate": "2021-09",
     "endDate": "2025-05",
     "location": "San Francisco, CA, USA (+ Seoul, Taipei, Hyderabad, Buenos Aires, Berlin)",
-    "description": "GPA 3.67/4.00. Relevant: Machine Learning, Bayesian Modeling, Statistical Modeling & Causal Inference, Optimization Methods."
+    "description": "GPA 3.67/4.00. Relevant Coursework: Machine Learning, Bayesian Modeling, Statistical Modeling & Causal Inference, Optimization Methods."
   }
 ]
