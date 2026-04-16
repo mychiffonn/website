@@ -32,7 +32,7 @@
     "@r4ai/remark-callout": "^0.6.2",
     "@tailwindcss/vite": "^4.2.2",
     "@types/mdast": "^4.0.4",
-    "astro": "6.1.2",
+    "astro": "6.1.7",
     "astro-expressive-code": "^0.41.7",
     "astro-icon": "^1.1.5",
     "class-variance-authority": "^0.7.1",

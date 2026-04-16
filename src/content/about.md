@@ -1,4 +1,4 @@
-I'm doing CoT monitoring research at [Algoverse](https://algoverseairesearch.org/) and multilingual agentic eval at [SEACrowd](https://seacrowd.org/).
+I'm doing CoT monitoring research at [Algoverse](https://algoverseairesearch.org/), multilingual agentic eval at [SEACrowd](https://seacrowd.org/), and AI x animals project at [Electric Sheep](https://www.electricsheep.is/).
 
 I research how to ensure that **current and future AI systems** reflect and support **pluralism across languages, cultures, and social contexts**, through **robust AI evals** and **realistic environment** (data, agent harness, system, etc):
 

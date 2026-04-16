@@ -7,7 +7,7 @@
     "orgUrl": "https://seacrowd.github.io",
     "startDate": "2026-02",
     "location": "Remote",
-    "description": "Extending Tau3-Bench for multilingual agentic evaluation across 5 settings. Mentors: Dr. Samuel Cahyawijaya (Cohere) & Patomporn Payoungkhamdee (VISTEC). Target: EMNLP 2026."
+    "description": "Extending Tau3-Bench for multilingual agentic evaluation across 5 settings. Mentors: Dr. Samuel Cahyawijaya (Cohere) & Patomporn Payoungkhamdee (VISTEC). Target: EMNLP '26."
   },
   {
     "id": "algoverse-2025",
@@ -17,7 +17,7 @@
     "orgUrl": "https://algoverseairesearch.org/",
     "startDate": "2025-10",
     "location": "Remote",
-    "description": "Lead project investigating whether weaker models can detect sandbagging in stronger models on safety evals. Evaluated 20 open-weight reasoning model pairs."
+    "description": "Lead project investigating whether weaker models can detect sandbagging in stronger models on safety evals. Evaluated 20 open-weight reasoning model pairs. Target: ICML '26 Workshop"
   },
   {
     "id": "landshut-2025",

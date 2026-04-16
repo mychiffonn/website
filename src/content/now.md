@@ -1,3 +1,3 @@
-- [Scaling behavior of chain-of-thought monitoring in open-weight models](/projects/2025-cot-monitoring) at [Algoverse AI Research](https://algoverseairesearch.org/)
+- [Scaling behavior of chain-of-thought monitoring in open-weight models](/projects/2025-cot-monitoring) at [Algoverse AI Research](https://algoverseairesearch.org/), targeting ICML 2026 Workshop
 - Multilingual agentic evaluation by experimenting with Tau3-Bench in multilingual & cross-lingual settings, at SEACrowd, targeting [EMNLP 2026](https://2026.emnlp.org/)
 - Collaborating with ETH Zurich researchers on [CroissantMiner](https://github.com/berkearda/croissantminer), targeting [NeurIPS 2026 E&D track](https://neurips.cc/Conferences/2026/CallForEvaluationsDatasets)
