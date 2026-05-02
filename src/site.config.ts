@@ -58,7 +58,7 @@ export const PROFILE: ProfileConfig = {
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
     orcid: "https://orcid.org/0009-0002-5787-3948",
     openreview: "https://openreview.net/profile?id=~My_Chiffon_Nguyen1",
-    x: "https://x.com/chiffonng"
+    x: "https://x.com/mychiffonn"
     // bluesky: "https://bsky.app/profile/mychiffonn.bsky.social",
     // discord: "https://discordapp.com/users/mychiffonn",
   },

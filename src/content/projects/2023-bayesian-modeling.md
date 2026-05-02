@@ -2,7 +2,7 @@
 title: "Bayesian Hierarchical Modeling for GP Visit Count Data"
 description: "Analyze GP visit patterns using Zero-Inflated Poisson models with complete and partial pooling, with Bayesian inference and data imputation."
 context: school
-toDate: 2023-12
+toDate: 2023-11-28
 isHighlighted: false
 code: https://github.com/mychiffonn/jupyter-notebooks/blob/main/CS146-project-2.ipynb
 tags:
