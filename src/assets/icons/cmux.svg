@@ -1,0 +1,27 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="tileShadow" x="8" y="14" width="240" height="236" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000000" flood-opacity="0.18"/>
+    </filter>
+    <filter id="markShadow" x="68" y="51" width="132" height="154" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#0C2E5C" flood-opacity="0.24"/>
+    </filter>
+    <linearGradient id="chevronGradient" x1="86" y1="128" x2="182" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#12D6E7"/>
+      <stop offset="0.55" stop-color="#2B9EF1"/>
+      <stop offset="1" stop-color="#6257F5"/>
+    </linearGradient>
+    <linearGradient id="tileGradient" x1="43" y1="38" x2="218" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F7FAFC"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#tileShadow)">
+    <rect x="25" y="25" width="206" height="206" rx="45" fill="url(#tileGradient)"/>
+  </g>
+
+  <g filter="url(#markShadow)">
+    <path d="M89.75 64.5L181.25 128L89.75 191.5V159.5L135.2 128L89.75 96.5V64.5Z" fill="url(#chevronGradient)"/>
+  </g>
+</svg>

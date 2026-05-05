@@ -1,5 +1,7 @@
 - My Vietnamese name is 'Trà My', which means [Camellia japonica](https://en.wikipedia.org/wiki/Camellia_japonica) (tea flower).
 
+- I graduated in May 2025 from [Minerva University](https://minerva.edu/) studying Machine Learning & Statistics, with peers from 50+ countries and living in 6 cities as part of its [global immersion program](https://www.minerva.edu/global-immersion/): Seoul (South Korea), Chinese Taipei, Hyderabad (India), Buenos Aires (Argentina), Berlin (Germany). This experience heavily shapes my worldviews and motivates my research focus in diversity and collaboration.
+
 - Things that restore my energy: walks, [reading](https://app.thestorygraph.com/profile/mychiffonn), cooking, cycling, card reading, and astrology. I also enjoy solo travel, food, cultural activities, and historical museums.
 
 - Things that excite me outside research: teaching & mentoring, event planning and organizing, languages and cultures, philosophical and politcal discussions.
