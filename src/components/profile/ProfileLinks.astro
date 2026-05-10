@@ -38,14 +38,14 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
             rel="me"
             class={cn(
               "flex touch-manipulation items-center justify-center rounded-md border transition-colors",
-              "focus-visible:ring-ring size-11 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
+              "focus-visible:ring-ring size-10.5 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:size-9",
               isPrimary
                 ? "border-primary bg-primary text-primary-foreground hover:bg-background hover:text-primary hover:border-primary"
                 : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )}
             external={isExternal}
           >
-            <Icon name={iconName} class="size-5.5" />
+            <Icon name={iconName} class="size-5.5 sm:size-4.5" />
             <span class="sr-only" set:html={label} />
           </Link>
         </li>
