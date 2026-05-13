@@ -10,155 +10,20 @@ import type { ProcessedPublication, PublicationConfig } from "@/types"
 
 import { PUBLICATION_LINK_TYPES } from "@/icon.config"
 
+import {
+  CUSTOM_FIELD_NAMES,
+  CUSTOM_FIELDS_CONFIG,
+  LINK_FIELD_NAMES,
+  VENUE_BOOKTITLE_PATTERNS,
+  VENUE_DOI_PATTERNS,
+  VENUE_URL_PATTERNS
+} from "./data"
+
 // @ts-ignore - citation-js doesn't have types
 const { Cite, plugins } = pkg
 
-/**
- * Valid field types for BibTeX plugin configuration
- * @see https://citation.js.org/api/0.7/module-@citation-js_plugin-bibtex.config.html
- */
-type BibTeXFieldType = "field" | "list" | "separated"
-
-/**
- * Valid value types for BibTeX plugin configuration
- * - literal: Normal text or numeric content
- * - title: Like literal but responsive to sentenceCase config
- * - name: Personal or organizational names
- * - date: An EDTF Level 1 date
- * - verbatim: Unaltered text (no expansion of commands)
- * - uri: Same as verbatim but URL-encoded if needed
- * - other: No special behavior, treated like literal
- * @see https://citation.js.org/api/0.7/module-@citation-js_plugin-bibtex.config.html
- */
-type BibTeXValueType = "literal" | "title" | "name" | "date" | "verbatim" | "uri" | "other"
-
-/**
- * Central configuration for all custom publication fields
- *
- * Add the field to CUSTOM_FIELDS_CONFIG with its configuration (fieldType, valueType, category)
- *
- * @see https://citation.js.org/api/0.7/module-@citation-js_plugin-bibtex.config.html
- * @see also PUBLICATION_LINK_TYPES in @link {src/icon.config.ts} for link field icons/labels
- */
-const CUSTOM_FIELDS_CONFIG = {
-  abstract: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "literal" as BibTeXValueType,
-    category: "metadata"
-  },
-  arxiv: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "literal" as BibTeXValueType,
-    category: "metadata"
-  },
-  award: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "literal" as BibTeXValueType,
-    category: "metadata"
-  },
-  eprint: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "literal" as BibTeXValueType,
-    category: "metadata"
-  },
-  venue: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "literal" as BibTeXValueType,
-    category: "metadata"
-  },
-  selected: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "literal" as BibTeXValueType,
-    category: "metadata"
-  },
-
-  // Link fields (to appear as action buttons - must also be in PUBLICATION_LINK_TYPES)
-  pdf: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  code: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  data: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  demo: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  draft: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  models: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  post: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  poster: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  proposal: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  resources: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  slides: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  talk: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  thread: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  video: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  },
-  website: {
-    fieldType: "field" as BibTeXFieldType,
-    valueType: "uri" as BibTeXValueType,
-    category: "link"
-  }
-} as const
-
-type CustomFieldName = keyof typeof CUSTOM_FIELDS_CONFIG
-
-// Auto-generate type for custom fields based on CUSTOM_FIELDS_CONFIG
-type CustomFields = {
-  [K in CustomFieldName]?: K extends "selected" ? string | boolean : string
-}
-
 // Types for citation-js
-interface CitationEntry extends CustomFields {
+interface CitationEntry {
   id?: string
   label?: string
   title?: string
@@ -174,16 +39,13 @@ interface CitationEntry extends CustomFields {
   doi?: string
   URL?: string
   url?: string
+  keyword?: string
   _graph?: Array<{ data?: string }>
+  [key: string]: unknown
 }
 
-// Auto-generate type for Publication custom fields (normalized to proper types)
-type PublicationCustomFields = {
-  [K in CustomFieldName]: K extends "selected" ? boolean : string | undefined
-}
-
-/** Publication return type - automatically includes all custom fields from CUSTOM_FIELDS_CONFIG */
-export interface Publication extends PublicationCustomFields {
+/** Publication return type - normalized fields plus flexible custom metadata/link fields. */
+export interface Publication {
   id: string
   title: string
   authors: string[]
@@ -197,6 +59,13 @@ export interface Publication extends PublicationCustomFields {
   doi?: string
   url?: string
   keywords?: string
+  abstract?: string
+  award?: string
+  arxiv?: string
+  eprint?: string
+  venue?: string
+  selected?: boolean
+  [key: string]: unknown
 }
 
 interface AuthorData {
@@ -216,14 +85,13 @@ interface PublicationLink {
 
 /**
  * Configure custom field types for academic publications using the plugin's configuration API
- * Automatically configures all fields from CUSTOM_FIELDS_CONFIG
+ * Automatically configures all fields from `src/lib/publications/data/custom-fields.json`
  * @see https://www.npmjs.com/package/@citation-js/plugin-bibtex
  */
 const configureCustomFields = (): void => {
   const config = plugins.config.get("@bibtex")
 
-  // Automatically configure all custom fields from CUSTOM_FIELDS_CONFIG
-  // Format: config.constants.fieldTypes.fieldname = [fieldType, valueType]
+  // Config format: config.constants.fieldTypes.fieldname = [fieldType, valueType]
   for (const [fieldName, fieldConfig] of Object.entries(CUSTOM_FIELDS_CONFIG)) {
     config.constants.fieldTypes[fieldName] = [fieldConfig.fieldType, fieldConfig.valueType]
   }
@@ -281,56 +149,6 @@ function extractEntryType(entry: CitationEntry): string | undefined {
 /**
  * Venue inference patterns: match booktitle/journal substrings to short venue names.
  * Ordered by specificity — first match wins.
- */
-const VENUE_BOOKTITLE_PATTERNS: [RegExp, string][] = [
-  [/Findings of the Association for Computational Linguistics:\s*ACL/i, "Findings of ACL"],
-  [/Findings of the Association for Computational Linguistics:\s*EMNLP/i, "Findings of EMNLP"],
-  [/Findings of the Association for Computational Linguistics:\s*NAACL/i, "Findings of NAACL"],
-  [/Findings of the Association for Computational Linguistics:\s*EACL/i, "Findings of EACL"],
-  [/Findings of the Association for Computational Linguistics/i, "Findings of ACL"],
-  [/Annual Meeting of the Association for Computational Linguistics/i, "ACL"],
-  [/Conference on Empirical Methods in Natural Language Processing/i, "EMNLP"],
-  [/North American Chapter/i, "NAACL"],
-  [/European Chapter.*Association for Computational Linguistics/i, "EACL"],
-  [/Asian Chapter|AACL/i, "AACL"],
-  [/Computational Natural Language Learning/i, "CoNLL"],
-  [/International Conference on Learning Representations/i, "ICLR"],
-  [/Advances in Neural Information Processing Systems/i, "NeurIPS"],
-  [/International Conference on Machine Learning/i, "ICML"],
-  [/Computer Vision and Pattern Recognition.*Workshop/i, "CVPR Workshop"],
-  [/Computer Vision and Pattern Recognition/i, "CVPR"],
-  [/International Conference on Computer Vision.*Workshop/i, "ICCV Workshop"],
-  [/International Conference on Computer Vision/i, "ICCV"],
-  [/European Conference on Computer Vision.*Workshop/i, "ECCV Workshop"],
-  [/European Conference on Computer Vision/i, "ECCV"],
-  [/Computer Vision\s*[-–]+\s*ECCV.*Workshop/i, "ECCV Workshop"],
-  [/Computer Vision\s*[-–]+\s*ECCV/i, "ECCV"],
-  [/AAAI Conference on Artificial Intelligence/i, "AAAI"],
-  [/International Joint Conference on Artificial Intelligence/i, "IJCAI"],
-  [/COLM/i, "COLM"],
-  [/COLING/i, "COLING"],
-  [/LREC/i, "LREC"]
-]
-
-const VENUE_URL_PATTERNS: [RegExp, string][] = [
-  [/aclanthology\.org/i, "ACL Anthology"],
-  [/proceedings\.neurips\.cc|papers\.nips\.cc/i, "NeurIPS"],
-  [/proceedings\.mlr\.press/i, "PMLR"],
-  [/openaccess\.thecvf\.com.*CVPR/i, "CVPR"],
-  [/openaccess\.thecvf\.com.*ICCV/i, "ICCV"],
-  [/openaccess\.thecvf\.com.*ECCV/i, "ECCV"],
-  [/ecva\.net/i, "ECCV"],
-  [/ojs\.aaai\.org/i, "AAAI"]
-]
-
-const VENUE_DOI_PATTERNS: [RegExp, string][] = [
-  [/10\.18653\/v1/i, "ACL Anthology"],
-  [/10\.1609\/aaai/i, "AAAI"]
-]
-
-/**
- * Infer a short venue name from publication metadata.
- * Priority: explicit venue > booktitle > journal > URL > DOI > series > publisher > eprint fallback
  */
 function inferVenue(pub: Publication): string {
   if (pub.venue) return pub.venue
@@ -394,7 +212,10 @@ export function parseBibTeX(bibContent: string): Publication[] {
                 : `${author.given || ""} ${author.family || ""}`.trim()
             )
           : [],
-        year: entry.issued?.["date-parts"]?.[0]?.[0] || entry.year || parseInt(customFields.year),
+        year:
+          entry.issued?.["date-parts"]?.[0]?.[0] ||
+          entry.year ||
+          (customFields.year ? parseInt(customFields.year, 10) : undefined),
         month,
         entryType,
         // Standard BibTeX fields
@@ -407,7 +228,7 @@ export function parseBibTeX(bibContent: string): Publication[] {
       }
 
       // Automatically add all custom fields from CUSTOM_FIELDS_CONFIG
-      for (const fieldName of Object.keys(CUSTOM_FIELDS_CONFIG) as CustomFieldName[]) {
+      for (const fieldName of CUSTOM_FIELD_NAMES) {
         const value = getField(fieldName)
         // Handle 'selected' field specially (convert to boolean)
         if (fieldName === "selected") {
@@ -537,15 +358,10 @@ export function truncateAuthors(
 export function getPublicationLinks(entry: Publication): PublicationLink[] {
   const links: PublicationLink[] = []
 
-  // Automatically get all link fields from CUSTOM_FIELDS_CONFIG
-  const linkFields = Object.keys(CUSTOM_FIELDS_CONFIG).filter(
-    (field) => CUSTOM_FIELDS_CONFIG[field as CustomFieldName].category === "link"
-  ) as CustomFieldName[]
-
-  for (const field of linkFields) {
-    const fieldValue = (entry as any)[field]
-    if (fieldValue) {
-      const linkConfig = (PUBLICATION_LINK_TYPES as any)[field]
+  for (const field of LINK_FIELD_NAMES) {
+    const fieldValue = entry[field]
+    if (typeof fieldValue === "string" && fieldValue) {
+      const linkConfig = PUBLICATION_LINK_TYPES[field as keyof typeof PUBLICATION_LINK_TYPES]
       if (linkConfig) {
         links.push({
           href: fieldValue,
@@ -707,7 +523,7 @@ export function getPublicationData(
           .map((k: string) => k.trim())
           .filter(Boolean)
       : [],
-    selected: publication.selected,
+    selected: publication.selected === true,
     authorPosition
   }
 }

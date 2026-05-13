@@ -1,0 +1,128 @@
+[
+  {
+    "name": "abstract",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "arxiv",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "award",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "eprint",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "selected",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "venue",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "code",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "data",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "demo",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "draft",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "models",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "pdf",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "post",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "poster",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "proposal",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "resources",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "slides",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "talk",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "thread",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "video",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  },
+  {
+    "name": "website",
+    "fieldType": "field",
+    "valueType": "uri",
+    "category": "link"
+  }
+]

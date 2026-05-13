@@ -1,0 +1,193 @@
+{
+  "booktitle": [
+    {
+      "pattern": "Findings of the Association for Computational Linguistics:\\s*ACL",
+      "venue": "Findings of ACL",
+      "flags": "i"
+    },
+    {
+      "pattern": "Findings of the Association for Computational Linguistics:\\s*EMNLP",
+      "venue": "Findings of EMNLP",
+      "flags": "i"
+    },
+    {
+      "pattern": "Findings of the Association for Computational Linguistics:\\s*NAACL",
+      "venue": "Findings of NAACL",
+      "flags": "i"
+    },
+    {
+      "pattern": "Findings of the Association for Computational Linguistics:\\s*EACL",
+      "venue": "Findings of EACL",
+      "flags": "i"
+    },
+    {
+      "pattern": "Findings of the Association for Computational Linguistics",
+      "venue": "Findings of ACL",
+      "flags": "i"
+    },
+    {
+      "pattern": "Annual Meeting of the Association for Computational Linguistics",
+      "venue": "ACL",
+      "flags": "i"
+    },
+    {
+      "pattern": "Conference on Empirical Methods in Natural Language Processing",
+      "venue": "EMNLP",
+      "flags": "i"
+    },
+    {
+      "pattern": "North American Chapter",
+      "venue": "NAACL",
+      "flags": "i"
+    },
+    {
+      "pattern": "European Chapter.*Association for Computational Linguistics",
+      "venue": "EACL",
+      "flags": "i"
+    },
+    {
+      "pattern": "Asian Chapter|AACL",
+      "venue": "AACL",
+      "flags": "i"
+    },
+    {
+      "pattern": "Computational Natural Language Learning",
+      "venue": "CoNLL",
+      "flags": "i"
+    },
+    {
+      "pattern": "International Conference on Learning Representations",
+      "venue": "ICLR",
+      "flags": "i"
+    },
+    {
+      "pattern": "Advances in Neural Information Processing Systems",
+      "venue": "NeurIPS",
+      "flags": "i"
+    },
+    {
+      "pattern": "International Conference on Machine Learning",
+      "venue": "ICML",
+      "flags": "i"
+    },
+    {
+      "pattern": "Computer Vision and Pattern Recognition.*Workshop",
+      "venue": "CVPR Workshop",
+      "flags": "i"
+    },
+    {
+      "pattern": "Computer Vision and Pattern Recognition",
+      "venue": "CVPR",
+      "flags": "i"
+    },
+    {
+      "pattern": "International Conference on Computer Vision.*Workshop",
+      "venue": "ICCV Workshop",
+      "flags": "i"
+    },
+    {
+      "pattern": "International Conference on Computer Vision",
+      "venue": "ICCV",
+      "flags": "i"
+    },
+    {
+      "pattern": "European Conference on Computer Vision.*Workshop",
+      "venue": "ECCV Workshop",
+      "flags": "i"
+    },
+    {
+      "pattern": "European Conference on Computer Vision",
+      "venue": "ECCV",
+      "flags": "i"
+    },
+    {
+      "pattern": "Computer Vision\\s*[\\-\\u2013]+\\s*ECCV.*Workshop",
+      "venue": "ECCV Workshop",
+      "flags": "i"
+    },
+    {
+      "pattern": "Computer Vision\\s*[\\-\\u2013]+\\s*ECCV",
+      "venue": "ECCV",
+      "flags": "i"
+    },
+    {
+      "pattern": "AAAI Conference on Artificial Intelligence",
+      "venue": "AAAI",
+      "flags": "i"
+    },
+    {
+      "pattern": "International Joint Conference on Artificial Intelligence",
+      "venue": "IJCAI",
+      "flags": "i"
+    },
+    {
+      "pattern": "COLM",
+      "venue": "COLM",
+      "flags": "i"
+    },
+    {
+      "pattern": "COLING",
+      "venue": "COLING",
+      "flags": "i"
+    },
+    {
+      "pattern": "LREC",
+      "venue": "LREC",
+      "flags": "i"
+    }
+  ],
+  "url": [
+    {
+      "pattern": "aclanthology\\.org",
+      "venue": "ACL Anthology",
+      "flags": "i"
+    },
+    {
+      "pattern": "proceedings\\.neurips\\.cc|papers\\.nips\\.cc",
+      "venue": "NeurIPS",
+      "flags": "i"
+    },
+    {
+      "pattern": "proceedings\\.mlr\\.press",
+      "venue": "PMLR",
+      "flags": "i"
+    },
+    {
+      "pattern": "openaccess\\.thecvf\\.com.*CVPR",
+      "venue": "CVPR",
+      "flags": "i"
+    },
+    {
+      "pattern": "openaccess\\.thecvf\\.com.*ICCV",
+      "venue": "ICCV",
+      "flags": "i"
+    },
+    {
+      "pattern": "openaccess\\.thecvf\\.com.*ECCV",
+      "venue": "ECCV",
+      "flags": "i"
+    },
+    {
+      "pattern": "ecva\\.net",
+      "venue": "ECCV",
+      "flags": "i"
+    },
+    {
+      "pattern": "ojs\\.aaai\\.org",
+      "venue": "AAAI",
+      "flags": "i"
+    }
+  ],
+  "doi": [
+    {
+      "pattern": "10\\.18653\\/v1",
+      "venue": "ACL Anthology",
+      "flags": "i"
+    },
+    {
+      "pattern": "10\\.1609\\/aaai",
+      "venue": "AAAI",
+      "flags": "i"
+    }
+  ]
+}

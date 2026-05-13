@@ -2,7 +2,7 @@ I research how to ensure that **current and future AI systems** reflect and supp
 
 - Pluralistic alignment, and more broadly AI Safety & trustworthy AI
 - Multilingual & multicultural AI
-- AI & Society: education, information & media, human-AI collaboration
+- AI for human augmentation in education, work, and other contexts
 
 I also care about AI ethics, and impacts of AI on humans, society, and [more-than-human world](https://humansandnature.org/to-be-human-david-abram/).
 

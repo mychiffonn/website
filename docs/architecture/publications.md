@@ -12,6 +12,10 @@ The publications system is built using `citation-js` for BibTeX parsing and prov
 ```
 src/
 ├── lib/publications/
+│   ├── data/
+│   │   ├── custom-fields.json   # BibTeX field definitions
+│   │   ├── index.ts            # Runtime config built from JSON
+│   │   └── venue-patterns.json  # Venue inference patterns
 │   ├── loader.ts           # Publication loading functions
 │   └── utils.ts            # Citation processing utilities
 ├── components/publications/
@@ -49,11 +53,10 @@ The following custom fields are supported beyond standard BibTeX:
 
 To add or remove custom fields:
 
-1. **Add field support in `src/lib/publications/utils.ts`**:
-   - Add to `CitationEntry` interface (line ~33)
-   - Add to `Publication` interface (line ~51)
-   - Add to `configureCustomFields()` function (line ~96)
-   - Add extraction in `parseBibTeX()` function (line ~162)
+1. **Add field support in `src/lib/publications/data/custom-fields.json`**:
+   - Add a new entry with `name`, `fieldType`, `valueType`, and `category`
+   - Metadata fields are normalized onto publication objects
+   - Link fields automatically show up in publication action buttons
 
 2. **Add icon mapping in `src/icon.config.ts`**:
 
@@ -64,8 +67,9 @@ To add or remove custom fields:
    }
    ```
 
-3. **Update action links in `getPublicationLinks()` function**:
-   - Add field name to `actionFields` array (line ~302)
+3. **If the field should render as an action button, add it to the data file with `category: "link"`**
+
+Venue inference patterns live in `src/lib/publications/data/venue-patterns.json`.
 
 ## 4. Configuration
 
