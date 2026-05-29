@@ -30,6 +30,30 @@
     "category": "metadata"
   },
   {
+    "name": "equalfirst",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "equalsecond",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "equalthird",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "equallast",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
     "name": "venue",
     "fieldType": "field",
     "valueType": "literal",

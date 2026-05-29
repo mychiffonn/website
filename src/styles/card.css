@@ -67,11 +67,25 @@
 
 .card-title-link {
   text-decoration: none;
+  display: block;
 }
 
-.card-title-link:hover {
-  color: var(--primary);
-  text-decoration: underline;
+.card-title-link .card-title {
+  display: inline;
+  background-image: linear-gradient(
+    oklch(from var(--primary) l c h / 0.4),
+    oklch(from var(--primary) l c h / 0.4)
+  );
+  background-size: 0% 85%;
+  background-repeat: no-repeat;
+  background-position: left center;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 400ms ease;
+}
+
+.card-title-link:hover .card-title {
+  background-size: 100% 85%;
 }
 
 /* Card metadata */

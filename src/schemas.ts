@@ -194,8 +194,16 @@ export const PublicationConfigSchema = z.object({
   highlightAuthor: z.object({
     firstName: z.string(),
     lastName: z.string(),
-    aliases: z.array(z.string()).optional() // Handle name variations
-  })
+    aliases: z.array(z.string()).optional()
+  }),
+  equalSymbols: z
+    .object({
+      first: z.string().default("*"),
+      second: z.string().default("†"),
+      third: z.string().default("‡"),
+      last: z.string().default("§")
+    })
+    .default({ first: "*", second: "†", third: "‡", last: "§" })
 })
 
 /**
@@ -241,5 +249,6 @@ export const ProcessedPublicationSchema = z.object({
   // Sorting & filtering metadata
   keywords: z.array(z.string()).default([]),
   selected: z.boolean().default(false),
-  authorPosition: z.number().default(Infinity)
+  authorPosition: z.number().default(Infinity),
+  equalContributionNote: z.string().default("")
 })

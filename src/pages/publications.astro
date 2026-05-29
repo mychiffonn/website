@@ -19,6 +19,14 @@ const ggScholarUrl =
     : PROFILE.links.googleScholar
 
 const { publicationsByYear, years, allPublicationsFlat, allKeywords } = await loadAllPublications()
+
+const equalContributionNote = [
+  ...new Set(
+    allPublicationsFlat.flatMap((pub) =>
+      pub.equalContributionNote ? pub.equalContributionNote.split(". ") : []
+    )
+  )
+].join(". ")
 ---
 
 <Layout title="Publications" description="Publications, preprints, and conference tutorials">
@@ -84,6 +92,11 @@ const { publicationsByYear, years, allPublicationsFlat, allKeywords } = await lo
             </button>
           </span>
         </div>
+      )
+    }
+    {
+      equalContributionNote && (
+        <p class="text-muted-foreground w-full text-xs" set:html={equalContributionNote} />
       )
     }
   </div>

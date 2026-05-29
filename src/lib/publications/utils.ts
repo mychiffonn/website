@@ -313,6 +313,57 @@ export function highlightAuthorName(
 }
 
 /**
+ * Append equal-contribution superscripts to author HTML strings and build a footnote.
+ * equalfirst/second/third count from the front; equallast counts from the end.
+ */
+function applyEqualMarkers(
+  authors: string[],
+  pub: Publication,
+  symbols: PublicationConfig["equalSymbols"]
+): { authors: string[]; note: string } {
+  const result = [...authors]
+  const usedSymbols: string[] = []
+  let offset = 0
+
+  const groups = [
+    { field: "equalfirst", symbol: symbols.first },
+    { field: "equalsecond", symbol: symbols.second },
+    { field: "equalthird", symbol: symbols.third }
+  ] as const
+
+  for (const { field, symbol } of groups) {
+    const raw = pub[field]
+    if (!raw) continue
+    const n = parseInt(raw as string, 10)
+    if (isNaN(n) || n <= 0) continue
+    for (let i = offset; i < Math.min(offset + n, result.length); i++) {
+      result[i] += `<sup>${symbol}</sup>`
+    }
+    offset += n
+    usedSymbols.push(symbol)
+  }
+
+  const lastRaw = pub.equallast
+  let lastNote = ""
+  if (lastRaw) {
+    const n = parseInt(lastRaw as string, 10)
+    if (!isNaN(n) && n > 0) {
+      for (let i = Math.max(0, result.length - n); i < result.length; i++) {
+        result[i] += `<sup>${symbols.last}</sup>`
+      }
+      lastNote = `${symbols.last} Co-last authorship`
+    }
+  }
+
+  const parts = [
+    usedSymbols.length > 0 ? `${usedSymbols.join(", ")} Equal contribution` : "",
+    lastNote
+  ].filter(Boolean)
+
+  return { authors: result, note: parts.join(". ") }
+}
+
+/**
  * Truncate author list based on configuration
  * @param authors - Array of author names (already highlighted)
  * @param maxFirst - Maximum number of first authors to show
@@ -479,11 +530,12 @@ export function getPublicationData(
 ): ProcessedPublication {
   // Process authors
   const highlightedAuthors = highlightAuthorName(publication.authors || [], config.highlightAuthor)
-  const authorData = truncateAuthors(
+  const { authors: markedAuthors, note: equalContributionNote } = applyEqualMarkers(
     highlightedAuthors,
-    config.maxFirstAuthors,
-    config.maxLastAuthors
+    publication,
+    config.equalSymbols
   )
+  const authorData = truncateAuthors(markedAuthors, config.maxFirstAuthors, config.maxLastAuthors)
 
   // Get publication links
   const links = getPublicationLinks(publication)
@@ -524,6 +576,7 @@ export function getPublicationData(
           .filter(Boolean)
       : [],
     selected: publication.selected === true,
-    authorPosition
+    authorPosition,
+    equalContributionNote
   }
 }

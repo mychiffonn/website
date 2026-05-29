@@ -16,7 +16,7 @@ const { pub } = Astro.props
 ---
 
 <article
-  class="card card-content"
+  class:list={["card", "card-content", { "card-selected": pub.selected }]}
   data-pub-year={pub.year ?? ""}
   data-pub-selected={pub.selected ? "true" : "false"}
   data-pub-author-position={pub.authorPosition ?? Infinity}
