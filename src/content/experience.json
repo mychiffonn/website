@@ -6,9 +6,8 @@
     "org": "SEACrowd",
     "orgUrl": "https://seacrowd.github.io",
     "startDate": "2026-02",
-    "endDate": "2026-06",
     "location": "Remote",
-    "description": "Evaluating conversational agents on Tau2-Bench across five settings with increasing language and cultural adaptation. Mentors: Dr. Samuel Cahyawijaya (Cohere) & Patomporn Payoungkhamdee (VISTEC). Target: EMNLP '26."
+    "description": "Evaluating conversational agents on Tau2-Bench across five settings with increasing language and cultural adaptation. Mentors: Dr. Samuel Cahyawijaya (Cohere) & Patomporn Payoungkhamdee (VISTEC). In Submission"
   },
   {
     "id": "algoverse-2025",
@@ -17,7 +16,6 @@
     "org": "Algoverse AI Research",
     "orgUrl": "https://algoverseairesearch.org/",
     "startDate": "2025-10",
-    "endDate": "2026-05",
     "location": "Remote",
     "description": "Lead project studying the boundaries of weak-to-strong chain-of-thought monitoring on safety-relevant evals (WMDP & SWEBench-Verified) using sandbagging as a case study."
   },
