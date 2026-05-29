@@ -1,5 +1,5 @@
 import { defineConfig } from "astro/config"
-import { rehypeHeadingIds } from "@astrojs/markdown-remark"
+import { rehypeHeadingIds, unified } from "@astrojs/markdown-remark"
 import mdx from "@astrojs/mdx"
 import sitemap from "@astrojs/sitemap"
 import expressiveCode from "astro-expressive-code"
@@ -98,27 +98,29 @@ export default defineConfig({
   },
   markdown: {
     syntaxHighlight: false,
-    rehypePlugins: [
-      [
-        rehypeExternalLinks,
-        {
-          target: "_blank",
-          rel: ["nofollow", "noreferrer", "noopener"],
-          content: { type: "text", value: "↗" }
-        }
+    processor: unified({
+      rehypePlugins: [
+        [
+          rehypeExternalLinks,
+          {
+            target: "_blank",
+            rel: ["nofollow", "noreferrer", "noopener"],
+            content: { type: "text", value: "↗" }
+          }
+        ],
+        rehypeHeadingIds,
+        [
+          rehypeAutolinkHeadings,
+          {
+            behavior: "append",
+            properties: { className: ["anchor"] },
+            content: { type: "text", value: " 🔗" }
+          }
+        ],
+        rehypeKatex,
+        rehypeSidenotes
       ],
-      rehypeHeadingIds,
-      [
-        rehypeAutolinkHeadings,
-        {
-          behavior: "append",
-          properties: { className: ["anchor"] },
-          content: { type: "text", value: " 🔗" }
-        }
-      ],
-      rehypeKatex,
-      rehypeSidenotes
-    ],
-    remarkPlugins: [remarkMath, remarkCallout, remarkNormalizeHeadings, remarkSectionize]
+      remarkPlugins: [remarkMath, remarkCallout, remarkNormalizeHeadings, remarkSectionize]
+    })
   }
 })
