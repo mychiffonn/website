@@ -8,7 +8,8 @@ import type {
 
 export const SITE: SiteConfig = {
   title: "My Chiffon N.",
-  description: "AI researcher, working towards safer, more inclusive, and collaborative AI",
+  description:
+    "AI research for broader world (multilinguality, alignment, human- and animal-compatible AI)",
   href: "https://mychiffonn.com",
   author: "My (Chiffon) Nguyen",
 
@@ -45,7 +46,7 @@ export const SITE: SiteConfig = {
 export const PROFILE: ProfileConfig = {
   name: SITE.author,
   othernames: "Nguyễn Trà My / 阮沐茶 / 윈자미",
-  tagline: "AI Researcher & Life-long Learner",
+  tagline: "AI Research for Broader World & Life-long Learning",
   email: "hi@mychiffonn.com",
   // location: "San Francisco, CA, USA",
   pronouns: "she/her",

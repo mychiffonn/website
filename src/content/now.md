@@ -1,3 +1,3 @@
 - [Scaling behavior of chain-of-thought monitoring in LLMs](/projects/2025-cot-monitoring) at [Algoverse AI Research](https://algoverseairesearch.org/). Preprint released soon.
-- Multilingual agentic evaluation by experimenting with Tau3-Bench in multilingual & cross-lingual settings, at SEACrowd, targeting [EMNLP 2026](https://2026.emnlp.org/)
+- Multilingual agentic evaluation by experimenting with Tau2-Bench in multilingual & cross-lingual settings, at SEACrowd, in submission to [EMNLP 2026](https://2026.emnlp.org/)
 - Cohere Labs' Cultural Riddles Benchmarking project
