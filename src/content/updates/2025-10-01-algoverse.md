@@ -1,1 +1,1 @@
-[Expected Apr 2026] Working on [scaling behavior of chain-of-though monitoring in white-box models](/projects/2025-cot-monitoring) with [Yeonwoo (Eyon) Jang](https://www.eyonjang.me/).
+Started working on [scaling behavior of chain-of-thought monitoring in white-box models](/projects/2025-cot-monitoring) with mentor [Yeonwoo (Eyon) Jang](https://www.eyonjang.me/) at Algoverse AI Research.

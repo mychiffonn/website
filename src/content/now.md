@@ -1,3 +1,4 @@
-- [Scaling behavior of chain-of-thought monitoring in LLMs](/projects/2025-cot-monitoring) at [Algoverse AI Research](https://algoverseairesearch.org/). Preprint released soon.
-- Multilingual agentic evaluation by experimenting with Tau2-Bench in multilingual & cross-lingual settings, at SEACrowd, in submission to [EMNLP 2026](https://2026.emnlp.org/)
-- Cohere Labs' Cultural Riddles Benchmarking project
+- AI safety research internship at Lida Safety Research, contributing to projects in persona alignment, scalable oversight, and sandbagging.
+- Co-leading multi-cultural riddles benchmarking project @ Cohere Labs Open Science Community, builduing analysis workflow and coordinating with model benchmarking and human evaluation teams
+- Wrapping up [SEATauBench](https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented), a multilingual agentic evaluation project adapting Tau2-Bench into low-resource Southeast Asian languages, in submission to [EMNLP 2026](https://2026.emnlp.org/).
+- Finalizing [scaling behavior of chain-of-thought monitoring in LLMs](/projects/2025-cot-monitoring) from [Algoverse AI Research](https://algoverseairesearch.org/).

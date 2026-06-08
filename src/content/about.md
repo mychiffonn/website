@@ -8,6 +8,6 @@ I research **current and future AI for broader world**:
 
 For technical research, I'm interested in [AI measurement science](https://aimslab.stanford.edu/textbook/) and mechanistic understanding to make grounded, predictive, specific claims about AI capability and safety.
 
-Leading [CoT monitoring](/projects/2025-cot-monitoring) (Algoverse), AI implicit values about animals (ElectricSheep), and [cultural benchmarking](https://cohere-labs-community.github.io/blog/2026/tongueless-lions-and-hallucinating-machines/) (Cohere Labs).
+I'm interning at [Lida Safety Research](https://www.lidasafety.org/), contributing to projects in persona alignment, scalable oversight, and sandbagging. I also co-lead Cohere Labs Open Science Community's multi-cultural riddles analysis subteam. Recently I worked on [SEATauBench](https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented) and [CoT monitoring](/projects/2025-cot-monitoring).
 
 I am **applying to research-oriented Master's in Computer Science, AI, NLP, or related fields for Spring 2027** and seeking research opportunities (internships, research assistantships, collaborations). For research collaborations, drop me an email!
