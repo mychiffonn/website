@@ -1,1 +1,1 @@
-Started an AI safety research internship at Lida Safety Research, contributing to projects in persona alignment, scalable oversight, and sandbagging.
+Started interning at [Lida Safety Research](https://www.lidasafety.org/), contributing to projects in persona alignment, scalable oversight, and sandbagging.

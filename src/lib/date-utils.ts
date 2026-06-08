@@ -66,13 +66,13 @@ export function createLocalDate(dateInput: string | number | Date): Date {
   // Handle year-month strings (YYYY-MM) - create on first day of month in local timezone
   if (/^\d{4}-\d{2}$/.test(cleanDateString)) {
     const [year, month] = cleanDateString.split("-").map(Number)
-    return new Date(year, month - 1, 1)
+    return new TZDate(year, month - 1, 1, timeZone)
   }
 
   // Handle date-only strings (YYYY-MM-DD) - create at midnight in local timezone
   if (/^\d{4}-\d{2}-\d{2}$/.test(cleanDateString)) {
     const [year, month, day] = cleanDateString.split("-").map(Number)
-    return new Date(year, month - 1, day)
+    return new TZDate(year, month - 1, day, timeZone)
   }
 
   // All other cases: use TZDate to interpret in site timezone

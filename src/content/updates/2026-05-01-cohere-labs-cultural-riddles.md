@@ -1,1 +1,1 @@
-Started co-leading Cohere Labs Open Science Community's multi-cultural riddles analysis subteam, coordinating 15 community researchers on LLM behavior analysis across factual accuracy, hallucination behavior, topic-level patterns, and cross-cultural reasoning.
+Started co-leading [Cohere Labs Open Science Community]'s multi-cultural riddles benchmarking project with other six leads, working with 100+ community researchers.
