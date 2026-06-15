@@ -10,4 +10,4 @@ For technical research, I'm interested in [AI measurement science](https://aimsl
 
 I'm interning at [Lida Safety Research](https://www.lidasafety.org/), contributing to projects in persona alignment, scalable oversight, and sandbagging. I also co-lead Cohere Labs Open Science Community's multi-cultural riddles analysis subteam. Recently I worked on [SEATauBench](https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented) and [CoT monitoring](/projects/2025-cot-monitoring).
 
-I am **applying to research-oriented Master's in Computer Science, AI, NLP, or related fields for Spring 2027** and seeking research opportunities (internships, research assistantships, collaborations). For research collaborations, drop me an email!
+I am **applying to research-oriented Master's in Computer Science, AI, NLP, or related fields for Spring/Fall 2027** and seeking research opportunities (internships, research assistantships, collaborations). For research collaborations, drop me an email!
