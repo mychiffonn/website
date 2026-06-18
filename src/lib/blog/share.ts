@@ -20,10 +20,7 @@ export interface ShareActionConfig {
  * Extract a platform handle from a profile URL.
  * Returns the handle without @ prefix, or null if unrecognized.
  */
-export function extractHandle(
-  url: string,
-  platform: "x" | "bluesky"
-): string | null {
+export function extractHandle(url: string, platform: "x" | "bluesky"): string | null {
   try {
     const parsed = new URL(url)
     if (platform === "x") {
@@ -42,10 +39,7 @@ export function extractHandle(
   return null
 }
 
-function getAuthorHandles(
-  authors: AuthorData[],
-  platform: "x" | "bluesky"
-): string[] {
+function getAuthorHandles(authors: AuthorData[], platform: "x" | "bluesky"): string[] {
   const handles: string[] = []
   for (const author of authors) {
     const linkVal = author.links?.[platform]
@@ -94,7 +88,11 @@ export function getShareActions(
         // Mention additional authors in tweet text
         const mentions =
           handles.length > 1
-            ? " " + handles.slice(1).map((h) => `@${h}`).join(" ")
+            ? " " +
+              handles
+                .slice(1)
+                .map((h) => `@${h}`)
+                .join(" ")
             : ""
         const text = encodeURIComponent(`${title}${mentions}`)
         return {
@@ -124,9 +122,7 @@ export function getShareActions(
       case "bluesky": {
         const bskyHandles = getAuthorHandles(authors, "bluesky")
         const mentions = bskyHandles.map((h) => `@${h}`).join(" ")
-        const text = encodeURIComponent(
-          `${title} ${mentions}`.trim() + `\n\n${url}`
-        )
+        const text = encodeURIComponent(`${title} ${mentions}`.trim() + `\n\n${url}`)
         return {
           key,
           label: "Share on Bluesky",

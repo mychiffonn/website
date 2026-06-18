@@ -14,7 +14,7 @@
       "Bash(git diff:*)",
       "Bash(git status:*)",
       "Bash(git fetch:*)",
-      "Bash(git pull:*):",
+      "Bash(git pull:*)",
       "Bash(pnpm info:*)",
       "Bash(pnpm preview:*)",
       "Bash(pnpm format:*)",

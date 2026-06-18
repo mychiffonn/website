@@ -7,7 +7,7 @@
  * 3. Rewrite bottom footnotes section with backrefs
  */
 
-import type { Root, Element, ElementContent } from "hast"
+import type { Element, ElementContent, Root } from "hast"
 import { visit } from "unist-util-visit"
 
 export interface SidenoteOptions {
@@ -57,7 +57,7 @@ function cleanFootnoteContent(children: ElementContent[]): ElementContent[] {
     }
     result.push({
       ...child,
-      children: cleanFootnoteContent(child.children) as ElementContent[],
+      children: cleanFootnoteContent(child.children) as ElementContent[]
     })
   }
   return result
@@ -70,8 +70,8 @@ const BACKREF_ICON: Element = {
   properties: { viewBox: "0 0 24 24", ariaHidden: "true", className: ["sidenote-backref-icon"] },
   children: [
     { type: "element", tagName: "path", properties: { d: "m10 9l5-5l5 5" }, children: [] },
-    { type: "element", tagName: "path", properties: { d: "M4 20h7a4 4 0 0 0 4-4V4" }, children: [] },
-  ],
+    { type: "element", tagName: "path", properties: { d: "M4 20h7a4 4 0 0 0 4-4V4" }, children: [] }
+  ]
 }
 
 function isInsideHeading(node: Element, parent: Element | Root | null): boolean {
@@ -85,9 +85,15 @@ function stripFnPrefix(s: string): string {
 }
 
 function rehypeSidenotes(options: SidenoteOptions = {}) {
-  const { rewriteFootnotes = true, backrefLabel = "Back to reference {n}", backrefContent } = options
+  const {
+    rewriteFootnotes = true,
+    backrefLabel = "Back to reference {n}",
+    backrefContent
+  } = options
   const backrefChildren: ElementContent[] = backrefContent
-    ? Array.isArray(backrefContent) ? backrefContent : [backrefContent]
+    ? Array.isArray(backrefContent)
+      ? backrefContent
+      : [backrefContent]
     : [{ type: "text", value: " " }, BACKREF_ICON]
   const label = (n: number) => backrefLabel.replace("{n}", String(n))
 
@@ -158,17 +164,21 @@ function rehypeSidenotes(options: SidenoteOptions = {}) {
               type: "element",
               tagName: "label",
               properties: { id: refId, className: ["sidenote-toggle", "sidenote-number"] },
-              children: [{ type: "text", value: String(counter) }],
-            },
-          ],
+              children: [{ type: "text", value: String(counter) }]
+            }
+          ]
         }
         ;(parent as Element).children.splice(index as number, 1, indicator)
       } else {
         const backref: Element = {
           type: "element",
           tagName: "a",
-          properties: { href: `#${refId}`, className: ["sidenote-backref"], ariaLabel: label(counter) },
-          children: structuredClone(backrefChildren),
+          properties: {
+            href: `#${refId}`,
+            className: ["sidenote-backref"],
+            ariaLabel: label(counter)
+          },
+          children: structuredClone(backrefChildren)
         }
 
         const wrapper: Element = {
@@ -179,22 +189,30 @@ function rehypeSidenotes(options: SidenoteOptions = {}) {
             {
               type: "element",
               tagName: "label",
-              properties: { htmlFor: snId, id: refId, className: ["sidenote-toggle", "sidenote-number"] },
-              children: [{ type: "text", value: String(counter) }],
+              properties: {
+                htmlFor: snId,
+                id: refId,
+                className: ["sidenote-toggle", "sidenote-number"]
+              },
+              children: [{ type: "text", value: String(counter) }]
             },
             {
               type: "element",
               tagName: "input",
               properties: { type: "checkbox", id: snId, className: ["sidenote-toggle-checkbox"] },
-              children: [],
+              children: []
             },
             {
               type: "element",
               tagName: "span",
-              properties: { className: ["sidenote"], id: `sn-note-${counter}`, dataSidenoteNumber: String(counter) },
-              children: [...content, backref],
-            },
-          ],
+              properties: {
+                className: ["sidenote"],
+                id: `sn-note-${counter}`,
+                dataSidenoteNumber: String(counter)
+              },
+              children: [...content, backref]
+            }
+          ]
         }
         ;(parent as Element).children.splice(index as number, 1, wrapper)
       }
@@ -238,9 +256,13 @@ function rewriteFootnotesList(
       {
         type: "element",
         tagName: "a",
-        properties: { href: `#${ref.refId}`, className: ["footnote-backref"], ariaLabel: label(ref.counter) },
-        children: structuredClone(backrefChildren),
-      },
+        properties: {
+          href: `#${ref.refId}`,
+          className: ["footnote-backref"],
+          ariaLabel: label(ref.counter)
+        },
+        children: structuredClone(backrefChildren)
+      }
     ]
   }
 }
