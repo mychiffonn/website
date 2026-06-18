@@ -83,11 +83,11 @@ const usesDescription =
         tags: [ToolTag.Subscription, ToolTag.OpenSource]
       },
       {
-        name: "Linear",
-        description: "Software Development Tracking",
-        href: "https://linear.app/",
-        icon: "mingcute:linear-line",
-        tags: [ToolTag.Free, ToolTag.Favorite]
+        name: "Claude",
+        description: "Coding Agent",
+        href: "https://openai.com/codex/",
+        icon: "claude",
+        tags: [ToolTag.Subscription]
       }
     ]}
   />
@@ -95,11 +95,33 @@ const usesDescription =
     title="Research & Knowledge Management"
     tools={[
       {
+        name: "Linear",
+        description: "Software Development Tracking",
+        href: "https://linear.app/",
+        icon: "mingcute:linear-line",
+        tags: [ToolTag.Free, ToolTag.Favorite]
+      },
+      {
         name: "Obsidian",
         description: "Knowledge Management",
         href: "https://obsidian.md/",
         icon: "obsidian",
         tags: [ToolTag.Free, ToolTag.Favorite]
+      },
+      {
+        name: "Overleaf",
+        description: "Online LaTeX Editor",
+        href: "https://www.overleaf.com/",
+        icon: "academicons:overleaf",
+        tags: [ToolTag.Free]
+      },
+
+      {
+        name: "Zotero",
+        description: "Citation Management",
+        href: "https://www.zotero.org/",
+        icon: "academicons:zotero",
+        tags: [ToolTag.Free]
       },
       {
         name: "Logseq",
@@ -109,25 +131,11 @@ const usesDescription =
         tags: [ToolTag.OpenSource, ToolTag.Favorite]
       },
       {
-        name: "Overleaf",
-        description: "Online LaTeX Editor",
-        href: "https://www.overleaf.com/",
-        icon: "academicons:overleaf",
-        tags: [ToolTag.Free]
-      },
-      {
         name: "Typst",
         description: "Typesetting, LaTeX successor",
         href: "https://typst.app/",
         icon: "typst",
         tags: [ToolTag.OpenSource, ToolTag.Free]
-      },
-      {
-        name: "Zotero",
-        description: "Citation Management",
-        href: "https://www.zotero.org/",
-        icon: "academicons:zotero",
-        tags: [ToolTag.Free]
       }
     ]}
   />
