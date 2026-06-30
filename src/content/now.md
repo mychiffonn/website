@@ -1,4 +1,4 @@
-- AI safety research internship at Lida Safety Research, contributing to projects in persona alignment, scalable oversight, and sandbagging.
-- Co-leading multi-cultural riddles benchmarking project @ Cohere Labs Open Science Community, builduing analysis workflow and coordinating with model benchmarking and human evaluation teams
-- Wrapping up [SEATauBench](https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented), a multilingual agentic evaluation project adapting Tau2-Bench into low-resource Southeast Asian languages, in submission to [EMNLP 2026](https://2026.emnlp.org/).
+- AI safety research internship at [Lida Safety Research](https://www.lidasafety.org/), contributing to projects in superposition and sandbagging.
 - Finalizing [scaling behavior of chain-of-thought monitoring in LLMs](/projects/2025-cot-monitoring) from [Algoverse AI Research](https://algoverseairesearch.org/).
+- Co-leading multi-cultural riddles benchmarking project @ Cohere Labs Open Science Community with 7 leads for 100+ community researchers, spearheading analysis workflow and coordinating with model benchmarking and human evaluation teams
+- Contributing to [MatrAIx](https://matraix.ai)'s collection of projects

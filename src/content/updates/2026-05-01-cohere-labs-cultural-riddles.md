@@ -1,1 +1,1 @@
-Started co-leading [Cohere Labs Open Science Community]'s multi-cultural riddles benchmarking project with other six leads, working with 100+ community researchers.
+Started co-leading [Cohere Labs Open Science Community](https://discord.com/channels/1111315570160320636/1487160224249810984)'s multi-cultural riddles benchmarking project with other six leads, working with 100+ community researchers.
