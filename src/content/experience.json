@@ -1,11 +1,22 @@
 [
   {
+    "id": "lida-safety-2026",
+    "category": "research",
+    "title": "AI Safety Research Intern",
+    "org": "Lida Safety Research",
+    "orgUrl": "https://www.lidasafety.org/",
+    "startDate": "2026-06",
+    "location": "Remote",
+    "description": "Contributing to mechanistic interpretability & sandbagging research."
+  },
+  {
     "id": "seacrowd-2026",
     "category": "research",
     "title": "AI Research Mentee (Multilingual Agentic Evaluation)",
     "org": "SEACrowd",
     "orgUrl": "https://seacrowd.github.io",
     "startDate": "2026-02",
+    "endDate": "2026-06",
     "location": "Remote",
     "description": "Evaluating conversational agents on Tau2-Bench across five settings with increasing language and cultural adaptation. Mentors: Dr. Samuel Cahyawijaya (Cohere) & Patomporn Payoungkhamdee (VISTEC). In Submission"
   },
@@ -18,17 +29,6 @@
     "startDate": "2025-10",
     "location": "Remote",
     "description": "Lead project studying the boundaries of weak-to-strong chain-of-thought monitoring on safety-relevant evals (WMDP & SWEBench-Verified) using sandbagging as a case study."
-  },
-  {
-    "id": "landshut-2025",
-    "category": "research",
-    "title": "ML Research Assistant",
-    "org": "Landshut University of Applied Sciences",
-    "orgUrl": "https://www.haw-landshut.de/en",
-    "startDate": "2024-06",
-    "endDate": "2024-08",
-    "location": "Landshut, Bavaria, Germany",
-    "description": "3D object detection in point clouds and point cloud registration, supervised by Prof. Eduard Kromer and Prof Sandra Eisenreich"
   },
   {
     "id": "minerva-2025",
