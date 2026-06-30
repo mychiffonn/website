@@ -4,9 +4,11 @@
 import { PUB_CONFIG } from "@site-config"
 
 import {
+  expandHierarchicalKeywords,
   getPublicationData,
   getSelectedPublications,
   parseBibTeX,
+  parsePublicationKeywords,
   sortPublications,
   sortPublicationsByRelevance
 } from "./utils"
@@ -36,13 +38,9 @@ export async function loadAllPublications() {
       processedPublicationsByYear[yearStr].push(getPublicationData(pub, PUB_CONFIG))
       yearsSet.add(year)
 
-      if (pub.keywords) {
-        for (const kw of pub.keywords
-          .split(",")
-          .map((k) => k.trim())
-          .filter(Boolean)) {
-          keywordCounts.set(kw, (keywordCounts.get(kw) || 0) + 1)
-        }
+      const expandedKeywords = expandHierarchicalKeywords(parsePublicationKeywords(pub.keywords))
+      for (const kw of expandedKeywords) {
+        keywordCounts.set(kw, (keywordCounts.get(kw) || 0) + 1)
       }
     }
 

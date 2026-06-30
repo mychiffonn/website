@@ -90,8 +90,8 @@ export const NAV_LINKS: LinkConfig[] = [
 ]
 
 export const PUB_CONFIG: PublicationConfig = {
-  maxFirstAuthors: 4,
-  maxLastAuthors: 4,
+  maxFirstAuthors: 8,
+  maxLastAuthors: 2,
   highlightAuthor: {
     firstName: "My Chiffon",
     lastName: "Nguyen",

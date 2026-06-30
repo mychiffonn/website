@@ -1,10 +1,10 @@
 @misc{lu2026syntheticpersona,
   title={Position: Synthetic Persona Needs Explicit Grounding and Standardized Reporting},
   author={Yucheng Lu and Xiaoyi Liu and Heming Liu and Hanwen Xing and Shirley Huang and Guanghui Min and Zhengyang Shan and My Chiffon Nguyen and Ishan Gupta and Zonglin Di and Qianfeng Wen and Yifan Simon Liu and Ruoqi Gao and Yilan Fan and Jianheng Hou and Brihi Joshi and Muhammad Ahmed Mohsin and Yunze Xiao and Keyang Xuan and Hannah Collison and Jintao Huang and Jiatong Li and Sankalp Jajee and Yunhan Zhao and Bing Hu and Zhiwei Zhang and Sky Ng and Xupeng Chen and Binghang Lu and Weihang Xiao and Aravind Mohan and Bolun Sun and Yunshu Wu and Yuanda Xu and Yun Shen and Zheyuan Deng and Xincheng Tan and Qianyu Julie Zhu and Dianzhuo Wang and Yijun Wang and Runyu Zhang and Yixuan He and Xiaomin Li and Yuexing Hao},
-  venue={Under Review at COLM 2026 SocialSim Workshop},
+  venue={In Submission (Early Work)},
   year={2026},
-  keywords={Position,Persona-based Simulation,Synthetic Personas,AI Evaluation},
-  pdf={https://openreview.net/pdf?id=xMJWR38BZX},
+  month={jun},
+  keywords={Position,Persona-based Simulation,AI Evaluation},
   abstract={This position paper argues that synthetic personas used in Large Language Models (LLM) social simulations need explicit grounding. By grounding, we mean that researchers should state where persona information comes from, what social actor or population it is meant to represent, what evidence supports it, and what kinds of simulation claims it can justify. Without such grounding, persona-based simulations risk treating appearance of plausible descriptions or vivid narratives as evidence of realism. We identify several recurring failure modes that explicit grounding can help expose, and argue that these failures should not be diagnosed only after simulation results are produced; they should be addressed at the level of persona construction and reporting. We conclude by proposing lightweight reporting standards for persona provenance, construction process, selection or sampling logic, internal consistency checks, model enactment checks, and intended inference.}
 }
 
@@ -13,11 +13,13 @@
   author={My Chiffon Nguyen and Aulia Adila and Saksorn Ruangtanusak and Kittiphat Leesombatwathana and Vissuta Gunawan Lim and Patomporn Payoungkhamdee and Samuel Cahyawijaya},
   selected={true},
   equalFirst={5},
-  venue={In Submission, Pending Preprint},
+  venue={In Submission},
   year={2026},
   month=jun,
   abstract={We introduce SEATauBench, the first agentic-focused evaluation framework for sovereign AI development in Southeast Asia, a region of strategic importance with over 700 million people. Despite growing regional evaluation efforts, existing multilingual agents show limited capability when operating in SEA languages, particularly in mixed-language scenarios. Through evaluation across multiple adaptation approaches, we find that while English agentic capabilities transfer to target language responses, performance degrades significantly when context is provided in SEA languages. We propose a translation-based mitigation strategy that preserves entity consistency while enabling agents to leverage English comprehension. SEATauBench establishes a rigorous benchmark for sovereign AI agent assessment, providing diagnostic tools to address capability gaps and support agentic AI development in diverse linguistic communities in the region.},
-  keywords={AI Evaluation,Benchmarking,Agent,Agent/LLM,Multilinguality,Southeast Asia}
+  keywords={Evaluation/Benchmarking,Agent,Agent/LLM,Multilinguality,Southeast Asia},
+  url={https://arxiv.org/abs/2606.28715},
+  pdf={https://github.com/SEACrowd/SEATauBench/blob/main/docs/SEATauBench_v1.pdf}
 }
 
 @misc{cahyawijaya2026anthropogenic,
@@ -30,7 +32,7 @@
   },
   url={https://arxiv.org/abs/2604.11490},
   pdf={https://arxiv.org/pdf/2604.11490},
-  keywords={Multimodality,Computer Vision,Vision-Language Model,Cultural Adaptation,Southeast Asia}
+  keywords={Multimodality,CV/VLM,Cultural Adaptation,Southeast Asia}
 }
 
 @misc{suarez2026commonlidreevaluatingstateoftheartlanguage,
@@ -45,7 +47,7 @@
   urldate={2026-01-26},
   website={https://commoncrawl.org/blog/commonlid-re-evaluating-state-of-the-art-language-identification-performance-on-web-data},
   abstract={Language identification (LID) is a fundamental step in curating multilingual corpora. However, LID models still perform poorly for many languages, especially on the noisy and heterogeneous web data often used to train multilingual language models. In this paper, we introduce CommonLID, a community-driven, human-annotated LID benchmark for the web domain, covering 109 languages. Many of the included languages have been previously under-served, making CommonLID a key resource for developing more representative high-quality text corpora. We show CommonLID's value by using it, alongside five other common evaluation sets, to test eight popular LID models. We analyse our results to situate our contribution and to provide an overview of the state of the art. In particular, we highlight that existing evaluations overestimate LID accuracy for many languages in the web domain. We make CommonLID and the code used to create it available under an open, permissive license. },
-  keywords={NLP,AI Evaluation,Benchmarking,Language Identification,Multilinguality}
+  keywords={NLP,Evaluation,Language Identification,Multilinguality}
 }
 
 @article{phan2025humanitysexam,
@@ -66,5 +68,5 @@
   urldate = {2026-02-05},
   langid = {english},
   abstract={Benchmarks are important tools for tracking the rapid advancements in large language model (LLM) capabilities. However, benchmarks are not keeping pace in difficulty: LLMs now achieve more than 90% accuracy on popular benchmarks such as Measuring Massive Multitask Language Understanding1, limiting informed measurement of state-of-the-art LLM capabilities. Here, in response, we introduce Humanity’s Last Exam (HLE), a multi-modal benchmark at the frontier of human knowledge, designed to be an expert-level closed-ended academic benchmark with broad subject coverage. HLE consists of 2,500 questions across dozens of subjects, including mathematics, humanities and the natural sciences. HLE is developed globally by subject-matter experts and consists of multiple-choice and short-answer questions suitable for automated grading. Each question has a known solution that is unambiguous and easily verifiable but cannot be quickly answered by internet retrieval. State-of-the-art LLMs demonstrate low accuracy and calibration on HLE, highlighting a marked gap between current LLM capabilities and the expert human frontier on closed-ended academic questions. To inform research and policymaking upon a clear understanding of model capabilities, we publicly release HLE at https://lastexam.ai.},
-  keywords = {AI Evaluation, LLM, Benchmarking}
+  keywords = {Evaluation/Benchmarking,MCQ}
 }

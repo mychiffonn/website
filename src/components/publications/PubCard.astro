@@ -20,7 +20,7 @@ const { pub } = Astro.props
   data-pub-year={pub.year ?? ""}
   data-pub-selected={pub.selected ? "true" : "false"}
   data-pub-author-position={pub.authorPosition ?? Infinity}
-  data-pub-keywords={pub.keywords?.map((k: string) => slugify(k)).join(",") ?? ""}
+  data-pub-keywords={pub.expandedKeywords?.map((k: string) => slugify(k)).join(",") ?? ""}
 >
   {pub.award && <span class="text-primary items-center text-sm font-bold">🏆 {pub.award}</span>}
 

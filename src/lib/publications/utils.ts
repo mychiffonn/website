@@ -84,6 +84,37 @@ interface PublicationLink {
 }
 
 /**
+ * Parse comma-separated publication keywords from BibTeX.
+ */
+export function parsePublicationKeywords(keywords?: string): string[] {
+  return keywords
+    ? keywords
+        .split(",")
+        .map((keyword) => keyword.trim())
+        .filter(Boolean)
+    : []
+}
+
+/**
+ * Expand hierarchical slash-separated tags.
+ *
+ * Example: ["Agent/LLM", "Agent/GUI"] becomes
+ * ["Agent", "Agent/LLM", "Agent/GUI"].
+ */
+export function expandHierarchicalKeywords(keywords: string[]): string[] {
+  const expanded = keywords.flatMap((keyword) => {
+    const parts = keyword
+      .split("/")
+      .map((part) => part.trim())
+      .filter(Boolean)
+
+    return parts.map((_, index) => parts.slice(0, index + 1).join("/"))
+  })
+
+  return [...new Set(expanded)]
+}
+
+/**
  * Configure custom field types for academic publications using the plugin's configuration API
  * Automatically configures all fields from `src/lib/publications/data/custom-fields.json`
  * @see https://www.npmjs.com/package/@citation-js/plugin-bibtex
@@ -553,6 +584,8 @@ export function getPublicationData(
     publication.authors || [],
     config.highlightAuthor
   )
+  const keywords = parsePublicationKeywords(publication.keywords)
+  const expandedKeywords = expandHierarchicalKeywords(keywords)
 
   return {
     title: publication.title || "",
@@ -569,12 +602,8 @@ export function getPublicationData(
     },
     publisher: venue || undefined,
     links,
-    keywords: publication.keywords
-      ? publication.keywords
-          .split(",")
-          .map((k: string) => k.trim())
-          .filter(Boolean)
-      : [],
+    keywords,
+    expandedKeywords,
     selected: publication.selected === true,
     authorPosition,
     equalContributionNote
