@@ -1,14 +1,19 @@
 ---
 import { PROFILE } from "@site-config"
-import { getProjects } from "@/lib/projects"
+import { getProjectCategoryCounts, getProjects } from "@/lib/projects"
 import CommonLayout from "@/layouts/CommonLayout.astro"
+import Badge from "@/components/base/Badge.astro"
+import Icon from "@/components/base/Icon.astro"
 import Section from "@/components/layout/Section.astro"
 import { GithubActivity, ProjectCard } from "@/components/projects"
+
+import "@/styles/chip-filter.css"
 
 // Fetch and categorize projects in single operation
 const allProjects = await getProjects()
 const featuredProjects = allProjects.filter((project) => project.data.isHighlighted)
 const otherProjects = allProjects.filter((project) => !project.data.isHighlighted)
+const categoryCounts = getProjectCategoryCounts(allProjects)
 
 // Get GitHub URL for GithubActivity
 const githubUrl =
@@ -23,23 +28,50 @@ const githubUrl =
   breadcrumbs={[{ label: "Projects", icon: "folder-open" }]}
 >
   <div class="flex flex-col gap-8">
+    {/* Category filter bar */}
+    {
+      categoryCounts.length > 0 && (
+        <div class="chip-filter-bar">
+          {categoryCounts.map(({ slug, label, count }) => (
+            <Badge
+              variant="tag"
+              as="button"
+              data-project-category-filter={slug}
+              aria-pressed="false"
+            >
+              {label}
+              <span class="ml-0.5 opacity-60">({count})</span>
+            </Badge>
+          ))}
+          <span class="chip-active-filter hidden" data-active-filter>
+            <button class="chip-clear-filter" data-clear-filter aria-label="Clear filter">
+              <Icon name="close" size={12} />
+              Clear
+            </button>
+          </span>
+        </div>
+      )
+    }
+
     {/* Featured Projects */}
     {
       featuredProjects.length > 0 && (
-        <Section title="Featured Projects">
-          <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-            {featuredProjects.map((project) => (
-              <ProjectCard {project} />
-            ))}
-          </div>
-        </Section>
+        <div data-project-section>
+          <Section title="Featured Projects">
+            <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+              {featuredProjects.map((project) => (
+                <ProjectCard {project} />
+              ))}
+            </div>
+          </Section>
+        </div>
       )
     }
 
     {/* Other Projects */}
     {
       otherProjects.length > 0 && (
-        <section>
+        <section data-project-section>
           <h2 class="mb-4 text-2xl font-semibold">Other Projects</h2>
           <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
             {otherProjects.map((project) => (
@@ -54,3 +86,24 @@ const githubUrl =
     <GithubActivity githubUrl={githubUrl} />
   </div>
 </CommonLayout>
+
+<script>
+  import { initChipFilter } from "@/lib/chip-filter"
+
+  function initProjectControls() {
+    initChipFilter({
+      itemSelector: "[data-project-categories]",
+      itemAttr: "projectCategories",
+      filterButtonSelector: "[data-project-category-filter]",
+      filterButtonAttr: "projectCategoryFilter",
+      chipSelector: "[data-project-category]",
+      chipAttr: "projectCategory",
+      groupSelector: "[data-project-section]",
+      clearButtonSelector: "[data-clear-filter]",
+      activeIndicatorSelector: "[data-active-filter]"
+    })
+  }
+
+  document.addEventListener("astro:page-load", initProjectControls)
+  document.addEventListener("astro:after-swap", initProjectControls)
+</script>

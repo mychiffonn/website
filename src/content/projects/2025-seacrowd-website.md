@@ -5,7 +5,9 @@ fromDate: 2025-08-16
 toDate: 2025-12-15
 url: https://seacrowd.org
 code: https://github.com/SEACrowd/seacrowd.github.io
-context: community
+category:
+  - web
+  - research
 tags:
   - Jekyll
   - Bootstrap
