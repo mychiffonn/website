@@ -60,7 +60,7 @@ const recentPostsMetadata = await Promise.all(
       <Section title="Selected publications" moreLink="/publications">
         <div class="space-y-4">
           {selectedPublications.slice(0, 3).map((pub) => (
-            <PubCard pub={pub} />
+            <PubCard pub={pub} filterableTags={false} />
           ))}
         </div>
       </Section>
