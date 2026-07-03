@@ -5,7 +5,7 @@ import { PROFILE } from "@site-config"
 import { loadAllPublications } from "@/lib/publications/loader"
 import { slugify } from "@/lib/string-manipulation"
 import Layout from "@/layouts/Layout.astro"
-import Badge from "@/components/base/Badge.astro"
+import Chip from "@/components/base/Chip.astro"
 import Dropdown from "@/components/base/Dropdown.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
@@ -77,15 +77,10 @@ const equalContributionNote = [
       allKeywords.length > 0 && (
         <div class="chip-filter-bar">
           {allKeywords.map(({ keyword, count }) => (
-            <Badge
-              variant="tag"
-              as="button"
-              data-pub-tag-filter={slugify(keyword)}
-              aria-pressed="false"
-            >
+            <Chip data-pub-tag-filter={slugify(keyword)} aria-pressed="false">
               {keyword}
               <span class="ml-0.5 opacity-60">({count})</span>
-            </Badge>
+            </Chip>
           ))}
           <span class="chip-active-filter hidden" data-active-filter>
             <button class="chip-clear-filter" data-clear-filter aria-label="Clear filter">

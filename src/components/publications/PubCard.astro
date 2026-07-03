@@ -3,6 +3,7 @@ import type { ProcessedPublication } from "@/types"
 
 import { slugify } from "@/lib/string-manipulation"
 import Badge from "@/components/base/Badge.astro"
+import Chip from "@/components/base/Chip.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 
@@ -103,9 +104,9 @@ const { pub, filterableTags = true } = Astro.props
       <div class="card-tags">
         {pub.keywords.map((keyword: string) =>
           filterableTags ? (
-            <Badge variant="tag" as="button" data-pub-tag={slugify(keyword)} aria-pressed="false">
+            <Chip data-pub-tag={slugify(keyword)} aria-pressed="false">
               {keyword}
-            </Badge>
+            </Chip>
           ) : (
             <Badge variant="muted">{keyword}</Badge>
           )

@@ -50,7 +50,7 @@ const cardClasses = cn(
 
   {project.data.description && <p class="card-description relative">{project.data.description}</p>}
 
-  {/* Tags (static, non-interactive) */}
+  {/* Tags (static keywords, rendered as badges) */}
   {
     tags && tags.length > 0 && (
       <div class="card-tags relative">

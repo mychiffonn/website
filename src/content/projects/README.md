@@ -53,7 +53,7 @@ tags:
 | `category` | Enum[] | ❌ | Any of: `ai-ml`, `web`, `data`, `tool`, `simulation`, `research`, `fun-creativity` | Filterable on the projects page; a project can have multiple categories |
 | `isHighlighted` | Boolean | ❌ | Whether to feature this project | Defaults to `false` |
 | `release` | URL | ❌ | Link to release or deployment | Must be a valid URL |
-| `tags` | String[] | ❌ | Project keywords, frameworks, languages, etc | Free-form, display-only chips (not filterable); will be deduplicated |
+| `tags` | String[] | ❌ | Project keywords, frameworks, languages, etc | Free-form, display-only badges (not filterable); will be deduplicated |
 
 ## Notes
 
