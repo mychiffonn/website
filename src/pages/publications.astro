@@ -153,6 +153,11 @@ const equalContributionNote = [
 
     if (!relevanceView || !yearView) return
 
+    // astro:page-load and astro:after-swap both fire per navigation; skip the
+    // second call so we don't double-bind listeners on this DOM instance
+    if (relevanceView.dataset.controlsInitialized === "true") return
+    relevanceView.dataset.controlsInitialized = "true"
+
     let currentSort = "relevance"
 
     const chipFilter = initChipFilter({

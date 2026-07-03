@@ -91,6 +91,14 @@ const githubUrl =
   import { initChipFilter } from "@/lib/chip-filter"
 
   function initProjectControls() {
+    // astro:page-load and astro:after-swap both fire per navigation; skip the
+    // second call so we don't double-bind listeners on this DOM instance.
+    // Anchor the flag to a swapped-in element (not document.body, which
+    // persists across navigations) so it resets on the next real navigation.
+    const anchor = document.querySelector<HTMLElement>("[data-project-section]")
+    if (anchor?.dataset.controlsInitialized === "true") return
+    if (anchor) anchor.dataset.controlsInitialized = "true"
+
     initChipFilter({
       itemSelector: "[data-project-categories]",
       itemAttr: "projectCategories",

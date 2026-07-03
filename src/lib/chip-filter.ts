@@ -36,6 +36,15 @@ export interface ChipFilterController {
   getActive: () => string | null
 }
 
+/**
+ * Registry of live `setActive` callbacks keyed by chip selector, so the single
+ * document-level click delegate (registered once and never removed, since it
+ * isn't tied to any element Astro's view transitions would tear down) always
+ * forwards clicks to the most recently initialized controller instead of a
+ * stale one from a previous page.
+ */
+const chipClickDelegates = new Map<string, (value: string) => void>()
+
 export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
   const {
     itemSelector,
@@ -104,10 +113,15 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
   })
 
   if (chipSelector && chipAttr) {
-    document.addEventListener("click", (e) => {
-      const chip = (e.target as Element).closest<HTMLButtonElement>(chipSelector)
-      if (chip?.dataset[chipAttr]) setActive(chip.dataset[chipAttr])
-    })
+    const isFirstRegistration = !chipClickDelegates.has(chipSelector)
+    chipClickDelegates.set(chipSelector, setActive)
+
+    if (isFirstRegistration) {
+      document.addEventListener("click", (e) => {
+        const chip = (e.target as Element).closest<HTMLButtonElement>(chipSelector)
+        if (chip?.dataset[chipAttr]) chipClickDelegates.get(chipSelector)?.(chip.dataset[chipAttr])
+      })
+    }
   }
 
   if (clearButtonSelector) {
