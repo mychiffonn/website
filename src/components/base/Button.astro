@@ -13,8 +13,8 @@ const buttonVariants = cva(
     // Typography
     "text-sm font-medium",
 
-    // Base sizing
-    "min-h-[44px]",
+    // Base sizing — 44px touch target on mobile (WCAG 2.5.5), scales down on larger screens where mouse precision makes it unnecessary
+    "min-h-[44px] sm:min-h-8",
 
     // Touch & interaction
     "touch-manipulation transition-all cursor-pointer select-none",
