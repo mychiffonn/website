@@ -5,7 +5,7 @@ import "@/styles/sidenote.css"
 import { render, type CollectionEntry } from "astro:content"
 
 import {
-  getContextVariant,
+  getCategoryLabel,
   getProjectLinks,
   getProjectNavigation,
   getProjects
@@ -37,13 +37,11 @@ const [{ Content }, navigation] = await Promise.all([
   render(project),
   getProjectNavigation(project.id)
 ])
-const { title, isHighlighted, fromDate, toDate, code, doc, url, release, context, tags } =
+const { title, isHighlighted, fromDate, toDate, code, doc, url, release, category, tags } =
   project.data
 
 const links = getProjectLinks(code, doc, url, release)
 const rawMarkdown = project.body ?? null
-
-const contextVariant = getContextVariant(context)
 ---
 
 <Layout title={title} description={`Project: ${title}`}>
@@ -68,14 +66,12 @@ const contextVariant = getContextVariant(context)
       }
     </div>
 
-    {/* Context and Date */}
+    {/* Category and Date */}
     <div class="flex flex-wrap items-center gap-3 text-sm">
       {
-        context && (
-          <Badge variant={contextVariant}>
-            {context.charAt(0).toUpperCase() + context.slice(1)}
-          </Badge>
-        )
+        category &&
+          category.length > 0 &&
+          category.map((slug: string) => <Badge variant="muted">{getCategoryLabel(slug)}</Badge>)
       }
       <DateRange
         fromDate={fromDate}

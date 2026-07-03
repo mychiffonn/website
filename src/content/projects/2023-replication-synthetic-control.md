@@ -4,7 +4,9 @@ description: Replication study of Philadelphia's excise tax impact on beverages 
 toDate: 2023-12
 code: https://github.com/mychiffonn/synthetic-control-rep
 doc: https://github.com/mychiffonn/synthetic-control-rep/blob/main/CS130%20Final%20Assignment.pdf
-context: research
+category:
+  - research
+  - data
 tags:
   - R
   - rmarkdown

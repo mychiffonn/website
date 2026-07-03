@@ -154,7 +154,7 @@ const rawMarkdown = post.body ?? null
           )}
           {post.data.tags.map((tag: string) => (
             <li>
-              <Badge href={`/blog/tags/${tag}`} variant="muted">
+              <Badge href={`/blog/tags/${tag}`} variant="tag">
                 <Icon name="hashtag" class="size-3" />
                 {tag}
               </Badge>

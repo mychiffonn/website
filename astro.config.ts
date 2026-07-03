@@ -24,6 +24,10 @@ export default defineConfig({
   site: "https://mychiffonn.com",
   trailingSlash: "never",
   output: "static",
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "hover"
+  },
   image: {
     responsiveStyles: true,
     layout: "constrained",

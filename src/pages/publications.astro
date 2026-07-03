@@ -5,13 +5,15 @@ import { PROFILE } from "@site-config"
 import { loadAllPublications } from "@/lib/publications/loader"
 import { slugify } from "@/lib/string-manipulation"
 import Layout from "@/layouts/Layout.astro"
-import Badge from "@/components/base/Badge.astro"
+import Chip from "@/components/base/Chip.astro"
 import Dropdown from "@/components/base/Dropdown.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import Section from "@/components/layout/Section.astro"
 import PubCard from "@/components/publications/PubCard.astro"
+
+import "@/styles/chip-filter.css"
 
 const ggScholarUrl =
   typeof PROFILE.links.googleScholar === "object"
@@ -73,20 +75,15 @@ const equalContributionNote = [
 
     {
       allKeywords.length > 0 && (
-        <div class="pub-tag-bar">
+        <div class="chip-filter-bar">
           {allKeywords.map(({ keyword, count }) => (
-            <Badge
-              variant="tag"
-              as="button"
-              data-pub-tag-filter={slugify(keyword)}
-              aria-pressed="false"
-            >
+            <Chip data-pub-tag-filter={slugify(keyword)} aria-pressed="false">
               {keyword}
               <span class="ml-0.5 opacity-60">({count})</span>
-            </Badge>
+            </Chip>
           ))}
-          <span class="pub-active-filter hidden" data-active-filter>
-            <button class="pub-clear-filter" data-clear-filter aria-label="Clear filter">
+          <span class="chip-active-filter hidden" data-active-filter>
+            <button class="chip-clear-filter" data-clear-filter aria-label="Clear filter">
               <Icon name="close" size={12} />
               Clear
             </button>
@@ -139,6 +136,8 @@ const equalContributionNote = [
 </Layout>
 
 <script>
+  import { initChipFilter } from "@/lib/chip-filter"
+
   function initPublicationControls() {
     const relevanceView = document.querySelector<HTMLElement>('[data-pub-view="relevance"]')
     const yearView = document.querySelector<HTMLElement>('[data-pub-view="year"]')
@@ -146,14 +145,28 @@ const equalContributionNote = [
     const sortOptions = document.querySelectorAll<HTMLElement>(
       "#pub-sort-dropdown [data-dropdown-item]"
     )
-    const tagFilterButtons = document.querySelectorAll<HTMLButtonElement>("[data-pub-tag-filter]")
-    const activeFilterIndicator = document.querySelector<HTMLElement>("[data-active-filter]")
-    const clearFilterButton = document.querySelector<HTMLButtonElement>("[data-clear-filter]")
 
     if (!relevanceView || !yearView) return
 
+    // astro:page-load and astro:after-swap both fire per navigation; skip the
+    // second call so we don't double-bind listeners on this DOM instance
+    if (relevanceView.dataset.controlsInitialized === "true") return
+    relevanceView.dataset.controlsInitialized = "true"
+
     let currentSort = "relevance"
-    let activeTag: string | null = null
+
+    const chipFilter = initChipFilter({
+      itemSelector: "[data-pub-keywords]",
+      itemAttr: "pubKeywords",
+      filterButtonSelector: "[data-pub-tag-filter]",
+      filterButtonAttr: "pubTagFilter",
+      chipSelector: "[data-pub-tag]",
+      chipAttr: "pubTag",
+      groupSelector: "[data-pub-year-section]",
+      clearButtonSelector: "[data-clear-filter]",
+      activeIndicatorSelector: "[data-active-filter]",
+      getScope: () => (currentSort === "relevance" ? relevanceView! : yearView!)
+    })
 
     function switchSort(mode: string) {
       currentSort = mode
@@ -174,56 +187,7 @@ const equalContributionNote = [
         opt.setAttribute("aria-selected", opt.dataset.dropdownItem === mode ? "true" : "false")
       })
 
-      applyTagFilter()
-    }
-
-    function applyTagFilter() {
-      const activeView = currentSort === "relevance" ? relevanceView! : yearView!
-      const cards = activeView.querySelectorAll<HTMLElement>("[data-pub-keywords]")
-
-      cards.forEach((card) => {
-        if (!activeTag) {
-          card.style.display = ""
-          return
-        }
-        const keywords = (card.dataset.pubKeywords || "").split(",").map((k) => k.trim())
-        card.style.display = keywords.includes(activeTag) ? "" : "none"
-      })
-
-      // Hide empty year sections in year view
-      if (currentSort === "year") {
-        const yearSections = yearView!.querySelectorAll<HTMLElement>("[data-pub-year-section]")
-        yearSections.forEach((section) => {
-          const visibleCards = section.querySelectorAll<HTMLElement>(
-            '[data-pub-keywords]:not([style*="display: none"])'
-          )
-          section.style.display = visibleCards.length === 0 ? "none" : ""
-        })
-      }
-
-      // Update filter indicator
-      if (activeFilterIndicator) {
-        if (activeTag) {
-          activeFilterIndicator.classList.remove("hidden")
-        } else {
-          activeFilterIndicator.classList.add("hidden")
-        }
-      }
-
-      // Update tag badge buttons in the filter bar
-      tagFilterButtons.forEach((btn) => {
-        btn.setAttribute("aria-pressed", btn.dataset.pubTagFilter === activeTag ? "true" : "false")
-      })
-
-      // Update tag badges on cards in both views
-      document.querySelectorAll<HTMLButtonElement>("[data-pub-tag]").forEach((badge) => {
-        badge.setAttribute("aria-pressed", badge.dataset.pubTag === activeTag ? "true" : "false")
-      })
-    }
-
-    function setActiveTag(tag: string | null) {
-      activeTag = activeTag === tag ? null : tag
-      applyTagFilter()
+      chipFilter.applyFilter()
     }
 
     // Sort dropdown clicks
@@ -232,29 +196,6 @@ const equalContributionNote = [
         const value = opt.dataset.dropdownItem
         if (value) switchSort(value)
       })
-    })
-
-    // Tag filter bar clicks
-    tagFilterButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const tag = btn.dataset.pubTagFilter
-        if (tag) setActiveTag(tag)
-      })
-    })
-
-    // Tag badge clicks on cards (delegate from both views)
-    ;[relevanceView, yearView].forEach((view) => {
-      view!.addEventListener("click", (e) => {
-        const badge = (e.target as Element).closest<HTMLButtonElement>("[data-pub-tag]")
-        if (badge?.dataset.pubTag) {
-          setActiveTag(badge.dataset.pubTag)
-        }
-      })
-    })
-
-    // Clear filter
-    clearFilterButton?.addEventListener("click", () => {
-      setActiveTag(null)
     })
   }
 
@@ -308,41 +249,5 @@ const equalContributionNote = [
   .pub-sort-option[aria-selected="true"] {
     font-weight: 600;
     color: var(--primary);
-  }
-
-  .pub-tag-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.375rem;
-  }
-
-  .pub-active-filter {
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .pub-clear-filter {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.125rem 0.5rem;
-    font-size: 0.75rem;
-    line-height: 1.25rem;
-    border: 1px solid var(--border);
-    border-radius: 9999px;
-    background: transparent;
-    color: var(--muted-foreground);
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .pub-clear-filter:hover {
-    border-color: var(--destructive);
-    color: var(--destructive);
-  }
-
-  .hidden {
-    display: none !important;
   }
 </style>

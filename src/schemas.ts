@@ -185,6 +185,26 @@ export const ToolSchema = z.object({
 })
 
 /**
+ * Taxonomy of project domains, used for the `category` field on the projects
+ * collection and for rendering filterable category chips on /projects.
+ */
+export const PROJECT_CATEGORIES = [
+  { slug: "ai-ml", label: "AI/ML" },
+  { slug: "web", label: "Web" },
+  { slug: "data", label: "Data" },
+  { slug: "tool", label: "Tool" },
+  { slug: "simulation", label: "Simulation" },
+  { slug: "research", label: "Research" },
+  { slug: "fun-creativity", label: "Fun & Creativity" }
+] as const
+
+export type ProjectCategorySlug = (typeof PROJECT_CATEGORIES)[number]["slug"]
+
+export const ProjectCategorySchema = z.enum(
+  PROJECT_CATEGORIES.map((c) => c.slug) as [ProjectCategorySlug, ...ProjectCategorySlug[]]
+)
+
+/**
  * Schema for publication configuration including author display and formatting settings.
  */
 export const PublicationConfigSchema = z.object({

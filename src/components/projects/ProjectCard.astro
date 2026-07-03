@@ -15,7 +15,8 @@ interface Props {
 }
 
 const { project } = Astro.props
-const { title, isHighlighted, fromDate, toDate, code, doc, url, release, tags } = project.data
+const { title, isHighlighted, fromDate, toDate, code, doc, url, release, category, tags } =
+  project.data
 
 const links = getProjectLinks(code, doc, url, release)
 
@@ -28,7 +29,7 @@ const cardClasses = cn(
 )
 ---
 
-<article class={cardClasses}>
+<article class={cardClasses} data-project-categories={category?.join(",") ?? ""}>
   {
     hasDetailPage && (
       <a
@@ -49,12 +50,12 @@ const cardClasses = cn(
 
   {project.data.description && <p class="card-description relative">{project.data.description}</p>}
 
-  {/* Tags */}
+  {/* Tags (static keywords, rendered as badges) */}
   {
     tags && tags.length > 0 && (
       <div class="card-tags relative">
         {tags.map((tag: string) => (
-          <Badge variant="tag" class="px-1.5 py-0.5 text-xs leading-tight">
+          <Badge variant="muted" class="px-1.5 py-0.5 text-xs leading-tight">
             {tag}
           </Badge>
         ))}

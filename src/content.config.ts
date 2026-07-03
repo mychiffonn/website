@@ -2,7 +2,7 @@ import { defineCollection, reference } from "astro:content"
 import { file, glob } from "astro/loaders"
 import { z } from "astro/zod"
 
-import { ProfileLinkConfigSchema } from "@/schemas"
+import { ProfileLinkConfigSchema, ProjectCategorySchema } from "@/schemas"
 
 import { createLocalDate } from "@/lib/date-utils"
 import { dedupLowerCase, dedupPreserveCase, slugify } from "@/lib/string-manipulation"
@@ -89,7 +89,7 @@ const projects = defineCollection({
       doc: z.url().optional(),
       url: z.url().optional(),
       release: z.url().optional(),
-      context: z.enum(["community", "personal", "research", "school", "work"]).optional(),
+      category: z.array(ProjectCategorySchema).default([]),
       description: z.string().max(200).optional(),
       tags: z
         .array(z.string())
