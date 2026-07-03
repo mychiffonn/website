@@ -1,9 +1,9 @@
 I research **current and future AI for human plurality and broader world**. Towards this end, I'm currently interested in the following problems:
 
-- making AI go well, for **diverse**, *current and future* humans
+- making AI go well, for **diverse** humans and animals
 - developing AI for low-resource languages and under-represented cultures
 - improving cooperation among AI agents, and between AI & humans
-- highlighting impacts of AI on broader world, focusing on education, future of work, societal issues, climate change and animal welfare
+- highlighting impacts of AI on broader world, focusing on education, future of work, climate change, and other urgent societal issues
 
 
 For technical research, I'm interested in [AI evaluation](https://aimslab.stanford.edu/textbook/) and mechanistic understanding to make grounded, predictive, specific claims about *long-horizon* AI capability and safety. 
