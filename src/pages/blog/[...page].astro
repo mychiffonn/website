@@ -101,10 +101,10 @@ if (!hasNoPosts) {
             </h2>
             <div class="flex flex-wrap gap-2">
               {displayTags.map(({ tag, count }) => (
-                <Badge href={`/blog/tags/${tag}`} variant="muted">
+                <Badge href={`/blog/tags/${tag}`} variant="tag">
                   <Icon name="hashtag" class="size-3" />
                   {tag}
-                  <span class="text-muted-foreground ml-1">({count})</span>
+                  <span class="ml-1 opacity-70">({count})</span>
                 </Badge>
               ))}
               {moreTagsButton && (
