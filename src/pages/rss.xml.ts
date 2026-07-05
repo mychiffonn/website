@@ -1,4 +1,4 @@
-import { SITE } from "@/consts"
+import { SITE } from "@site-config"
 import { getPosts } from "@/lib/content"
 import rss from "@astrojs/rss"
 import type { APIContext } from "astro"

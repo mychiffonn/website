@@ -7,6 +7,8 @@ import UpdatesTimeline from "@/components/timeline/UpdatesTimeline.astro"
 
 import { Content as NowContent } from "@/content/now.md"
 
+import "@/styles/callout.css"
+
 const nowDescription =
   "A sporadically updated log of what I am doing, thinking, and exploring."
 const renderedUpdates = await getLatestUpdates(10)

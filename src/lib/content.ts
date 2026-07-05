@@ -1,4 +1,4 @@
-import { SITE } from "@/consts"
+import { SITE } from "@site-config"
 import { getCollection, type CollectionEntry } from "astro:content"
 import { isSubpost } from "@/lib/utils"
 

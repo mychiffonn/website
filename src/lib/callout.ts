@@ -92,8 +92,9 @@ const normalizeDirectiveVariant = (name: string): CalloutVariant | null => {
 }
 
 const calloutSummary = (variant: CalloutVariant, label: string | null) => {
-  const title: ElementContent[] = [{ type: "text", value: capitalize(variant) }]
-  if (label) title.push(h("span", ` (${label})`))
+  const title: ElementContent[] = [
+    { type: "text", value: label || capitalize(variant) },
+  ]
 
   return toHtml(
     h("summary", [

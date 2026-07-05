@@ -15,6 +15,9 @@ export const SiteConfigSchema = z.object({
   description: z.string().max(100),
   href: z.url(),
   author: z.string(),
+  dir: z.enum(["ltr", "rtl"]).default("ltr"),
+  defaultPageImage: z.string(),
+  defaultPostImage: z.string(),
 
   /** Locale settings for date time */
   locale: z.object({

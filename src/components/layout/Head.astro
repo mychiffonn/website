@@ -41,9 +41,12 @@ const seoTitle =
   fullTitle.length > 60 ? fullTitle.substring(0, 57) + "..." : fullTitle
 
 const socialImage = (() => {
-  // 1. If no image, use social-preview.png
+  // 1. If no image, use configured page/post preview image
   if (!image) {
-    return new URL("/img/social-preview.png", Astro.site)
+    return new URL(
+      type === "article" ? SITE.defaultPostImage : SITE.defaultPageImage,
+      Astro.site,
+    )
   }
   // 2. If image is already a URL object, use it directly
   if (image instanceof URL) {

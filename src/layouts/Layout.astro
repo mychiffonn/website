@@ -1,7 +1,5 @@
 ---
 import "@/styles/global.css"
-import "@/styles/callout.css"
-import "@/styles/card.css"
 
 import { SITE } from "@site-config"
 import BackToTop from "@/components/base/BackToTop.astro"
@@ -39,7 +37,7 @@ const {
 ---
 
 <!doctype html>
-<html lang={SITE.locale.lang}>
+<html lang={SITE.locale.lang} dir={SITE.dir}>
   <Head
     title={title}
     description={description}

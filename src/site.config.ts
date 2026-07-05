@@ -12,6 +12,9 @@ export const SITE: SiteConfig = {
     "AI research for broader world (multilinguality, alignment, human- and animal-compatible AI)",
   href: "https://mychiffonn.com",
   author: "My (Chiffon) Nguyen",
+  dir: "ltr",
+  defaultPageImage: "/img/social-preview.png",
+  defaultPostImage: "/img/social-preview.png",
 
   locale: {
     lang: "en-US",
@@ -89,6 +92,11 @@ export const NAV_LINKS: LinkConfig[] = [
     label: "Now",
   },
 ]
+
+export const NAVIGATION: LinkConfig[] = NAV_LINKS.map(({ href, label }) => ({
+  href,
+  label,
+}))
 
 export const PUB_CONFIG: PublicationConfig = {
   maxFirstAuthors: 8,
