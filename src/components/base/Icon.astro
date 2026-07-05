@@ -1,10 +1,8 @@
 ---
 import type { HTMLAttributes } from "astro/types"
-import academiconsIcons from "@iconify-json/academicons/icons.json"
-import mingcuteIcons from "@iconify-json/mingcute/icons.json"
-import { getIconData, iconToSVG, replaceIDs } from "@iconify/utils"
 
-import { SEMANTIC_ICONS, type SemanticIconName } from "@icon-config"
+import type { SemanticIconName } from "@icon-config"
+import { resolveIcon } from "@/lib/icons"
 
 interface Props extends HTMLAttributes<"svg"> {
   /** The name of the icon to include - can be semantic name or direct icon name */
@@ -36,87 +34,10 @@ const {
   ...props
 } = Astro.props
 
-// Check if it's a semantic name, otherwise use the name directly
-const iconName = (SEMANTIC_ICONS as Record<string, string>)[name] || name
-
-const iconSets = {
-  academicons: academiconsIcons,
-  mingcute: mingcuteIcons,
-}
-
-const localIcons = import.meta.glob("../../assets/icons/*.svg", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-})
-
 const formatSize = (value: number | string | undefined) =>
   value === undefined ? undefined : String(value)
 
-const parseAttributes = (attributes: string) => {
-  const parsed: Record<string, string> = {}
-  const attributePattern =
-    /([:\w-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g
-
-  for (const match of attributes.matchAll(attributePattern)) {
-    parsed[match[1]] = match[2] ?? match[3] ?? match[4] ?? ""
-  }
-
-  return parsed
-}
-
-const parseLocalSVG = (svg: string, icon: string) => {
-  const match = svg.match(/<svg\b([^>]*)>([\s\S]*?)<\/svg>/i)
-
-  if (!match) {
-    throw new Error(`Icon "${icon}" is not a valid inline SVG`)
-  }
-
-  return {
-    attributes: parseAttributes(match[1]),
-    body: match[2].trim(),
-  }
-}
-
-const resolveIcon = (icon: string) => {
-  if (icon.includes(":")) {
-    const [prefix, iconId] = icon.split(":")
-    const iconSet = iconSets[prefix as keyof typeof iconSets]
-
-    if (!iconSet) {
-      throw new Error(`Unknown Iconify prefix "${prefix}" for icon "${icon}"`)
-    }
-
-    const iconData = getIconData(iconSet, iconId)
-
-    if (!iconData) {
-      throw new Error(`Unknown Iconify icon "${icon}"`)
-    }
-
-    const svg = iconToSVG(iconData, { height: "1em" })
-
-    return {
-      attributes: svg.attributes,
-      body: replaceIDs(svg.body),
-    }
-  }
-
-  const iconPath = `../../assets/icons/${icon}.svg`
-  const svg = localIcons[iconPath]
-
-  if (typeof svg !== "string") {
-    throw new Error(`Unknown local icon "${icon}"`)
-  }
-
-  const parsed = parseLocalSVG(svg, icon)
-
-  return {
-    attributes: parsed.attributes,
-    body: replaceIDs(parsed.body),
-  }
-}
-
-const { attributes, body } = resolveIcon(iconName)
+const { attributes, body } = resolveIcon(name)
 const {
   width: intrinsicWidth,
   height: intrinsicHeight,
