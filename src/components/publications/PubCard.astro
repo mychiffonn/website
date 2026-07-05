@@ -3,6 +3,7 @@ import type { ProcessedPublication } from "@/types"
 
 import { slugify } from "@/lib/string-manipulation"
 import Badge from "@/components/base/Badge.astro"
+import Button from "@/components/base/Button.astro"
 import Chip from "@/components/base/Chip.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
@@ -72,7 +73,7 @@ const { pub, filterableTags = true } = Astro.props
   <div class="card-actions">
     {pub.abstract && (
         <details class="publication-abstract">
-          <summary class="card-button abstract-summary">Abstract</summary>
+          <summary data-button data-variant="accent-outline" class="abstract-summary">Abstract</summary>
           <div class="abstract-content">
             {pub.abstract}
           </div>
@@ -80,10 +81,10 @@ const { pub, filterableTags = true } = Astro.props
       )}
 
     {pub.links.map(({ href, icon, label }) => (
-        <Link href={href} external class="card-button">
+        <Button href={href} external variant="accent-outline">
           <Icon name={icon} />
-          {label}
-        </Link>
+          <span>{label}</span>
+        </Button>
       ))}
   </div>
 
@@ -131,6 +132,11 @@ const { pub, filterableTags = true } = Astro.props
 
   .abstract-summary {
     cursor: pointer;
+  }
+
+  .card-tags :global([data-pub-tag]) {
+    min-block-size: 1.5rem;
+    padding-block: 0.0625rem;
   }
 
   .publication-abstract summary::-webkit-details-marker {

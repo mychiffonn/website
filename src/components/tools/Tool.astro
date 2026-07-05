@@ -53,20 +53,14 @@ const safeIcon = getSafeIcon(icon)
     color: inherit;
     font-size: var(--step--1);
     text-decoration: none;
-    transform: translateY(0);
     transition:
       background-color var(--motion-duration) var(--motion-ease),
-      border-color var(--motion-duration) var(--motion-ease),
-      box-shadow var(--motion-duration) var(--motion-ease),
-      transform var(--motion-duration) var(--motion-ease);
+      border-color var(--motion-duration) var(--motion-ease);
   }
 
   .tool-link:hover {
     border-color: var(--border);
     background: var(--muted);
-    box-shadow: 0 0.35rem 1rem
-      color-mix(in oklab, var(--foreground) 8%, transparent);
-    transform: translateY(-1px);
   }
 
   .tool-body {

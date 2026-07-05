@@ -20,40 +20,40 @@ const sourceLinks = [
       &copy; <span id="current-year"></span>
       {PROFILE.name}.
       {SITE.license ? (
-        <>
-          {` Unless otherwise stated, all content is licensed under `}
-          <Link class="footer-link" href={SITE.license.href} external>
-            {SITE.license.label}.
-          </Link>
-        </>
-      ) : (
-        ` All rights reserved.`
-      )}
+          <>
+            {` Unless otherwise stated, all content is licensed under `}
+            <Link class="footer-link" href={SITE.license.href} external>
+              {SITE.license.label}.
+            </Link>
+          </>
+        ) : (
+          ` All rights reserved.`
+        )}
     </p>
 
     {sourceLinks.length > 0 && (
-      <p class="footer-small">
-        {sourceLinks.map((link, index) => [
-          <Link href={link.href} class="footer-muted-link" external underline>
-            {link.label}
-          </Link>,
-          index < sourceLinks.length - 1 && " / ",
-        ])}
-      </p>
-    )}
+        <p class="footer-small">
+          {sourceLinks.map((link, index) => [
+            <Link href={link.href} class="footer-muted-link" external underline>
+              {link.label}
+            </Link>,
+            index < sourceLinks.length - 1 && " / ",
+          ])}
+        </p>
+      )}
 
     {FOOTER.credits && (
-      <p class="footer-small">
-        Built with{" "}
-        <Link href="https://astro.build/" class="footer-link" external>
-          Astro
-        </Link>
-        {". "}
-        <Link href="/palette" class="footer-link">
-          View Color Palette
-        </Link>
-      </p>
-    )}
+        <p>
+          Built with{" "}
+          <Link href="https://astro.build/" class="footer-link" external>
+            Astro.
+          </Link>
+          View
+          <Link href="/palette" class="footer-link">
+            Color Palette.
+          </Link>
+        </p>
+      )}
   </div>
 </footer>
 
