@@ -1,7 +1,9 @@
 ---
-import { Image, type LocalImageProps, type RemoteImageProps } from "astro:assets"
-
-import { cn } from "@/lib/utils"
+import {
+  Image,
+  type LocalImageProps,
+  type RemoteImageProps,
+} from "astro:assets"
 
 type AstroImageProps = LocalImageProps | RemoteImageProps
 
@@ -18,43 +20,51 @@ const {
   ...imageProps
 } = Astro.props
 
-// Ensure square dimensions - if width or height is set, use it for both
 const squareDimension = imageProps.width || imageProps.height
 const finalImageProps = {
   ...imageProps,
-  ...(squareDimension && { width: squareDimension, height: squareDimension })
+  ...(squareDimension && { width: squareDimension, height: squareDimension }),
 }
-
-// Auto-add inferSize for remote images without dimensions
-const isRemoteImage = typeof imageProps.src === "string" && imageProps.src.startsWith("http")
+const isRemoteImage =
+  typeof imageProps.src === "string" && imageProps.src.startsWith("http")
 const shouldInferSize =
-  isRemoteImage && !imageProps.width && !imageProps.height && !("inferSize" in imageProps)
+  isRemoteImage &&
+  !imageProps.width &&
+  !imageProps.height &&
+  !("inferSize" in imageProps)
 ---
 
-<div class={cn("relative flex shrink-0 overflow-hidden rounded-full", className)}>
-  {
-    finalImageProps.src && (
+<span data-avatar class={className}>
+  {finalImageProps.src ? (
       <Image
         {...(finalImageProps as any)}
         {...(shouldInferSize && { inferSize: true })}
-        class="aspect-square object-cover object-center"
         data-slot={dataSlot}
-        aria-label="Avatar"
       />
-    )
+    ) : (
+      <span data-avatar-fallback>
+        <slot name="fallback">{fallback}</slot>
+      </span>
+    )}
+</span>
+
+<style is:global>
+  [data-avatar] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: var(--radius-full);
+    background: var(--muted);
+    color: var(--foreground);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
   }
 
-  <div
-    class={cn(
-      "bg-muted flex size-full items-center justify-center",
-      "text-foreground font-medium uppercase",
-      !!finalImageProps.src && "hidden"
-    )}
-    data-slot="avatar-fallback"
-    style="font-size: clamp(0.5rem, 25%, 1.5rem)"
-  >
-    <slot name="fallback">
-      {fallback}
-    </slot>
-  </div>
-</div>
+  [data-avatar] img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+</style>

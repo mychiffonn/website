@@ -1,19 +1,12 @@
 ---
 import Layout from "@/layouts/Layout.astro"
-import Button from "@/components/base/Button.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 ---
 
-<Layout title="404">
-  <Breadcrumbs slot="breadcrumb" items={[{ label: "???", icon: "question" }]} />
-
-  <section class="flex flex-col items-center justify-center gap-y-4 text-center">
-    <div class="max-w-md">
-      <h1 class="mb-4 text-3xl font-medium">404: Page not found</h1>
-      <p class="prose">Oops! The page you're looking for doesn't exist.</p>
-    </div>
-    <Button variant={"outline"} href="/" class="group flex gap-x-1.5">
-      <span class="transition-transform group-hover:-translate-x-1">&larr;</span> Go to home page
-    </Button>
-  </section>
+<Layout title="404" noindex>
+  <Breadcrumbs slot="breadcrumb" items={[{ label: "404", icon: "question" }]} />
+  <prose-content>
+    <h1>404</h1>
+    <p>This page does not exist.</p>
+  </prose-content>
 </Layout>

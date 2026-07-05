@@ -15,8 +15,8 @@ const { email, showIcon = true, showCopyButton = true } = Astro.props
 const displayEmail = getTransformedEmail(email, "display")
 ---
 
-<span class="flex items-center gap-2">
-  {showIcon && <Icon name="mingcute:mail-line" class="size-5.5" />}
+<span class="email-link">
+  {showIcon && <Icon name="mingcute:mail-line" />}
   <Link
     href={`mailto:${email}`}
     aria-label={`Send email to ${displayEmail}`}
@@ -25,14 +25,39 @@ const displayEmail = getTransformedEmail(email, "display")
   >
     {displayEmail}
   </Link>
-  {
-    showCopyButton && (
+  {showCopyButton && (
       <CopyButton
         text={email}
         title="Copy email address"
         size="1.5rem"
-        class="hover:text-accent hover:ring-ring rounded p-1 transition-colors hover:ring-2"
+        class="email-copy"
       />
-    )
-  }
+    )}
 </span>
+
+<style>
+  .email-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  .email-link :global(svg) {
+    inline-size: 1.375rem;
+    block-size: 1.375rem;
+  }
+
+  .email-link :global(.email-copy) {
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    outline: 2px solid transparent;
+    transition:
+      color var(--motion-duration-fast) var(--motion-ease),
+      outline-color var(--motion-duration) var(--motion-ease);
+  }
+
+  .email-link :global(.email-copy:hover) {
+    color: var(--accent);
+    outline-color: var(--ring);
+  }
+</style>

@@ -1,5 +1,4 @@
 ---
-import { cn } from "@/lib/utils"
 import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
 
@@ -64,32 +63,29 @@ const pages = generatePages()
   role="navigation"
   aria-label="pagination"
   data-slot="pagination"
-  class={cn("mx-auto flex w-full justify-center", className)}
+  class:list={["pagination", className]}
 >
-  <ul data-slot="pagination-content" class="flex flex-row flex-wrap items-center gap-1">
+  <ul data-slot="pagination-content">
     <li data-slot="pagination-item">
       <Button
         href={currentPage > 1 ? getPageUrl(currentPage - 1) : undefined}
         variant="ghost"
         size="default"
-        class={cn("gap-2 px-2", currentPage === 1 && "pointer-events-none opacity-50")}
+        class="pagination-step"
         aria-label="Go to previous page"
         aria-disabled={currentPage === 1}
       >
         <Icon name="left" />
-        <span class="hidden sm:block">Previous</span>
+        <span data-label>Previous</span>
       </Button>
     </li>
 
-    {/** Page Numbers  */}
-    {
-      pages.map((page) => (
+    {pages.map((page) => (
         <li data-slot="pagination-item">
           {page === "ellipsis" ? (
             <span
               aria-hidden="true"
               data-slot="pagination-ellipsis"
-              class="flex size-9 items-center justify-center"
             >
               <Icon name="more-horizontal" />
               <span class="sr-only">More pages</span>
@@ -99,7 +95,7 @@ const pages = generatePages()
               href={getPageUrl(page)}
               variant={page === currentPage ? "outline" : "ghost"}
               size="default"
-              class="size-9"
+              class="pagination-page"
               aria-current={page === currentPage ? "page" : undefined}
               data-active={page === currentPage}
             >
@@ -107,22 +103,70 @@ const pages = generatePages()
             </Button>
           )}
         </li>
-      ))
-    }
+      ))}
 
-    {/** Next */}
     <li data-slot="pagination-item">
       <Button
         href={currentPage < totalPages ? getPageUrl(currentPage + 1) : undefined}
         variant="ghost"
         size="default"
-        class={cn("gap-2 px-2", currentPage === totalPages && "pointer-events-none opacity-50")}
+        class="pagination-step"
         aria-label="Go to next page"
         aria-disabled={currentPage === totalPages}
       >
-        <span class="hidden sm:block">Next</span>
+        <span data-label>Next</span>
         <Icon name="right" />
       </Button>
     </li>
   </ul>
 </nav>
+
+<style>
+  .pagination {
+    display: flex;
+    inline-size: 100%;
+    justify-content: center;
+    margin-inline: auto;
+  }
+
+  [data-slot="pagination-content"] {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3xs);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  [data-slot="pagination-ellipsis"] {
+    display: inline-flex;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+  }
+
+  :global(.pagination-step) {
+    gap: var(--space-2xs);
+    padding-inline: var(--space-xs);
+  }
+
+  :global(.pagination-page) {
+    inline-size: 2.25rem;
+    padding-inline: 0;
+  }
+
+  :global(.pagination-step[aria-disabled="true"]) {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  @media (width < 40rem) {
+    :global(.pagination-step [data-label]) {
+      display: none;
+    }
+  }
+</style>

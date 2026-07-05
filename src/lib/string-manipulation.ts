@@ -23,7 +23,9 @@ export const slugify = (text: string): string => {
  * @param arr Array of strings to deduplicate
  * @returns Array with duplicates removed (case-insensitive)
  */
-export const dedupLowerCase = (arr: string[]) => [...new Set(arr.map((s) => s.toLowerCase()))]
+export const dedupLowerCase = (arr: string[]) => [
+  ...new Set(arr.map((s) => s.toLowerCase())),
+]
 
 /**
  * Deduplicates an array of strings while preserving the case of the first occurrence

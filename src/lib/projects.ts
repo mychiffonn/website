@@ -10,21 +10,28 @@ export type Project = CollectionEntry<"projects">
 // Project Utilities
 // ========================================
 
-export const getProjectLinks = (code?: string, doc?: string, url?: string, release?: string) => {
+export const getProjectLinks = (
+  code?: string,
+  doc?: string,
+  url?: string,
+  release?: string,
+) => {
   const linkData = [
     { type: "code" as const, href: code },
     { type: "doc" as const, href: doc },
     { type: "url" as const, href: url },
-    { type: "release" as const, href: release }
+    { type: "release" as const, href: release },
   ]
 
   return linkData
-    .filter((link): link is { type: ProjectLinkType; href: string } => !!link.href)
+    .filter(
+      (link): link is { type: ProjectLinkType; href: string } => !!link.href,
+    )
     .map((link) => ({
       type: link.type,
       href: link.href,
       icon: PROJECT_LINK_TYPES[link.type].iconName,
-      label: PROJECT_LINK_TYPES[link.type].label
+      label: PROJECT_LINK_TYPES[link.type].label,
     }))
 }
 
@@ -50,7 +57,7 @@ export function getProjectCategoryCounts(projects: Project[]) {
   return PROJECT_CATEGORIES.map(({ slug, label }) => ({
     slug,
     label,
-    count: counts.get(slug) || 0
+    count: counts.get(slug) || 0,
   }))
     .filter((c) => c.count > 0)
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
@@ -74,8 +81,10 @@ export function sortProjects(projects: Project[]): Project[] {
 
     // Then sort by end date (most recent first); ongoing projects rank highest.
     const ongoingSentinel = new Date(8640000000000000)
-    const endDateA = a.data.toDate ?? (a.data.fromDate ? ongoingSentinel : new Date(0))
-    const endDateB = b.data.toDate ?? (b.data.fromDate ? ongoingSentinel : new Date(0))
+    const endDateA =
+      a.data.toDate ?? (a.data.fromDate ? ongoingSentinel : new Date(0))
+    const endDateB =
+      b.data.toDate ?? (b.data.fromDate ? ongoingSentinel : new Date(0))
     const endDelta = endDateB.getTime() - endDateA.getTime()
     if (endDelta !== 0) return endDelta
 
@@ -92,7 +101,9 @@ export function sortProjects(projects: Project[]): Project[] {
  * @param filter - Optional filter function to apply at collection level
  * @returns Promise resolving to filtered and sorted projects
  */
-export async function getProjects(filter?: (project: Project) => boolean): Promise<Project[]> {
+export async function getProjects(
+  filter?: (project: Project) => boolean,
+): Promise<Project[]> {
   // Fetch from collection with optional filtering
   const projects = filter
     ? await getCollection("projects", filter)
@@ -106,12 +117,15 @@ export interface ProjectNavigation {
   next: Project | null
 }
 
-export async function getProjectNavigation(currentId: string): Promise<ProjectNavigation> {
+export async function getProjectNavigation(
+  currentId: string,
+): Promise<ProjectNavigation> {
   const projects = await getProjects((project) => !!project.body?.trim())
   const currentIndex = projects.findIndex((p) => p.id === currentId)
   if (currentIndex === -1) return { prev: null, next: null }
   return {
     prev: currentIndex > 0 ? projects[currentIndex - 1] : null,
-    next: currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null
+    next:
+      currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null,
   }
 }

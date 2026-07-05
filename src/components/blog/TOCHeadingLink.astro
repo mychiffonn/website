@@ -2,7 +2,6 @@
 import type { MarkdownHeading } from "astro"
 
 import type { TOCHeadingItem } from "@/lib/blog/types"
-import { cn } from "@/lib/utils"
 
 interface Props {
   heading: MarkdownHeading | TOCHeadingItem
@@ -19,16 +18,64 @@ const href = "href" in heading ? heading.href : propHref || `#${heading.slug}`
 <li>
   <a
     href={href}
-    class={cn(
-      "toc-item block px-2 py-1 text-sm text-muted-foreground rounded-sm",
-      "hover:bg-accent/50 hover:text-accent-foreground/50 transition-all duration-200",
-      "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-      "data-active:text-foreground data-active:font-medium data-active:bg-accent/30",
-      className
-    )}
+    class:list={["toc-item", className]}
     data-heading-link={heading.slug}
     data-depth={heading.depth}
   >
-    <span class="line-clamp-2">{heading.text}</span>
+    <span>{heading.text}</span>
   </a>
 </li>
+
+<style>
+  .toc-item {
+    display: block;
+    margin-inline-start: calc(var(--depth-offset, 0) * var(--space-s));
+    padding: 0.25rem var(--space-2xs);
+    border-radius: var(--radius-sm);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    text-decoration: none;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .toc-item:hover {
+    background: color-mix(in oklab, var(--accent) 50%, transparent);
+    color: color-mix(in oklab, var(--accent-foreground) 50%, transparent);
+  }
+
+  .toc-item:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .toc-item[data-active] {
+    background: color-mix(in oklab, var(--accent) 30%, transparent);
+    color: var(--foreground);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .toc-item[data-depth="3"] {
+    --depth-offset: 1;
+  }
+
+  .toc-item[data-depth="4"] {
+    --depth-offset: 2;
+  }
+
+  .toc-item[data-depth="5"] {
+    --depth-offset: 3;
+  }
+
+  .toc-item[data-depth="6"] {
+    --depth-offset: 4;
+  }
+
+  span {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+</style>

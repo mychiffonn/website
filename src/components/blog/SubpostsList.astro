@@ -9,14 +9,23 @@ interface Props {
 const { items } = Astro.props
 ---
 
-{
-  items.length > 0 && (
-    <ul class="gap-y-1">
+{items.length > 0 && (
+    <ul>
       {items.map((item) => (
         <li>
           <PostNavItem {...item} />
         </li>
       ))}
     </ul>
-  )
-}
+  )}
+
+<style>
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+</style>

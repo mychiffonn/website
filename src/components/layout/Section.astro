@@ -4,49 +4,92 @@ import Link from "@/components/base/Link.astro"
 interface Props {
   title: string
   class?: string
-  /** Optional link to see more */
   moreLink?: string
-  /** Custom more link text (defaults to "see all →") */
   moreText?: string
 }
 
-const { class: className, title, moreLink, moreText = "see all →" } = Astro.props
+const {
+  class: className,
+  title,
+  moreLink,
+  moreText = "see all →",
+} = Astro.props
 ---
 
-<section class:list={["mt-2 flex flex-col gap-y-1", className]}>
-  <div class={moreLink && "flex items-baseline gap-x-3"}>
-    <h2
-      id={title.toLowerCase()}
-      class="section-title relative mt-4 mb-2 pb-0.5 text-2xl font-medium"
-    >
-      {title}
-    </h2>
-    {
-      moreLink && (
-        <Link href={moreLink} underline class="text-muted-foreground text-sm">
-          {moreText}
-        </Link>
-      )
-    }
-  </div>
+<section class:list={["section-block", className]}>
+  <section-heading>
+    <h2 id={title.toLowerCase()}>{title}</h2>
+    {moreLink && (
+      <Link href={moreLink} underline class="section-more">
+        {moreText}
+      </Link>
+    )}
+  </section-heading>
   <slot />
 </section>
 
 <style>
-  .section-title::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 2rem;
-    height: 2px;
-    background-color: var(--primary);
-    border-radius: 1px;
-    opacity: 0.7;
-    transition: width 300ms ease-in-out;
+  .section-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    margin-block-start: var(--space-xl);
   }
 
-  section:hover .section-title::after {
-    width: 3rem;
+  section-heading {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-s);
+    min-width: 0;
+  }
+
+  h2 {
+    position: relative;
+    width: fit-content;
+    margin: 0;
+    padding-block-end: 0.125rem;
+    color: var(--foreground);
+    font-size: var(--step-2);
+    line-height: 1.333;
+    font-weight: var(--font-weight-medium);
+  }
+
+  h2::after {
+    content: "";
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    inline-size: 2rem;
+    block-size: 2px;
+    border-radius: 1px;
+    background: var(--primary);
+    opacity: 0.7;
+    transition: inline-size 300ms ease-in-out;
+  }
+
+  .section-block:hover h2::after,
+  section-heading:focus-within h2::after {
+    inline-size: 3rem;
+  }
+
+  .section-more {
+    flex-shrink: 0;
+    color: var(--muted-foreground);
+    font-size: var(--step-0);
+    line-height: 1.5;
+  }
+
+  @media (width < 40rem) {
+    .section-block {
+      margin-block-start: var(--space-l);
+    }
+
+    section-heading {
+      gap: var(--space-xs);
+    }
+
+    .section-more {
+      font-size: var(--step--1);
+    }
   }
 </style>

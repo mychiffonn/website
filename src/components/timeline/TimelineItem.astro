@@ -6,17 +6,57 @@ interface Props {
 const { class: className } = Astro.props
 ---
 
-<li class:list={["group relative flex gap-3", className]}>
-  <div class="relative flex flex-col items-center">
-    <div class="border-primary relative z-10 mt-1 h-2 w-2 rounded-full border-2"></div>
-    <div
-      class="border-muted absolute top-4 bottom-4 left-1 -translate-x-px border-l-2 border-dashed group-last:hidden"
-    >
-    </div>
+<li class:list={["timeline-item", className]}>
+  <div class="timeline-marker" aria-hidden="true">
+    <div class="timeline-dot"></div>
+    <div class="timeline-line"></div>
   </div>
-
-  <div class="min-w-0 flex-1 pb-2">
+  <div class="timeline-content">
     <slot name="date" />
     <slot />
   </div>
 </li>
+
+<style>
+  .timeline-item {
+    position: relative;
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .timeline-marker {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .timeline-dot {
+    position: relative;
+    z-index: 1;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    margin-block-start: 0.35rem;
+    border: 2px solid var(--primary);
+    border-radius: var(--radius-full);
+    background: var(--background);
+  }
+
+  .timeline-line {
+    position: absolute;
+    inset-block: 1rem 0;
+    inset-inline-start: 50%;
+    border-inline-start: 2px dashed var(--muted);
+  }
+
+  .timeline-item:last-child .timeline-line {
+    display: none;
+  }
+
+  .timeline-content {
+    flex: 1;
+    min-inline-size: 0;
+    padding-block-end: var(--space-2xs);
+  }
+</style>

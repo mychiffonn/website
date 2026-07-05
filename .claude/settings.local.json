@@ -1,37 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find:*)",
-      "Bash(fzf:*)",
-      "Bash(grep:*)",
-      "Bash(eza:*)",
-      "Bash(sed:*)",
-      "Bash(pwd:*)",
-      "Bash(ls:*)",
-      "Bash(cat:*)",
-      "Bash(rg:*)",
-      "Bash(git log:*)",
-      "Bash(git diff:*)",
-      "Bash(git status:*)",
-      "Bash(git fetch:*)",
-      "Bash(git pull:*)",
-      "Bash(pnpm info:*)",
-      "Bash(pnpm preview:*)",
-      "Bash(pnpm format:*)",
-      "Bash(pnpm lint:*)",
-      "Bash(pnpm routine:*)",
-      "Bash(pnpm check:*)",
-      "Bash(mkdir:*)",
-      "Bash(node --version:*)",
-      "Bash(nvm ls:*)",
-      "WebFetch(domain:localhost)",
-      "WebFetch(domain:docs.astro.build)",
-      "WebFetch(domain:citation.js.org)",
-      "WebFetch(domain:mychiffonn.com)",
-      "WebFetch(domain:webmention.io)",
-      "WebFetch(domain:pagefind.app)"
-    ],
-    "deny": ["Bash(git push:*):", "Bash(rm:*)", "Bash(rmdir:*)"],
-    "defaultMode": "plan"
+      "Bash(awk '{print $1}')",
+      "Bash(codex --version)",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s http://localhost:4322/blog/__migration-test)"
+    ]
   }
 }

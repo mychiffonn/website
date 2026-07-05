@@ -1,6 +1,4 @@
 ---
-import { cn } from "@/lib/utils"
-
 interface Props {
   href: string
   external?: boolean
@@ -14,15 +12,29 @@ const { href, external, class: className, underline, ...rest } = Astro.props
 
 <a
   href={href}
-  target={external ? "_blank" : "_self"}
+  target={external ? "_blank" : undefined}
   rel={external ? "noopener noreferrer nofollow" : undefined}
-  class={cn(
-    "inline transition-colors duration-300 ease-in-out hover:text-accent",
-    underline &&
-      "underline decoration-muted-foreground underline-offset-[3px] hover:decoration-accent",
-    className
-  )}
+  data-link
+  data-underline={underline || undefined}
+  class={className}
   {...rest}
 >
   <slot />
 </a>
+
+<style is:global>
+  [data-link] {
+    color: inherit;
+    transition:
+      color var(--motion-duration-fast) var(--motion-ease),
+      text-decoration-color var(--motion-duration) var(--motion-ease);
+  }
+
+  [data-link]:hover {
+    color: var(--accent);
+  }
+
+  [data-link][data-underline] {
+    --underline: var(--muted-foreground);
+  }
+</style>

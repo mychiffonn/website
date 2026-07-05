@@ -184,8 +184,21 @@ const usesDescription =
       }
     ]}
   />
-  <p class="text-muted-foreground text-sm">
+  <p class="uses-note">
     Discover other developers' setups at
-    <Link href="https://uses.tech/" external underline class="text-foreground">uses.tech.</Link>
+    <Link href="https://uses.tech/" external underline class="uses-note-link"
+      >uses.tech.</Link
+    >
   </p>
 </CommonLayout>
+
+<style>
+  .uses-note {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  :global(.uses-note-link) {
+    color: var(--foreground);
+  }
+</style>

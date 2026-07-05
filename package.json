@@ -1,86 +1,59 @@
 {
   "name": "astro-scholar",
   "type": "module",
-  "version": "1.3.0",
+  "version": "2.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
     "build": "astro build",
-    "check": "astro check",
     "preview": "astro preview",
-    "sync": "astro sync",
     "astro": "astro",
-    "format": "prettier --write **/*.{astro,ts,tsx,css,mjs,md,mdx} --ignore-path .gitignore --ignore-path .prettierignore",
-    "lint": "pnpm dlx oxlint --type-aware",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "oxlint --type-aware",
     "routine": "pnpm lint && pnpm sync && pnpm format",
     "clean": "rm -rf dist/ .astro/ node_modules/.astro/data-store.json",
     "prepare": "husky"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
-    "@astrojs/markdown-remark": "^7.2.1",
-    "@astrojs/mdx": "^7.0.2",
+    "@astrojs/markdown-satteri": "^0.3.3",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@citation-js/core": "^0.7.21",
     "@citation-js/plugin-bibtex": "^0.7.21",
     "@date-fns/tz": "^1.5.0",
-    "@expressive-code/plugin-collapsible-sections": "^0.44.0",
-    "@expressive-code/plugin-line-numbers": "^0.44.0",
+    "@expressive-code/plugin-collapsible-sections": "^0.42.0",
+    "@expressive-code/plugin-line-numbers": "^0.42.0",
     "@iconify-json/academicons": "^1.2.4",
     "@iconify-json/mingcute": "^1.2.7",
-    "@r4ai/remark-callout": "^0.6.2",
-    "@tailwindcss/vite": "^4.3.2",
-    "@types/mdast": "^4.0.4",
-    "astro": "7.0.6",
-    "astro-expressive-code": "^0.44.0",
-    "astro-icon": "^1.1.5",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
+    "@iconify/utils": "^3.1.3",
+    "astro": "^7.0.6",
     "date-fns": "^4.4.0",
-    "rehype-autolink-headings": "^7.1.0",
-    "rehype-external-links": "^3.0.0",
-    "rehype-katex": "^7.0.1",
-    "remark-math": "^6.0.0",
-    "remark-sectionize": "^2.1.0",
-    "sharp": "^0.34.5",
-    "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.3.2",
-    "typescript": "^5.9.3",
-    "unified": "^11.0.5",
-    "unist-util-visit": "^5.1.0"
+    "github-slugger": "^2.0.0",
+    "hast-util-select": "^6.0.4",
+    "hast-util-to-html": "^9.0.5",
+    "hastscript": "^9.0.1",
+    "husky": "^9.1.7",
+    "satteri": "^0.9.4",
+    "satteri-expressive-code": "^0.1.17",
+    "temml": "^0.13.3",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "@biomejs/biome": "^2.5.2",
     "@types/hast": "^3.0.4",
-    "husky": "^9.1.7",
-    "lighthouse": "^13.4.0",
-    "lint-staged": "^16.4.0",
+    "@types/mdast": "^4.0.4",
+    "mdast-util-to-hast": "^13.2.0",
     "oxlint": "^1.72.0",
     "oxlint-tsgolint": "^0.24.0",
-    "prettier": "^3.9.4",
-    "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.6.14"
-  },
-  "lint-staged": {
-    "*.{astro,md,mdx}": [
-      "astro check"
-    ],
-    "*.{astro,ts,tsx,js,jsx,mjs}": [
-      "prettier --write",
-      "pnpm dlx oxlint --type-aware"
-    ],
-    "*.{md,mdx}": [
-      "prettier --write"
-    ],
-    "*.css": [
-      "prettier --write"
-    ]
+    "sharp": "^0.35.3"
   },
   "packageManager": "pnpm@10.20.0+sha512.cf9998222162dd85864d0a8102e7892e7ba4ceadebbf5a31f9c2fce48dfce317a9c53b9f6464d1ef9042cba2e02ae02a9f7c143a2b438cd93c91840f0192b9dd",
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@tailwindcss/oxide",
       "esbuild",
       "sharp"
     ]

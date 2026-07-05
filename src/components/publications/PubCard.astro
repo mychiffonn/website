@@ -22,29 +22,26 @@ const { pub, filterableTags = true } = Astro.props
   data-pub-year={pub.year ?? ""}
   data-pub-selected={pub.selected ? "true" : "false"}
   data-pub-author-position={pub.authorPosition ?? Infinity}
-  data-pub-keywords={pub.expandedKeywords?.map((k: string) => slugify(k)).join(",") ?? ""}
+  data-pub-keywords={pub.expandedKeywords?.map((k) => slugify(k)).join(",") ?? ""}
 >
-  {pub.award && <span class="text-primary items-center text-sm font-bold">🏆 {pub.award}</span>}
+  {pub.award && <span class="publication-award">🏆 {pub.award}</span>}
 
   <span class="bibliography-title">
-    {
-      pub.mainUrl ? (
+    {pub.mainUrl ? (
         <Link href={pub.mainUrl} external class="card-title-link">
           <h3 class="card-title">{pub.title}</h3>
         </Link>
       ) : (
         <h3 class="card-title">{pub.title}</h3>
-      )
-    }
+      )}
   </span>
 
-  <div class="bibliography-authors text-muted-foreground text-sm">
+  <div class="bibliography-authors">
     <span set:html={pub.authorData.displayFirstAuthors} />
-    {
-      pub.authorData.hasMore && (
+    {pub.authorData.hasMore && (
         <>
           <button
-            class="author-toggle text-accent"
+            class="author-toggle"
             data-hidden-authors={pub.authorData.hiddenAuthors}
             data-hidden-count={pub.authorData.hiddenCount}
             data-last-authors={pub.authorData.displayLastAuthors || ""}
@@ -53,54 +50,44 @@ const { pub, filterableTags = true } = Astro.props
           >
             ...and {pub.authorData.hiddenCount} more authors...
           </button>
-          <span class="hidden-authors hidden" />
+          <span class="hidden-authors" hidden />
         </>
-      )
-    }
-    {
-      pub.authorData.displayLastAuthors && pub.authorData.hasMore && (
+      )}
+    {pub.authorData.displayLastAuthors && pub.authorData.hasMore && (
         <span>
           ,
           <span set:html={pub.authorData.displayLastAuthors} />
         </span>
-      )
-    }
+      )}
   </div>
 
-  {
-    (pub.publisher || pub.year) && (
-      <div class="bibliography-details text-muted-foreground text-sm">
-        {pub.publisher && <span class="font-bold">{pub.publisher}</span>}
+  {(pub.publisher || pub.year) && (
+      <div class="bibliography-details">
+        {pub.publisher && <span class="publication-publisher">{pub.publisher}</span>}
         {pub.publisher && pub.year && <span> • </span>}
         {pub.year && <span>{pub.year}</span>}
       </div>
-    )
-  }
+    )}
 
   <div class="card-actions">
-    {
-      pub.abstract && (
+    {pub.abstract && (
         <details class="publication-abstract">
-          <summary class="card-button cursor-pointer">Abstract</summary>
-          <div class="abstract-content mt-2 rounded p-3 text-sm leading-relaxed">
+          <summary class="card-button abstract-summary">Abstract</summary>
+          <div class="abstract-content">
             {pub.abstract}
           </div>
         </details>
-      )
-    }
+      )}
 
-    {
-      pub.links.map(({ href, icon, label }) => (
+    {pub.links.map(({ href, icon, label }) => (
         <Link href={href} external class="card-button">
           <Icon name={icon} />
           {label}
         </Link>
-      ))
-    }
+      ))}
   </div>
 
-  {
-    pub.keywords && pub.keywords.length > 0 && (
+  {pub.keywords && pub.keywords.length > 0 && (
       <div class="card-tags">
         {pub.keywords.map((keyword: string) =>
           filterableTags ? (
@@ -112,17 +99,38 @@ const { pub, filterableTags = true } = Astro.props
           )
         )}
       </div>
-    )
-  }
+    )}
 </article>
 
 <style>
+  .publication-award {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .bibliography-authors,
+  .bibliography-details {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  .publication-publisher {
+    font-weight: var(--font-weight-bold);
+  }
+
   .publication-abstract[open] summary {
     margin-bottom: 0.5rem;
   }
 
   .publication-abstract summary::marker {
     content: "";
+  }
+
+  .abstract-summary {
+    cursor: pointer;
   }
 
   .publication-abstract summary::-webkit-details-marker {
@@ -133,7 +141,7 @@ const { pub, filterableTags = true } = Astro.props
     content: "⏵";
     display: inline-block;
     margin-right: 0.5em;
-    transition: transform 0.2s;
+    transition: transform var(--motion-duration) var(--motion-ease);
   }
 
   .publication-abstract[open] summary:before {
@@ -141,25 +149,57 @@ const { pub, filterableTags = true } = Astro.props
   }
 
   .author-toggle {
-    cursor: pointer;
-    transition: text-decoration 0.2s;
     display: inline-flex;
     align-items: center;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    cursor: pointer;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-style: dotted;
+    text-underline-offset: 0.12em;
+    transition:
+      color var(--motion-duration-fast) var(--motion-ease),
+      text-decoration-color var(--motion-duration) var(--motion-ease),
+      text-underline-offset var(--motion-duration) var(--motion-ease);
   }
 
   .author-toggle:hover,
   .author-toggle:focus-visible {
-    text-decoration: underline;
-    text-decoration-style: dotted;
+    text-decoration-color: currentColor;
+    text-underline-offset: 0.18em;
   }
 
   .expanded-authors {
     cursor: pointer;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-style: dotted;
+    text-underline-offset: 0.12em;
+    transition:
+      text-decoration-color var(--motion-duration) var(--motion-ease),
+      text-underline-offset var(--motion-duration) var(--motion-ease);
+  }
+
+  .hidden-authors[hidden] {
+    display: none;
+  }
+
+  .abstract-content {
+    margin-block-start: var(--space-2xs);
+    padding: var(--space-xs);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--muted) 45%, transparent);
+    font-size: var(--step--1);
+    line-height: var(--leading-relaxed);
   }
 
   .expanded-authors:hover {
-    text-decoration: underline;
-    text-decoration-style: dotted;
+    text-decoration-color: currentColor;
+    text-underline-offset: 0.18em;
   }
 
   .bibliography-authors :global(.author-highlight) {
@@ -197,7 +237,7 @@ const { pub, filterableTags = true } = Astro.props
         if (!isExpanded) {
           // Show hidden authors - replace button with clickable author list
           hiddenSpan.innerHTML = ` ${hiddenAuthors}`
-          hiddenSpan.classList.remove("hidden")
+          hiddenSpan.hidden = false
           hiddenSpan.classList.add("expanded-authors")
           button.style.display = "none"
           button.setAttribute("aria-expanded", "true")
@@ -208,7 +248,7 @@ const { pub, filterableTags = true } = Astro.props
 
         function hideAuthors() {
           // Hide hidden authors - show button again
-          hiddenSpan.classList.add("hidden")
+          hiddenSpan.hidden = true
           hiddenSpan.classList.remove("expanded-authors")
           hiddenSpan.innerHTML = ""
           button.style.display = "inline-flex"

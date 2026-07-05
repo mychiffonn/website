@@ -34,7 +34,7 @@ export type ProcessedProfileLink = {
 export const getProcessedProfileLinks = (
   links?: ProfileLinkConfig | Record<string, string>,
   includeRss = false,
-  includeEmail = false
+  includeEmail = false,
 ): ProcessedProfileLink[] => {
   const linksToProcess = links || PROFILE.links
   const entries: ProcessedProfileLink[] = []
@@ -45,7 +45,7 @@ export const getProcessedProfileLinks = (
       href: `mailto:${PROFILE.email}`,
       isExternal: true,
       label: "Email",
-      iconName: "mingcute:mail-line"
+      iconName: "mingcute:mail-line",
     })
   }
 
@@ -55,7 +55,7 @@ export const getProcessedProfileLinks = (
 
     const linkData = processProfileLink(
       value as string | { href: string; label?: string },
-      iconConfig
+      iconConfig,
     )
 
     const { href, isExternal } = normalizeHref(linkData.href)
@@ -65,7 +65,7 @@ export const getProcessedProfileLinks = (
       href,
       isExternal,
       label: linkData.label,
-      iconName: iconConfig.iconName
+      iconName: iconConfig.iconName,
     })
   }
 
@@ -76,7 +76,7 @@ export const getProcessedProfileLinks = (
       href,
       isExternal: false,
       label: "RSS",
-      iconName: PROFILE_ICON_MAP.rss.iconName
+      iconName: PROFILE_ICON_MAP.rss.iconName,
     })
   }
 
@@ -99,7 +99,10 @@ export const getIconForPlatform = (platform: string): string => {
  * @param variant The variant to return, display or encoded
  * @returns The email in the desired variant
  */
-export const getTransformedEmail = (email: string, variant: EmailVariant = "display"): string => {
+export const getTransformedEmail = (
+  email: string,
+  variant: EmailVariant = "display",
+): string => {
   switch (variant) {
     case "encoded":
       return Buffer.from(email, "utf8").toString("base64")
@@ -114,10 +117,12 @@ export const getTransformedEmail = (email: string, variant: EmailVariant = "disp
 // ========================================
 
 const normalizeHref = (href: string): { href: string; isExternal: boolean } => {
-  const normalized = href.startsWith("/public/") ? href.replace("/public", "") : href
+  const normalized = href.startsWith("/public/")
+    ? href.replace("/public", "")
+    : href
   return {
     href: normalized,
-    isExternal: !normalized.startsWith("/")
+    isExternal: !normalized.startsWith("/"),
   }
 }
 
@@ -127,9 +132,14 @@ const normalizeHref = (href: string): { href: string; isExternal: boolean } => {
  * @param iconConfig The icon configuration
  * @returns The label for the link
  */
-const getLabel = (value: string | { href: string; label?: string }, iconConfig: any): string => {
+const getLabel = (
+  value: string | { href: string; label?: string },
+  iconConfig: any,
+): string => {
   if (typeof value === "string") return iconConfig.label
-  return value.label && value.label !== "platform" ? value.label : iconConfig.label
+  return value.label && value.label !== "platform"
+    ? value.label
+    : iconConfig.label
 }
 
 /**
@@ -138,9 +148,12 @@ const getLabel = (value: string | { href: string; label?: string }, iconConfig: 
  * @param iconConfig The icon configuration
  * @returns The processed link
  */
-const processProfileLink = (value: string | { href: string; label?: string }, iconConfig: any) => ({
+const processProfileLink = (
+  value: string | { href: string; label?: string },
+  iconConfig: any,
+) => ({
   href: typeof value === "string" ? value : value.href,
-  label: getLabel(value, iconConfig)
+  label: getLabel(value, iconConfig),
 })
 
 /**
@@ -150,7 +163,7 @@ const DOMAIN_SHORTCUTS: Record<string, string> = {
   "gmail.com": "[gmail]",
   "yahoo.com": "[yahoo]",
   "outlook.com": "[outlook]",
-  "hotmail.com": "[hotmail]"
+  "hotmail.com": "[hotmail]",
 }
 
 const getEmailDisplayText = (email: string): string => {

@@ -1,6 +1,5 @@
 ---
 import type { Post } from "@/lib/blog/types"
-import { cn } from "@/lib/utils"
 import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
 
@@ -14,67 +13,166 @@ const { prevPost, nextPost, parentPost } = Astro.props
 const isSubpost = !!parentPost
 ---
 
-<nav
-  class={cn("col-start-2 grid grid-cols-1 gap-4", isSubpost ? "sm:grid-cols-3" : "sm:grid-cols-2")}
->
+<nav class="post-navigation" data-subpost={isSubpost ? "true" : "false"}>
   <Button
     href={nextPost ? `/${nextPost.collection}/${nextPost.id}#post-title` : undefined}
     variant="outline"
-    class={cn(
-      "rounded-lg group flex items-center justify-start size-full",
-      !nextPost && "pointer-events-none opacity-50 cursor-not-allowed"
-    )}
+    class="post-navigation-link"
+    data-direction="previous"
     aria-disabled={!nextPost}
   >
-    <Icon name="arrow-left" class="mr-2 transition-transform group-hover:-translate-x-1" />
-    <div class="flex flex-col items-start overflow-hidden text-wrap">
-      <span class="text-muted-foreground text-left text-xs">
+    <Icon name="arrow-left" class="post-navigation-icon" />
+    <post-navigation-label>
+      <span>
         {isSubpost ? "Previous Subpost" : "Previous Post"}
       </span>
-      <span class="line-clamp-2 w-full text-left text-sm text-balance text-ellipsis">
+      <strong>
         {nextPost?.data.title || (isSubpost ? "No older subpost" : "You're at the oldest post!")}
-      </span>
-    </div>
+      </strong>
+    </post-navigation-label>
   </Button>
 
-  {
-    isSubpost && (
+  {isSubpost && (
       <Button
         href={parentPost ? `/${parentPost.collection}/${parentPost.id}#post-title` : undefined}
         variant="outline"
-        class={cn(
-          "group flex size-full items-center justify-center rounded-lg",
-          !parentPost && "pointer-events-none cursor-not-allowed opacity-50"
-        )}
+        class="post-navigation-link"
+        data-direction="parent"
+        aria-disabled={!parentPost}
       >
-        <Icon name="arrow-left-up" class="mr-1 transition-transform group-hover:-translate-1" />
-        <div class="flex flex-col items-center overflow-hidden text-wrap">
-          <span class="text-muted-foreground text-center text-xs">Parent Post</span>
-          <span class="line-clamp-2 w-full text-center text-sm text-balance text-ellipsis">
+        <Icon name="arrow-left-up" class="post-navigation-icon" />
+        <post-navigation-label>
+          <span>Parent Post</span>
+          <strong>
             {parentPost?.data.title || "No parent post"}
-          </span>
-        </div>
+          </strong>
+        </post-navigation-label>
       </Button>
-    )
-  }
+    )}
 
   <Button
     href={prevPost ? `/${prevPost.collection}/${prevPost.id}#post-title` : undefined}
     variant="outline"
-    class={cn(
-      "rounded-lg group flex items-center justify-end size-full",
-      !prevPost && "pointer-events-none opacity-50 cursor-not-allowed"
-    )}
+    class="post-navigation-link"
+    data-direction="next"
     aria-disabled={!prevPost}
   >
-    <div class="flex flex-col items-end overflow-hidden text-wrap">
-      <span class="text-muted-foreground text-right text-xs">
+    <post-navigation-label>
+      <span>
         {isSubpost ? "Next Subpost" : "Next Post"}
       </span>
-      <span class="line-clamp-2 w-full text-right text-sm text-balance text-ellipsis">
+      <strong>
         {prevPost?.data.title || (isSubpost ? "No newer subpost" : "You're at the newest post!")}
-      </span>
-    </div>
-    <Icon name="arrow-right" class="ml-1 transition-transform group-hover:translate-x-1" />
+      </strong>
+    </post-navigation-label>
+    <Icon name="arrow-right" class="post-navigation-icon" />
   </Button>
 </nav>
+
+<style>
+  .post-navigation {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-s);
+  }
+
+  .post-navigation[data-subpost="true"] {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .post-navigation[data-subpost="false"] {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  :global(.post-navigation-link) {
+    inline-size: 100%;
+    min-block-size: 4rem;
+    border-radius: var(--radius-lg);
+  }
+
+  :global(.post-navigation-link[aria-disabled="true"]) {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+  :global(.post-navigation-link[data-direction="previous"]) {
+    justify-content: flex-start;
+  }
+
+  :global(.post-navigation-link[data-direction="parent"]) {
+    justify-content: center;
+  }
+
+  :global(.post-navigation-link[data-direction="next"]) {
+    justify-content: flex-end;
+  }
+
+  post-navigation-label {
+    display: flex;
+    min-inline-size: 0;
+    flex-direction: column;
+    overflow: hidden;
+    text-wrap: pretty;
+  }
+
+  [data-direction="previous"] post-navigation-label {
+    align-items: flex-start;
+    text-align: start;
+  }
+
+  [data-direction="parent"] post-navigation-label {
+    align-items: center;
+    text-align: center;
+  }
+
+  [data-direction="next"] post-navigation-label {
+    align-items: flex-end;
+    text-align: end;
+  }
+
+  post-navigation-label span {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  post-navigation-label strong {
+    display: -webkit-box;
+    inline-size: 100%;
+    overflow: hidden;
+    color: var(--foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    text-overflow: ellipsis;
+    text-wrap: balance;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  :global(.post-navigation-icon) {
+    flex-shrink: 0;
+    transition: transform var(--motion-duration) var(--motion-ease);
+  }
+
+  :global(
+    .post-navigation-link[data-direction="previous"]:hover .post-navigation-icon
+  ) {
+    transform: translateX(-0.25rem);
+  }
+
+  :global(
+    .post-navigation-link[data-direction="parent"]:hover .post-navigation-icon
+  ) {
+    transform: translate(-0.125rem, -0.125rem);
+  }
+
+  :global(
+    .post-navigation-link[data-direction="next"]:hover .post-navigation-icon
+  ) {
+    transform: translateX(0.25rem);
+  }
+</style>

@@ -5,16 +5,16 @@ import CopyButton from "@/components/base/CopyButton.astro"
 const colorGroups = [
   {
     label: "Core",
-    tokens: ["background", "foreground"]
+    tokens: ["background", "foreground"],
   },
   {
     label: "Brand",
-    tokens: ["primary", "primary-foreground", "accent", "accent-foreground"]
+    tokens: ["primary", "primary-foreground", "accent", "accent-foreground"],
   },
   {
     label: "UI",
-    tokens: ["muted", "muted-foreground", "border", "ring", "destructive"]
-  }
+    tokens: ["muted", "muted-foreground", "border", "ring", "destructive"],
+  },
 ]
 ---
 
@@ -24,45 +24,41 @@ const colorGroups = [
   breadcrumbs={[{ label: "Palette", icon: "mingcute:palette-line" }]}
   prose={false}
 >
-  {
-    colorGroups.map((group) => (
-      <section class="mb-8">
-        <h2 class="text-foreground mb-3 text-xl font-semibold">{group.label}</h2>
-        <div class="grid grid-cols-2 gap-4">
+  {colorGroups.map((group) => (
+      <section class="palette-section">
+        <h2>{group.label}</h2>
+        <div class="palette-grid">
           {group.tokens.map((token) => (
-            <div
-              class="group border-border overflow-hidden rounded-lg border"
-              data-palette-card={token}
-            >
-              <div class="relative" style={`height:8rem;background-color:var(--${token})`}>
-                <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
-                  <span class="rounded-md px-3 py-2 font-mono text-xs" data-overlay={token}>
+            <div class="palette-card" data-palette-card={token}>
+              <div class="palette-swatch" style={`background-color:var(--${token})`}>
+                <div class="palette-overlay">
+                  <span data-overlay={token}>
                     {token}
                   </span>
                 </div>
               </div>
-              <div class="flex flex-col gap-1 p-2">
-                <p class="text-foreground mb-1 text-sm font-semibold">{token}</p>
-                <div class="flex items-center justify-between gap-1">
-                  <code class="oklch-value text-muted-foreground text-xs" data-value={token}>
+              <div class="palette-card-body">
+                <p>{token}</p>
+                <div class="palette-value-row">
+                  <code class="oklch-value" data-value={token}>
                     …
                   </code>
                   <CopyButton
                     selector=".oklch-value"
                     title={`Copy ${token} OKLCH value`}
                     size="1rem"
-                    class="text-muted-foreground hover:text-foreground shrink-0"
+                    class="palette-copy"
                   />
                 </div>
-                <div class="flex items-center justify-between gap-1">
-                  <code class="hex-value text-muted-foreground text-xs" data-hex={token}>
+                <div class="palette-value-row">
+                  <code class="hex-value" data-hex={token}>
                     …
                   </code>
                   <CopyButton
                     selector=".hex-value"
                     title={`Copy ${token} hex value`}
                     size="1rem"
-                    class="text-muted-foreground hover:text-foreground shrink-0"
+                    class="palette-copy"
                   />
                 </div>
               </div>
@@ -70,9 +66,95 @@ const colorGroups = [
           ))}
         </div>
       </section>
-    ))
-  }
+    ))}
 </CommonLayout>
+
+<style>
+  .palette-section {
+    margin-block-end: var(--space-xl);
+  }
+
+  .palette-section h2 {
+    margin-block: 0 var(--space-xs);
+    color: var(--foreground);
+    font-size: var(--step-2);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-s);
+  }
+
+  .palette-card {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .palette-swatch {
+    position: relative;
+    block-size: 8rem;
+  }
+
+  .palette-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--motion-duration) var(--motion-ease);
+  }
+
+  .palette-card:hover .palette-overlay {
+    opacity: 1;
+  }
+
+  .palette-overlay span {
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .palette-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding: var(--space-2xs);
+  }
+
+  .palette-card-body p {
+    margin-block: 0 var(--space-3xs);
+    color: var(--foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .palette-value-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3xs);
+  }
+
+  .palette-value-row code {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  :global(.palette-copy) {
+    flex-shrink: 0;
+    color: var(--muted-foreground);
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  :global(.palette-copy:hover) {
+    color: var(--foreground);
+  }
+</style>
 
 <script is:inline data-astro-rerun>
   ;(function () {
@@ -110,7 +192,9 @@ const colorGroups = [
         var b = parseInt(hex.substring(4, 6), 16)
         return r * 0.299 + g * 0.587 + b * 0.114 > 150
       }
-      return Number(m[0]) * 0.299 + Number(m[1]) * 0.587 + Number(m[2]) * 0.114 > 150
+      return (
+        Number(m[0]) * 0.299 + Number(m[1]) * 0.587 + Number(m[2]) * 0.114 > 150
+      )
     }
 
     function updateColorValues() {
@@ -134,7 +218,9 @@ const colorGroups = [
         var swatchEl = card.querySelector("[style*=background-color]")
         if (!swatchEl) return
         var light = isLight(swatchEl)
-        pill.style.backgroundColor = light ? "rgba(0,0,0,0.75)" : "rgba(255,255,255,0.85)"
+        pill.style.backgroundColor = light
+          ? "rgba(0,0,0,0.75)"
+          : "rgba(255,255,255,0.85)"
         pill.style.color = light ? "#fff" : "#000"
       })
     }
@@ -144,7 +230,7 @@ const colorGroups = [
 
     new MutationObserver(updateColorValues).observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-theme"]
+      attributeFilter: ["data-theme"],
     })
   })()
 </script>

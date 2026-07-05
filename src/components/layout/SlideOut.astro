@@ -1,55 +1,98 @@
 ---
-import { cn } from "@/lib/utils"
-
 interface Props {
   position: "left" | "right"
   class?: string
 }
 
 const { position, class: className } = Astro.props
-
-const positionClasses = {
-  left: "left-0",
-  right: "right-0"
-}
-
-const borderClasses = {
-  left: "border-r",
-  right: "border-l"
-}
-
-const summaryPositionClasses = {
-  left: "left-2",
-  right: "right-2"
-}
 ---
 
 <aside
-  class={cn(
-    "group fixed z-40 hidden w-8 transition-all duration-200 hover:w-80 xl:block",
-    positionClasses[position],
-    className
-  )}
+  class:list={["slide-out", className]}
+  data-position={position}
   style="top: var(--header-height, 5rem); height: calc(100vh - var(--header-height, 5rem));"
 >
-  <div
-    class={cn(
-      "bg-background/95 border-border h-full shadow-lg backdrop-blur-sm",
-      borderClasses[position]
-    )}
-  >
-    <div
-      class="flex h-full flex-col p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-    >
+  <div class="slide-out-panel">
+    <div class="slide-out-main">
       <slot name="main" />
     </div>
-    <div
-      class={cn(
-        "absolute top-1/2 -translate-y-1/2 opacity-100 transition-opacity duration-200 group-hover:opacity-0",
-        summaryPositionClasses[position]
-      )}
-    >
+    <div class="slide-out-summary">
       <slot name="summary" />
     </div>
   </div>
 </aside>
+
+<style>
+  .slide-out {
+    position: fixed;
+    z-index: 40;
+    display: none;
+    inline-size: 2rem;
+    transition: inline-size 200ms ease;
+
+    @media (width >= 80rem) {
+      display: block;
+    }
+  }
+
+  .slide-out:hover {
+    inline-size: 20rem;
+  }
+
+  .slide-out[data-position="left"] {
+    left: 0;
+  }
+
+  .slide-out[data-position="right"] {
+    right: 0;
+  }
+
+  .slide-out-panel {
+    block-size: 100%;
+    border-color: var(--border);
+    background: color-mix(in oklab, var(--background) 95%, transparent);
+    box-shadow: 0 1rem 2rem oklch(from var(--foreground) l c h / 0.1);
+    backdrop-filter: blur(8px);
+  }
+
+  .slide-out[data-position="left"] .slide-out-panel {
+    border-inline-end: 1px solid var(--border);
+  }
+
+  .slide-out[data-position="right"] .slide-out-panel {
+    border-inline-start: 1px solid var(--border);
+  }
+
+  .slide-out-main {
+    display: flex;
+    block-size: 100%;
+    flex-direction: column;
+    padding: var(--space-xs);
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+
+  .slide-out:hover .slide-out-main {
+    opacity: 1;
+  }
+
+  .slide-out-summary {
+    position: absolute;
+    top: 50%;
+    opacity: 1;
+    transform: translateY(-50%);
+    transition: opacity 200ms ease;
+  }
+
+  .slide-out[data-position="left"] .slide-out-summary {
+    left: var(--space-2xs);
+  }
+
+  .slide-out[data-position="right"] .slide-out-summary {
+    right: var(--space-2xs);
+  }
+
+  .slide-out:hover .slide-out-summary {
+    opacity: 0;
+  }
+</style>

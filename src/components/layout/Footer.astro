@@ -3,70 +3,90 @@ import { FOOTER, PROFILE, SITE } from "@site-config"
 import Link from "@/components/base/Link.astro"
 import ProfileLinks from "@/components/profile/ProfileLinks.astro"
 
-// Create array of available source links
 const sourceLinks = [
   FOOTER.sourceCode ? { href: FOOTER.sourceCode, label: "Source Code" } : null,
-  FOOTER.sourceContent ? { href: FOOTER.sourceContent, label: "Source Content" } : null,
-  ...FOOTER.footerLinks
+  FOOTER.sourceContent
+    ? { href: FOOTER.sourceContent, label: "Source Content" }
+    : null,
+  ...FOOTER.footerLinks,
 ].filter(Boolean) as { href: string; label: string }[]
 ---
 
-<footer class="border-foreground/20 mt-4 border-t py-4">
-  <div class="text-muted-foreground flex flex-col gap-2 text-sm">
-    <ProfileLinks links={PROFILE.links} includeRss={true} includeEmail={true} class="my-2" />
+<footer>
+  <div class="footer-inner">
+    <ProfileLinks links={PROFILE.links} includeRss={true} includeEmail={true} />
 
     <p>
       &copy; <span id="current-year"></span>
       {PROFILE.name}.
-      {
-        SITE.license ? (
-          <>
-            {`Unless otherwise stated, all content is licensed under `}
-            <Link class="text-foreground" href={SITE.license.href} external>
-              {SITE.license.label}.
-            </Link>
-          </>
-        ) : (
-          `All rights reserved.`
-        )
-      }
+      {SITE.license ? (
+        <>
+          {` Unless otherwise stated, all content is licensed under `}
+          <Link class="footer-link" href={SITE.license.href} external>
+            {SITE.license.label}.
+          </Link>
+        </>
+      ) : (
+        ` All rights reserved.`
+      )}
     </p>
 
-    {/** Source Links */}
-    {
-      sourceLinks.length > 0 && (
-        <p class="text-xs">
-          {sourceLinks.map((link, index) => [
-            <Link href={link.href} class="text-muted-foreground" external underline>
-              {link.label}
-            </Link>,
-            index < sourceLinks.length - 1 && " / "
-          ])}
-        </p>
-      )
-    }
+    {sourceLinks.length > 0 && (
+      <p class="footer-small">
+        {sourceLinks.map((link, index) => [
+          <Link href={link.href} class="footer-muted-link" external underline>
+            {link.label}
+          </Link>,
+          index < sourceLinks.length - 1 && " / ",
+        ])}
+      </p>
+    )}
 
-    {/** Credits */}
-    {
-      FOOTER.credits && (
-        <p class="text-xs">
-          Built with{" "}
-          <Link href="https://astro.build/" class="text-foreground" external>
-            Astro
-          </Link>
-          {"."}
-          <Link href="/palette" class="text-foreground">
-            View Color Palette
-          </Link>
-        </p>
-      )
-    }
+    {FOOTER.credits && (
+      <p class="footer-small">
+        Built with{" "}
+        <Link href="https://astro.build/" class="footer-link" external>
+          Astro
+        </Link>
+        {". "}
+        <Link href="/palette" class="footer-link">
+          View Color Palette
+        </Link>
+      </p>
+    )}
   </div>
 </footer>
 
 <script>
   const yearElement = document.getElementById("current-year")
-  if (yearElement) {
-    yearElement.textContent = new Date().getFullYear().toString()
-  }
+  if (yearElement) yearElement.textContent = new Date().getFullYear().toString()
 </script>
+
+<style>
+  footer {
+    margin-block-start: var(--space-l);
+    padding-block: var(--space-s);
+    border-block-start: 1px solid
+      color-mix(in oklab, var(--foreground) 20%, transparent);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  .footer-small {
+    font-size: var(--step--1);
+  }
+
+  .footer-link {
+    color: var(--foreground);
+  }
+
+  .footer-muted-link {
+    color: var(--muted-foreground);
+  }
+</style>

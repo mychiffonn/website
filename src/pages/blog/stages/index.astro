@@ -11,7 +11,7 @@ const allPosts = await postManager.getMainPosts()
 
 const stageCounts = STAGES.map((s) => ({
   ...s,
-  count: allPosts.filter((p) => p.data.stage === s.name).length
+  count: allPosts.filter((p) => p.data.stage === s.name).length,
 }))
 ---
 
@@ -23,17 +23,34 @@ const stageCounts = STAGES.map((s) => ({
     ]}
   />
 
-  <div class="flex flex-col gap-4">
-    <div class="flex flex-wrap gap-2">
-      {
-        stageCounts.map(({ name, variant, count }) => (
+  <stage-list>
+    <stage-cloud>
+      {stageCounts.map(({ name, variant, count }) => (
           <Badge href={`/blog/stages/${name}`} variant={variant}>
-            <Icon name={name} class="size-3" />
+            <Icon name={name} size="0.75rem" />
             {name}
-            <span class="ml-1.5 opacity-70">({count})</span>
+            <span>({count})</span>
           </Badge>
-        ))
-      }
-    </div>
-  </div>
+        ))}
+    </stage-cloud>
+  </stage-list>
 </Layout>
+
+<style>
+  stage-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  stage-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  stage-cloud span {
+    margin-inline-start: 0.375rem;
+    opacity: 0.7;
+  }
+</style>

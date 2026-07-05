@@ -9,12 +9,5 @@ pnpm-debug.log*
 .env.production
 .DS_Store
 .idea/
-teaser.pptx
-~$teaser.pptx
 
-# Claude worktrees (temporary, not tracked)
 .claude/worktrees/
-
-# Writing
-.obsidian
-.logseq

@@ -21,7 +21,7 @@ const {
   hasSubposts,
   subpostCount,
   variant = "full",
-  class: className
+  class: className,
 } = Astro.props
 const isCard = variant === "card"
 ---
@@ -29,76 +29,118 @@ const isCard = variant === "card"
 <div
   id="post-metadata"
   class:list={[
-    "text-muted-foreground flex items-center gap-x-3 gap-y-2 text-sm",
-    isCard ? "meta-card flex-wrap" : "flex-col justify-center sm:flex-row",
-    className
+    "post-metadata",
+    isCard ? "meta-card" : "meta-full",
+    className,
   ]}
 >
-  {
-    authors.length > 0 && (
-      <div class="flex items-center gap-1.5">
+  {authors.length > 0 && (
+      <post-meta-group>
         {authors.map((author) => (
-          <div class="flex items-center gap-1">
-            <AuthorAvatar author={author} class="size-5" />
+          <post-meta-item>
+            <AuthorAvatar author={author} class="post-meta-avatar" />
             {isCard ? (
               <span>{author.name}</span>
             ) : (
-              <Link href={`/people/${author.id}`} underline class="text-foreground">
+              <Link href={`/people/${author.id}`} underline class="post-meta-author-link">
                 {author.name}
               </Link>
             )}
-          </div>
+          </post-meta-item>
         ))}
-      </div>
-    )
-  }
+      </post-meta-group>
+    )}
 
-  <div class="flex items-center gap-1">
+  <post-meta-item>
     <Icon name="publish" title="Published" />
     <FormattedDate date={createdAt} />
-  </div>
+  </post-meta-item>
 
-  {
-    updatedAt && (
-      <div class="flex items-center gap-1">
+  {updatedAt && (
+      <post-meta-item>
         <Icon name="edit" title="Updated" />
         <FormattedDate date={updatedAt} />
-      </div>
-    )
-  }
+      </post-meta-item>
+    )}
 
-  {
-    hasSubposts && subpostCount && (
-      <div class="flex items-center gap-1">
+  {hasSubposts && subpostCount && (
+      <post-meta-item>
         <Icon name="subposts" />
         <span>{formatSubpostCount(subpostCount)}</span>
-      </div>
-    )
-  }
+      </post-meta-item>
+    )}
 
-  {
-    wordCount > 0 && (
-      <div class="flex items-center gap-1">
+  {wordCount > 0 && (
+      <post-meta-item>
         <Icon name="reading-time" />
         <ReadingTime
           wordCount={isCard && combinedWordCount ? combinedWordCount : wordCount}
           combinedWordCount={!isCard ? combinedWordCount : undefined}
         />
-      </div>
-    )
-  }
+      </post-meta-item>
+    )}
 </div>
 <style>
+  .post-metadata {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-s);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  .meta-card {
+    flex-wrap: wrap;
+  }
+
+  .meta-full {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  post-meta-group,
+  post-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+  }
+
+  .meta-full post-meta-group,
+  .meta-full post-meta-item {
+    justify-content: center;
+  }
+
+  post-meta-group {
+    gap: var(--space-2xs);
+  }
+
+  :global(.post-meta-avatar) {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+
+  :global(.post-meta-author-link) {
+    color: var(--foreground);
+  }
+
   #post-metadata > *:not(:first-child)::before {
     content: none;
   }
-  @media (min-width: 640px) {
+
+  @media (width >= 40rem) {
+    .meta-full {
+      flex-direction: row;
+    }
+
     #post-metadata:not(.meta-card) > *:not(:first-child)::before {
       content: "•";
       margin-inline: 0.25rem;
       display: inline-block;
       vertical-align: middle;
-      color: color-mix(in oklch, var(--text-muted-foreground) 50%, transparent);
+      color: color-mix(in oklch, var(--muted-foreground) 50%, transparent);
       pointer-events: none;
     }
   }

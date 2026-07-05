@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 
   return authors.map((author) => ({
     params: { id: author.id },
-    props: { authorId: author.id }
+    props: { authorId: author.id },
   }))
 }
 
@@ -20,7 +20,7 @@ const { authorId } = Astro.props
 const postManager = PostManager.getInstance()
 const [author, authorPostsMetadata] = await Promise.all([
   getAuthorById(authorId),
-  postManager.getPostsByAuthor(authorId)
+  postManager.getPostsByAuthor(authorId),
 ])
 
 if (!author) {
@@ -35,6 +35,7 @@ if (!author) {
   type="profile"
 >
   <Breadcrumbs
+    slot="breadcrumb"
     items={[
       { href: "/people", label: "People", icon: "group" },
       { label: author.name, icon: "person" }
@@ -44,11 +45,10 @@ if (!author) {
   <section>
     <AuthorCard author={author} />
   </section>
-  <section class="flex flex-col gap-y-4">
-    <h2 class="text-2xl font-medium">Posts by {author.name}</h2>
-    {
-      authorPostsMetadata.length > 0 ? (
-        <ul class="flex flex-col gap-4">
+  <section class="author-posts">
+    <h2>Posts by {author.name}</h2>
+    {authorPostsMetadata.length > 0 ? (
+        <ul>
           {authorPostsMetadata.map((metadata) => (
             <li>
               <PreviewCard metadata={metadata} />
@@ -56,8 +56,34 @@ if (!author) {
           ))}
         </ul>
       ) : (
-        <p class="text-muted-foreground">No posts available from this author.</p>
-      )
-    }
+        <p>No posts available from this author.</p>
+      )}
   </section>
 </Layout>
+
+<style>
+  .author-posts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .author-posts h2 {
+    margin: 0;
+    font-size: var(--step-2);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .author-posts ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .author-posts p {
+    color: var(--muted-foreground);
+  }
+</style>

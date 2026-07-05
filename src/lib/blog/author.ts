@@ -16,7 +16,7 @@ export function getSiteAuthor(): AuthorData {
     avatar: undefined,
     bio: SITE.description,
     affiliation: undefined,
-    links: PROFILE.links ?? {}
+    links: PROFILE.links ?? {},
   }
 }
 
@@ -30,7 +30,9 @@ export async function getAllAuthors(): Promise<AuthorData[]> {
   }
 }
 
-export async function getAuthorById(authorId: string): Promise<AuthorData | null> {
+export async function getAuthorById(
+  authorId: string,
+): Promise<AuthorData | null> {
   try {
     const author = await getEntry("people", authorId)
     return author?.data || null
@@ -44,20 +46,22 @@ export async function getAuthorById(authorId: string): Promise<AuthorData | null
  * Resolves author references to author data objects.
  * Processes all references in parallel.
  */
-export async function resolveAuthors(authorRefs: AuthorReference[]): Promise<AuthorData[]> {
+export async function resolveAuthors(
+  authorRefs: AuthorReference[],
+): Promise<AuthorData[]> {
   if (!authorRefs?.length) return []
 
   const resolvedAuthors = await Promise.allSettled(
     authorRefs.map(async (authorRef) => {
       const author = await getEntry(authorRef)
       return author?.data || null
-    })
+    }),
   )
 
   return resolvedAuthors
     .filter(
       (result): result is PromiseFulfilledResult<AuthorData> =>
-        result.status === "fulfilled" && result.value !== null
+        result.status === "fulfilled" && result.value !== null,
     )
     .map((result) => result.value)
 }

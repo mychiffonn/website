@@ -19,7 +19,7 @@ const { profile } = Astro.props
 ---
 
 <article id="profile">
-  <header class="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+  <header class="profile-header">
     <Avatar
       src={avatar}
       alt={profile.name}
@@ -29,59 +29,144 @@ const { profile } = Astro.props
       height={200}
       loading="eager"
       fetchpriority="high"
-      class="size-28 self-center sm:size-50 sm:self-start"
+      class="profile-avatar"
     />
 
-    <div class="flex-1 space-y-4">
-      <div class="space-y-2">
-        <h1 class="flex flex-wrap items-center gap-2 text-2xl font-bold sm:text-3xl">
+    <div class="profile-content">
+      <div class="profile-heading">
+        <h1>
           {profile.name}
-          {
-            profile.pronouns && (
-              <Badge variant="outline" class="text-xs">
+          {profile.pronouns && (
+              <Badge variant="outline" class="profile-pronouns">
                 {profile.pronouns}
               </Badge>
-            )
-          }
+            )}
         </h1>
-        {profile.othernames && <p class="text-muted-foreground text-sm">{profile.othernames}</p>}
-        <p class="text-foreground">{profile.tagline}</p>
+        {profile.othernames && <p class="profile-othernames">{profile.othernames}</p>}
+        <p class="profile-tagline">{profile.tagline}</p>
       </div>
-      {
-        profile.pronunciation && (
+      {profile.pronunciation && (
           <Collapse title="Pronunciation" variant="muted">
-            <p class="text-muted-foreground">{profile.pronunciation}</p>
+            <p class="profile-pronunciation">{profile.pronunciation}</p>
           </Collapse>
-        )
-      }
+        )}
     </div>
   </header>
 </article>
 
-<section class="prose">
+<prose-content>
   <AboutContent />
-</section>
+</prose-content>
 
-<footer class="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-2 px-4 pt-4">
+<footer class="profile-footer">
   <EmailLink email={profile.email} />
 
-  {
-    profile.location && (
-      <span class="flex items-center gap-2">
-        <Icon name="mingcute:location-line" class="size-4" />
+  {profile.location && (
+      <span class="profile-contact-item">
+        <Icon name="mingcute:location-line" />
         <span>{profile.location}</span>
       </span>
-    )
-  }
+    )}
 
-  {
-    profile.phone && (
-      <span class="flex items-center gap-2">
-        <Icon name="mingcute:phone-line" class="size-4" />
+  {profile.phone && (
+      <span class="profile-contact-item">
+        <Icon name="mingcute:phone-line" />
         <span>{profile.phone}</span>
       </span>
-    )
-  }
+    )}
 
   <ProfileLinks highlight />
 </footer>
+
+<style>
+  .profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-s);
+  }
+
+  #profile {
+    margin-block-start: var(--space-s);
+  }
+
+  .profile-avatar {
+    inline-size: 7rem;
+    block-size: 7rem;
+    align-self: center;
+  }
+
+  .profile-content {
+    flex: 1;
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .profile-heading {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .profile-heading h1 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs);
+    margin: 0;
+    font-size: var(--step-3);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+  }
+
+  .profile-pronouns {
+    font-size: var(--step--1);
+  }
+
+  .profile-othernames,
+  .profile-pronunciation {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  .profile-tagline {
+    color: var(--foreground);
+  }
+
+  .profile-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-s);
+    padding-block-start: var(--space-s);
+    padding-inline: var(--space-s);
+    color: var(--muted-foreground);
+  }
+
+  .profile-contact-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  .profile-contact-item :global(svg) {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+
+  @media (width >= 40rem) {
+    .profile-header {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .profile-avatar {
+      inline-size: 12.5rem;
+      block-size: 12.5rem;
+      align-self: flex-start;
+    }
+
+    .profile-heading h1 {
+      font-size: var(--step-3);
+    }
+  }
+</style>

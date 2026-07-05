@@ -1,26 +1,46 @@
 ---
-import { cn } from "@/lib/utils"
-
 export type Props = astroHTML.JSX.ButtonHTMLAttributes
 
 const { class: className, type = "button", ...rest } = Astro.props
 ---
 
-<button
-  type={type}
-  data-slot="chip"
-  class={cn(
-    "inline-flex items-center justify-center gap-1 rounded-md border px-2 py-0.5",
-    "text-xs font-medium w-fit whitespace-nowrap shrink-0 overflow-hidden",
-    "[&>svg]:size-3 [&>svg]:pointer-events-none",
-    "cursor-pointer transition-all",
-    "bg-transparent border-border text-muted-foreground",
-    "hover:border-accent hover:text-accent",
-    "aria-[pressed=true]:bg-primary aria-[pressed=true]:text-primary-foreground aria-[pressed=true]:border-primary",
-    "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-    className
-  )}
-  {...rest}
->
+<button type={type} data-chip class={className} {...rest}>
   <slot />
 </button>
+
+<style is:global>
+  [data-chip] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    inline-size: fit-content;
+    min-block-size: 2rem;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      border-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  [data-chip]:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  [data-chip][aria-pressed="true"] {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+</style>

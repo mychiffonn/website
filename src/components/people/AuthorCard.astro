@@ -1,6 +1,5 @@
 ---
 import type { AuthorData } from "@/lib/blog/types"
-import { cn } from "@/lib/utils"
 import ProfileLinks from "@/components/profile/ProfileLinks.astro"
 
 import AuthorAvatar from "./AuthorAvatar.astro"
@@ -16,53 +15,134 @@ const { author, variant = "full" } = Astro.props
 const { id, name, bio, pronouns, links } = author
 const isAuthorPage = Astro.url.pathname === `/people/${id}`
 const isCompact = variant === "compact"
-
-const cardClasses = cn(
-  "author-card card relative flex",
-  isCompact ? "items-start gap-2 py-2" : "flex-wrap gap-4 py-4",
-  !isCompact && !isAuthorPage && "card-clickable group"
-)
+const isClickable = !isCompact && !isAuthorPage
 ---
 
-<article class={cardClasses}>
-  {
-    !isCompact && !isAuthorPage && (
+<article
+  class:list={[
+    "author-card",
+    "card",
+    { "author-card-compact": isCompact, "card-clickable": isClickable }
+  ]}
+>
+  {!isCompact && !isAuthorPage && (
       <a
         href={`/people/${id}`}
-        class="absolute inset-0 z-20"
+        class="author-card-link"
         aria-label={`View profile for ${name}`}
       />
-    )
-  }
+    )}
 
   <AuthorAvatar
     author={author}
     fallbackStyle="all-initials"
-    class={cn("relative z-10 shrink-0", isCompact ? "size-12" : "size-40")}
+    class:list={["author-card-avatar", { "author-card-avatar-compact": isCompact }]}
   />
 
-  <div
-    class={cn(
-      "relative z-10 flex grow flex-col",
-      isCompact ? "gap-y-1" : "justify-between gap-y-4"
-    )}
-  >
+  <div class="author-card-body">
     <div>
-      <div class="flex flex-wrap items-center gap-x-2">
-        {
-          isCompact ? (
-            <a href={`/people/${id}`} class="text-sm font-medium hover:underline">
+      <div class="author-card-heading">
+        {isCompact ? (
+            <a href={`/people/${id}`} class="author-card-name-link">
               {name}
             </a>
           ) : (
-            <h3 class="text-lg font-medium">{name}</h3>
-          )
-        }
-        {pronouns && <span class="text-muted-foreground text-sm">({pronouns})</span>}
+            <h3>{name}</h3>
+          )}
+        {pronouns && <span class="author-card-pronouns">({pronouns})</span>}
       </div>
-      {bio && <p class={cn("text-muted-foreground text-sm", isCompact && "line-clamp-2")}>{bio}</p>}
+      {bio && <p class:list={["author-card-bio", { "author-card-bio-compact": isCompact }]}>{bio}</p>}
     </div>
 
-    {!isCompact && <ProfileLinks links={links} class="relative z-30" />}
+    {!isCompact && <ProfileLinks links={links} class="author-card-profile-links" />}
   </div>
 </article>
+
+<style>
+  .author-card {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    padding-block: var(--space-s);
+  }
+
+  .author-card-compact {
+    align-items: flex-start;
+    gap: var(--space-2xs);
+    padding-block: var(--space-2xs);
+  }
+
+  .author-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+  }
+
+  :global(.author-card-avatar) {
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0;
+    inline-size: 10rem;
+    block-size: 10rem;
+  }
+
+  :global(.author-card-avatar-compact) {
+    inline-size: 3rem;
+    block-size: 3rem;
+  }
+
+  .author-card-body {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex: 1 1 16rem;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+
+  .author-card-compact .author-card-body {
+    gap: var(--space-3xs);
+  }
+
+  .author-card-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--space-2xs);
+  }
+
+  .author-card-heading h3 {
+    margin: 0;
+    font-size: var(--step-1);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .author-card-name-link {
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .author-card-pronouns,
+  .author-card-bio {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  .author-card-bio {
+    margin: 0;
+  }
+
+  .author-card-bio-compact {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  :global(.author-card-profile-links) {
+    position: relative;
+    z-index: 30;
+  }
+</style>

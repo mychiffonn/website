@@ -1,115 +1,167 @@
 ---
-import { cva, type VariantProps } from "class-variance-authority"
-
-import { cn } from "@/lib/utils"
-
 import Link from "./Link.astro"
 
-const buttonVariants = cva(
-  [
-    // Base layout & display
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md",
-
-    // Typography
-    "text-sm font-medium",
-
-    // Base sizing — 44px touch target on mobile (WCAG 2.5.5), scales down on larger screens where mouse precision makes it unnecessary
-    "min-h-[44px] sm:min-h-8",
-
-    // Touch & interaction
-    "touch-manipulation transition-all cursor-pointer select-none",
-    "text-decoration-none",
-
-    // Focus & accessibility
-    "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-    "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
-    "aria-invalid:ring-destructive/20 aria-invalid:border-destructive",
-    "dark:aria-invalid:ring-destructive/40"
-  ],
-  {
-    variants: {
-      variant: {
-        default: [
-          "bg-border text-foreground border border-transparent rounded-md",
-          "hover:bg-primary hover:text-primary-foreground hover:border-primary",
-          "focus-visible:ring-2 focus-visible:ring-primary/20"
-        ],
-        primary: [
-          "bg-primary text-primary-foreground border border-transparent rounded-md",
-          "hover:bg-background hover:text-foreground hover:border-primary",
-          "focus-visible:ring-2 focus-visible:ring-primary/20"
-        ],
-        accent: [
-          "bg-accent text-accent-foreground border border-transparent rounded-md",
-          "hover:bg-background hover:text-foreground hover:border-accent",
-          "focus-visible:ring-2 focus-visible:ring-accent/20"
-        ],
-        destructive: [
-          "bg-destructive text-accent-foreground border border-transparent rounded-md",
-          "hover:bg-background hover:text-foreground hover:border-destructive",
-          "focus-visible:ring-2 focus-visible:ring-destructive/20"
-        ],
-        outline: [
-          "bg-transparent text-foreground border border-border rounded-lg",
-          "hover:bg-accent hover:text-accent-foreground hover:border-accent",
-          "focus-visible:ring-2 focus-visible:ring-primary/20"
-        ],
-        "primary-outline": [
-          "bg-transparent text-foreground border border-border rounded-lg",
-          "hover:bg-primary hover:text-primary-foreground hover:border-primary",
-          "focus-visible:ring-2 focus-visible:ring-primary/20"
-        ],
-        "accent-outline": [
-          "bg-transparent text-foreground border border-border rounded-lg",
-          "hover:bg-accent hover:text-accent-foreground hover:border-accent",
-          "focus-visible:ring-2 focus-visible:ring-accent/20"
-        ],
-        "destructive-outline": [
-          "bg-transparent text-foreground border border-border rounded-lg",
-          "hover:bg-destructive hover:text-accent-foreground hover:border-destructive",
-          "focus-visible:ring-2 focus-visible:ring-destructive/20"
-        ],
-        ghost: "hover:bg-accent hover:text-accent-foreground active:bg-accent/80"
-      },
-      size: {
-        default: "px-3 py-2",
-        square: "aspect-square p-2 gap-0"
-      }
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default"
-    }
-  }
-)
-
 export interface Props extends astroHTML.JSX.ButtonHTMLAttributes {
-  variant?: VariantProps<typeof buttonVariants>["variant"]
-  size?: VariantProps<typeof buttonVariants>["size"]
+  variant?:
+    | "default"
+    | "primary"
+    | "accent"
+    | "destructive"
+    | "outline"
+    | "primary-outline"
+    | "accent-outline"
+    | "destructive-outline"
+    | "ghost"
+  size?: "default" | "square"
   href?: string
 }
 
-const { variant = "default", size = "default", class: className, href, ...rest } = Astro.props
+const {
+  variant = "default",
+  size = "default",
+  class: className,
+  href,
+  type = "button",
+  ...rest
+} = Astro.props
 ---
 
-{
-  href ? (
+{href ? (
     <Link
       href={href}
-      data-slot="button"
-      class={cn(buttonVariants({ variant, size }), className)}
+      data-button
+      data-variant={variant}
+      data-size={size}
+      class={className ?? undefined}
       {...rest}
     >
       <slot />
     </Link>
   ) : (
     <button
-      type="button"
-      data-slot="button"
-      class={cn(buttonVariants({ variant, size }), className)}
+      type={type}
+      data-button
+      data-variant={variant}
+      data-size={size}
+      class={className ?? undefined}
       {...rest}
     >
       <slot />
     </button>
-  )
-}
+  )}
+
+<style is:global>
+  [data-button] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    min-block-size: 44px;
+    padding: var(--space-2xs) var(--space-xs);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.2;
+    text-decoration: none;
+    touch-action: manipulation;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      border-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+
+    @media (width >= 40rem) {
+      min-block-size: 2rem;
+    }
+  }
+
+  [data-button][data-size="square"] {
+    inline-size: 2.75rem;
+    padding: 0;
+
+    @media (width >= 40rem) {
+      inline-size: 2rem;
+    }
+  }
+
+  [data-button][data-variant="default"] {
+    background: var(--muted);
+    color: var(--foreground);
+  }
+
+  [data-button][data-variant="primary"],
+  [data-button][data-variant="accent"] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  [data-button][data-variant="destructive"] {
+    background: var(--destructive);
+    color: var(--primary-foreground);
+  }
+
+  [data-button][data-variant$="outline"],
+  [data-button][data-variant="outline"] {
+    border-color: var(--border);
+    background: transparent;
+    color: var(--foreground);
+  }
+
+  [data-button][data-variant="ghost"] {
+    background: transparent;
+    color: var(--foreground);
+  }
+
+  [data-button][data-variant="default"]:hover {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  [data-button][data-variant="primary"]:hover {
+    border-color: var(--primary);
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  [data-button][data-variant="accent"]:hover {
+    border-color: var(--accent);
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  [data-button][data-variant="destructive"]:hover {
+    border-color: var(--destructive);
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  [data-button][data-variant="outline"]:hover,
+  [data-button][data-variant="accent-outline"]:hover,
+  [data-button][data-variant="ghost"]:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  [data-button][data-variant="primary-outline"]:hover {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  [data-button][data-variant="destructive-outline"]:hover {
+    border-color: var(--destructive);
+    background: var(--destructive);
+    color: var(--accent-foreground);
+  }
+
+  [data-button][aria-disabled="true"],
+  [data-button]:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+</style>

@@ -1,0 +1,167 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e3]:
+    - link "My Chiffon N." [ref=e4] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e5]: My Chiffon N.
+    - generic [ref=e6]:
+      - navigation "Site navigation" [ref=e7]:
+        - link "Projects" [ref=e8] [cursor=pointer]:
+          - /url: /projects
+        - link "Publications" [ref=e9] [cursor=pointer]:
+          - /url: /publications
+        - link "Blog" [ref=e10] [cursor=pointer]:
+          - /url: /blog
+        - link "Tech" [ref=e11] [cursor=pointer]:
+          - /url: /uses
+        - link "Now" [ref=e12] [cursor=pointer]:
+          - /url: /now
+      - button "Toggle theme" [ref=e14] [cursor=pointer]:
+        - img [ref=e16]
+        - generic [ref=e20]: Toggle theme
+  - navigation "Breadcrumb navigation" [ref=e22]:
+    - list [ref=e23]:
+      - listitem [ref=e24]:
+        - link "Navigate to home page" [ref=e25] [cursor=pointer]:
+          - /url: /
+          - img [ref=e26]
+          - generic [ref=e30]: Home
+      - listitem [ref=e31]:
+        - img [ref=e32]
+      - listitem [ref=e36]:
+        - link "Navigate to Blog" [ref=e37] [cursor=pointer]:
+          - /url: /blog
+          - img [ref=e38]
+          - generic [ref=e42]: Blog
+      - listitem [ref=e43]:
+        - img [ref=e44]
+      - listitem [ref=e48]:
+        - generic [ref=e49]:
+          - img [ref=e50]
+          - generic [ref=e54]: Page 1
+  - main [ref=e55]:
+    - navigation "Browse posts" [ref=e56]:
+      - generic [ref=e57]:
+        - heading "Browse by Stages" [level=2] [ref=e58]
+        - link "seedling (1)" [ref=e60] [cursor=pointer]:
+          - /url: /blog/stages/seedling
+          - img [ref=e61]
+          - text: seedling
+          - generic [ref=e65]: (1)
+      - generic [ref=e66]:
+        - heading "Browse by Tags" [level=2] [ref=e67]
+        - generic [ref=e68]:
+          - link "migration (1)" [ref=e69] [cursor=pointer]:
+            - /url: /blog/tags/migration
+            - img [ref=e70]
+            - text: migration
+            - generic [ref=e74]: (1)
+          - link "ui (1)" [ref=e75] [cursor=pointer]:
+            - /url: /blog/tags/ui
+            - img [ref=e76]
+            - text: ui
+            - generic [ref=e80]: (1)
+    - generic [ref=e81]:
+      - paragraph [ref=e82]: Showing 1–1 of 1 posts
+      - generic [ref=e83]:
+        - heading "2026" [level=2] [ref=e84]
+        - list [ref=e85]:
+          - listitem [ref=e86]:
+            - article [ref=e87] [cursor=pointer]:
+              - 'link "Post: Migration test parent post" [ref=e88]':
+                - /url: /blog/__migration-test
+              - generic [ref=e89]:
+                - heading "Migration test parent post" [level=3] [ref=e91]
+                - paragraph [ref=e92]: Temporary fixture for validating post, subpost, TOC, sidenote, table, and card styles during the Erudite v2 migration.
+                - generic [ref=e93]:
+                  - generic [ref=e95]:
+                    - img "My (Chiffon) Nguyen's Avatar" [ref=e97]
+                    - generic [ref=e98]: My (Chiffon) Nguyen
+                  - generic [ref=e99]:
+                    - img "Published" [ref=e100]
+                    - time [ref=e104]: Jul 3, 2026
+                  - generic [ref=e105]:
+                    - img [ref=e106]
+                    - time [ref=e111]: 1 min read
+                - generic [ref=e112]:
+                  - generic [ref=e113]:
+                    - img [ref=e114]
+                    - text: seedling
+                  - generic [ref=e118]:
+                    - img [ref=e119]
+                    - text: migration
+                  - generic [ref=e123]:
+                    - img [ref=e124]
+                    - text: ui
+    - navigation "pagination" [ref=e128]:
+      - list [ref=e129]:
+        - listitem [ref=e130]:
+          - button "Go to previous page" [disabled]:
+            - img
+            - generic: Previous
+        - listitem [ref=e131]:
+          - link "1" [ref=e132] [cursor=pointer]:
+            - /url: /blog
+        - listitem [ref=e133]:
+          - button "Go to next page" [disabled]:
+            - generic: Next
+            - img
+  - contentinfo [ref=e134]:
+    - generic [ref=e135]:
+      - list [ref=e136]:
+        - listitem [ref=e137]:
+          - link "Email" [ref=e138] [cursor=pointer]:
+            - /url: mailto:hi@mychiffonn.com
+            - img [ref=e139]
+            - generic [ref=e143]: Email
+        - listitem [ref=e144]:
+          - link "CV" [ref=e145] [cursor=pointer]:
+            - /url: /doc/My_Chiffon_Nguyen_CV.pdf
+            - img [ref=e146]
+            - generic [ref=e148]: CV
+        - listitem [ref=e149]:
+          - link "GitHub" [ref=e150] [cursor=pointer]:
+            - /url: https://github.com/mychiffonn
+            - img [ref=e151]
+            - generic [ref=e155]: GitHub
+        - listitem [ref=e156]:
+          - link "Google Scholar" [ref=e157] [cursor=pointer]:
+            - /url: https://scholar.google.com/citations?user=a25a-rUAAAAJ
+            - img [ref=e158]
+            - generic [ref=e160]: Google Scholar
+        - listitem [ref=e161]:
+          - link "ORCID" [ref=e162] [cursor=pointer]:
+            - /url: https://orcid.org/0009-0002-5787-3948
+            - img [ref=e163]
+            - generic [ref=e165]: ORCID
+        - listitem [ref=e166]:
+          - link "Open Review" [ref=e167] [cursor=pointer]:
+            - /url: https://openreview.net/profile?id=~My_Chiffon_Nguyen1
+            - img [ref=e168]
+            - generic [ref=e172]: Open Review
+        - listitem [ref=e173]:
+          - link "X" [ref=e174] [cursor=pointer]:
+            - /url: https://x.com/mychiffonn
+            - img [ref=e175]
+            - generic [ref=e179]: X
+        - listitem [ref=e180]:
+          - link "RSS" [ref=e181] [cursor=pointer]:
+            - /url: /rss.xml
+            - img [ref=e182]
+            - generic [ref=e186]: RSS
+      - paragraph [ref=e187]:
+        - text: © 2026 My (Chiffon) Nguyen. Unless otherwise stated, all content is licensed under
+        - link "CC-BY-NC-4.0." [ref=e188] [cursor=pointer]:
+          - /url: https://creativecommons.org/licenses/by-nc/4.0/
+      - paragraph [ref=e189]:
+        - link "Source Code" [ref=e190] [cursor=pointer]:
+          - /url: https://github.com/mychiffonn/website
+        - text: /
+        - link "Source Content" [ref=e191] [cursor=pointer]:
+          - /url: https://github.com/mychiffonn/website/tree/main/src/content
+      - paragraph [ref=e192]:
+        - text: Built with
+        - link "Astro" [ref=e193] [cursor=pointer]:
+          - /url: https://astro.build/
+        - text: .
+        - link "View Color Palette" [ref=e194] [cursor=pointer]:
+          - /url: /palette

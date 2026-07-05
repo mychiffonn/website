@@ -1,6 +1,5 @@
 ---
 import { PROFILE } from "@site-config"
-import { cn } from "@/lib/utils"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 
@@ -19,16 +18,15 @@ const {
   class: className = "",
   highlight = false,
   includeEmail = false,
-  includeRss = false
+  includeRss = false,
 } = Astro.props
 
 const highlightKeys = new Set(PROFILE.highlightLinks)
 const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
 ---
 
-<ul class={`flex flex-wrap gap-x-2 gap-y-1 ${className}`}>
-  {
-    processedLinks.map(({ key, href, isExternal, label, iconName }) => {
+<ul class:list={["profile-links", className]}>
+  {processedLinks.map(({ key, href, isExternal, label, iconName }) => {
       const isPrimary = highlight && highlightKeys.has(key)
       return (
         <li>
@@ -36,20 +34,118 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
             href={href}
             title={label}
             rel="me"
-            class={cn(
-              "flex touch-manipulation items-center justify-center rounded-md border transition-colors",
-              "focus-visible:ring-ring size-10.5 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:size-9",
-              isPrimary
-                ? "border-primary bg-primary text-primary-foreground hover:bg-background hover:text-primary hover:border-primary"
-                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            )}
+            class="profile-link"
+            data-primary={isPrimary ? "true" : undefined}
             external={isExternal}
           >
-            <Icon name={iconName} class="size-5.5 sm:size-4.5" />
+            <Icon name={iconName} />
             <span class="sr-only" set:html={label} />
           </Link>
         </li>
       )
-    })
-  }
+    })}
 </ul>
+
+<style>
+  .profile-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .profile-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.625rem;
+    block-size: 2.625rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--muted-foreground);
+    text-decoration: none;
+    touch-action: manipulation;
+    overflow: hidden;
+    transition:
+      border-color var(--motion-duration) var(--motion-ease),
+      box-shadow var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .profile-link::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background: var(--accent);
+    opacity: 0;
+    transform: scale(0.92);
+    transition:
+      opacity var(--motion-duration) var(--motion-ease),
+      transform var(--motion-duration) var(--motion-ease);
+  }
+
+  .profile-link :global(svg),
+  .profile-link :global(.sr-only) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .profile-link :global(svg) {
+    inline-size: 1.375rem;
+    block-size: 1.375rem;
+    transition: transform var(--motion-duration) var(--motion-ease);
+  }
+
+  .profile-link:hover::before {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .profile-link:hover,
+  .profile-link[data-link]:hover {
+    border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
+    color: var(--accent-foreground);
+    box-shadow: 0 0.35rem 1rem
+      color-mix(in oklab, var(--accent) 16%, transparent);
+  }
+
+  .profile-link:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .profile-link[data-primary="true"] {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .profile-link[data-primary="true"]::before {
+    background: var(--background);
+  }
+
+  .profile-link[data-primary="true"]:hover,
+  .profile-link[data-primary="true"][data-link]:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 0.35rem 1rem
+      color-mix(in oklab, var(--primary) 18%, transparent);
+  }
+
+  @media (width >= 40rem) {
+    .profile-link {
+      inline-size: 2.25rem;
+      block-size: 2.25rem;
+    }
+
+    .profile-link :global(svg) {
+      inline-size: 1.125rem;
+      block-size: 1.125rem;
+    }
+  }
+</style>

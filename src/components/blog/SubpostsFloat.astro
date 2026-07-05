@@ -1,6 +1,5 @@
 ---
 import type { PostNavItem } from "@/lib/blog/types"
-import { cn } from "@/lib/utils"
 
 interface Props {
   postNavItems: PostNavItem[]
@@ -17,29 +16,48 @@ const allItems = [
         {
           ...activePostNavItem,
           type: "parent" as const,
-          isSubpost: false
-        }
+          isSubpost: false,
+        },
       ]
     : []),
-  ...postNavItems
+  ...postNavItems,
 ]
 ---
 
-<aside class={cn("flex flex-col gap-1", className)}>
-  {
-    allItems.map((item) => {
-      const widthClass = item.isSubpost ? "w-3" : "w-4"
-      const stateClass = item.isActive ? "bg-primary" : "bg-muted-foreground/50"
-
+<aside class:list={["subposts-float", className]}>
+  {allItems.map((item) => {
       return (
         <span
-          class={`${widthClass} h-0.5 ${stateClass} transition-colors duration-200`}
+          data-subpost={item.isSubpost ? "true" : "false"}
+          data-active={item.isActive ? "true" : undefined}
           data-post-id={item.id}
         />
       )
-    })
-  }
+    })}
 </aside>
+
+<style>
+  .subposts-float {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  span {
+    block-size: 0.125rem;
+    inline-size: 1rem;
+    background: color-mix(in oklab, var(--muted-foreground) 50%, transparent);
+    transition: background-color var(--motion-duration) var(--motion-ease);
+  }
+
+  span[data-subpost="true"] {
+    inline-size: 0.75rem;
+  }
+
+  span[data-active="true"] {
+    background: var(--primary);
+  }
+</style>
 
 <script>
   class SubpostsFloatController {
@@ -65,7 +83,8 @@ const allItems = [
 
     private updateActiveIndicators() {
       const currentPath = window.location.pathname
-      const indicators = document.querySelectorAll<HTMLElement>("[data-post-id]")
+      const indicators =
+        document.querySelectorAll<HTMLElement>("[data-post-id]")
 
       let longestMatchId = ""
       indicators.forEach((indicator) => {
@@ -82,11 +101,9 @@ const allItems = [
         const isActive = postId === longestMatchId
 
         if (isActive) {
-          indicator.classList.remove("bg-muted-foreground/30")
-          indicator.classList.add("bg-primary")
+          indicator.dataset.active = "true"
         } else {
-          indicator.classList.remove("bg-primary")
-          indicator.classList.add("bg-muted-foreground/30")
+          delete indicator.dataset.active
         }
       })
     }

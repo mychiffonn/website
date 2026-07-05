@@ -3,7 +3,7 @@ import type {
   LinkConfig,
   ProfileConfig,
   PublicationConfig,
-  SiteConfig
+  SiteConfig,
 } from "@/types"
 
 export const SITE: SiteConfig = {
@@ -19,8 +19,8 @@ export const SITE: SiteConfig = {
       day: "numeric",
       month: "short",
       year: "numeric",
-      timeZone: "America/Los_Angeles" // or your preferred timezone
-    }
+      timeZone: "America/Los_Angeles", // or your preferred timezone
+    },
   },
 
   // Blog settings
@@ -28,7 +28,7 @@ export const SITE: SiteConfig = {
     featuredPostCount: 3,
     postsPerPage: 8,
     tocMaxDepth: 3,
-    shareActions: ["x"]
+    shareActions: ["x"],
   },
 
   // Theme settings
@@ -39,8 +39,8 @@ export const SITE: SiteConfig = {
   // Content license
   license: {
     label: "CC-BY-NC-4.0",
-    href: "https://creativecommons.org/licenses/by-nc/4.0/"
-  }
+    href: "https://creativecommons.org/licenses/by-nc/4.0/",
+  },
 }
 
 export const PROFILE: ProfileConfig = {
@@ -50,7 +50,8 @@ export const PROFILE: ProfileConfig = {
   email: "hi@mychiffonn.com",
   // location: "San Francisco, CA, USA",
   pronouns: "she/her",
-  pronunciation: "My = /me/, Chiffon = /shi-FON/. I'm Chiffon in English-speaking context.",
+  pronunciation:
+    "My = /me/, Chiffon = /shi-FON/. I'm Chiffon in English-speaking context.",
   // hover or click on "links" to see all profile links supported. or search PROFILE_ICON_MAP in icon.config.ts, the keys are what used here
   links: {
     cv: "/doc/My_Chiffon_Nguyen_CV.pdf",
@@ -59,34 +60,34 @@ export const PROFILE: ProfileConfig = {
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
     orcid: "https://orcid.org/0009-0002-5787-3948",
     openreview: "https://openreview.net/profile?id=~My_Chiffon_Nguyen1",
-    x: "https://x.com/mychiffonn"
+    x: "https://x.com/mychiffonn",
     // bluesky: "https://bsky.app/profile/mychiffonn.bsky.social",
     // discord: "https://discordapp.com/users/mychiffonn",
   },
-  highlightLinks: ["cv", "resume"]
+  highlightLinks: ["cv", "resume"],
 }
 
 export const NAV_LINKS: LinkConfig[] = [
   {
     href: "/projects",
-    label: "Projects"
+    label: "Projects",
   },
   {
     href: "/publications",
-    label: "Publications"
+    label: "Publications",
   },
   {
     href: "/blog",
-    label: "Blog"
+    label: "Blog",
   },
   {
     href: "/uses",
-    label: "Tech"
+    label: "Tech",
   },
   {
     href: "/now",
-    label: "Now"
-  }
+    label: "Now",
+  },
 ]
 
 export const PUB_CONFIG: PublicationConfig = {
@@ -95,26 +96,30 @@ export const PUB_CONFIG: PublicationConfig = {
   highlightAuthor: {
     firstName: "My Chiffon",
     lastName: "Nguyen",
-    aliases: ["My Nguyen", "M. Nguyen", "Chiffon Nguyen"]
+    aliases: ["My Nguyen", "M. Nguyen", "Chiffon Nguyen"],
   },
   equalSymbols: {
     first: "*",
     second: "†",
     third: "‡",
-    last: "§"
-  }
+    last: "§",
+  },
 }
 
 export const FOOTER: FooterConfig = {
   credits: true,
   sourceCode: "https://github.com/mychiffonn/website",
   sourceContent: "https://github.com/mychiffonn/website/tree/main/src/content",
-  footerLinks: []
+  footerLinks: [],
 }
 
 if (import.meta.env.DEV && typeof window === "undefined") {
-  const { FooterConfigSchema, ProfileConfigSchema, PublicationConfigSchema, SiteConfigSchema } =
-    await import("@/schemas")
+  const {
+    FooterConfigSchema,
+    ProfileConfigSchema,
+    PublicationConfigSchema,
+    SiteConfigSchema,
+  } = await import("@/schemas")
   SiteConfigSchema.parse(SITE)
   ProfileConfigSchema.parse(PROFILE)
   FooterConfigSchema.parse(FOOTER)

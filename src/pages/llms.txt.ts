@@ -43,6 +43,6 @@ For questions about content usage or permissions, please refer to the website's 
 export const GET: APIRoute = () =>
   new Response(llmsTxt, {
     headers: {
-      "Content-Type": "text/plain; charset=utf-8"
-    }
+      "Content-Type": "text/plain; charset=utf-8",
+    },
   })

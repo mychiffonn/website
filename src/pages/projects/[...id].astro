@@ -8,7 +8,7 @@ import {
   getCategoryLabel,
   getProjectLinks,
   getProjectNavigation,
-  getProjects
+  getProjects,
 } from "@/lib/projects"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
@@ -24,7 +24,7 @@ export async function getStaticPaths() {
 
   return projects.map((project) => ({
     params: { id: project.id },
-    props: { project }
+    props: { project },
   }))
 }
 
@@ -35,10 +35,20 @@ type Props = {
 const { project } = Astro.props
 const [{ Content }, navigation] = await Promise.all([
   render(project),
-  getProjectNavigation(project.id)
+  getProjectNavigation(project.id),
 ])
-const { title, isHighlighted, fromDate, toDate, code, doc, url, release, category, tags } =
-  project.data
+const {
+  title,
+  isHighlighted,
+  fromDate,
+  toDate,
+  code,
+  doc,
+  url,
+  release,
+  category,
+  tags,
+} = project.data
 
 const links = getProjectLinks(code, doc, url, release)
 const rawMarkdown = project.body ?? null
@@ -46,58 +56,45 @@ const rawMarkdown = project.body ?? null
 
 <Layout title={title} description={`Project: ${title}`}>
   <Breadcrumbs
+    slot="breadcrumb"
     items={[
       { href: "/projects", label: "Projects", icon: "folder-open" },
       { label: title, icon: "file" }
     ]}
   />
 
-  <header class="mb-8 flex flex-col gap-4">
-    {/* Title and Highlight */}
-    <div class="flex items-start justify-between gap-4">
-      <h1 class="text-3xl leading-tight font-bold sm:text-4xl">{title}</h1>
-      {
-        isHighlighted && (
-          <Badge variant="default" class="shrink-0">
-            <Icon name="star" class="mr-1 size-3" />
+  <header class="project-header">
+    <div class="project-title-row">
+      <h1>{title}</h1>
+      {isHighlighted && (
+          <Badge variant="default" class="featured-badge">
+            <Icon name="star" class="featured-badge-icon" />
             Featured
           </Badge>
-        )
-      }
+        )}
     </div>
-
-    {/* Category and Date */}
-    <div class="flex flex-wrap items-center gap-3 text-sm">
-      {
-        category &&
+    <div class="project-meta-row">
+      {category &&
           category.length > 0 &&
-          category.map((slug: string) => <Badge variant="muted">{getCategoryLabel(slug)}</Badge>)
-      }
+          category.map((slug: string) => <Badge variant="muted">{getCategoryLabel(slug)}</Badge>)}
       <DateRange
         fromDate={fromDate}
         toDate={toDate}
-        class="text-muted-foreground flex items-center gap-1"
+        class="project-date-range"
         showIcon={true}
       />
     </div>
-
-    {/* Tags */}
-    {
-      tags && tags.length > 0 && (
-        <div class="flex flex-wrap gap-2">
+    {tags && tags.length > 0 && (
+        <div class="project-tags">
           {tags.map((tag: string) => (
-            <Badge variant="muted" class="text-xs">
+            <Badge variant="muted" class="project-tag">
               {tag}
             </Badge>
           ))}
         </div>
-      )
-    }
-
-    {/* Links */}
-    {
-      links.length > 0 && (
-        <div class="flex flex-wrap gap-2">
+      )}
+    {links.length > 0 && (
+        <div class="project-links">
           {links.map(({ href, icon, label }) => (
             <Button href={href} variant="accent-outline">
               <Icon name={icon} />
@@ -105,15 +102,80 @@ const rawMarkdown = project.body ?? null
             </Button>
           ))}
         </div>
-      )
-    }
+      )}
   </header>
 
-  <article class="prose lg:prose-lg">
-    <Content />
+  <article>
+    <prose-content>
+      <Content />
+    </prose-content>
   </article>
 
-  {rawMarkdown && <CopyMarkdown markdown={rawMarkdown} class="flex justify-end" />}
+  {rawMarkdown && <CopyMarkdown markdown={rawMarkdown} class="copy-project-markdown" />}
 
   <ProjectNavigation prev={navigation.prev} next={navigation.next} />
 </Layout>
+
+<style>
+  .project-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    margin-block-end: var(--space-xl);
+  }
+
+  .project-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-s);
+  }
+
+  .project-title-row h1 {
+    margin: 0;
+    font-size: var(--step-4);
+    line-height: var(--leading-tight);
+    font-weight: var(--font-weight-bold);
+    text-wrap: balance;
+  }
+
+  :global(.featured-badge) {
+    flex-shrink: 0;
+  }
+
+  :global(.featured-badge-icon) {
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    margin-inline-end: var(--space-3xs);
+  }
+
+  .project-meta-row,
+  .project-tags,
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  .project-meta-row {
+    font-size: var(--step--1);
+  }
+
+  :global(.project-date-range) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    color: var(--muted-foreground);
+  }
+
+  :global(.project-tag) {
+    font-size: var(--step--1);
+  }
+
+  :global(.copy-project-markdown) {
+    display: flex;
+    justify-content: flex-end;
+    margin-block: var(--space-l);
+  }
+</style>

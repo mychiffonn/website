@@ -1,13 +1,12 @@
 ---
 import "@/styles/global.css"
-import "@/styles/typography.css"
 import "@/styles/callout.css"
+import "@/styles/card.css"
 
 import { SITE } from "@site-config"
-import { cn } from "@/lib/utils"
 import BackToTop from "@/components/base/BackToTop.astro"
-import Footer from "@/components/layout/Footer.astro"
 import Head from "@/components/layout/Head.astro"
+import Footer from "@/components/layout/Footer.astro"
 import Header from "@/components/layout/Header.astro"
 
 interface Props {
@@ -35,12 +34,12 @@ const {
   modifiedTime,
   author,
   tags,
-  section
+  section,
 } = Astro.props
 ---
 
 <!doctype html>
-<html class="bg-background text-foreground" lang={SITE.locale.lang}>
+<html lang={SITE.locale.lang}>
   <Head
     title={title}
     description={description}
@@ -55,51 +54,83 @@ const {
   >
     <slot name="head" />
   </Head>
-  <body class="flex min-h-screen flex-col font-sans">
-    <div
-      id="main-header"
-      class="bg-background/80 sticky top-0 z-50 w-full divide-y backdrop-blur-sm xl:divide-none"
-    >
+  <body>
+    <div id="main-header">
       <Header />
-      {
-        Astro.slots.has("subposts-navigation-header") && (
-          <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
-        )
-      }
-      {Astro.slots.has("toc-header") && <slot name="toc-header" aria-label="Table of contents" />}
+      {Astro.slots.has("subposts-navigation-header") && (
+        <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
+      )}
+      {Astro.slots.has("toc-header") && (
+        <slot name="toc-header" aria-label="Table of contents" />
+      )}
     </div>
-    {
-      Astro.slots.has("breadcrumb") && (
-        <div class="my-4 flex w-full">
-          <slot name="breadcrumb" />
-        </div>
-      )
-    }
-    <main class={cn("flex grow flex-col gap-y-6", className)}>
+    {Astro.slots.has("breadcrumb") && (
+      <div class="breadcrumb-region">
+        <slot name="breadcrumb" />
+      </div>
+    )}
+    <main class={className}>
       <slot />
     </main>
-
     <BackToTop />
-
     <Footer />
 
     <script>
-      // Update header height CSS variable dynamically
       function updateHeaderHeight() {
         const header = document.getElementById("main-header")
-        if (header) {
-          const height = header.offsetHeight
-          document.documentElement.style.setProperty("--header-height", `${height}px`)
-        }
+        if (!header) return
+        document.documentElement.style.setProperty(
+          "--header-height",
+          `${header.offsetHeight}px`,
+        )
       }
 
-      // Update on load and resize
       updateHeaderHeight()
       window.addEventListener("resize", updateHeaderHeight)
-
-      // Update after navigation (for Astro page transitions)
       document.addEventListener("astro:page-load", updateHeaderHeight)
       document.addEventListener("astro:after-swap", updateHeaderHeight)
     </script>
   </body>
 </html>
+
+<style>
+  body {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    max-width: var(--measure);
+    margin-inline: auto;
+    padding-inline: var(--grid-gutter);
+    font-family: var(--font-sans);
+    overflow-x: clip;
+  }
+
+  #main-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    margin-inline: calc(-1 * var(--grid-gutter));
+    padding-inline: var(--grid-gutter);
+    border-block-end: 1px solid var(--border);
+    background: color-mix(in oklab, var(--background) 86%, transparent);
+    backdrop-filter: blur(10px);
+  }
+
+  .breadcrumb-region {
+    display: flex;
+    width: 100%;
+    margin-block: var(--space-s);
+  }
+
+  main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-m);
+    min-width: 0;
+  }
+
+  main > :first-child {
+    margin-block-start: var(--space-s);
+  }
+</style>

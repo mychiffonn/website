@@ -14,8 +14,14 @@ import PubCard from "@/components/publications/PubCard.astro"
 import ExperienceTimeline from "@/components/timeline/ExperienceTimeline.astro"
 import UpdatesInline from "@/components/timeline/UpdatesInline.astro"
 
-import { Content as MiscContent, rawContent as miscRaw } from "@/content/misc.md"
-import { Content as ServicesContent, rawContent as servicesRaw } from "@/content/services.md"
+import {
+  Content as MiscContent,
+  rawContent as miscRaw,
+} from "@/content/misc.md"
+import {
+  Content as ServicesContent,
+  rawContent as servicesRaw,
+} from "@/content/services.md"
 
 const hasServices = servicesRaw().trim().length > 0
 const hasMisc = miscRaw().trim().length > 0
@@ -28,15 +34,14 @@ const selectedPublications = await loadSelectedPublications()
 const postManager = PostManager.getInstance()
 const recentPosts = await postManager.getMainPosts(SITE.blog.featuredPostCount)
 const recentPostsMetadata = await Promise.all(
-  recentPosts.map((post) => postManager.getMetadata(post.id))
+  recentPosts.map((post) => postManager.getMetadata(post.id)),
 )
 ---
 
 <Layout title="Home">
   <Profile profile={PROFILE} />
 
-  {
-    careerHighlights.length > 0 && (
+  {careerHighlights.length > 0 && (
       <Section
         title="Career highlights"
         moreLink="/doc/My_Chiffon_Nguyen_CV.pdf"
@@ -44,68 +49,100 @@ const recentPostsMetadata = await Promise.all(
       >
         <ExperienceTimeline entries={careerHighlights} />
       </Section>
-    )
-  }
+    )}
 
-  {
-    renderedUpdates.length > 0 && (
+  {renderedUpdates.length > 0 && (
       <Section title="Latest updates" moreLink="/now">
-        <UpdatesInline renderedUpdates={renderedUpdates} itemClass="line-clamp-4 md:line-clamp-3" />
+        <UpdatesInline renderedUpdates={renderedUpdates} itemClass="home-update-content" />
       </Section>
-    )
-  }
+    )}
 
-  {
-    selectedPublications.length > 0 && (
+  {selectedPublications.length > 0 && (
       <Section title="Selected publications" moreLink="/publications">
-        <div class="space-y-4">
+        <div class="selected-publications">
           {selectedPublications.slice(0, 3).map((pub) => (
             <PubCard pub={pub} filterableTags={false} />
           ))}
         </div>
       </Section>
-    )
-  }
-  {
-    recentPostsMetadata.length > 0 && (
+    )}
+  {recentPostsMetadata.length > 0 && (
       <Section title="Latest posts">
-        <ul class="flex flex-col gap-y-2">
+        <ul class="latest-posts-list">
           {recentPostsMetadata.map((metadata) => (
             <li>
               <PreviewCard metadata={metadata} />
             </li>
           ))}
         </ul>
-        <div class="mt-4 flex justify-center gap-2">
-          <Button href="/blog" variant="default" class="group">
-            See all posts <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+        <div class="latest-posts-actions">
+          <Button href="/blog" variant="default" class="home-arrow-button">
+            See all posts <span aria-hidden="true">&rarr;</span>
           </Button>
-          <Button href="/blog/tags" variant="ghost" class="group">
-            Browse by tags{" "}
-            <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+          <Button href="/blog/tags" variant="ghost" class="home-arrow-button">
+            Browse by tags <span aria-hidden="true">&rarr;</span>
           </Button>
         </div>
       </Section>
-    )
-  }
+    )}
 
-  {
-    hasServices && (
+  {hasServices && (
       <Section title="Services">
-        <div class="prose">
+        <prose-content>
           <ServicesContent />
-        </div>
+        </prose-content>
       </Section>
-    )
+    )}
+
+  {hasMisc && (
+      <Section title="Miscellaneous">
+        <prose-content>
+          <MiscContent />
+        </prose-content>
+      </Section>
+    )}
+</Layout>
+
+<style>
+  .selected-publications {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
   }
 
-  {
-    hasMisc && (
-      <Section title="Miscellaneous">
-        <div class="prose">
-          <MiscContent />
-        </div>
-      </Section>
-    )
+  .latest-posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
-</Layout>
+
+  .latest-posts-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-s);
+  }
+
+  :global(.home-arrow-button span[aria-hidden="true"]) {
+    display: inline-block;
+    transition: transform var(--motion-duration) var(--motion-ease);
+  }
+
+  :global(.home-arrow-button:hover span[aria-hidden="true"]) {
+    transform: translateX(0.25rem);
+  }
+
+  :global(.home-update-content) {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+
+    @media (width >= 48rem) {
+      -webkit-line-clamp: 3;
+    }
+  }
+</style>

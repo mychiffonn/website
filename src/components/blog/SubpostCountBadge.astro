@@ -11,18 +11,40 @@ interface Props {
 const { count, variant = "compact", class: className } = Astro.props
 ---
 
-<Badge variant="info" class:list={["flex shrink-0 items-center gap-1 text-xs", className]}>
+<Badge variant="info" class:list={["subpost-count-badge", className]}>
   <Icon name="subposts" />
-  {
-    variant === "full" ? (
+  {variant === "full" ? (
       <>
-        <span class="hidden sm:inline">
+        <span class="subpost-count-full">
           {count}&nbsp;{count === 1 ? "subpost" : "subposts"}
         </span>
-        <span class="sm:hidden">{count}</span>
+        <span class="subpost-count-compact">{count}</span>
       </>
     ) : (
       <span>{count}</span>
-    )
-  }
+    )}
 </Badge>
+
+<style>
+  :global(.subpost-count-badge) {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--step--1);
+  }
+
+  .subpost-count-full {
+    display: none;
+  }
+
+  @media (width >= 40rem) {
+    .subpost-count-full {
+      display: inline;
+    }
+
+    .subpost-count-compact {
+      display: none;
+    }
+  }
+</style>

@@ -10,7 +10,7 @@ export async function getStaticPaths() {
   const { STAGE_NAMES } = await import("@/lib/blog/stage")
   return STAGE_NAMES.map((stage) => ({
     params: { stage },
-    props: { stage }
+    props: { stage },
   }))
 }
 
@@ -21,7 +21,7 @@ const allPosts = await postManager.getMainPosts()
 const filteredPosts = allPosts.filter((post) => post.data.stage === stage)
 
 const postsMetadata: PostMeta[] = await Promise.all(
-  filteredPosts.map((post) => postManager.getMetadata(post.id))
+  filteredPosts.map((post) => postManager.getMetadata(post.id)),
 )
 ---
 
@@ -38,26 +38,66 @@ const postsMetadata: PostMeta[] = await Promise.all(
     ]}
   />
 
-  <div class="mb-6">
-    <div class="flex items-center gap-2">
-      <Icon name={stage} class="size-5" />
-      <h1 class="text-2xl font-medium capitalize">{stage} posts</h1>
-      <span class="text-muted-foreground text-sm">({postsMetadata.length})</span>
-    </div>
-    <p class="text-muted-foreground mt-2 text-sm">{stageConfig.description}</p>
-  </div>
+  <stage-header>
+    <stage-title>
+      <Icon name={stage} />
+      <h1>{stage} posts</h1>
+      <span>({postsMetadata.length})</span>
+    </stage-title>
+    <p>{stageConfig.description}</p>
+  </stage-header>
 
-  {
-    postsMetadata.length === 0 ? (
-      <p class="text-muted-foreground">No posts at this stage yet.</p>
+  {postsMetadata.length === 0 ? (
+      <p class="empty-stage">No posts at this stage yet.</p>
     ) : (
-      <ul class="flex flex-col gap-y-4">
+      <ul class="post-list">
         {postsMetadata.map((metadata) => (
           <li>
             <PreviewCard metadata={metadata} />
           </li>
         ))}
       </ul>
-    )
-  }
+    )}
 </Layout>
+
+<style>
+  stage-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    margin-block-end: var(--space-l);
+  }
+
+  stage-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  stage-title :global(svg) {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+
+  h1 {
+    font-size: var(--step-2);
+    font-weight: var(--font-weight-medium);
+    text-transform: capitalize;
+  }
+
+  stage-title span,
+  stage-header p,
+  .empty-stage {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+</style>

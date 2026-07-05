@@ -1,0 +1,56 @@
+:root {
+  --background: oklch(0.9578 0.0058 264.53);
+  --foreground: oklch(0.4363 0.0428 281.03);
+  --primary: oklch(0.7789 0.1553 140.9);
+  --primary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.92 0.002 264.53);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.6182 0.1121 292.61);
+  --accent-foreground: oklch(0.9578 0.0058 264.53);
+  --destructive: oklch(0.55 0.216 19.8);
+  --border: oklch(0.9 0 0);
+  --ring: oklch(0.708 0 0);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"],
+:root:has(#theme-toggle:checked) {
+  --background: oklch(0.2007 0.0199 284.46);
+  --foreground: oklch(0.8708 0.0481 273.67);
+  --primary: oklch(0.7789 0.1553 140.9);
+  --primary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.797 0.1121 292.61);
+  --accent-foreground: oklch(0.145 0 0);
+  --destructive: oklch(0.737 0.125 11.2);
+  --border: oklch(1 0 0 / 20%);
+  --ring: oklch(0.556 0 0);
+
+  color-scheme: dark;
+}
+
+*,
+::before,
+::after,
+::backdrop,
+::file-selector-button {
+  border-color: var(--border);
+
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 0.25rem;
+    border-radius: var(--radius-sm);
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+::selection {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}

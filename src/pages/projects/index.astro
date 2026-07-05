@@ -11,14 +11,19 @@ import "@/styles/chip-filter.css"
 
 // Fetch and categorize projects in single operation
 const allProjects = await getProjects()
-const featuredProjects = allProjects.filter((project) => project.data.isHighlighted)
-const otherProjects = allProjects.filter((project) => !project.data.isHighlighted)
+const featuredProjects = allProjects.filter(
+  (project) => project.data.isHighlighted,
+)
+const otherProjects = allProjects.filter(
+  (project) => !project.data.isHighlighted,
+)
 const categoryCounts = getProjectCategoryCounts(allProjects)
 
 // Get GitHub URL for GithubActivity
 const githubUrl =
-  (typeof PROFILE.links.github === "object" ? PROFILE.links.github?.href : PROFILE.links.github) ||
-  "https://github.com"
+  (typeof PROFILE.links.github === "object"
+    ? PROFILE.links.github?.href
+    : PROFILE.links.github) || "https://github.com"
 ---
 
 <CommonLayout
@@ -27,57 +32,44 @@ const githubUrl =
   prose={false}
   breadcrumbs={[{ label: "Projects", icon: "folder-open" }]}
 >
-  <div class="flex flex-col gap-8">
-    {/* Category filter bar */}
-    {
-      categoryCounts.length > 0 && (
+  <div class="projects-page">
+    {categoryCounts.length > 0 && (
         <div class="chip-filter-bar">
           {categoryCounts.map(({ slug, label, count }) => (
             <Chip data-project-category-filter={slug} aria-pressed="false">
               {label}
-              <span class="ml-0.5 opacity-60">({count})</span>
+              <span class="chip-count">({count})</span>
             </Chip>
           ))}
-          <span class="chip-active-filter hidden" data-active-filter>
+          <span class="chip-active-filter" data-active-filter hidden>
             <button class="chip-clear-filter" data-clear-filter aria-label="Clear filter">
               <Icon name="close" size={12} />
               Clear
             </button>
           </span>
         </div>
-      )
-    }
-
-    {/* Featured Projects */}
-    {
-      featuredProjects.length > 0 && (
+      )}
+    {featuredProjects.length > 0 && (
         <div data-project-section>
           <Section title="Featured Projects">
-            <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+            <project-grid>
               {featuredProjects.map((project) => (
                 <ProjectCard {project} />
               ))}
-            </div>
+            </project-grid>
           </Section>
         </div>
-      )
-    }
-
-    {/* Other Projects */}
-    {
-      otherProjects.length > 0 && (
+      )}
+    {otherProjects.length > 0 && (
         <section data-project-section>
-          <h2 class="mb-4 text-2xl font-semibold">Other Projects</h2>
-          <div class="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+          <h2 class="projects-section-title">Other Projects</h2>
+          <project-grid>
             {otherProjects.map((project) => (
               <ProjectCard {project} />
             ))}
-          </div>
+          </project-grid>
         </section>
-      )
-    }
-
-    {/* GitHub Activity */}
+      )}
     <GithubActivity githubUrl={githubUrl} />
   </div>
 </CommonLayout>
@@ -103,10 +95,50 @@ const githubUrl =
       chipAttr: "projectCategory",
       groupSelector: "[data-project-section]",
       clearButtonSelector: "[data-clear-filter]",
-      activeIndicatorSelector: "[data-active-filter]"
+      activeIndicatorSelector: "[data-active-filter]",
     })
   }
 
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initProjectControls, {
+      once: true,
+    })
+  } else {
+    initProjectControls()
+  }
   document.addEventListener("astro:page-load", initProjectControls)
   document.addEventListener("astro:after-swap", initProjectControls)
 </script>
+
+<style>
+  .projects-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .chip-count {
+    margin-inline-start: 0.125rem;
+    opacity: 0.6;
+  }
+
+  .chip-active-filter[hidden] {
+    display: none;
+  }
+
+  .projects-section-title {
+    margin-block: 0 var(--space-s);
+    font-size: var(--step-2);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  project-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-s);
+
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

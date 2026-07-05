@@ -1,130 +1,59 @@
 import { defineConfig } from "astro/config"
-import { rehypeHeadingIds, unified } from "@astrojs/markdown-remark"
-import mdx from "@astrojs/mdx"
 import sitemap from "@astrojs/sitemap"
-import expressiveCode from "astro-expressive-code"
-import icon from "astro-icon"
-import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections"
-import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers"
-
-import rehypeAutolinkHeadings from "rehype-autolink-headings"
-import rehypeExternalLinks from "rehype-external-links"
-import rehypeKatex from "rehype-katex"
-
-import remarkNormalizeHeadings from "./src/plugins/remark-normalize-headings"
-import remarkCallout from "@r4ai/remark-callout"
-import remarkMath from "remark-math"
-import remarkSectionize from "remark-sectionize"
-
-import tailwindcss from "@tailwindcss/vite"
-
-import rehypeSidenotes from "./src/plugins/rehype-sidenotes"
+import { satteri } from "@astrojs/markdown-satteri"
+import {
+  blockExpressiveCode,
+  inlineExpressiveCode,
+} from "./src/lib/expressive-code"
+import { temmlMath } from "./src/lib/math"
+import { calloutDirective } from "./src/lib/callout"
+import { externalLinks } from "./src/lib/external-links"
+import { headingNamespace } from "./src/lib/heading-namespace"
+import { headingAnchors } from "./src/lib/heading-anchors"
+import { rehypeSidenotes } from "./src/plugins/rehype-sidenotes"
+import { remarkNormalizeHeadings } from "./src/plugins/remark-normalize-headings"
 
 export default defineConfig({
   site: "https://mychiffonn.com",
+  compressHTML: true,
   trailingSlash: "never",
   output: "static",
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: "hover"
-  },
+  prefetch: { prefetchAll: true, defaultStrategy: "hover" },
   image: {
     responsiveStyles: true,
     layout: "constrained",
     remotePatterns: [
-      {
-        protocol: "data"
-      },
-      {
-        protocol: "https",
-        hostname: "gravatar.com"
-      }
-    ]
+      { protocol: "data" },
+      { protocol: "https", hostname: "gravatar.com" },
+    ],
   },
   integrations: [
-    expressiveCode({
-      themes: ["catppuccin-macchiato", "catppuccin-latte"],
-      plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
-      themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
-      defaultProps: {
-        wrap: true,
-        collapseStyle: "collapsible-auto",
-        overridesByLang: {
-          "ansi,bat,bash,batch,cmd,console,powershell,ps,ps1,psd1,psm1,sh,shell,shellscript,shellsession,text,zsh":
-            {
-              showLineNumbers: false
-            }
-        }
-      },
-      styleOverrides: {
-        codeFontSize: "0.75rem",
-        borderColor: "var(--border)",
-        codeFontFamily: "var(--font-mono)",
-        codeBackground: "color-mix(in oklab, var(--muted) 25%, transparent)",
-        frames: {
-          editorActiveTabForeground: "var(--muted-foreground)",
-          editorActiveTabBackground: "color-mix(in oklab, var(--muted) 25%, transparent)",
-          editorActiveTabIndicatorBottomColor: "transparent",
-          editorActiveTabIndicatorTopColor: "transparent",
-          editorTabBorderRadius: "0",
-          editorTabBarBackground: "transparent",
-          editorTabBarBorderBottomColor: "transparent",
-          frameBoxShadowCssValue: "none",
-          terminalBackground: "color-mix(in oklab, var(--muted) 25%, transparent)",
-          terminalTitlebarBackground: "transparent",
-          terminalTitlebarBorderBottomColor: "transparent",
-          terminalTitlebarForeground: "var(--muted-foreground)"
-        },
-        lineNumbers: {
-          foreground: "var(--muted-foreground)"
-        },
-        uiFontFamily: "var(--font-sans)"
-      }
+    sitemap({
+      filter: (page) =>
+        !/\/blog\/[^/]+\/[^/]+\/?$/.test(page) &&
+        !/\/people\/[^/]+\/?$/.test(page) &&
+        !page.includes("/blog/tags/"),
     }),
-    mdx(),
-    sitemap(),
-    icon({
-      iconDir: "src/assets/icons/"
-    })
   ],
-  vite: {
-    plugins: [tailwindcss()],
-    build: {
-      reportCompressedSize: false
-    }
-  },
-  server: {
-    port: 4321,
-    host: true
-  },
-  devToolbar: {
-    enabled: false
-  },
+  server: { port: 4321, host: true },
+  devToolbar: { enabled: false },
   markdown: {
     syntaxHighlight: false,
-    processor: unified({
-      rehypePlugins: [
-        [
-          rehypeExternalLinks,
-          {
-            target: "_blank",
-            rel: ["nofollow", "noreferrer", "noopener"],
-            content: { type: "text", value: "↗" }
-          }
-        ],
-        rehypeHeadingIds,
-        [
-          rehypeAutolinkHeadings,
-          {
-            behavior: "append",
-            properties: { className: ["anchor"] },
-            content: { type: "text", value: " 🔗" }
-          }
-        ],
-        rehypeKatex,
-        rehypeSidenotes
+    processor: satteri({
+      features: { directive: true, math: true },
+      mdastPlugins: [
+        remarkNormalizeHeadings,
+        calloutDirective,
+        inlineExpressiveCode,
+        temmlMath,
       ],
-      remarkPlugins: [remarkMath, remarkCallout, remarkNormalizeHeadings, remarkSectionize]
-    })
-  }
+      hastPlugins: [
+        externalLinks,
+        blockExpressiveCode,
+        ...rehypeSidenotes(),
+        headingNamespace,
+        headingAnchors,
+      ],
+    }),
+  },
 })

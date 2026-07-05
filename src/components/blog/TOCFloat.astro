@@ -2,7 +2,6 @@
 import type { MarkdownHeading } from "astro"
 
 import { getHeadingWidth } from "@/lib/blog/toc"
-import { cn } from "@/lib/utils"
 
 interface Props {
   headings: MarkdownHeading[]
@@ -12,21 +11,66 @@ interface Props {
 const { headings, class: className } = Astro.props
 ---
 
-<div class={cn("toc-summary-container flex flex-col gap-1", className)}>
-  {
-    headings.map((heading) => {
-      const widthClass = getHeadingWidth(heading.depth)
+<toc-float class:list={["toc-summary-container", className]}>
+  {headings.map((heading) => {
+      const widthClass = getHeadingWidth(heading.depth).replace("w-", "")
 
       return (
         <a
           href={`#${heading.slug}`}
-          class={`${widthClass} bg-muted-foreground/50 data-active:bg-accent h-0.5 transition-colors duration-200`}
+          data-width={widthClass}
           data-heading-link={heading.slug}
         />
       )
-    })
+    })}
+</toc-float>
+
+<style>
+  toc-float {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
   }
-</div>
+
+  a {
+    block-size: 0.125rem;
+    inline-size: calc(var(--width, 2) * 0.25rem);
+    background: color-mix(in oklab, var(--muted-foreground) 50%, transparent);
+    transition: background-color var(--motion-duration) var(--motion-ease);
+  }
+
+  a[data-width="1"] {
+    --width: 1;
+  }
+
+  a[data-width="1.5"] {
+    --width: 1.5;
+  }
+
+  a[data-width="2"] {
+    --width: 2;
+  }
+
+  a[data-width="3"] {
+    --width: 3;
+  }
+
+  a[data-width="4"] {
+    --width: 4;
+  }
+
+  a[data-width="5"] {
+    --width: 5;
+  }
+
+  a[data-width="6"] {
+    --width: 6;
+  }
+
+  a[data-active] {
+    background: var(--accent);
+  }
+</style>
 
 <script>
   import { UnifiedTOCController } from "@/lib/blog/scroll"
@@ -41,7 +85,10 @@ const { headings, class: className } = Astro.props
         controller.cleanup()
       }
 
-      controller = new UnifiedTOCController(".toc-summary-container", "[data-heading-link]")
+      controller = new UnifiedTOCController(
+        ".toc-summary-container",
+        "[data-heading-link]",
+      )
       controller.init()
     })
   }

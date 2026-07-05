@@ -20,7 +20,10 @@ export interface ShareActionConfig {
  * Extract a platform handle from a profile URL.
  * Returns the handle without @ prefix, or null if unrecognized.
  */
-export function extractHandle(url: string, platform: "x" | "bluesky"): string | null {
+export function extractHandle(
+  url: string,
+  platform: "x" | "bluesky",
+): string | null {
   try {
     const parsed = new URL(url)
     if (platform === "x") {
@@ -39,7 +42,10 @@ export function extractHandle(url: string, platform: "x" | "bluesky"): string | 
   return null
 }
 
-function getAuthorHandles(authors: AuthorData[], platform: "x" | "bluesky"): string[] {
+function getAuthorHandles(
+  authors: AuthorData[],
+  platform: "x" | "bluesky",
+): string[] {
   const handles: string[] = []
   for (const author of authors) {
     const linkVal = author.links?.[platform]
@@ -63,7 +69,7 @@ export function getShareActions(
   keys: ShareActionKey[],
   title: string,
   url: string,
-  authors: AuthorData[]
+  authors: AuthorData[],
 ): ShareActionConfig[] {
   const encodedUrl = encodeURIComponent(url)
   const encodedTitle = encodeURIComponent(title)
@@ -78,7 +84,7 @@ export function getShareActions(
           key,
           label: "Share via Email",
           icon: "mail-send",
-          href: `mailto:?subject=${subject}&body=${body}`
+          href: `mailto:?subject=${subject}&body=${body}`,
         }
       }
 
@@ -99,7 +105,7 @@ export function getShareActions(
           key,
           label: "Share on X",
           icon: "mingcute:social-x-line",
-          href: `https://x.com/intent/tweet?text=${text}&url=${encodedUrl}${via}`
+          href: `https://x.com/intent/tweet?text=${text}&url=${encodedUrl}${via}`,
         }
       }
 
@@ -108,7 +114,7 @@ export function getShareActions(
           key,
           label: "Share on LinkedIn",
           icon: "mingcute:linkedin-line",
-          href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`
+          href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
         }
 
       case "facebook":
@@ -116,18 +122,20 @@ export function getShareActions(
           key,
           label: "Share on Facebook",
           icon: "mingcute:facebook-line",
-          href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
+          href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
         }
 
       case "bluesky": {
         const bskyHandles = getAuthorHandles(authors, "bluesky")
         const mentions = bskyHandles.map((h) => `@${h}`).join(" ")
-        const text = encodeURIComponent(`${title} ${mentions}`.trim() + `\n\n${url}`)
+        const text = encodeURIComponent(
+          `${title} ${mentions}`.trim() + `\n\n${url}`,
+        )
         return {
           key,
           label: "Share on Bluesky",
           icon: "mingcute:bluesky-social-line",
-          href: `https://bsky.app/intent/compose?text=${text}`
+          href: `https://bsky.app/intent/compose?text=${text}`,
         }
       }
 
@@ -136,7 +144,7 @@ export function getShareActions(
           key,
           label: "Share on Mastodon",
           icon: "mingcute:mastodon-line",
-          href: `https://mastodonshare.com/?text=${encodedTitle}&url=${encodedUrl}`
+          href: `https://mastodonshare.com/?text=${encodedTitle}&url=${encodedUrl}`,
         }
 
       case "reddit":
@@ -144,7 +152,7 @@ export function getShareActions(
           key,
           label: "Share on Reddit",
           icon: "mingcute:reddit-line",
-          href: `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`
+          href: `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`,
         }
     }
   })

@@ -5,26 +5,24 @@ import { z } from "astro/zod"
 import { ProfileLinkConfigSchema, ProjectCategorySchema } from "@/schemas"
 
 import { createLocalDate } from "@/lib/date-utils"
-import { dedupLowerCase, dedupPreserveCase, slugify } from "@/lib/string-manipulation"
+import {
+  dedupLowerCase,
+  dedupPreserveCase,
+  slugify,
+} from "@/lib/string-manipulation"
 
-/**
- * @input string YYYY-MM
- * @returns Date object with year and month (defaults to first day of month)
- */
 const yearMonthDateSchema = z
   .union([z.date(), z.string().transform(createLocalDate)])
   .describe("Should be valid YYYY-MM format.")
 
-/** Accepts YYYY-MM-DD and ISO datetime formats */
 const dateSchema = z
   .union([z.date(), z.string().transform(createLocalDate)])
   .refine((date) => !Number.isNaN(date.getTime()), {
-    error:
-      "Invalid date format. Must be YYYY-MM-DD or ISO datetime format.\n For more, see https://zod.dev/api#datetimes"
+    error: "Invalid date format. Must be YYYY-MM-DD or ISO datetime format.",
   })
 
 const blog = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
   schema: ({ image }) =>
     z
       .object({
@@ -41,17 +39,15 @@ const blog = defineCollection({
         authors: z.array(reference("people")).default([]),
         draft: z.boolean().default(false),
         stage: z.enum(["seedling", "budding", "evergreen"]).optional(),
-        audience: z.string().max(300).optional()
+        audience: z.string().max(300).optional(),
       })
       .refine(
-        (data) => {
-          if (!data.createdAt || !data.updatedAt) return true
-          return data.updatedAt > data.createdAt
-        },
+        (data) =>
+          !data.createdAt || !data.updatedAt || data.updatedAt > data.createdAt,
         {
-          error: "Modified date must be after published date"
-        }
-      )
+          error: "Modified date must be after published date",
+        },
+      ),
 })
 
 const people = defineCollection({
@@ -60,25 +56,19 @@ const people = defineCollection({
     id: z.string(),
     name: z.string(),
     pronouns: z.string().optional(),
-    /**
-     * Optional URL path to avatar, or /public/path/to/image.jpg.
-     * The latter renders to /path/to/image.jpg, which you should use
-     */
     avatar: z
       .url()
       .or(z.string().startsWith("/"))
       .optional()
-      .describe(
-        "This people's avatar field only deal with image under /public/ directory or a remote image"
-      ),
+      .describe("Avatar URL or /public path."),
     bio: z.string().max(200).optional(),
     affiliation: z.string().max(100).optional(),
-    links: ProfileLinkConfigSchema
-  })
+    links: ProfileLinkConfigSchema,
+  }),
 })
 
 const projects = defineCollection({
-  loader: glob({ base: "./src/content/projects", pattern: "**/!(*README).{md,mdx}" }),
+  loader: glob({ base: "./src/content/projects", pattern: "**/!(*README).md" }),
   schema: z
     .object({
       title: z.string().max(75),
@@ -94,23 +84,19 @@ const projects = defineCollection({
       tags: z
         .array(z.string())
         .default([])
-        .transform((arr) => dedupPreserveCase(arr))
+        .transform((arr) => dedupPreserveCase(arr)),
     })
     .refine(
-      // Validate that toDate is after fromDate
-      (data) => {
-        if (!data.fromDate || !data.toDate) return true
-        return data.toDate >= data.fromDate
-      },
+      (data) => !data.fromDate || !data.toDate || data.toDate >= data.fromDate,
       {
-        error: "End date must be on or after start date"
-      }
-    )
+        error: "End date must be on or after start date",
+      },
+    ),
 })
 
 const updates = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/updates" }),
-  schema: z.object({})
+  loader: glob({ pattern: "**/*.md", base: "./src/content/updates" }),
+  schema: z.object({}),
 })
 
 const experience = defineCollection({
@@ -123,8 +109,8 @@ const experience = defineCollection({
     startDate: yearMonthDateSchema,
     endDate: yearMonthDateSchema.optional(),
     location: z.string().optional(),
-    description: z.string().optional()
-  })
+    description: z.string().optional(),
+  }),
 })
 
 export const collections = { blog, experience, people, projects, updates }

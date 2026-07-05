@@ -26,7 +26,7 @@ const {
   modifiedTime,
   author,
   tags = [],
-  section
+  section,
 } = Astro.props
 
 // SEO title optimization
@@ -37,7 +37,8 @@ const fullTitle = title
   : `${SITE.title} - ${PROFILE.tagline}`
 
 // Trim title to approximately 60 characters for SEO
-const seoTitle = fullTitle.length > 60 ? fullTitle.substring(0, 57) + "..." : fullTitle
+const seoTitle =
+  fullTitle.length > 60 ? fullTitle.substring(0, 57) + "..." : fullTitle
 
 const socialImage = (() => {
   // 1. If no image, use social-preview.png
@@ -74,37 +75,40 @@ const structuredData = {
     ? {
         "@type": "Person",
         name: author,
-        ...(PROFILE.email && { email: PROFILE.email })
+        ...(PROFILE.email && { email: PROFILE.email }),
       }
     : {
         "@type": "Person",
         name: SITE.author || SITE.title,
-        ...(PROFILE.email && { email: PROFILE.email })
+        ...(PROFILE.email && { email: PROFILE.email }),
       },
   publisher: {
     "@type": "Person",
     name: SITE.title,
     logo: {
       "@type": "ImageObject",
-      url: new URL("/web-app-manifest-512x512.png", Astro.site).toString()
-    }
+      url: new URL("/web-app-manifest-512x512.png", Astro.site).toString(),
+    },
   },
   ...(publishedTime && { datePublished: publishedTime.toISOString() }),
   ...(modifiedTime && { dateModified: modifiedTime.toISOString() }),
   ...(type === "article" && section && { articleSection: section }),
-  ...(tags.length > 0 && { keywords: tags.join(", ") })
+  ...(tags.length > 0 && { keywords: tags.join(", ") }),
 }
 ---
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <meta name="generator" content={Astro.generator} />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=yes"
+  >
+  <meta name="generator" content={Astro.generator}>
 
   <title>{seoTitle}</title>
-  <meta name="description" content={description} />
-  <link rel="canonical" href={canonicalURL} />
+  <meta name="description" content={description}>
+  <link rel="canonical" href={canonicalURL}>
   {noindex && <meta name="robots" content="noindex, nofollow" />}
   {!noindex && <meta name="robots" content="index, follow" />}
 
@@ -113,97 +117,100 @@ const structuredData = {
   {modifiedTime && <meta name="article:modified_time" content={modifiedTime.toISOString()} />}
   {section && <meta name="article:section" content={section} />}
   {tags.length > 0 && <meta name="keywords" content={tags.join(", ")} />}
-
-  {/* Open Graph / Facebook */}
-  <meta property="og:type" content={type} />
-  <meta property="og:site_name" content={SITE.title} />
-  <meta property="og:title" content={seoTitle} />
-  <meta property="og:description" content={description} />
-  <meta property="og:image" content={socialImage} />
-  <meta property="og:image:alt" content={title || SITE.title} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:url" content={canonicalURL} />
-  <meta property="og:locale" content={SITE.locale.lang} />
-  {
-    publishedTime && (
+  <meta property="og:type" content={type}>
+  <meta property="og:site_name" content={SITE.title}>
+  <meta property="og:title" content={seoTitle}>
+  <meta property="og:description" content={description}>
+  <meta property="og:image" content={socialImage}>
+  <meta property="og:image:alt" content={title || SITE.title}>
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content={canonicalURL}>
+  <meta property="og:locale" content={SITE.locale.lang}>
+  {publishedTime && (
       <meta property="article:published_time" content={publishedTime.toISOString()} />
-    )
-  }
+    )}
   {modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
   {author && <meta property="article:author" content={author} />}
   {section && <meta property="article:section" content={section} />}
   {tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={title || SITE.title} />
-  <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={socialImage} />
-  <meta name="twitter:image:alt" content={title || SITE.title} />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title || SITE.title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={socialImage}>
+  <meta name="twitter:image:alt" content={title || SITE.title}>
 
-  <meta name="theme-color" content="#15151f" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#eff1f5" media="(prefers-color-scheme: light)" />
-  <meta name="color-scheme" content="light dark" />
+  <meta
+    name="theme-color"
+    content="#15151f"
+    media="(prefers-color-scheme: dark)"
+  >
+  <meta
+    name="theme-color"
+    content="#eff1f5"
+    media="(prefers-color-scheme: light)"
+  >
+  <meta name="color-scheme" content="light dark">
 
-  <meta name="HandheldFriendly" content="True" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content={SITE.title} />
-  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no" />
+  <meta name="HandheldFriendly" content="True">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content={SITE.title}>
+  <meta
+    name="format-detection"
+    content="telephone=no,date=no,address=no,email=no,url=no"
+  >
 
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
-  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="sitemap" href="/sitemap-index.xml">
   <link
     rel="alternate"
     type="application/rss+xml"
     title={SITE.title}
     href={`${SITE.href}rss.xml`}
-  />
+  >
 
   <ClientRouter />
-
-  {/* Preconnect to external CDNs for faster connections */}
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-
-  {/* KaTeX CSS for math rendering - non-blocking load */}
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link
     rel="preload"
     href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
     as="style"
     onload={`this.onload=null;this.rel='stylesheet'`}
-  />
-  <noscript
-    ><link
+  >
+  <noscript>
+    <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
-    /></noscript
-  >
-
-  {/* Medium Zoom CSS and JS - non-blocking load */}
+    >
+  </noscript>
   <link
     rel="preload"
     href="/styles/zoom.css"
     as="style"
     onload={`this.onload=null;this.rel='stylesheet'`}
-  />
-  <noscript><link rel="stylesheet" href="/styles/zoom.css" /></noscript>
-  <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script>
-
-  {/* Site locale configuration for client-side date formatting */}
+  >
+  <noscript><link rel="stylesheet" href="/styles/zoom.css"></noscript>
+  <script
+    src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"
+  ></script>
   <script is:inline define:vars={{ siteLocale: SITE.locale.lang }}>
     document.addEventListener("DOMContentLoaded", function () {
       if (typeof mediumZoom !== "undefined") {
-        const images = document.querySelectorAll("main img:not(a img):not(.card img)")
+        const images = document.querySelectorAll(
+          "main img:not(a img):not(.card img)",
+        )
 
         if (images.length) {
           mediumZoom(images, {
             margin: 24,
-            scrollOffset: 40
+            scrollOffset: 40,
           })
         }
       }
@@ -213,5 +220,9 @@ const structuredData = {
 
   <slot />
 
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(structuredData)}
+  />
 </head>

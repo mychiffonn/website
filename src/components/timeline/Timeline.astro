@@ -6,6 +6,14 @@ interface Props {
 const { class: className } = Astro.props
 ---
 
-<ul class:list={["flex flex-col space-y-2", className]}>
+<ul class:list={["timeline", className]}>
   <slot />
 </ul>
+
+<style>
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+</style>

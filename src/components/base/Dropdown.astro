@@ -1,29 +1,4 @@
 ---
-import { cva } from "class-variance-authority"
-
-import { cn } from "@/lib/utils"
-
-const dropdownContentVariants = cva(
-  [
-    "bg-popover text-popover-foreground z-50 min-w-40 overflow-hidden rounded-md border shadow-md",
-    "absolute invisible opacity-0 scale-95 transition-all duration-150 ease-out",
-    "[&.show]:visible [&.show]:opacity-100 [&.show]:scale-100",
-    "touch-manipulation"
-  ],
-  {
-    variants: {
-      align: {
-        start: "origin-top-left",
-        center: "origin-top",
-        end: "origin-top-right"
-      }
-    },
-    defaultVariants: {
-      align: "start"
-    }
-  }
-)
-
 export interface Props {
   class?: string
   align?: "start" | "end" | "center"
@@ -42,15 +17,17 @@ const {
 } = Astro.props
 ---
 
-<div class="relative inline-block" data-dropdown-root data-state={open ? "open" : "closed"}>
+<div
+  data-dropdown-root
+  data-state={open ? "open" : "closed"}
+  style={`--dropdown-offset:${sideOffset}px`}
+>
   <slot name="trigger" />
-
   <div
     id={id}
-    class={cn(dropdownContentVariants({ align }), className)}
     data-dropdown-content
     data-align={align}
-    data-side="bottom"
+    class={className}
     role="menu"
     aria-orientation="vertical"
     tabindex="-1"
@@ -62,170 +39,142 @@ const {
 
 <script>
   class DropdownMenu {
-    private trigger: HTMLElement | null = null
-    private content: HTMLElement | null = null
+    private trigger: HTMLElement | null
+    private content: HTMLElement | null
     private isOpen = false
 
     constructor(private container: HTMLElement) {
       this.trigger = container.querySelector("[data-dropdown-trigger]")
       this.content = container.querySelector("[data-dropdown-content]")
-
-      if (this.trigger && this.content) {
-        this.setupEventListeners()
-
-        // Set initial state
-        const initialState = container.getAttribute("data-state")
-        if (initialState === "open") {
-          this.open()
-        }
-      }
-    }
-
-    private setupEventListeners() {
       if (!this.trigger || !this.content) return
-
-      // Simple event listeners
-      this.trigger.addEventListener("click", this.handleTriggerClick.bind(this))
-      this.content.addEventListener("click", this.handleContentClick.bind(this))
-      document.addEventListener("click", this.handleOutsideClick.bind(this))
+      this.trigger.addEventListener("click", this.handleTriggerClick)
+      this.content.addEventListener("click", this.handleContentClick)
+      document.addEventListener("click", this.handleOutsideClick)
+      this.container.addEventListener("dropdown-close", () => this.close())
+      this.container.addEventListener("dropdown-open", () => this.open())
+      if (container.dataset.state === "open") this.open()
     }
 
-    private handleTriggerClick = (e: Event) => {
-      e.preventDefault()
-      e.stopPropagation()
-      this.toggle()
+    private handleTriggerClick = (event: Event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      if (this.isOpen) this.close()
+      else this.open()
     }
 
-    private handleContentClick = (e: Event) => {
-      const item = (e.target as Element).closest("[data-dropdown-item]")
-      if (item && !item.hasAttribute("data-disabled")) {
+    private handleContentClick = (event: Event) => {
+      if ((event.target as Element).closest("[data-dropdown-item]"))
         this.close()
-      }
     }
 
-    private handleOutsideClick = (e: Event) => {
-      if (!this.container.contains(e.target as Node)) {
-        this.close()
-      }
-    }
-
-    private toggle() {
-      if (this.isOpen) {
-        this.close()
-      } else {
-        this.open()
-      }
+    private handleOutsideClick = (event: Event) => {
+      if (!this.container.contains(event.target as Node)) this.close()
     }
 
     private open() {
-      if (!this.content || this.isOpen) return
-
+      if (!this.content) return
       this.isOpen = true
-      this.container.setAttribute("data-state", "open")
-      this.content.classList.add("show")
-      this.positionContent()
-
-      // Emit open event
-      this.container.dispatchEvent(new CustomEvent("dropdown-open"))
+      this.container.dataset.state = "open"
+      this.position()
     }
 
     private close() {
-      if (!this.content || !this.isOpen) return
-
       this.isOpen = false
-      this.container.setAttribute("data-state", "closed")
-      this.content.classList.remove("show")
-
-      // Emit close event
-      this.container.dispatchEvent(new CustomEvent("dropdown-close"))
+      this.container.dataset.state = "closed"
     }
 
-    private positionContent() {
+    private position() {
       if (!this.trigger || !this.content) return
-
-      const triggerRect = this.trigger.getBoundingClientRect()
-      const { innerWidth: vw, innerHeight: vh } = window
-      const align = this.content.dataset.align || "start"
-      const sideOffset = 4
+      const trigger = this.trigger.getBoundingClientRect()
+      const content = this.content.getBoundingClientRect()
       const margin = 10
-
-      // Force max-width first to constrain the dropdown
-      const maxWidth = vw - 2 * margin
-      this.content.style.maxWidth = `${maxWidth}px`
-      this.content.style.width = "auto"
-
-      // Get dimensions after constraining width
-      const contentRect = this.content.getBoundingClientRect()
-      const contentWidth = contentRect.width
-
       let left = 0
-
-      // For "end" alignment on mobile, position from right edge of viewport
-      if (align === "end") {
-        // Align the right edge of the content with the right edge of the trigger
-        left = triggerRect.width - contentWidth
-      } else if (align === "center") {
-        // Center on the trigger
-        left = (triggerRect.width - contentWidth) / 2
-      }
-
-      // Ensure we don't overflow on either side
-      const triggerLeft = triggerRect.left
-      const proposedLeft = triggerLeft + left
-      const proposedRight = proposedLeft + contentWidth
-
-      // Clamp to viewport bounds
-      if (proposedRight > vw - margin) {
-        left = vw - triggerLeft - contentWidth - margin
-      }
-      if (proposedLeft < margin) {
-        left = margin - triggerLeft
-      }
-
+      if (this.content.dataset.align === "end")
+        left = trigger.width - content.width
+      if (this.content.dataset.align === "center")
+        left = (trigger.width - content.width) / 2
+      left = Math.min(
+        left,
+        window.innerWidth - trigger.left - content.width - margin,
+      )
+      left = Math.max(left, margin - trigger.left)
       this.content.style.left = `${left}px`
-      this.content.style.top = `calc(100% + ${sideOffset}px)`
-
-      // Set max height efficiently
-      const maxHeight = vh - triggerRect.bottom - sideOffset - 20
-      this.content.style.maxHeight = `${Math.max(200, maxHeight)}px`
-    }
-
-    public setOpen(open: boolean) {
-      if (open) {
-        this.open()
-      } else {
-        this.close()
-      }
     }
   }
 
-  // Initialize dropdowns
   function initDropdowns() {
-    document.querySelectorAll("[data-dropdown-root]").forEach((container) => {
-      if (!container.hasAttribute("data-dropdown-initialized")) {
-        new DropdownMenu(container as HTMLElement)
-        container.setAttribute("data-dropdown-initialized", "")
-      }
-    })
+    document
+      .querySelectorAll<HTMLElement>("[data-dropdown-root]")
+      .forEach((container) => {
+        if (container.dataset.dropdownInitialized) return
+        new DropdownMenu(container)
+        container.dataset.dropdownInitialized = "true"
+      })
   }
 
-  // Initialize on page load
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initDropdowns)
   } else {
     initDropdowns()
   }
-
-  // Re-initialize after Astro page transitions
   document.addEventListener("astro:after-swap", initDropdowns)
 </script>
 
-<style>
-  /* Touch-friendly hover states */
-  @media (hover: hover) and (pointer: fine) {
-    [data-dropdown-item]:hover {
-      background-color: hsl(var(--accent));
-      color: hsl(var(--accent-foreground));
+<style is:global>
+  [data-dropdown-root] {
+    position: relative;
+    display: inline-block;
+  }
+
+  [data-dropdown-content] {
+    position: absolute;
+    display: none;
+    inset-block-start: calc(100% + var(--dropdown-offset, 4px));
+    inset-inline-start: 0;
+    z-index: 50;
+    min-inline-size: 10rem;
+    max-inline-size: calc(100vw - 1.25rem);
+    max-block-size: min(24rem, calc(100vh - 6rem));
+    overflow: auto;
+    padding-block: var(--space-3xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--background);
+    color: var(--foreground);
+    opacity: 0;
+    visibility: hidden;
+    scale: 0.98;
+    transform-origin: top left;
+    transition:
+      display var(--motion-duration) var(--motion-ease) allow-discrete,
+      opacity var(--motion-duration) var(--motion-ease),
+      visibility var(--motion-duration) var(--motion-ease),
+      scale var(--motion-duration) var(--motion-ease);
+  }
+
+  [data-dropdown-root][data-state="open"] [data-dropdown-content] {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    scale: 1;
+  }
+
+  @starting-style {
+    [data-dropdown-root][data-state="open"] [data-dropdown-content] {
+      opacity: 0;
+      scale: 0.98;
     }
+  }
+
+  [data-dropdown-item] {
+    display: block;
+    inline-size: 100%;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  [data-dropdown-item]:hover {
+    background: var(--muted);
   }
 </style>

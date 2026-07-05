@@ -29,7 +29,7 @@ export async function getStaticPaths() {
   const posts = await PostManager.getInstance().getAllPostsAndSubposts()
   return posts.map((post) => ({
     params: { id: post.id },
-    props: post
+    props: post,
   }))
 }
 
@@ -43,7 +43,11 @@ const currentPostId = post.id
 
 // Render first, then pass headings to context to avoid double render() in TOC generation
 const { Content, headings: rawHeadings } = await render(post)
-const context = await postManager.getPostContext(currentPostId, SITE.blog.tocMaxDepth, rawHeadings)
+const context = await postManager.getPostContext(
+  currentPostId,
+  SITE.blog.tocMaxDepth,
+  rawHeadings,
+)
 
 const {
   metadata,
@@ -54,7 +58,7 @@ const {
   isSubpost,
   hasSubposts,
   postNavItems,
-  activePostNavItem
+  activePostNavItem,
 } = context
 
 const rawMarkdown = post.body ?? null
@@ -71,8 +75,7 @@ const rawMarkdown = post.body ?? null
   tags={post.data.tags}
   section="Blog"
 >
-  {
-    (hasSubposts || isSubpost) && activePostNavItem && (
+  {(hasSubposts || isSubpost) && activePostNavItem && (
       <SubpostsHeader
         slot="subposts-navigation-header"
         currentPost={post}
@@ -81,8 +84,7 @@ const rawMarkdown = post.body ?? null
         isSubpost={isSubpost}
         activePostNavItem={activePostNavItem}
       />
-    )
-  }
+    )}
   {headings.length > 1 && <TOCHeader slot="toc-header" headings={headings} />}
   <Breadcrumbs
     slot="breadcrumb"
@@ -110,44 +112,34 @@ const rawMarkdown = post.body ?? null
           ])
     ]}
   />
-  {/** Hero image */}
-  {
-    post.data.image && (
+  {post.data.image && (
       <Image
         src={post.data.image}
         alt={post.data.title}
         width={1200}
         height={630}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-        class="mx-auto w-full object-cover"
+        class="post-hero-image"
         loading="lazy"
       />
-    )
-  }
+    )}
 
-  {/** Post header */}
-  <header class="flex flex-col gap-y-4 text-center">
-    <h1
-      id="post-title"
-      class="[scroll-margin-top:var(--header-height)] text-3xl leading-tight font-medium sm:text-4xl"
-    >
+  <header class="post-header">
+    <h1 id="post-title">
       {post.data.title}
     </h1>
 
-    {/** Post metadata */}
     <PostMetadata {...metadata} variant="full" />
 
-    {/** Stage + Tags */}
-    {
-      (post.data.stage || post.data.tags?.length > 0) && (
-        <ul class="flex flex-wrap justify-center gap-2" aria-label="Post tags">
+    {(post.data.stage || post.data.tags?.length > 0) && (
+        <ul class="post-tags" aria-label="Post tags">
           {post.data.stage && (
             <li>
               <Badge
                 href={`/blog/stages/${post.data.stage}`}
                 variant={getStageVariant(post.data.stage)}
               >
-                <Icon name={post.data.stage} class="size-3" />
+                <Icon name={post.data.stage} size="0.75rem" />
                 {post.data.stage}
               </Badge>
             </li>
@@ -155,40 +147,35 @@ const rawMarkdown = post.body ?? null
           {post.data.tags.map((tag: string) => (
             <li>
               <Badge href={`/blog/tags/${tag}`} variant="tag">
-                <Icon name="hashtag" class="size-3" />
+                <Icon name="hashtag" size="0.75rem" />
                 {tag}
               </Badge>
             </li>
           ))}
         </ul>
-      )
-    }
+      )}
   </header>
 
-  {/** Top navigation */}
-  <PostNav prevPost={navigation.newer} nextPost={navigation.older} parentPost={navigation.parent} />
+  <PostNav
+    prevPost={navigation.newer}
+    nextPost={navigation.older}
+    parentPost={navigation.parent}
+  />
 
-  {
-    post.data.audience && (
-      <aside class="border-primary/40 bg-muted/30 rounded-r-lg border-l-4 px-4 py-3 text-sm">
-        <span class="font-medium">Assumed audience:</span> {post.data.audience}
+  {post.data.audience && (
+      <aside class="post-audience">
+        <span>Assumed audience:</span> {post.data.audience}
       </aside>
-    )
-  }
+    )}
 
-  {/** Left sidebar - TOC */}
   <SlideOut position="left">
-    {
-      tocSections.length > 0 && (
+    {tocSections.length > 0 && (
         <TOCSidebar slot="main" sections={tocSections} currentPostId={currentPostId} />
-      )
-    }
+      )}
     {headings.length > 0 && <TOCFloat slot="summary" headings={headings} />}
   </SlideOut>
 
-  {/** Right sidebar - Subposts */}
-  {
-    (hasSubposts || isSubpost) && activePostNavItem && (
+  {(hasSubposts || isSubpost) && activePostNavItem && (
       <SlideOut position="right">
         <SubpostsSidebar
           slot="main"
@@ -201,16 +188,15 @@ const rawMarkdown = post.body ?? null
           activePostNavItem={activePostNavItem}
         />
       </SlideOut>
-    )
-  }
+    )}
 
-  {/** Main article content */}
-  <article class="post-content prose lg:prose-lg">
-    <Content />
+  <article>
+    <prose-content>
+      <Content />
+    </prose-content>
   </article>
 
-  {/** Post footer: authors + actions */}
-  <footer class="flex flex-col gap-y-6">
+  <footer class="post-footer">
     {metadata.authors.length > 0 && <AboutAuthors authors={metadata.authors} />}
 
     <ShareActions
@@ -218,12 +204,80 @@ const rawMarkdown = post.body ?? null
       url={`${SITE.href}/blog/${currentPostId}`}
       authors={metadata.authors}
       markdown={rawMarkdown}
-      class="flex justify-end"
+      class="post-share-actions"
     />
   </footer>
 
-  {/** Bottom navigation */}
-  <PostNav prevPost={navigation.newer} nextPost={navigation.older} parentPost={navigation.parent} />
+  <PostNav
+    prevPost={navigation.newer}
+    nextPost={navigation.older}
+    parentPost={navigation.parent}
+  />
 </Layout>
 
 <BackToTop />
+
+<style>
+  .post-hero-image {
+    inline-size: 100%;
+    margin-inline: auto;
+    object-fit: cover;
+  }
+
+  .post-header,
+  .post-footer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-header {
+    gap: var(--space-s);
+    text-align: center;
+  }
+
+  #post-title {
+    scroll-margin-top: var(--header-height);
+    font-size: var(--step-4);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .post-audience {
+    padding: var(--space-2xs) var(--space-s);
+    border-inline-start: 4px solid
+      color-mix(in oklab, var(--primary) 40%, transparent);
+    border-start-end-radius: var(--radius-lg);
+    border-end-end-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--muted) 30%, transparent);
+    font-size: var(--step--1);
+  }
+
+  .post-audience span {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .post-footer {
+    gap: var(--space-l);
+  }
+
+  .post-share-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media (width >= 40rem) {
+    #post-title {
+      font-size: var(--step-5);
+    }
+  }
+</style>

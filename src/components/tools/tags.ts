@@ -23,7 +23,7 @@ export enum ToolTag {
   Organization = "org",
 
   // Personal Status
-  Favorite = "🤍"
+  Favorite = "🤍",
 }
 
 /**

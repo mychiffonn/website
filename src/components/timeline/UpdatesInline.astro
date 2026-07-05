@@ -11,20 +11,45 @@ interface Props {
 const { renderedUpdates, class: className, itemClass } = Astro.props
 ---
 
-<div class={className}>
-  {
-    renderedUpdates.map((item) => (
-      <article class="relative block">
-        <div class="flex flex-col gap-x-2 gap-y-1 sm:flex-row sm:items-baseline">
-          <FormattedDate
-            date={item.date}
-            class="text-muted-foreground shrink-0 text-xs font-medium uppercase"
-          />
-          <div class:list={["prose", itemClass]}>
-            <item.Content />
-          </div>
-        </div>
-      </article>
-    ))
-  }
+<div class:list={["updates-inline", className]}>
+  {renderedUpdates.map((item) => (
+    <article>
+      <FormattedDate date={item.date} class="update-date" />
+      <div class:list={["update-content prose", itemClass]}>
+        <item.Content />
+      </div>
+    </article>
+  ))}
 </div>
+
+<style>
+  .updates-inline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  article {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+
+    @media (width >= 40rem) {
+      flex-direction: row;
+      align-items: baseline;
+      gap: var(--space-xs);
+    }
+  }
+
+  :global(.update-date) {
+    flex-shrink: 0;
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+  }
+
+  .update-content {
+    min-inline-size: 0;
+  }
+</style>

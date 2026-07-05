@@ -7,7 +7,8 @@ import UpdatesTimeline from "@/components/timeline/UpdatesTimeline.astro"
 
 import { Content as NowContent } from "@/content/now.md"
 
-const nowDescription = "A sporadically updated log of what I am doing, thinking, and exploring."
+const nowDescription =
+  "A sporadically updated log of what I am doing, thinking, and exploring."
 const renderedUpdates = await getLatestUpdates(10)
 ---
 
@@ -20,18 +21,27 @@ const renderedUpdates = await getLatestUpdates(10)
   <section id="now-content">
     <NowContent />
   </section>
-  {
-    renderedUpdates.length > 0 && (
+  {renderedUpdates.length > 0 && (
       <Section title="Timeline">
         <UpdatesTimeline renderedUpdates={renderedUpdates} />
       </Section>
-    )
-  }
+    )}
 
-  <p class="text-muted-foreground text-sm">
+  <p class="now-note">
     Learn more about now pages and browse others at
-    <Link href="https://nownownow.com" class="text-foreground" external underline
+    <Link href="https://nownownow.com" class="now-note-link" external underline
       >nownownow.com</Link
     >
   </p>
 </CommonLayout>
+
+<style>
+  .now-note {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  :global(.now-note-link) {
+    color: var(--foreground);
+  }
+</style>

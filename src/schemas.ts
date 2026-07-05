@@ -34,11 +34,13 @@ export const SiteConfigSchema = z.object({
     options: z
       .object({
         day: z.enum(["numeric", "2-digit"]).optional(),
-        month: z.enum(["numeric", "2-digit", "narrow", "short", "long"]).optional(),
+        month: z
+          .enum(["numeric", "2-digit", "narrow", "short", "long"])
+          .optional(),
         year: z.enum(["numeric", "2-digit"]).optional(),
-        timeZone: z.string().optional()
+        timeZone: z.string().optional(),
       })
-      .default({})
+      .default({}),
   }),
 
   /** Blog-specific settings */
@@ -51,8 +53,18 @@ export const SiteConfigSchema = z.object({
     tocMaxDepth: z.number().min(1).max(6).default(3),
     /** Share action buttons on blog posts */
     shareActions: z
-      .array(z.enum(["email", "x", "linkedin", "facebook", "bluesky", "mastodon", "reddit"]))
-      .default(["email", "x"])
+      .array(
+        z.enum([
+          "email",
+          "x",
+          "linkedin",
+          "facebook",
+          "bluesky",
+          "mastodon",
+          "reddit",
+        ]),
+      )
+      .default(["email", "x"]),
   }),
 
   // Theme settings
@@ -64,12 +76,12 @@ export const SiteConfigSchema = z.object({
   license: z
     .object({
       href: z.string(),
-      label: z.string()
+      label: z.string(),
     })
     .default({
       label: "CC-BY-NC-4.0",
-      href: "https://creativecommons.org/licenses/by-nc/4.0/"
-    })
+      href: "https://creativecommons.org/licenses/by-nc/4.0/",
+    }),
 })
 
 /**
@@ -100,9 +112,9 @@ export const ProfileLinkConfigSchema = z
         /** URL or path for the social link */
         href: z.string(),
         /** Custom label or 'platform' to use default from platform config */
-        label: z.union([z.string(), z.literal("platform")]).optional()
-      })
-    ])
+        label: z.union([z.string(), z.literal("platform")]).optional(),
+      }),
+    ]),
   )
   .optional()
   .default({})
@@ -138,7 +150,7 @@ export const ProfileConfigSchema = z.object({
   /** Social media and professional platform links */
   links: ProfileLinkConfigSchema,
   /** Link keys (e.g., "cv", "resume") to highlight with primary color in profile */
-  highlightLinks: z.array(z.string()).optional().default([])
+  highlightLinks: z.array(z.string()).optional().default([]),
 })
 
 /**
@@ -158,10 +170,10 @@ export const FooterConfigSchema = z.object({
         /** URL for the footer link */
         href: z.url(),
         /** Display text for the footer link */
-        label: z.string()
-      })
+        label: z.string(),
+      }),
     )
-    .default([])
+    .default([]),
 })
 
 /**
@@ -179,9 +191,17 @@ export const ToolSchema = z.object({
   /** Categorization tags for filtering and organization */
   tags: z
     .array(
-      z.enum(["Free", "OpenSource", "Subscription", "Bundle", "SelfHosted", "Gifted", "Favorite"])
+      z.enum([
+        "Free",
+        "OpenSource",
+        "Subscription",
+        "Bundle",
+        "SelfHosted",
+        "Gifted",
+        "Favorite",
+      ]),
     )
-    .optional()
+    .optional(),
 })
 
 /**
@@ -195,13 +215,16 @@ export const PROJECT_CATEGORIES = [
   { slug: "tool", label: "Tool" },
   { slug: "simulation", label: "Simulation" },
   { slug: "research", label: "Research" },
-  { slug: "fun-creativity", label: "Fun & Creativity" }
+  { slug: "fun-creativity", label: "Fun & Creativity" },
 ] as const
 
 export type ProjectCategorySlug = (typeof PROJECT_CATEGORIES)[number]["slug"]
 
 export const ProjectCategorySchema = z.enum(
-  PROJECT_CATEGORIES.map((c) => c.slug) as [ProjectCategorySlug, ...ProjectCategorySlug[]]
+  PROJECT_CATEGORIES.map((c) => c.slug) as [
+    ProjectCategorySlug,
+    ...ProjectCategorySlug[],
+  ],
 )
 
 /**
@@ -214,16 +237,16 @@ export const PublicationConfigSchema = z.object({
   highlightAuthor: z.object({
     firstName: z.string(),
     lastName: z.string(),
-    aliases: z.array(z.string()).optional()
+    aliases: z.array(z.string()).optional(),
   }),
   equalSymbols: z
     .object({
       first: z.string().default("*"),
       second: z.string().default("†"),
       third: z.string().default("‡"),
-      last: z.string().default("§")
+      last: z.string().default("§"),
     })
-    .default({ first: "*", second: "†", third: "‡", last: "§" })
+    .default({ first: "*", second: "†", third: "‡", last: "§" }),
 })
 
 /**
@@ -251,7 +274,7 @@ export const ProcessedPublicationSchema = z.object({
     /** Count of hidden authors */
     hiddenCount: z.number(),
     /** Hidden authors (with highlighted author(s) and commas) */
-    hiddenAuthors: z.string()
+    hiddenAuthors: z.string(),
   }),
 
   /** Information based on venue / booktitle / journal / etc */
@@ -262,8 +285,8 @@ export const ProcessedPublicationSchema = z.object({
     z.object({
       href: z.string(),
       icon: z.string(),
-      label: z.string()
-    })
+      label: z.string(),
+    }),
   ),
 
   // Sorting & filtering metadata
@@ -271,5 +294,5 @@ export const ProcessedPublicationSchema = z.object({
   expandedKeywords: z.array(z.string()).default([]),
   selected: z.boolean().default(false),
   authorPosition: z.number().default(Infinity),
-  equalContributionNote: z.string().default("")
+  equalContributionNote: z.string().default(""),
 })

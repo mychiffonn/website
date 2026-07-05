@@ -3,19 +3,22 @@ import { render } from "astro:content"
 
 import type { Post, PostManager, TOCHeadingItem, TOCSection } from "./types"
 
-function processRawHeadings(headings: MarkdownHeading[], tocMaxDepth: number): TOCHeadingItem[] {
+function processRawHeadings(
+  headings: MarkdownHeading[],
+  tocMaxDepth: number,
+): TOCHeadingItem[] {
   if (!headings?.length) return []
   return headings
     .filter((heading) => heading.depth <= tocMaxDepth)
     .map((heading) => ({
       ...heading,
-      href: `#${heading.slug}`
+      href: `#${heading.slug}`,
     }))
 }
 
 async function extractAndProcessHeadings(
   post: Post,
-  tocMaxDepth: number
+  tocMaxDepth: number,
 ): Promise<TOCHeadingItem[]> {
   try {
     const { headings } = await render(post)
@@ -36,7 +39,7 @@ export async function getTOCSections(
   postId: string,
   postManager: PostManager,
   tocMaxDepth: number,
-  preRenderedHeadings?: MarkdownHeading[]
+  preRenderedHeadings?: MarkdownHeading[],
 ): Promise<TOCSection[]> {
   if (tocMaxDepth <= 0) return []
 
@@ -46,14 +49,16 @@ export async function getTOCSections(
   const isSubpostPost = postManager.isSubpost(postId)
   const parentId = isSubpostPost ? postManager.getParentId(postId) : postId
 
-  const parentPost = isSubpostPost ? await postManager.getPostById(parentId) : post
+  const parentPost = isSubpostPost
+    ? await postManager.getPostById(parentId)
+    : post
   if (!parentPost) return []
 
   const [parentHeadings, subposts] = await Promise.all([
     parentId === postId && preRenderedHeadings
       ? processRawHeadings(preRenderedHeadings, tocMaxDepth)
       : extractAndProcessHeadings(parentPost, tocMaxDepth),
-    postManager.getSubpostsByParent(parentId)
+    postManager.getSubpostsByParent(parentId),
   ])
 
   if (parentHeadings.length === 0 && subposts.length === 0) return []
@@ -71,14 +76,14 @@ export async function getTOCSections(
         postId: subpost.id,
         postTitle: subpost.data.title,
         isSubpost: true,
-        headings
+        headings,
       }
-    }
+    },
   )
 
   const subpostResults = await Promise.all(subpostSectionsPromises)
   const subpostSections = subpostResults.filter(
-    (section): section is TOCSection => section !== null
+    (section): section is TOCSection => section !== null,
   )
 
   const sections: TOCSection[] = []
@@ -88,7 +93,7 @@ export async function getTOCSections(
       postId: parentId,
       postTitle: parentPost.data.title,
       isSubpost: false,
-      headings: parentHeadings
+      headings: parentHeadings,
     })
   }
 
@@ -99,12 +104,17 @@ export async function getTOCSections(
   return sections
 }
 
-export function getActiveSections(sections: TOCSection[], activeHeadingIds: string[]): Set<string> {
+export function getActiveSections(
+  sections: TOCSection[],
+  activeHeadingIds: string[],
+): Set<string> {
   const activeSections = new Set<string>()
   const activeIdSet = new Set(activeHeadingIds)
 
   for (const section of sections) {
-    const hasActiveHeading = section.headings.some((heading) => activeIdSet.has(heading.slug))
+    const hasActiveHeading = section.headings.some((heading) =>
+      activeIdSet.has(heading.slug),
+    )
 
     if (hasActiveHeading) {
       activeSections.add(section.postId)
@@ -117,7 +127,7 @@ export function getActiveSections(sections: TOCSection[], activeHeadingIds: stri
 export function getTOCUrl(
   heading: { slug: string },
   section: TOCSection,
-  isActiveSection: boolean
+  isActiveSection: boolean,
 ): string {
   if (isActiveSection) {
     return `#${heading.slug}`
@@ -132,7 +142,7 @@ export function getHeadingMargin(depth: number): string {
     3: "ml-4",
     4: "ml-8",
     5: "ml-12",
-    6: "ml-16"
+    6: "ml-16",
   }
   return margins[depth] || ""
 }
@@ -145,7 +155,7 @@ export function getHeadingWidth(depth: number): string {
     3: "w-3",
     4: "w-2",
     5: "w-1.5",
-    6: "w-1"
+    6: "w-1",
   }
   return widths[depth] || "w-2"
 }

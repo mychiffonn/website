@@ -14,41 +14,33 @@ const { sections, currentPostId, class: className } = Astro.props
 const hasSections = sections.length > 0
 ---
 
-{
-  hasSections && (
+{hasSections && (
     <aside
       id="toc-sidebar-container"
       role="complementary"
       aria-labelledby="toc-heading"
-      class={className}
+      class:list={["toc-sidebar", className]}
     >
-      <header class="border-border sticky top-0 mb-2 border-b pb-1">
-        <h2 id="toc-heading" class="text-foreground/80 text-sm font-semibold">
+      <header>
+        <h2 id="toc-heading">
           Table of Contents
         </h2>
       </header>
-      <ScrollArea
-        class="flex max-h-[calc(100vh_-_var(--header-height,4rem))] flex-col gap-2 p-2"
-        data-scroll-area
-      >
-        <ol class="space-y-2" role="navigation" aria-labelledby="toc-heading">
+      <ScrollArea class="toc-sidebar-scroll" data-scroll-area>
+        <ol role="navigation" aria-labelledby="toc-heading">
           {sections.map((section: TOCSection, index: number) => {
             const isFirstSubpost = section.isSubpost && !sections[index - 1]?.isSubpost
 
             return (
               <li>
                 {isFirstSubpost && (
-                  <div
-                    class="mb-4 flex items-center gap-3"
-                    role="separator"
-                    aria-label="Subposts section"
-                  >
-                    <div class="bg-border h-px flex-1" />
-                    <span class="text-muted-foreground px-2 text-xs font-semibold tracking-wider uppercase">
+                  <toc-separator role="separator" aria-label="Subposts section">
+                    <span />
+                    <strong>
                       Subposts
-                    </span>
-                    <div class="bg-border h-px flex-1" />
-                  </div>
+                    </strong>
+                    <span />
+                  </toc-separator>
                 )}
                 <TOCSectionComponent
                   id={section.postId}
@@ -62,8 +54,61 @@ const hasSections = sections.length > 0
         </ol>
       </ScrollArea>
     </aside>
-  )
-}
+  )}
+
+<style>
+  .toc-sidebar header {
+    position: sticky;
+    top: 0;
+    margin-block-end: var(--space-2xs);
+    padding-block-end: var(--space-3xs);
+    border-block-end: 1px solid var(--border);
+  }
+
+  h2 {
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  :global(.toc-sidebar-scroll) {
+    display: flex;
+    max-block-size: calc(100vh - var(--header-height, 4rem));
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: var(--space-2xs);
+  }
+
+  ol {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  toc-separator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    margin-block-end: var(--space-s);
+  }
+
+  toc-separator span {
+    block-size: 1px;
+    flex: 1;
+    background: var(--border);
+  }
+
+  toc-separator strong {
+    padding-inline: var(--space-2xs);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+  }
+</style>
 
 <script>
   import { SITE } from "@site-config"
@@ -76,7 +121,7 @@ const hasSections = sections.length > 0
     controller = new UnifiedTOCController(
       "#toc-sidebar-container",
       "#toc-sidebar-container [data-heading-link]",
-      { tocMaxDepth: SITE.blog.tocMaxDepth }
+      { tocMaxDepth: SITE.blog.tocMaxDepth },
     )
     controller.init()
   }

@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 
   return uniqueTags.map((tag) => ({
     params: { id: tag },
-    props: { tag: tag }
+    props: { tag: tag },
   }))
 }
 
@@ -33,13 +33,22 @@ const batchMetadata: PostMeta[] = await postManager.getPostsByTag(tag)
     ]}
   />
 
-  <ul class="flex flex-col gap-y-4">
-    {
-      batchMetadata.map((metadata) => (
+  <ul class="post-list">
+    {batchMetadata.map((metadata) => (
         <li>
           <PreviewCard metadata={metadata} />
         </li>
-      ))
-    }
+    ))}
   </ul>
 </Layout>
+
+<style>
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+</style>

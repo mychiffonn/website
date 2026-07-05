@@ -10,9 +10,35 @@ interface Props {
 const { class: className, title, tools, ...props } = Astro.props
 ---
 
-<section class:list={["not-prose flex flex-col px-2", className]} {...props}>
-  <h3 class="m-2 text-lg font-semibold">{title}</h3>
-  <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+<section class:list={["tool-section", className]} {...props}>
+  <h3>{title}</h3>
+  <div class="tool-grid">
     {tools.map((tool) => <ToolComponent {...tool} />)}
   </div>
 </section>
+
+<style>
+  .tool-section {
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--space-2xs);
+  }
+
+  h3 {
+    margin: var(--space-2xs);
+    font-size: var(--step-1);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xs);
+  }
+
+  @media (width >= 40rem) {
+    .tool-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

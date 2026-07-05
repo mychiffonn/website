@@ -1,7 +1,5 @@
 ---
-import { getHeadingMargin } from "@/lib/blog/toc"
 import type { TOCHeadingItem } from "@/lib/blog/types"
-import { cn } from "@/lib/utils"
 import Icon from "@/components/base/Icon.astro"
 import TOCHeadingLink from "@/components/blog/TOCHeadingLink.astro"
 
@@ -15,43 +13,99 @@ interface Props {
 const { id, title, isActive, headings } = Astro.props
 ---
 
-<details class={cn("border-border/20 border-t border-b py-1 group")} open={isActive}>
-  <summary
-    class={cn(
-      "list-none cursor-pointer rounded-md px-1 py-1.5 text-sm font-medium transition-colors",
-      "hover:bg-accent/50 hover:text-accent-foreground",
-      "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-      "flex items-center gap-2",
-      "text-foreground/70"
-    )}
-    data-heading-link={isActive ? "top" : `${id}-top`}
-  >
-    <span class="min-w-0 flex-1">
+<details class="toc-section" open={isActive}>
+  <summary data-heading-link={isActive ? "top" : `${id}-top`}>
+    <span>
       {title}
     </span>
-    {
-      headings.length > 0 && (
+    {headings.length > 0 && (
         <Icon
           name="mingcute:down-line"
-          class="text-muted-foreground shrink-0 transition-transform duration-200 group-open:rotate-180"
+          class="toc-section-chevron"
           aria-hidden="true"
         />
-      )
-    }
+      )}
   </summary>
-  {
-    headings.length > 0 && (
-      <div class="border-border/50 mt-1 border-l-2 pl-2">
-        <ul class="space-y-0.5">
+  {headings.length > 0 && (
+      <toc-section-list>
+        <ul>
           {headings.map((heading) => (
             <TOCHeadingLink
               heading={heading}
-              class={cn("text-foreground/70", getHeadingMargin(heading.depth))}
+              class="toc-heading-link"
               data-heading-link={heading.slug}
             />
           ))}
         </ul>
-      </div>
-    )
-  }
+      </toc-section-list>
+    )}
 </details>
+
+<style>
+  .toc-section {
+    padding-block: var(--space-3xs);
+    border-block: 1px solid color-mix(in oklab, var(--border) 20%, transparent);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: 0.375rem var(--space-3xs);
+    border-radius: var(--radius-md);
+    color: color-mix(in oklab, var(--foreground) 70%, transparent);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    list-style: none;
+    cursor: pointer;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:hover {
+    background: color-mix(in oklab, var(--accent) 50%, transparent);
+    color: var(--accent-foreground);
+  }
+
+  summary:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  summary > span {
+    min-inline-size: 0;
+    flex: 1;
+  }
+
+  :global(.toc-section-chevron) {
+    flex-shrink: 0;
+    color: var(--muted-foreground);
+    transition: transform var(--motion-duration) var(--motion-ease);
+  }
+
+  details[open] :global(.toc-section-chevron) {
+    transform: rotate(180deg);
+  }
+
+  toc-section-list {
+    display: block;
+    margin-block-start: var(--space-3xs);
+    padding-inline-start: var(--space-2xs);
+    border-inline-start: 2px solid
+      color-mix(in oklab, var(--border) 50%, transparent);
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+</style>

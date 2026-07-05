@@ -17,14 +17,16 @@ const {
   combinedWordCount,
   customSuffix = "read",
   separator = " - ",
-  class: className
+  class: className,
 } = Astro.props
 
 // Calculate reading time in minutes (220 words per minute)
 const calculateMinutes = (words: number) => Math.max(1, Math.round(words / 220))
 
 const primaryMinutes = calculateMinutes(wordCount)
-const primaryText = customSuffix ? `${primaryMinutes} min ${customSuffix}` : `${primaryMinutes} min`
+const primaryText = customSuffix
+  ? `${primaryMinutes} min ${customSuffix}`
+  : `${primaryMinutes} min`
 
 // Check if we should show combined time
 const shouldShowCombined =
@@ -32,11 +34,12 @@ const shouldShowCombined =
   combinedWordCount > wordCount &&
   calculateMinutes(combinedWordCount) > primaryMinutes
 
-const combinedMinutes = shouldShowCombined ? calculateMinutes(combinedWordCount) : 0
+const combinedMinutes = shouldShowCombined
+  ? calculateMinutes(combinedWordCount)
+  : 0
 ---
 
-{
-  wordCount > 0 && (
+{wordCount > 0 && (
     <span class={className}>
       <time datetime={`PT${primaryMinutes}M`}>{primaryText}</time>
       {shouldShowCombined && (
@@ -46,5 +49,4 @@ const combinedMinutes = shouldShowCombined ? calculateMinutes(combinedWordCount)
         </>
       )}
     </span>
-  )
-}
+  )}

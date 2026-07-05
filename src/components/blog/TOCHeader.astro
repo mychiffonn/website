@@ -1,8 +1,6 @@
 ---
 import type { MarkdownHeading } from "astro"
 
-import { getHeadingMargin } from "@/lib/blog/toc"
-import { cn } from "@/lib/utils"
 import Icon from "@/components/base/Icon.astro"
 import ScrollArea from "@/components/blog/ScrollArea.astro"
 import TOCHeadingLink from "@/components/blog/TOCHeadingLink.astro"
@@ -15,24 +13,14 @@ const { headings } = Astro.props
 const hasHeadings = headings && headings.length > 0
 ---
 
-{
-  hasHeadings && (
-    <nav id="mobile-toc-container" class="w-full xl:hidden" aria-label="Table of contents">
-      <details class="group overflow-x-hidden" aria-expanded="false">
-        <summary
-          class={cn(
-            "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-            "flex w-full flex-1 cursor-pointer items-start gap-3 p-3"
-          )}
-        >
-          <div
-            class="relative flex shrink-0 items-center justify-center"
-            role="img"
-            aria-label="Reading progress indicator"
-          >
-            <svg class="size-5" viewBox="0 0 24 24" aria-hidden="true">
+{hasHeadings && (
+    <nav id="mobile-toc-container" class="mobile-toc" aria-label="Table of contents">
+      <details aria-expanded="false">
+        <summary>
+          <toc-progress role="img" aria-label="Reading progress indicator">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle
-                class="text-primary/20"
+                class="toc-progress-track"
                 cx="12"
                 cy="12"
                 r="10"
@@ -42,7 +30,7 @@ const hasHeadings = headings && headings.length > 0
               />
               <circle
                 id="mobile-toc-progress-circle"
-                class="text-primary"
+                class="toc-progress-value"
                 cx="12"
                 cy="12"
                 r="10"
@@ -54,36 +42,134 @@ const hasHeadings = headings && headings.length > 0
                 transform="rotate(-90 12 12)"
               />
             </svg>
-          </div>
-          <span
-            id="mobile-toc-current-section"
-            class="text-foreground min-w-0 truncate text-sm leading-tight font-medium"
-          >
+          </toc-progress>
+          <toc-current id="mobile-toc-current-section">
             Overview
-          </span>
+          </toc-current>
           <Icon
             name="mingcute:down-line"
-            class="text-muted-foreground ml-auto shrink-0 transition-transform duration-200 group-open:rotate-180"
+            class="mobile-toc-chevron"
             aria-hidden="true"
           />
         </summary>
 
-        <div class="border-border/50 border-t" data-scroll-container>
-          <ScrollArea class="flex max-h-[30vh] flex-col" data-scroll-area>
-            <ul class="flex list-none flex-col gap-y-1 px-3 py-2" id="mobile-toc">
+        <toc-panel data-scroll-container>
+          <ScrollArea class="mobile-toc-scroll" data-scroll-area>
+            <ul id="mobile-toc">
               {headings.map((heading) => (
-                <TOCHeadingLink
-                  heading={heading}
-                  class={cn("text-foreground/70", getHeadingMargin(heading.depth))}
-                />
+                <TOCHeadingLink heading={heading} class="toc-heading-link" />
               ))}
             </ul>
           </ScrollArea>
-        </div>
+        </toc-panel>
       </details>
     </nav>
-  )
-}
+  )}
+
+<style>
+  .mobile-toc {
+    inline-size: 100%;
+
+    @media (width >= 80rem) {
+      display: none;
+    }
+  }
+
+  details {
+    overflow-x: hidden;
+  }
+
+  summary {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-s);
+    inline-size: 100%;
+    padding: var(--space-s);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+  }
+
+  toc-progress {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  toc-progress svg {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+
+  toc-progress circle {
+    fill: none;
+    stroke-width: 2;
+  }
+
+  .toc-progress-track {
+    color: color-mix(in oklab, var(--primary) 20%, transparent);
+    stroke: currentColor;
+  }
+
+  .toc-progress-value {
+    color: var(--primary);
+    stroke: currentColor;
+  }
+
+  toc-current {
+    min-inline-size: 0;
+    flex: 1;
+    overflow: hidden;
+    color: var(--foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :global(.mobile-toc-chevron) {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    color: var(--muted-foreground);
+    transition: transform var(--motion-duration) var(--motion-ease);
+  }
+
+  details[open] :global(.mobile-toc-chevron) {
+    transform: rotate(180deg);
+  }
+
+  toc-panel {
+    display: block;
+    border-block-start: 1px solid
+      color-mix(in oklab, var(--border) 50%, transparent);
+  }
+
+  :global(.mobile-toc-scroll) {
+    display: flex;
+    max-block-size: 30vh;
+    flex-direction: column;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding: var(--space-2xs) var(--space-s);
+    margin: 0;
+    list-style: none;
+  }
+</style>
 
 <script>
   import { SITE } from "@site-config"
@@ -91,12 +177,26 @@ const hasHeadings = headings && headings.length > 0
 
   let controller: UnifiedTOCController | null = null
 
+  function closeHeader() {
+    const detailsElement = document.querySelector<HTMLDetailsElement>(
+      "#mobile-toc-container details",
+    )
+    if (detailsElement) detailsElement.open = false
+  }
+
   function initController() {
+    const container = document.getElementById("mobile-toc-container")
+    container?.querySelectorAll("a").forEach((link) => {
+      if ((link as HTMLElement).dataset.closeBound === "true") return
+      ;(link as HTMLElement).dataset.closeBound = "true"
+      link.addEventListener("click", closeHeader)
+    })
+
     controller?.cleanup()
     controller = new UnifiedTOCController(
       "#mobile-toc-container",
       "#mobile-toc-container [data-heading-link]",
-      { isMobile: true, tocMaxDepth: SITE.blog.tocMaxDepth }
+      { isMobile: true, tocMaxDepth: SITE.blog.tocMaxDepth },
     )
     controller.init()
   }
@@ -109,4 +209,6 @@ const hasHeadings = headings && headings.length > 0
   document.addEventListener("astro:page-load", initController)
   document.addEventListener("astro:after-swap", initController)
   document.addEventListener("astro:before-swap", cleanupController)
+  document.addEventListener("astro:before-preparation", closeHeader)
+  document.addEventListener("astro:before-swap", closeHeader)
 </script>

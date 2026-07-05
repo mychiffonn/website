@@ -17,7 +17,14 @@ interface Props {
   class?: string
 }
 
-const { text, selector, label, size = "0.875rem", title, class: className } = Astro.props
+const {
+  text,
+  selector,
+  label,
+  size = "0.875rem",
+  title,
+  class: className,
+} = Astro.props
 ---
 
 <button
@@ -25,11 +32,11 @@ const { text, selector, label, size = "0.875rem", title, class: className } = As
   data-copy-btn
   data-copy-text={text}
   data-copy-selector={selector}
-  class={cn("inline-flex cursor-pointer items-center gap-1", className)}
+  class={cn("copy-button", className)}
   title={title}
 >
   <Icon name="copy" size={size} class="copy-icon" />
-  <Icon name="check" size={size} class="check-icon hidden" />
+  <Icon name="check" size={size} class="check-icon" hidden />
   {label && <span class="copy-label">{label}</span>}
 </button>
 
@@ -60,13 +67,13 @@ const { text, selector, label, size = "0.875rem", title, class: className } = As
             var label = btn.querySelector(".copy-label")
             var origLabel = label ? label.textContent : ""
 
-            if (copyIcon) copyIcon.classList.add("hidden")
-            if (checkIcon) checkIcon.classList.remove("hidden")
+            if (copyIcon) copyIcon.setAttribute("hidden", "")
+            if (checkIcon) checkIcon.removeAttribute("hidden")
             if (label) label.textContent = "Copied!"
 
             setTimeout(function () {
-              if (copyIcon) copyIcon.classList.remove("hidden")
-              if (checkIcon) checkIcon.classList.add("hidden")
+              if (copyIcon) copyIcon.removeAttribute("hidden")
+              if (checkIcon) checkIcon.setAttribute("hidden", "")
               if (label) label.textContent = origLabel
             }, 1500)
           })
@@ -78,3 +85,20 @@ const { text, selector, label, size = "0.875rem", title, class: className } = As
     document.addEventListener("astro:after-swap", initCopyButtons)
   })()
 </script>
+
+<style>
+  .copy-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  :global(.copy-icon[hidden]),
+  :global(.check-icon[hidden]) {
+    display: none;
+  }
+</style>

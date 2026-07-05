@@ -56,7 +56,7 @@ export const SEMANTIC_ICONS = {
   info: "mingcute:information-line",
   time: "mingcute:time-line",
   timeline: "mingcute:time-line",
-  warning: "mingcute:alert-triangle-line"
+  warning: "mingcute:alert-triangle-line",
 }
 
 export const PROFILE_ICON_MAP = {
@@ -93,7 +93,10 @@ export const PROFILE_ICON_MAP = {
   arXiv: { label: "arXiv", iconName: "academicons:arxiv" },
   dblp: { label: "DBLP", iconName: "academicons:dblp" },
   figshare: { label: "Figshare", iconName: "academicons:figshare" },
-  googleScholar: { label: "Google Scholar", iconName: "academicons:google-scholar" },
+  googleScholar: {
+    label: "Google Scholar",
+    iconName: "academicons:google-scholar",
+  },
   inspire: { label: "Inspire", iconName: "academicons:inspire" },
   mendeley: { label: "Mendeley", iconName: "academicons:mendeley" },
   openreview: { label: "Open Review", iconName: "mingcute:document-2-line" },
@@ -102,7 +105,10 @@ export const PROFILE_ICON_MAP = {
   pubmed: { label: "PubMed", iconName: "academicons:pubmed" },
   researchgate: { label: "ResearchGate", iconName: "academicons:researchgate" },
   scopus: { label: "Scopus", iconName: "academicons:scopus" },
-  semanticScholar: { label: "Semantic Scholar", iconName: "academicons:semantic-scholar" },
+  semanticScholar: {
+    label: "Semantic Scholar",
+    iconName: "academicons:semantic-scholar",
+  },
   ssrn: { label: "SSRN", iconName: "academicons:ssrn" },
   zenodo: { label: "Zenodo", iconName: "academicons:zenodo" },
   zotero: { label: "Zotero", iconName: "academicons:zotero" },
@@ -114,7 +120,10 @@ export const PROFILE_ICON_MAP = {
   figma: { label: "Figma", iconName: "mingcute:figma-line" },
   github: { label: "GitHub", iconName: "mingcute:github-line" },
   gitlab: { label: "GitLab", iconName: "mingcute:git-lab-line" },
-  stackoverflow: { label: "Stack Overflow", iconName: "academicons:stackoverflow" },
+  stackoverflow: {
+    label: "Stack Overflow",
+    iconName: "academicons:stackoverflow",
+  },
 
   // Professional & Portfolio
   blog: { label: "Blog", iconName: "mingcute:pen-line" },
@@ -131,14 +140,14 @@ export const PROFILE_ICON_MAP = {
   patreon: { label: "Patreon", iconName: "mingcute:heart-line" },
   paypal: { label: "PayPal", iconName: "mingcute:paypal-line" },
   rss: { label: "RSS", iconName: "mingcute:rss-line" },
-  venmo: { label: "Venmo", iconName: "mingcute:wallet-4-line" }
+  venmo: { label: "Venmo", iconName: "mingcute:wallet-4-line" },
 }
 
 export const PROJECT_LINK_TYPES = {
   code: { label: "Code", iconName: "mingcute:code-line" },
   doc: { label: "Documentation", iconName: "mingcute:document-line" },
   release: { label: "Release", iconName: "mingcute:download-line" },
-  url: { label: "Website", iconName: "mingcute:globe-2-line" }
+  url: { label: "Website", iconName: "mingcute:globe-2-line" },
 } as const
 
 export const PUBLICATION_LINK_TYPES = {
@@ -169,7 +178,7 @@ export const PUBLICATION_LINK_TYPES = {
   // Metadata & accolades
   award: { label: "Award", iconName: "mingcute:trophy-line" },
   selected: { label: "Selected", iconName: "" },
-  venue: { label: "Venue", iconName: "" }
+  venue: { label: "Venue", iconName: "" },
 } as const
 
 export type ProfileLinkType = keyof typeof PROFILE_ICON_MAP

@@ -89,7 +89,7 @@ export interface TOCManager {
   getTOCSections(
     postId: string,
     postManager: PostManager,
-    tocMaxDepth?: number
+    tocMaxDepth?: number,
   ): Promise<TOCSection[]>
 }
 

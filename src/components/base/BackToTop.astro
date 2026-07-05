@@ -6,49 +6,67 @@ import Icon from "@/components/base/Icon.astro"
 <Button
   variant="outline"
   size="square"
-  class="group bg-background fixed right-2 bottom-8 z-50 hidden"
+  class="scroll-to-top"
   id="scroll-to-top"
+  hidden
   title="Scroll to top"
   aria-label="Scroll to top"
 >
-  <Icon name="to-top" size="1.25rem" class="transition-all group-hover:-translate-y-1" />
+  <Icon name="to-top" size="1.25rem" class="scroll-to-top-icon" />
 </Button>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
+  const initializeScrollToTop = () => {
     const scrollToTopButton = document.getElementById("scroll-to-top")
     const footer = document.querySelector("footer")
 
-    if (scrollToTopButton && footer) {
-      scrollToTopButton.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" })
-      })
+    if (!scrollToTopButton || !footer) return
 
-      window.addEventListener("scroll", () => {
-        const footerRect = footer.getBoundingClientRect()
-        const isFooterVisible = footerRect.top <= window.innerHeight
+    const updateVisibility = () => {
+      const footerRect = footer.getBoundingClientRect()
+      const isFooterVisible = footerRect.top <= window.innerHeight
 
-        scrollToTopButton.classList.toggle("hidden", window.scrollY <= 300 || isFooterVisible)
-      })
+      scrollToTopButton.toggleAttribute(
+        "hidden",
+        window.scrollY <= 300 || isFooterVisible,
+      )
     }
+
+    scrollToTopButton.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    })
+
+    window.addEventListener("scroll", updateVisibility, { passive: true })
+    updateVisibility()
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    initializeScrollToTop()
   })
 
   document.addEventListener("astro:after-swap", () => {
-    // Re-initialize after page transitions
-    const scrollToTopButton = document.getElementById("scroll-to-top")
-    const footer = document.querySelector("footer")
-
-    if (scrollToTopButton && footer) {
-      scrollToTopButton.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" })
-      })
-
-      window.addEventListener("scroll", () => {
-        const footerRect = footer.getBoundingClientRect()
-        const isFooterVisible = footerRect.top <= window.innerHeight
-
-        scrollToTopButton.classList.toggle("hidden", window.scrollY <= 300 || isFooterVisible)
-      })
-    }
+    initializeScrollToTop()
   })
 </script>
+
+<style>
+  :global(.scroll-to-top) {
+    position: fixed;
+    right: var(--space-xs);
+    bottom: var(--space-xl);
+    z-index: 50;
+    background: var(--background);
+  }
+
+  :global(.scroll-to-top[hidden]) {
+    display: none;
+  }
+
+  :global(.scroll-to-top-icon) {
+    transition: transform var(--motion-duration) var(--motion-ease);
+  }
+
+  :global(.scroll-to-top:hover .scroll-to-top-icon) {
+    transform: translateY(-0.25rem);
+  }
+</style>

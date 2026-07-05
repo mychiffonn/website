@@ -17,36 +17,39 @@ const { items, class: className } = Astro.props
 // Add current page indicator to last item
 const breadcrumbItems = items.map((item, index) => ({
   ...item,
-  isCurrent: index === items.length - 1
+  isCurrent: index === items.length - 1,
 }))
 
-const linkClasses =
-  "stretched-link hover:text-foreground flex items-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 rounded-sm"
-const currentClasses = "text-foreground flex items-center font-normal"
+const linkClasses = "breadcrumb-link stretched-link"
+const currentClasses = "breadcrumb-current"
 ---
 
 <nav aria-label="Breadcrumb navigation" class={className}>
-  <ol class="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm sm:gap-2.5">
-    <li class="relative inline-flex items-center gap-1.5">
-      <a href="/" class={linkClasses} aria-label="Navigate to home page" title="Go to home page">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item">
+      <a
+        href="/"
+        class={linkClasses}
+        aria-label="Navigate to home page"
+        title="Go to home page"
+      >
         <Icon name="home" size="1.25rem" aria-hidden="true" />
         <span class="sr-only">Home</span>
       </a>
     </li>
 
-    {
-      breadcrumbItems.map((item) => (
+    {breadcrumbItems.map((item) => (
         <>
           <li role="presentation" aria-hidden="true">
             <Icon name="chevron-right" aria-hidden="true" />
           </li>
-          <li class="relative inline-flex items-center gap-1.5">
+          <li class="breadcrumb-item">
             {item.isCurrent ? (
               <span aria-current="page" class={currentClasses}>
                 {item.icon && (
-                  <Icon name={item.icon} size="1.25rem" class="mr-1" aria-hidden="true" />
+                  <Icon name={item.icon} size="1.25rem" class="breadcrumb-icon" aria-hidden="true" />
                 )}
-                <span class="truncate">{item.label}</span>
+                <span class="breadcrumb-label">{item.label}</span>
               </span>
             ) : (
               <a
@@ -56,14 +59,79 @@ const currentClasses = "text-foreground flex items-center font-normal"
                 class={linkClasses}
               >
                 {item.icon && (
-                  <Icon name={item.icon} size="1.25rem" class="mr-1" aria-hidden="true" />
+                  <Icon name={item.icon} size="1.25rem" class="breadcrumb-icon" aria-hidden="true" />
                 )}
-                <span class="truncate leading-none">{item.label}</span>
+                <span class="breadcrumb-label">{item.label}</span>
               </a>
             )}
           </li>
         </>
-      ))
-    }
+      ))}
   </ol>
 </nav>
+
+<style>
+  .breadcrumb-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3xs) var(--space-2xs);
+    padding: 0;
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    list-style: none;
+
+    @media (width >= 40rem) {
+      gap: var(--space-2xs);
+    }
+  }
+
+  .breadcrumb-item,
+  .breadcrumb-link,
+  .breadcrumb-current {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+  }
+
+  .breadcrumb-item {
+    position: relative;
+  }
+
+  .breadcrumb-link {
+    border-radius: var(--radius-sm);
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--foreground);
+  }
+
+  .breadcrumb-link:focus {
+    outline: none;
+  }
+
+  .breadcrumb-link:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--ring) 50%, transparent);
+    outline-offset: 2px;
+  }
+
+  .breadcrumb-current {
+    color: var(--foreground);
+    font-weight: var(--font-weight-normal);
+  }
+
+  :global(.breadcrumb-icon) {
+    margin-inline-end: var(--space-3xs);
+  }
+
+  .breadcrumb-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1;
+  }
+</style>

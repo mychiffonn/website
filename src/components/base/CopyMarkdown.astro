@@ -15,6 +15,32 @@ const { markdown, class: className } = Astro.props
     label="Copy Markdown"
     title="Copy as Markdown"
     size="1rem"
-    class="hover:bg-accent hover:text-accent-foreground active:bg-accent/80 inline-flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-all select-none"
+    class="copy-markdown-button"
   />
 </div>
+
+<style>
+  :global(.copy-markdown-button) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-md);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  :global(.copy-markdown-button:hover) {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  :global(.copy-markdown-button:active) {
+    background: color-mix(in oklab, var(--accent) 80%, transparent);
+  }
+</style>

@@ -37,24 +37,24 @@ export class UnifiedTOCController {
     private options: {
       isMobile?: boolean
       tocMaxDepth?: number
-    } = {}
+    } = {},
   ) {
     this.tocMaxDepth = options.tocMaxDepth ?? 6
   }
 
   private getHeaderOffset(): number {
     if (typeof window === "undefined") return 80
-    const headerHeight = getComputedStyle(document.documentElement).getPropertyValue(
-      "--header-height"
-    )
+    const headerHeight = getComputedStyle(
+      document.documentElement,
+    ).getPropertyValue("--header-height")
     return parseInt(headerHeight, 10) || 64
   }
 
   private buildHeadingRegions(): void {
     const allHeadings = Array.from(
       document.querySelectorAll<HTMLElement>(
-        ".prose h2, .prose h3, .prose h4, .prose h5, .prose h6"
-      )
+        "prose-content h2, prose-content h3, prose-content h4, prose-content h5, prose-content h6",
+      ),
     )
 
     this.headings = allHeadings.filter((heading) => {
@@ -72,14 +72,14 @@ export class UnifiedTOCController {
       return {
         id: heading.id,
         start: heading.offsetTop,
-        end: nextHeading ? nextHeading.offsetTop : document.body.scrollHeight
+        end: nextHeading ? nextHeading.offsetTop : document.body.scrollHeight,
       }
     })
 
     if (this.options.isMobile) {
       this.markdownHeadings = this.headings.map((heading) => ({
         slug: heading.id,
-        text: heading.textContent?.trim() ?? ""
+        text: heading.textContent?.trim() ?? "",
       }))
     }
   }
@@ -123,7 +123,10 @@ export class UnifiedTOCController {
 
     const { scrollY, innerHeight } = window
     const { scrollHeight } = document.documentElement
-    this.targetProgress = Math.max(0, Math.min(1, scrollY / (scrollHeight - innerHeight)))
+    this.targetProgress = Math.max(
+      0,
+      Math.min(1, scrollY / (scrollHeight - innerHeight)),
+    )
 
     if (!this.animationFrame) {
       this.animateProgress()
@@ -136,7 +139,11 @@ export class UnifiedTOCController {
         this.activeIds.length > 0
           ? this.markdownHeadings
               .filter((h) => this.activeIds.includes(h.slug))
-              .map((h) => h.text.replace(UnifiedTOCController.LINK_EMOJI_REGEX, "").trim())
+              .map((h) =>
+                h.text
+                  .replace(UnifiedTOCController.LINK_EMOJI_REGEX, "")
+                  .trim(),
+              )
               .join(", ")
           : UnifiedTOCController.DEFAULT_SECTION_TEXT
       this.currentSectionText.textContent = currentText
@@ -169,7 +176,8 @@ export class UnifiedTOCController {
   private updateProgressCircle(): void {
     if (!this.progressCircle) return
 
-    const circumference = 2 * Math.PI * UnifiedTOCController.PROGRESS_CIRCLE_RADIUS
+    const circumference =
+      2 * Math.PI * UnifiedTOCController.PROGRESS_CIRCLE_RADIUS
     const offset = circumference * (1 - this.currentProgress)
     this.progressCircle.style.strokeDashoffset = offset.toString()
   }
@@ -180,7 +188,10 @@ export class UnifiedTOCController {
 
     const { scrollY, innerHeight } = window
     const { scrollHeight } = document.documentElement
-    this.targetProgress = Math.max(0, Math.min(1, scrollY / (scrollHeight - innerHeight)))
+    this.targetProgress = Math.max(
+      0,
+      Math.min(1, scrollY / (scrollHeight - innerHeight)),
+    )
 
     if (!this.animationFrame) {
       this.animateProgress()
@@ -211,7 +222,9 @@ export class UnifiedTOCController {
   scrollToActiveLink(headingId: string): void {
     if (!this.scrollArea) return
 
-    const link = this.container?.querySelector(`[data-heading-link="${headingId}"]`)
+    const link = this.container?.querySelector(
+      `[data-heading-link="${headingId}"]`,
+    )
     if (!link) return
 
     const areaRect = this.scrollArea.getBoundingClientRect()
@@ -223,8 +236,8 @@ export class UnifiedTOCController {
       0,
       Math.min(
         linkTop - (areaRect.height - linkRect.height) / 2,
-        this.scrollArea.scrollHeight - this.scrollArea.clientHeight
-      )
+        this.scrollArea.scrollHeight - this.scrollArea.clientHeight,
+      ),
     )
 
     if (Math.abs(desiredScroll - currentScrollTop) > 5) {
@@ -239,21 +252,26 @@ export class UnifiedTOCController {
 
     this.container = container as HTMLElement
     this.scrollArea = container?.querySelector(
-      "[data-scroll-area], [data-slot='scroll-area-viewport']"
+      "[data-scroll-area], [data-slot='scroll-area-viewport']",
     ) as HTMLElement
 
     if (this.options.isMobile) {
-      this.progressCircle = document.querySelector<SVGCircleElement>("#mobile-toc-progress-circle")
-      this.currentSectionText = document.getElementById("mobile-toc-current-section")
+      this.progressCircle = document.querySelector<SVGCircleElement>(
+        "#mobile-toc-progress-circle",
+      )
+      this.currentSectionText = document.getElementById(
+        "mobile-toc-current-section",
+      )
       this.detailsElement = document.querySelector<HTMLDetailsElement>(
-        `${this.containerSelector} details`
+        `${this.containerSelector} details`,
       )
 
       if (this.progressCircle) {
-        const circumference = 2 * Math.PI * UnifiedTOCController.PROGRESS_CIRCLE_RADIUS
+        const circumference =
+          2 * Math.PI * UnifiedTOCController.PROGRESS_CIRCLE_RADIUS
         Object.assign(this.progressCircle.style, {
           strokeDasharray: circumference.toString(),
-          strokeDashoffset: circumference.toString()
+          strokeDashoffset: circumference.toString(),
         })
 
         // Initialize with current scroll position
@@ -261,7 +279,7 @@ export class UnifiedTOCController {
         const { scrollHeight } = document.documentElement
         this.currentProgress = this.targetProgress = Math.max(
           0,
-          Math.min(1, scrollY / (scrollHeight - innerHeight))
+          Math.min(1, scrollY / (scrollHeight - innerHeight)),
         )
         this.updateProgressCircle()
       }
@@ -280,18 +298,27 @@ export class UnifiedTOCController {
           item.addEventListener("click", () => {
             if (this.detailsElement) this.detailsElement.open = false
             // Handle smooth animation on heading clicks
-            setTimeout(() => this.handleLargeJump(), UnifiedTOCController.NAV_SETTLE_DELAY_MS)
+            setTimeout(
+              () => this.handleLargeJump(),
+              UnifiedTOCController.NAV_SETTLE_DELAY_MS,
+            )
           })
         })
 
       // Handle Astro page transitions
       document.addEventListener("astro:after-swap", () => {
-        setTimeout(() => this.handleLargeJump(), UnifiedTOCController.NAV_SETTLE_DELAY_MS)
+        setTimeout(
+          () => this.handleLargeJump(),
+          UnifiedTOCController.NAV_SETTLE_DELAY_MS,
+        )
       })
 
       // Handle browser back/forward navigation
       window.addEventListener("popstate", () => {
-        setTimeout(() => this.handleLargeJump(), UnifiedTOCController.NAV_SETTLE_DELAY_MS)
+        setTimeout(
+          () => this.handleLargeJump(),
+          UnifiedTOCController.NAV_SETTLE_DELAY_MS,
+        )
       })
     }
 

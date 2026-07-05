@@ -1,59 +1,111 @@
 ---
-import { cva, type VariantProps } from "class-variance-authority"
-
-import { cn } from "@/lib/utils"
-
 import Link from "./Link.astro"
 
-const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow,background-color] [a&]:cursor-pointer overflow-hidden",
-  {
-    variants: {
-      variant: {
-        default:
-          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-background [a&]:hover:text-foreground",
-        accent:
-          "border-transparent bg-accent text-accent-foreground [a&]:hover:bg-primary [a&]:hover:text-primary-foreground",
-        destructive:
-          "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/80 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/80",
-        outline:
-          "border-primary text-foreground [a&]:hover:bg-primary [a&]:hover:text-primary-foreground",
-        muted:
-          "border-transparent bg-muted text-muted-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-        success:
-          "bg-transparent border-green-600/40 text-foreground transition-all [a&]:hover:border-green-600 [a&]:hover:bg-green-600/15 [a&]:hover:text-green-600 focus-visible:ring-green-600/20 dark:border-green-400/40 dark:[a&]:hover:border-green-400 dark:[a&]:hover:bg-green-400/15 dark:[a&]:hover:text-green-400 dark:focus-visible:ring-green-400/40",
-        warning:
-          "bg-transparent border-orange-500/40 text-foreground transition-all [a&]:hover:border-orange-500 [a&]:hover:bg-orange-500/15 [a&]:hover:text-orange-500 focus-visible:ring-orange-500/20 dark:border-orange-400/40 dark:[a&]:hover:border-orange-400 dark:[a&]:hover:bg-orange-400/15 dark:[a&]:hover:text-orange-400 dark:focus-visible:ring-orange-400/40",
-        danger:
-          "bg-transparent border-red-600/40 text-foreground transition-all [a&]:hover:border-red-600 [a&]:hover:bg-red-600/15 [a&]:hover:text-red-600 focus-visible:ring-red-600/20 dark:border-red-400/40 dark:[a&]:hover:border-red-400 dark:[a&]:hover:bg-red-400/15 dark:[a&]:hover:text-red-400 dark:focus-visible:ring-red-400/40",
-        info: "bg-transparent border-teal-600/40 text-foreground transition-all [a&]:hover:border-teal-600 [a&]:hover:bg-teal-600/15 [a&]:hover:text-teal-600 focus-visible:ring-teal-600/20 dark:border-teal-400/40 dark:[a&]:hover:border-teal-400 dark:[a&]:hover:bg-teal-400/15 dark:[a&]:hover:text-teal-400 dark:focus-visible:ring-teal-400/40",
-        tag: "bg-transparent border-border text-muted-foreground transition-all [a&]:hover:border-accent [a&]:hover:text-accent"
-      }
-    },
-    defaultVariants: {
-      variant: "default"
-    }
-  }
-)
-
-export type BadgeVariant = VariantProps<typeof badgeVariants>["variant"]
+export type BadgeVariant =
+  | "default"
+  | "accent"
+  | "destructive"
+  | "outline"
+  | "muted"
+  | "success"
+  | "warning"
+  | "danger"
+  | "info"
+  | "tag"
 
 export interface Props extends astroHTML.JSX.HTMLAttributes {
   variant?: BadgeVariant
   href?: string
 }
 
-const { variant = "default", class: className, href, ...rest } = Astro.props
+const { variant = "default", href, class: className, ...rest } = Astro.props
 ---
 
-{
-  href ? (
-    <Link href={href} data-slot="badge" class={cn(badgeVariants({ variant }), className)} {...rest}>
+{href ? (
+    <Link href={href} data-badge data-variant={variant} class={className ?? undefined} {...rest}>
       <slot />
     </Link>
   ) : (
-    <span data-slot="badge" class={cn(badgeVariants({ variant }), className)} {...rest}>
+    <span data-badge data-variant={variant} class={className ?? undefined} {...rest}>
       <slot />
     </span>
-  )
-}
+  )}
+
+<style is:global>
+  [data-badge] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    flex-shrink: 0;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-size: var(--step--1);
+    line-height: 1.25;
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      border-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  [data-badge] svg {
+    inline-size: 1em;
+    block-size: 1em;
+    flex-shrink: 0;
+  }
+
+  [data-badge][data-variant="default"] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  [data-badge][data-variant="accent"] {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  [data-badge][data-variant="destructive"],
+  [data-badge][data-variant="danger"] {
+    border-color: color-mix(in oklab, var(--destructive) 45%, transparent);
+    color: var(--destructive);
+  }
+
+  [data-badge][data-variant="outline"],
+  [data-badge][data-variant="tag"] {
+    border-color: var(--border);
+    color: var(--muted-foreground);
+  }
+
+  [data-badge][data-variant="muted"] {
+    background: color-mix(in oklab, var(--muted) 70%, transparent);
+    color: var(--muted-foreground);
+  }
+
+  [data-badge][data-variant="success"] {
+    border-color: color-mix(in oklab, var(--primary) 45%, transparent);
+    color: var(--primary);
+  }
+
+  [data-badge][data-variant="warning"] {
+    border-color: color-mix(in oklab, orange 45%, transparent);
+    color: color-mix(in oklab, orange 80%, var(--foreground));
+  }
+
+  [data-badge][data-variant="info"] {
+    border-color: color-mix(in oklab, var(--accent) 45%, transparent);
+    color: var(--accent);
+  }
+
+  a[data-badge]:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>

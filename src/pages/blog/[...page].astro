@@ -12,7 +12,11 @@ import Pagination from "@/components/base/Pagination.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
-export async function getStaticPaths({ paginate }: { paginate: PaginateFunction }) {
+export async function getStaticPaths({
+  paginate,
+}: {
+  paginate: PaginateFunction
+}) {
   const allPosts = await PostManager.getInstance().getMainPosts()
   return paginate(allPosts, { pageSize: SITE.blog.postsPerPage })
 }
@@ -35,7 +39,7 @@ let stageCounts: { name: string; count: number }[] = []
 if (!hasNoPosts) {
   // Get metadata for all posts in parallel
   postsMetadata = await Promise.all(
-    currentPagePosts.map((post) => postManager.getMetadata(post.id))
+    currentPagePosts.map((post) => postManager.getMetadata(post.id)),
   )
 
   // Group metadata by year
@@ -45,7 +49,7 @@ if (!hasNoPosts) {
       ;(acc[year] ??= []).push(metadata)
       return acc
     },
-    {}
+    {},
   )
 
   postsByYear = Object.entries(postsByYearMap)
@@ -60,7 +64,7 @@ if (!hasNoPosts) {
   const allMainPosts = await postManager.getMainPosts()
   stageCounts = STAGES.map((s) => ({
     name: s.name,
-    count: allMainPosts.filter((p) => p.data.stage === s.name).length
+    count: allMainPosts.filter((p) => p.data.stage === s.name).length,
   })).filter((s) => s.count > 0)
 }
 ---
@@ -73,72 +77,63 @@ if (!hasNoPosts) {
       { label: `Page ${page.currentPage}`, icon: "copy" }
     ]}
   />
-
-  {/** Browse filters */}
-  {
-    (stageCounts.length > 0 || numTags > 0) && (
-      <nav class="mb-6 flex flex-col gap-4" aria-label="Browse posts">
+  {(stageCounts.length > 0 || numTags > 0) && (
+      <nav class="blog-filters" aria-label="Browse posts">
         {stageCounts.length > 0 && (
-          <div class="flex flex-col gap-2">
-            <h2 class="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+          <filter-group>
+            <h2>
               Browse by Stages
             </h2>
-            <div class="flex flex-wrap gap-2">
+            <filter-chips>
               {stageCounts.map(({ name, count }) => (
                 <Badge href={`/blog/stages/${name}`} variant={getStageVariant(name)}>
-                  <Icon name={name} class="size-3" />
+                  <Icon name={name} size="0.75rem" />
                   {name}
-                  <span class="ml-1 opacity-70">({count})</span>
+                  <span class="count">({count})</span>
                 </Badge>
               ))}
-            </div>
-          </div>
+            </filter-chips>
+          </filter-group>
         )}
         {numTags > 0 && (
-          <div class="flex flex-col gap-2">
-            <h2 class="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+          <filter-group>
+            <h2>
               Browse by Tags
             </h2>
-            <div class="flex flex-wrap gap-2">
+            <filter-chips>
               {displayTags.map(({ tag, count }) => (
                 <Badge href={`/blog/tags/${tag}`} variant="tag">
-                  <Icon name="hashtag" class="size-3" />
+                  <Icon name="hashtag" size="0.75rem" />
                   {tag}
-                  <span class="ml-1 opacity-70">({count})</span>
+                  <span class="count">({count})</span>
                 </Badge>
               ))}
               {moreTagsButton && (
                 <Badge href="/blog/tags" variant="outline">
                   all {sortedTags.length} tags
-                  <Icon name="arrow-right" class="size-3" />
+                  <Icon name="arrow-right" size="0.75rem" />
                 </Badge>
               )}
-            </div>
-          </div>
+            </filter-chips>
+          </filter-group>
         )}
       </nav>
-    )
-  }
-
-  {/** Post listing */}
-  <div class="flex min-h-[calc(100vh-18rem)] flex-col gap-y-8">
-    {
-      hasNoPosts ? (
-        <section class="flex flex-col items-center justify-center gap-y-4 text-center">
-          <div class="max-w-md">
-            <h2 class="text-2xl font-medium">No posts yet</h2>
-            <p class="text-muted-foreground mt-2">Check back later for new content!</p>
-          </div>
+    )}
+  <blog-index>
+    {hasNoPosts ? (
+        <section class="empty-state">
+          <h2>No posts yet</h2>
+          <p>Check back later for new content!</p>
         </section>
       ) : (
         <>
-          <p class="text-muted-foreground text-sm">
+          <p class="post-count">
             Showing {page.start + 1}–{page.end + 1} of {page.total} posts
           </p>
           {postsByYear.map(({ year, posts }) => (
-            <section class="flex flex-col gap-y-4">
-              <h2 class="text-xl font-semibold">{year}</h2>
-              <ul class="flex flex-col gap-4">
+            <section class="post-year">
+              <h2>{year}</h2>
+              <ul>
                 {posts.map((metadata) => (
                   <li>
                     <PreviewCard metadata={metadata} />
@@ -148,9 +143,95 @@ if (!hasNoPosts) {
             </section>
           ))}
         </>
-      )
-    }
-  </div>
+      )}
+  </blog-index>
 
-  <Pagination currentPage={page.currentPage} totalPages={page.lastPage} baseUrl="/blog" />
+  <Pagination
+    currentPage={page.currentPage}
+    totalPages={page.lastPage}
+    baseUrl="/blog"
+  />
 </Layout>
+
+<style>
+  .blog-filters,
+  filter-group,
+  blog-index,
+  .post-year,
+  .post-year ul {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-filters {
+    gap: var(--space-s);
+    margin-block-end: var(--space-l);
+  }
+
+  filter-group {
+    gap: var(--space-2xs);
+  }
+
+  .blog-filters h2 {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+  }
+
+  filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .count {
+    margin-inline-start: 0.25rem;
+    opacity: 0.7;
+  }
+
+  blog-index {
+    min-block-size: calc(100vh - 18rem);
+    gap: var(--space-xl);
+  }
+
+  .empty-state {
+    display: flex;
+    min-block-size: 14rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-s);
+    text-align: center;
+  }
+
+  .empty-state h2 {
+    font-size: var(--step-2);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .empty-state p,
+  .post-count {
+    color: var(--muted-foreground);
+  }
+
+  .post-count {
+    font-size: var(--step--1);
+  }
+
+  .post-year {
+    gap: var(--space-s);
+  }
+
+  .post-year h2 {
+    font-size: var(--step-1);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .post-year ul {
+    gap: var(--space-s);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+</style>

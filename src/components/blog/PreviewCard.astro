@@ -15,72 +15,57 @@ interface Props {
 
 const { metadata } = Astro.props
 const tags = metadata.tags
+const hasBadges = metadata.stage || (tags && tags.length > 0)
 ---
 
-<article class="card card-clickable group relative overflow-hidden">
+<article
+  class="card card-clickable preview-card"
+  data-has-image={metadata.image ? "true" : "false"}
+>
   <a
     href={`/blog/${metadata.id}`}
-    class="absolute inset-0 z-20"
+    class="preview-card-link"
     aria-label={`Post: ${metadata.title}`}
-  >
-  </a>
+  > </a>
 
-  {
-    metadata.image && (
+  {metadata.image && (
       <Image
         src={metadata.image}
         alt={metadata.title}
         width={1200}
         height={630}
         sizes="(max-width: 768px) 100vw, 60vw"
-        class="cover-image absolute end-0 top-0 z-0 h-full w-3/5 object-cover opacity-30 transition-all duration-300 group-hover:opacity-50 max-md:h-2/3 max-md:w-full"
+        class="cover-image"
         loading="lazy"
       />
-    )
-  }
+    )}
 
-  <div
-    class:list={[
-      "card-content relative z-10 transition-all duration-300",
-      metadata.image && "max-md:pt-24 md:max-w-[80%]"
-    ]}
-  >
-    {/** Row 1: Title + stage badge */}
-    <div class="flex items-center gap-2">
-      <h3 class="card-title group-hover:text-primary transition-colors duration-300">
+  <div class="card-content preview-card-content">
+    <preview-card-heading>
+      <h3 class="card-title">
         {metadata.title}
       </h3>
-      {
-        metadata.stage && (
-          <Badge variant={getStageVariant(metadata.stage)} class="text-[0.65rem]">
-            <Icon name={metadata.stage} />
-            {metadata.stage}
-          </Badge>
-        )
-      }
-    </div>
-
-    {/** Row 2: Desc */}
+    </preview-card-heading>
     <p class="card-description">
       {metadata.description}
     </p>
-
-    {/** Row 3: Meta information */}
     <PostMetadata {...metadata} variant="card" />
-
-    {/** Row 4: Tags */}
-    {
-      tags && (
-        <div class="card-tags">
-          {tags.map((tag: string) => (
-            <Badge variant={"muted"} class="tag-badge transition-all duration-300">
-              <Icon name="hashtag" />
-              {tag}
-            </Badge>
-          ))}
+    {hasBadges && (
+        <div class="card-tags preview-card-badges">
+          {metadata.stage && (
+              <Badge variant={getStageVariant(metadata.stage)}>
+                <Icon name={metadata.stage} />
+                {metadata.stage}
+              </Badge>
+            )}
+          {tags && tags.map((tag: string) => (
+              <Badge variant={"muted"} class="tag-badge">
+                <Icon name="hashtag" />
+                {tag}
+              </Badge>
+            ))}
         </div>
-      )
-    }
+      )}
   </div>
 </article>
 
@@ -93,12 +78,78 @@ const tags = metadata.tags
     }
   }
 
-  .cover-image {
-    mask: linear-gradient(to right, transparent 0%, black 100%);
+  .preview-card {
+    position: relative;
+    overflow: hidden;
   }
 
-  @media (max-width: 768px) {
+  .preview-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .preview-card-content {
+    position: relative;
+    z-index: 1;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .preview-card[data-has-image="true"] .preview-card-content {
+    @media (width >= 48rem) {
+      max-inline-size: 80%;
+    }
+
+    @media (width < 48rem) {
+      padding-block-start: 6rem;
+    }
+  }
+
+  .preview-card .card-title {
+    transition: color var(--motion-duration) var(--motion-ease);
+  }
+
+  .preview-card:hover .card-title {
+    color: var(--primary);
+  }
+
+  preview-card-heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  .preview-card-badges {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .preview-card-badges::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cover-image {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    z-index: 0;
+    inline-size: 60%;
+    block-size: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+    mask: linear-gradient(to right, transparent 0%, black 100%);
+    transition: opacity var(--motion-duration-slow) var(--motion-ease);
+  }
+
+  .preview-card:hover .cover-image {
+    opacity: 0.5;
+  }
+
+  @media (width < 48rem) {
     .cover-image {
+      inline-size: 100%;
+      block-size: 66%;
       mask: linear-gradient(to top, transparent 0%, black 100%);
     }
   }

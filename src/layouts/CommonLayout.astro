@@ -29,30 +29,49 @@ const {
 } = Astro.props
 ---
 
-<Layout title={title} description={description} modifiedTime={modifiedTime} {...layoutProps}>
+<Layout title={title} description={description} {...layoutProps}>
   {breadcrumbs && <Breadcrumbs slot="breadcrumb" items={breadcrumbs} />}
 
-  <section class="mb-4">
-    <h1 class="mb-2 text-3xl font-bold">{title}</h1>
-    {description && <p class="text-muted-foreground">{description}</p>}
-    {
-      modifiedTime && (
-        <FormattedDate
-          date={modifiedTime}
-          class="text-muted-foreground text-sm italic before:content-['Last_updated:_']"
-        />
-      )
-    }
+  <section class="page-heading">
+    <h1>{title}</h1>
+    {description && <p class="page-description">{description}</p>}
+    {modifiedTime && <FormattedDate date={modifiedTime} class="page-modified" />}
   </section>
 
-  {prose && markdown && <CopyMarkdown markdown={markdown} class="flex justify-end" />}
-  {
-    prose ? (
-      <div class="prose lg:prose-lg">
+  {prose && markdown && <CopyMarkdown markdown={markdown} class="common-copy-markdown" />}
+  {prose ? (
+      <prose-content>
         <slot />
-      </div>
+      </prose-content>
     ) : (
       <slot />
-    )
-  }
+    )}
 </Layout>
+
+<style>
+  .page-heading {
+    margin-block: var(--space-s);
+
+    h1 {
+      font-size: var(--step-2);
+      line-height: calc(var(--leading-offset) + 1em);
+      font-weight: var(--font-weight-medium);
+      margin-block-end: var(--space-2xs);
+    }
+  }
+
+  .page-description,
+  :global(.page-modified) {
+    color: var(--muted-foreground);
+  }
+
+  :global(.page-modified) {
+    font-size: var(--step--1);
+  }
+
+  :global(.common-copy-markdown) {
+    display: flex;
+    justify-content: flex-end;
+    margin-block: var(--space-s);
+  }
+</style>

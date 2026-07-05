@@ -19,16 +19,16 @@ const data = createDateRange(fromDate, toDate)
 if (!data) return null
 
 // Determine if we should show both dates (when displays differ)
-const showBoth = data.fromDate && data.toDate && data.fromDateDisplay !== data.toDateDisplay
+const showBoth =
+  data.fromDate && data.toDate && data.fromDateDisplay !== data.toDateDisplay
 // Determine what to show: only toDate, or fromDate with optional range/Present
 const showOnlyToDate = !data.fromDate && data.toDate
 ---
 
 <span class={className}>
-  {showIcon && <Icon name="calendar" class="size-3" />}
+  {showIcon && <Icon name="calendar" size="0.75rem" />}
 
-  {
-    showOnlyToDate ? (
+  {showOnlyToDate ? (
       <time datetime={formatDateTimeISO(data.toDate!)}>{data.toDateDisplay}</time>
     ) : (
       <>
@@ -43,6 +43,5 @@ const showOnlyToDate = !data.fromDate && data.toDate
         )}
         {!data.toDate && data.fromDate && <span> - Present</span>}
       </>
-    )
-  }
+    )}
 </span>

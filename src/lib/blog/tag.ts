@@ -16,10 +16,12 @@ export type TagPageData = {
  * Retrieves all unique tags for static path generation.
  * Tags from subposts are attributed to their parent posts.
  */
-export async function getAllTags(getMainPosts: () => Promise<Post[]>): Promise<string[]> {
+export async function getAllTags(
+  getMainPosts: () => Promise<Post[]>,
+): Promise<string[]> {
   const [mainPosts, allSubposts] = await Promise.all([
     getMainPosts(),
-    getCollection("blog", (post) => isSubpost(post.id) && !post.data.draft)
+    getCollection("blog", (post) => isSubpost(post.id) && !post.data.draft),
   ])
 
   const uniqueTags = new Set<string>()
@@ -47,10 +49,12 @@ export async function getAllTags(getMainPosts: () => Promise<Post[]>): Promise<s
  * Retrieves sorted tags by count (descending) and name (ascending).
  * Tags from subposts are attributed to their parent posts.
  */
-export async function getSortedTags(getMainPosts: () => Promise<Post[]>): Promise<TagCount[]> {
+export async function getSortedTags(
+  getMainPosts: () => Promise<Post[]>,
+): Promise<TagCount[]> {
   const [mainPosts, allSubposts] = await Promise.all([
     getMainPosts(),
-    getCollection("blog", (post) => isSubpost(post.id) && !post.data.draft)
+    getCollection("blog", (post) => isSubpost(post.id) && !post.data.draft),
   ])
 
   const tagCounts = new Map<string, Set<string>>()

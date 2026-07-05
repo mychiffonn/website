@@ -6,7 +6,7 @@ import type {
   ProfileConfigSchema,
   PublicationConfigSchema,
   SiteConfigSchema,
-  ToolSchema
+  ToolSchema,
 } from "@/schemas"
 
 export type LinkConfig = {

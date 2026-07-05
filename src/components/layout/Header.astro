@@ -5,52 +5,109 @@ import MobileMenu from "@/components/layout/MobileMenu.astro"
 import ThemeToggle from "@/components/layout/ThemeToggle.astro"
 ---
 
-<header class="flex items-center justify-between py-2">
-  <Link href="/" class="flex shrink-0 items-center justify-center gap-x-2" transition:persist>
-    <span class="hidden h-full text-lg font-medium min-[300px]:block">{SITE.title}</span>
+<header class="site-header">
+  <Link href="/" class="site-title" transition:persist>
+    <span>{SITE.title}</span>
   </Link>
-  <div class="flex items-center sm:gap-1">
-    <nav class="hidden items-center gap-1 text-sm sm:flex" aria-label="Site navigation">
-      {
-        NAV_LINKS.map((item) => {
-          const isActive =
-            Astro.url.pathname === item.href ||
-            (item.href !== "/" && Astro.url.pathname.startsWith(item.href))
-          return (
-            <Link
-              href={item.href}
-              class:list={[
-                "relative inline-flex min-h-11 items-center px-2 capitalize transition-colors duration-300 ease-in-out",
-                isActive
-                  ? "text-foreground nav-active font-medium"
-                  : "text-foreground/60 hover:text-accent"
-              ]}
-            >
-              {item.label}
-            </Link>
-          )
-        })
-      }
+  <div class="site-actions">
+    <nav class="desktop-nav" aria-label="Site navigation">
+      {NAV_LINKS.map((item) => {
+        const isActive =
+          Astro.url.pathname === item.href ||
+          (item.href !== "/" && Astro.url.pathname.startsWith(item.href))
+        return (
+          <Link
+            href={item.href}
+            class:list={["nav-link", isActive && "nav-active"]}
+          >
+            {item.label}
+          </Link>
+        )
+      })}
     </nav>
-
     <MobileMenu transition:persist />
     <ThemeToggle transition:persist />
   </div>
 </header>
+
 <style>
-  .nav-active {
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    min-height: 3rem;
+    padding-block: var(--space-2xs);
+  }
+
+  .site-title {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--foreground);
+    font-size: var(--step-0);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .site-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+  }
+
+  .desktop-nav {
+    display: none;
+    align-items: center;
+    gap: var(--space-3xs);
+    font-size: var(--step--1);
+
+    @media (width >= 40rem) {
+      display: flex;
+    }
+  }
+
+  .nav-link {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-2xs);
+    color: var(--muted-foreground);
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .nav-link:hover {
+    color: var(--accent);
+  }
+
+  .nav-active {
+    color: var(--foreground);
+    font-weight: var(--font-weight-medium);
   }
 
   .nav-active::after {
     content: "";
     position: absolute;
-    bottom: 0;
-    left: 50%;
+    inset-block-end: 0;
+    inset-inline-start: 50%;
     transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: var(--primary);
+    inline-size: 4px;
+    block-size: 4px;
+    border-radius: var(--radius-full);
+    background: var(--primary);
+    opacity: 0.9;
+    transition:
+      opacity var(--motion-duration) var(--motion-ease),
+      transform var(--motion-duration) var(--motion-ease);
+  }
+
+  .nav-active:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.25);
   }
 </style>

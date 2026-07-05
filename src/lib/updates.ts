@@ -12,7 +12,9 @@ export interface RenderedUpdate {
  *
  * If count is not passed, render all updates
  */
-export async function getLatestUpdates(count?: number): Promise<RenderedUpdate[]> {
+export async function getLatestUpdates(
+  count?: number,
+): Promise<RenderedUpdate[]> {
   // Get all updates with parsed dates for efficient sorting
   const allUpdates = await getCollection("updates", ({ id }) => {
     const dateString = extractDateFromStr(id)
@@ -38,7 +40,7 @@ export async function getLatestUpdates(count?: number): Promise<RenderedUpdate[]
     latestUpdatesWithDates.map(async ({ update, date }) => {
       const { Content } = await render(update)
       return { Content, date }
-    })
+    }),
   )
 
   return renderedUpdates

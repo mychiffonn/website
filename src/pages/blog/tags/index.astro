@@ -18,17 +18,34 @@ const sortedTags = await getSortedTags(() => postManager.getMainPosts())
     ]}
   />
 
-  <div class="flex flex-col gap-4">
-    <div class="flex flex-wrap gap-2">
-      {
-        sortedTags.map(({ tag, count }) => (
+  <tag-list>
+    <tag-cloud>
+      {sortedTags.map(({ tag, count }) => (
           <Badge href={`/blog/tags/${tag}`} variant="tag">
-            <Icon name="hashtag" class="size-3" />
+            <Icon name="hashtag" size="0.75rem" />
             {tag}
-            <span class="ml-1.5 opacity-70">({count})</span>
+            <span>({count})</span>
           </Badge>
-        ))
-      }
-    </div>
-  </div>
+        ))}
+    </tag-cloud>
+  </tag-list>
 </Layout>
+
+<style>
+  tag-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  tag-cloud span {
+    margin-inline-start: 0.375rem;
+    opacity: 0.7;
+  }
+</style>

@@ -56,7 +56,7 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
     groupSelector,
     clearButtonSelector,
     activeIndicatorSelector,
-    getScope = () => document
+    getScope = () => document,
   } = config
 
   let active: string | null = null
@@ -70,14 +70,16 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
         item.style.display = ""
         return
       }
-      const values = (item.dataset[itemAttr] || "").split(",").map((v) => v.trim())
+      const values = (item.dataset[itemAttr] || "")
+        .split(",")
+        .map((v) => v.trim())
       item.style.display = values.includes(active) ? "" : "none"
     })
 
     if (groupSelector) {
       scope.querySelectorAll<HTMLElement>(groupSelector).forEach((group) => {
         const visibleItems = group.querySelectorAll<HTMLElement>(
-          `${itemSelector}:not([style*="display: none"])`
+          `${itemSelector}:not([style*="display: none"])`,
         )
         group.style.display = visibleItems.length === 0 ? "none" : ""
       })
@@ -86,17 +88,27 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
     if (activeIndicatorSelector) {
       document
         .querySelector<HTMLElement>(activeIndicatorSelector)
-        ?.classList.toggle("hidden", !active)
+        ?.toggleAttribute("hidden", !active)
     }
 
-    document.querySelectorAll<HTMLButtonElement>(filterButtonSelector).forEach((btn) => {
-      btn.setAttribute("aria-pressed", btn.dataset[filterButtonAttr] === active ? "true" : "false")
-    })
+    document
+      .querySelectorAll<HTMLButtonElement>(filterButtonSelector)
+      .forEach((btn) => {
+        btn.setAttribute(
+          "aria-pressed",
+          btn.dataset[filterButtonAttr] === active ? "true" : "false",
+        )
+      })
 
     if (chipSelector && chipAttr) {
-      document.querySelectorAll<HTMLButtonElement>(chipSelector).forEach((chip) => {
-        chip.setAttribute("aria-pressed", chip.dataset[chipAttr] === active ? "true" : "false")
-      })
+      document
+        .querySelectorAll<HTMLButtonElement>(chipSelector)
+        .forEach((chip) => {
+          chip.setAttribute(
+            "aria-pressed",
+            chip.dataset[chipAttr] === active ? "true" : "false",
+          )
+        })
     }
   }
 
@@ -105,12 +117,14 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
     applyFilter()
   }
 
-  document.querySelectorAll<HTMLButtonElement>(filterButtonSelector).forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const value = btn.dataset[filterButtonAttr]
-      if (value) setActive(value)
+  document
+    .querySelectorAll<HTMLButtonElement>(filterButtonSelector)
+    .forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const value = btn.dataset[filterButtonAttr]
+        if (value) setActive(value)
+      })
     })
-  })
 
   if (chipSelector && chipAttr) {
     const isFirstRegistration = !chipClickDelegates.has(chipSelector)
@@ -118,8 +132,11 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
 
     if (isFirstRegistration) {
       document.addEventListener("click", (e) => {
-        const chip = (e.target as Element).closest<HTMLButtonElement>(chipSelector)
-        if (chip?.dataset[chipAttr]) chipClickDelegates.get(chipSelector)?.(chip.dataset[chipAttr])
+        const chip = (e.target as Element).closest<HTMLButtonElement>(
+          chipSelector,
+        )
+        if (chip?.dataset[chipAttr])
+          chipClickDelegates.get(chipSelector)?.(chip.dataset[chipAttr])
       })
     }
   }

@@ -8,7 +8,15 @@ import SubpostCountBadge from "@/components/blog/SubpostCountBadge.astro"
 
 interface Props extends PostNavItemData {}
 
-const { title, isActive, isSubpost, wordCount, combinedWordCount, subpostCount, href } = Astro.props
+const {
+  title,
+  isActive,
+  isSubpost,
+  wordCount,
+  combinedWordCount,
+  subpostCount,
+  href,
+} = Astro.props
 
 const iconName = getPostIconName(isActive, isSubpost)
 
@@ -17,22 +25,15 @@ const iconName = getPostIconName(isActive, isSubpost)
 const effectiveCombinedWordCount = isSubpost ? undefined : combinedWordCount
 ---
 
-{
-  isActive ? (
-    <div
-      class:list={[
-        "flex items-center gap-2 rounded-md px-2 py-2 text-sm",
-        "bg-primary/40 text-primary-foreground font-medium"
-      ]}
-      aria-current="page"
-    >
+{isActive ? (
+    <div class="post-nav-item is-active" aria-current="page">
       <Icon
         name={iconName}
-        class="text-primary mt-0.5 self-start"
+        class="post-nav-item-icon"
         aria-label={isSubpost ? "Current subpost" : "Current post"}
       />
-      <div class="flex min-w-0 flex-col gap-0.5">
-        <span class="text-foreground line-clamp-2 leading-tight font-medium">{title}</span>
+      <post-nav-item-content>
+        <span>{title}</span>
         {!isSubpost && !!subpostCount && subpostCount > 0 && (
           <SubpostCountBadge count={subpostCount} variant="full" />
         )}
@@ -40,45 +41,99 @@ const effectiveCombinedWordCount = isSubpost ? undefined : combinedWordCount
           <ReadingTime
             wordCount={wordCount}
             combinedWordCount={effectiveCombinedWordCount}
-            class="text-muted-foreground flex items-center gap-2 text-xs"
+            class="post-nav-item-meta"
           />
         )}
-      </div>
+      </post-nav-item-content>
     </div>
   ) : (
-    <Link
-      href={href}
-      class:list={[
-        "group/post flex items-center gap-2 rounded-md px-2 py-2 text-sm",
-        "hover:bg-accent/50 transition-all duration-200",
-        "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2"
-      ]}
-    >
+    <Link href={href} class="post-nav-item">
       <Icon
         name={iconName}
-        class="text-muted-foreground group-hover/post:text-accent-foreground mt-0.5 self-start transition-colors"
+        class="post-nav-item-icon"
         aria-label={isSubpost ? "Subpost" : "Parent post"}
       />
-      <div class="flex min-w-0 flex-col gap-0.5">
-        <span
-          class:list={[
-            "text-muted-foreground line-clamp-2 font-medium",
-            "group-hover/post:text-accent-foreground transition-colors"
-          ]}
-        >
+      <post-nav-item-content>
+        <span>
           {title}
         </span>
         {(wordCount > 0 || (!!subpostCount && subpostCount > 0 && !isSubpost)) && (
-          <div class="text-muted-foreground/60 group-hover/post:text-accent-foreground/50 flex items-center gap-2 text-xs transition-colors">
+          <post-nav-item-meta>
             {wordCount > 0 && (
               <ReadingTime wordCount={wordCount} combinedWordCount={effectiveCombinedWordCount} />
             )}
             {!!subpostCount && subpostCount > 0 && !isSubpost && (
               <SubpostCountBadge count={subpostCount} variant="compact" />
             )}
-          </div>
+          </post-nav-item-meta>
         )}
-      </div>
+      </post-nav-item-content>
     </Link>
-  )
-}
+  )}
+
+<style>
+  .post-nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-2xs);
+    border-radius: var(--radius-md);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    text-decoration: none;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .post-nav-item:hover {
+    background: color-mix(in oklab, var(--accent) 50%, transparent);
+    color: var(--accent-foreground);
+  }
+
+  .post-nav-item:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .post-nav-item.is-active {
+    background: color-mix(in oklab, var(--primary) 18%, transparent);
+    color: var(--foreground);
+    font-weight: var(--font-weight-medium);
+  }
+
+  :global(.post-nav-item-icon) {
+    align-self: flex-start;
+    flex-shrink: 0;
+    margin-block-start: 0.125rem;
+    color: currentColor;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  post-nav-item-content {
+    display: flex;
+    min-inline-size: 0;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  post-nav-item-content > span {
+    display: -webkit-box;
+    overflow: hidden;
+    color: currentColor;
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  post-nav-item-meta,
+  :global(.post-nav-item-meta) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    color: color-mix(in oklab, var(--muted-foreground) 70%, transparent);
+    font-size: var(--step--1);
+  }
+</style>

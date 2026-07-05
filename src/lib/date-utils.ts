@@ -91,7 +91,7 @@ export function createLocalDate(dateInput: string | number | Date): Date {
 export function formatDate(
   date: string | number | Date,
   locale = SITE.locale.lang,
-  options?: Intl.DateTimeFormatOptions
+  options?: Intl.DateTimeFormatOptions,
 ): string {
   const dateObj = createLocalDate(date)
 
@@ -112,17 +112,17 @@ export function formatDate(
  */
 export function formatDateTimeISO(
   date: string | number | Date,
-  timeZone: string = SITE.locale.options.timeZone || "UTC"
+  timeZone: string = SITE.locale.options.timeZone || "UTC",
 ): string {
   const dateObj = createLocalDate(date)
   // For date-only inputs, use the local timezone instead of converting
   if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date.trim())) {
     return format(dateObj, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", {
-      in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
+      in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone),
     })
   }
   return format(dateObj, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", {
-    in: tz(timeZone)
+    in: tz(timeZone),
   })
 }
 
@@ -152,7 +152,7 @@ export interface DateRangeResult {
 export function createDateRange(
   fromDate?: Date,
   toDate?: Date,
-  options?: Intl.DateTimeFormatOptions
+  options?: Intl.DateTimeFormatOptions,
 ): DateRangeResult | null {
   if (!fromDate && !toDate) return null
 
@@ -160,14 +160,14 @@ export function createDateRange(
     formatDate(d, SITE.locale.lang, {
       ...SITE.locale.options,
       day: undefined,
-      ...options
+      ...options,
     })
 
   const result = {
     fromDate,
     fromDateDisplay: fromDate ? formatter(fromDate) : undefined,
     toDate,
-    toDateDisplay: toDate ? formatter(toDate) : undefined
+    toDateDisplay: toDate ? formatter(toDate) : undefined,
   }
 
   return result

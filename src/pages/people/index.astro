@@ -8,10 +8,9 @@ const authors = await getAllAuthors()
 ---
 
 <Layout title="People">
-  <Breadcrumbs items={[{ label: "People", icon: "group" }]} />
-  {
-    authors.length > 0 ? (
-      <ul class="flex flex-col gap-4">
+  <Breadcrumbs slot="breadcrumb" items={[{ label: "People", icon: "group" }]} />
+  {authors.length > 0 ? (
+      <ul class="people-list">
         {authors.map((author) => (
           <li>
             <AuthorCard author={author} />
@@ -19,7 +18,22 @@ const authors = await getAllAuthors()
         ))}
       </ul>
     ) : (
-      <p class="text-muted-foreground text-center">No authors found.</p>
-    )
-  }
+      <p class="people-empty">No authors found.</p>
+    )}
 </Layout>
+
+<style>
+  .people-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .people-empty {
+    color: var(--muted-foreground);
+    text-align: center;
+  }
+</style>

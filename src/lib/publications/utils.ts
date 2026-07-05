@@ -16,7 +16,7 @@ import {
   LINK_FIELD_NAMES,
   VENUE_BOOKTITLE_PATTERNS,
   VENUE_DOI_PATTERNS,
-  VENUE_URL_PATTERNS
+  VENUE_URL_PATTERNS,
 } from "./data"
 
 // @ts-ignore - citation-js doesn't have types
@@ -124,7 +124,10 @@ const configureCustomFields = (): void => {
 
   // Config format: config.constants.fieldTypes.fieldname = [fieldType, valueType]
   for (const [fieldName, fieldConfig] of Object.entries(CUSTOM_FIELDS_CONFIG)) {
-    config.constants.fieldTypes[fieldName] = [fieldConfig.fieldType, fieldConfig.valueType]
+    config.constants.fieldTypes[fieldName] = [
+      fieldConfig.fieldType,
+      fieldConfig.valueType,
+    ]
   }
 
   config.parse.strict = false
@@ -142,7 +145,9 @@ function extractCustomFields(entry: CitationEntry): Record<string, string> {
 
   if (entry._graph?.[0]?.data) {
     const rawBib = entry._graph[0].data
-    const entryMatch = rawBib.match(new RegExp(`@\\w+\\{${entry.id}[\\s\\S]*?\\n\\}`, "i"))
+    const entryMatch = rawBib.match(
+      new RegExp(`@\\w+\\{${entry.id}[\\s\\S]*?\\n\\}`, "i"),
+    )
     if (entryMatch) {
       const entryContent = entryMatch[0]
 
@@ -227,20 +232,24 @@ export function parseBibTeX(bibContent: string): Publication[] {
       const customFields = extractCustomFields(entry)
 
       // Helper to get field value (entry field takes precedence over customFields)
-      const getField = (fieldName: string) => (entry as any)[fieldName] || customFields[fieldName]
+      const getField = (fieldName: string) =>
+        (entry as any)[fieldName] || customFields[fieldName]
 
       // Build publication object with core fields + all custom fields
       const entryType = extractEntryType(entry)
       const month = entry.issued?.["date-parts"]?.[0]?.[1]
 
       const publication: any = {
-        id: entry.id || entry.label || `pub-${Math.random().toString(36).substring(2, 11)}`,
+        id:
+          entry.id ||
+          entry.label ||
+          `pub-${Math.random().toString(36).substring(2, 11)}`,
         title: entry.title || customFields.title || "",
         authors: entry.author
           ? entry.author.map((author) =>
               typeof author === "string"
                 ? author.trim()
-                : `${author.given || ""} ${author.family || ""}`.trim()
+                : `${author.given || ""} ${author.family || ""}`.trim(),
             )
           : [],
         year:
@@ -250,12 +259,13 @@ export function parseBibTeX(bibContent: string): Publication[] {
         month,
         entryType,
         // Standard BibTeX fields
-        journal: entry["container-title"] || entry.journal || customFields.journal,
+        journal:
+          entry["container-title"] || entry.journal || customFields.journal,
         booktitle: entry.booktitle || customFields.booktitle,
         series: entry.series || customFields.series,
         publisher: entry.publisher || customFields.publisher,
         doi: entry.DOI || entry.doi || customFields.doi,
-        url: entry.URL || entry.url || customFields.url
+        url: entry.URL || entry.url || customFields.url,
       }
 
       // Automatically add all custom fields from CUSTOM_FIELDS_CONFIG
@@ -270,7 +280,8 @@ export function parseBibTeX(bibContent: string): Publication[] {
       }
 
       // keywords is a standard BibTeX field — citation-js parses it as entry.keyword
-      publication.keywords = (entry as any).keyword || customFields.keywords || undefined
+      publication.keywords =
+        (entry as any).keyword || customFields.keywords || undefined
 
       return publication as Publication
     })
@@ -285,13 +296,16 @@ export function parseBibTeX(bibContent: string): Publication[] {
  * @param style - Citation style ('apa', 'mla', 'chicago')
  * @returns Formatted citation string
  */
-export function formatCitation(entry: Publication, style: string = "apa"): string {
+export function formatCitation(
+  entry: Publication,
+  style: string = "apa",
+): string {
   try {
     const cite = new Cite(entry)
     return cite.format("bibliography", {
       format: "text",
       template: `${style}`,
-      lang: "en-US"
+      lang: "en-US",
     })
   } catch {
     return `${entry.authors.join(", ")}. (${entry.year}). ${entry.title}.`
@@ -306,7 +320,7 @@ export function formatCitation(entry: Publication, style: string = "apa"): strin
  */
 export function highlightAuthorName(
   authors: string[],
-  highlightConfig: PublicationConfig["highlightAuthor"]
+  highlightConfig: PublicationConfig["highlightAuthor"],
 ): string[] {
   const { firstName, lastName, aliases = [] } = highlightConfig
 
@@ -316,7 +330,7 @@ export function highlightAuthorName(
     `${lastName}, ${firstName}`,
     `${firstName.split(" ")[0]} ${lastName}`, // Handle "My" from "My Chiffon"
     `${lastName}, ${firstName.split(" ")[0]}`,
-    ...aliases
+    ...aliases,
   ]
 
   return authors.map((author) => {
@@ -334,12 +348,14 @@ export function highlightAuthorName(
       // Word boundary regex - matches only complete words
       const wordBoundaryRegex = new RegExp(
         `\\b${nameLower.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`,
-        "i"
+        "i",
       )
       return wordBoundaryRegex.test(authorTrimmed)
     })
 
-    return shouldHighlight ? `<strong class="author-highlight">${author}</strong>` : author
+    return shouldHighlight
+      ? `<strong class="author-highlight">${author}</strong>`
+      : author
   })
 }
 
@@ -350,7 +366,7 @@ export function highlightAuthorName(
 function applyEqualMarkers(
   authors: string[],
   pub: Publication,
-  symbols: PublicationConfig["equalSymbols"]
+  symbols: PublicationConfig["equalSymbols"],
 ): { authors: string[]; note: string } {
   const result = [...authors]
   const usedSymbols: string[] = []
@@ -359,7 +375,7 @@ function applyEqualMarkers(
   const groups = [
     { field: "equalfirst", symbol: symbols.first },
     { field: "equalsecond", symbol: symbols.second },
-    { field: "equalthird", symbol: symbols.third }
+    { field: "equalthird", symbol: symbols.third },
   ] as const
 
   for (const { field, symbol } of groups) {
@@ -387,8 +403,10 @@ function applyEqualMarkers(
   }
 
   const parts = [
-    usedSymbols.length > 0 ? `${usedSymbols.join(", ")} Equal contribution` : "",
-    lastNote
+    usedSymbols.length > 0
+      ? `${usedSymbols.join(", ")} Equal contribution`
+      : "",
+    lastNote,
   ].filter(Boolean)
 
   return { authors: result, note: parts.join(". ") }
@@ -404,7 +422,7 @@ function applyEqualMarkers(
 export function truncateAuthors(
   authors: string[],
   maxFirst: number,
-  maxLast: number = 0
+  maxLast: number = 0,
 ): AuthorData {
   const totalAuthors = authors.length
 
@@ -414,12 +432,13 @@ export function truncateAuthors(
       displayFirstAuthors: authors.join(", ") + (totalAuthors > 0 ? "," : ""),
       hasMore: false,
       hiddenCount: 0,
-      hiddenAuthors: ""
+      hiddenAuthors: "",
     }
   }
 
   const firstAuthors = authors.slice(0, maxFirst)
-  const hidden = maxLast > 0 ? authors.slice(maxFirst, -maxLast) : authors.slice(maxFirst)
+  const hidden =
+    maxLast > 0 ? authors.slice(maxFirst, -maxLast) : authors.slice(maxFirst)
   const lastAuthors = maxLast > 0 ? authors.slice(-maxLast) : undefined
 
   return {
@@ -427,7 +446,7 @@ export function truncateAuthors(
     displayLastAuthors: lastAuthors?.join(", "),
     hasMore: true,
     hiddenCount: hidden.length,
-    hiddenAuthors: hidden.join(", ")
+    hiddenAuthors: hidden.join(", "),
   }
 }
 
@@ -443,13 +462,14 @@ export function getPublicationLinks(entry: Publication): PublicationLink[] {
   for (const field of LINK_FIELD_NAMES) {
     const fieldValue = entry[field]
     if (typeof fieldValue === "string" && fieldValue) {
-      const linkConfig = PUBLICATION_LINK_TYPES[field as keyof typeof PUBLICATION_LINK_TYPES]
+      const linkConfig =
+        PUBLICATION_LINK_TYPES[field as keyof typeof PUBLICATION_LINK_TYPES]
       if (linkConfig) {
         links.push({
           href: fieldValue,
           icon: linkConfig.iconName,
           label: linkConfig.label,
-          type: field
+          type: field,
         })
       }
     }
@@ -464,7 +484,7 @@ export function getPublicationLinks(entry: Publication): PublicationLink[] {
  */
 function getHighlightedAuthorPosition(
   authors: string[],
-  highlightConfig: PublicationConfig["highlightAuthor"]
+  highlightConfig: PublicationConfig["highlightAuthor"],
 ): number {
   const { firstName, lastName, aliases = [] } = highlightConfig
   const namesToMatch = [
@@ -472,12 +492,16 @@ function getHighlightedAuthorPosition(
     `${lastName}, ${firstName}`,
     `${firstName.split(" ")[0]} ${lastName}`,
     `${lastName}, ${firstName.split(" ")[0]}`,
-    ...aliases
+    ...aliases,
   ].map((n) => n.toLowerCase())
 
   for (let i = 0; i < authors.length; i++) {
     const authorLower = authors[i].trim().toLowerCase()
-    if (namesToMatch.some((name) => authorLower === name || authorLower.includes(name))) {
+    if (
+      namesToMatch.some(
+        (name) => authorLower === name || authorLower.includes(name),
+      )
+    ) {
       return i
     }
   }
@@ -492,7 +516,7 @@ function getHighlightedAuthorPosition(
  */
 export function sortPublications(
   publications: Publication[],
-  _config?: PublicationConfig
+  _config?: PublicationConfig,
 ): Publication[] {
   return [...publications].sort((a, b) => {
     const yearA = a.year || 0
@@ -510,7 +534,7 @@ export function sortPublications(
  */
 export function sortPublicationsByRelevance(
   publications: Publication[],
-  config: PublicationConfig
+  config: PublicationConfig,
 ): Publication[] {
   return [...publications].sort((a, b) => {
     // selected=true first
@@ -543,7 +567,7 @@ export function sortPublicationsByRelevance(
  */
 export function getSelectedPublications(
   publications: Publication[],
-  limit?: number
+  limit?: number,
 ): Publication[] {
   const selected = publications.filter((pub) => pub.selected === true)
   return limit ? selected.slice(0, limit) : selected
@@ -557,16 +581,20 @@ export function getSelectedPublications(
  */
 export function getPublicationData(
   publication: Publication,
-  config: PublicationConfig
+  config: PublicationConfig,
 ): ProcessedPublication {
   // Process authors
-  const highlightedAuthors = highlightAuthorName(publication.authors || [], config.highlightAuthor)
-  const { authors: markedAuthors, note: equalContributionNote } = applyEqualMarkers(
-    highlightedAuthors,
-    publication,
-    config.equalSymbols
+  const highlightedAuthors = highlightAuthorName(
+    publication.authors || [],
+    config.highlightAuthor,
   )
-  const authorData = truncateAuthors(markedAuthors, config.maxFirstAuthors, config.maxLastAuthors)
+  const { authors: markedAuthors, note: equalContributionNote } =
+    applyEqualMarkers(highlightedAuthors, publication, config.equalSymbols)
+  const authorData = truncateAuthors(
+    markedAuthors,
+    config.maxFirstAuthors,
+    config.maxLastAuthors,
+  )
 
   // Get publication links
   const links = getPublicationLinks(publication)
@@ -582,7 +610,7 @@ export function getPublicationData(
 
   const authorPosition = getHighlightedAuthorPosition(
     publication.authors || [],
-    config.highlightAuthor
+    config.highlightAuthor,
   )
   const keywords = parsePublicationKeywords(publication.keywords)
   const expandedKeywords = expandHierarchicalKeywords(keywords)
@@ -598,7 +626,7 @@ export function getPublicationData(
       displayLastAuthors: authorData.displayLastAuthors,
       hasMore: authorData.hasMore,
       hiddenCount: authorData.hiddenCount,
-      hiddenAuthors: authorData.hiddenAuthors
+      hiddenAuthors: authorData.hiddenAuthors,
     },
     publisher: venue || undefined,
     links,
@@ -606,6 +634,6 @@ export function getPublicationData(
     expandedKeywords,
     selected: publication.selected === true,
     authorPosition,
-    equalContributionNote
+    equalContributionNote,
   }
 }

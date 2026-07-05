@@ -1,21 +1,9 @@
-/**
- * Rehype plugin: GFM footnotes → Tufte-style sidenotes.
- * Desktop (>= 1200px): margin notes. Mobile: CSS checkbox popup cards. Zero JS.
- *
- * 1. Collect footnote definitions from <section data-footnotes>
- * 2. Replace each <sup> footnote ref with sidenote wrapper
- * 3. Rewrite bottom footnotes section with backrefs
- */
-
-import type { Element, ElementContent, Root } from "hast"
-import { visit } from "unist-util-visit"
+import type { Element, ElementContent, RootContent } from "hast"
+import { defineHastPlugin } from "satteri"
 
 export interface SidenoteOptions {
-  /** hast node(s) for backref links. Default: SVG arrow-curve-up icon */
   backrefContent?: ElementContent | ElementContent[]
-  /** Whether to rewrite the bottom footnotes section. Default: true */
   rewriteFootnotes?: boolean
-  /** Aria-label template for backrefs. {n} = footnote number. Default: "Back to reference {n}" */
   backrefLabel?: string
 }
 
@@ -26,6 +14,30 @@ interface FootnoteRef {
 
 const HEADING_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"])
 
+const BACKREF_ICON: Element = {
+  type: "element",
+  tagName: "svg",
+  properties: {
+    viewBox: "0 0 24 24",
+    ariaHidden: "true",
+    className: ["sidenote-backref-icon"],
+  },
+  children: [
+    {
+      type: "element",
+      tagName: "path",
+      properties: { d: "m10 9l5-5l5 5" },
+      children: [],
+    },
+    {
+      type: "element",
+      tagName: "path",
+      properties: { d: "M4 20h7a4 4 0 0 0 4-4V4" },
+      children: [],
+    },
+  ],
+}
+
 function isElement(node: unknown): node is Element {
   return (
     typeof node === "object" &&
@@ -35,61 +47,186 @@ function isElement(node: unknown): node is Element {
   )
 }
 
-/** Strip backref <a> elements and unwrap <p> tags from footnote content. */
-function cleanFootnoteContent(children: ElementContent[]): ElementContent[] {
-  const result: ElementContent[] = []
+function hasProperty(node: Element, key: string): boolean {
+  return !!node.properties && key in node.properties
+}
+
+function stripFnPrefix(value: string): string {
+  return value.replace("user-content-fn-", "").replace("fn-", "")
+}
+
+function cloneNode<T extends RootContent>(node: T): T {
+  return structuredClone(node)
+}
+
+function cleanFootnoteContent(children: readonly RootContent[]): RootContent[] {
+  const result: RootContent[] = []
+
   for (const child of children) {
     if (!isElement(child)) {
-      result.push(child)
+      result.push(cloneNode(child))
       continue
     }
+
     if (
       child.tagName === "a" &&
-      child.properties &&
-      ("dataFootnoteBackref" in child.properties ||
-        String(child.properties.className ?? "").includes("data-footnote-backref"))
+      (hasProperty(child, "dataFootnoteBackref") ||
+        String(child.properties?.className ?? "").includes(
+          "data-footnote-backref",
+        ))
     ) {
       continue
     }
+
     if (child.tagName === "p") {
       result.push(...cleanFootnoteContent(child.children))
       continue
     }
+
     result.push({
-      ...child,
-      children: cleanFootnoteContent(child.children) as ElementContent[]
+      ...cloneNode(child),
+      children: cleanFootnoteContent(child.children) as ElementContent[],
     })
   }
+
   return result
 }
 
-/** Default backref icon (arrow curve up) — visual styling in sidenote.css */
-const BACKREF_ICON: Element = {
-  type: "element",
-  tagName: "svg",
-  properties: { viewBox: "0 0 24 24", ariaHidden: "true", className: ["sidenote-backref-icon"] },
-  children: [
-    { type: "element", tagName: "path", properties: { d: "m10 9l5-5l5 5" }, children: [] },
-    { type: "element", tagName: "path", properties: { d: "M4 20h7a4 4 0 0 0 4-4V4" }, children: [] }
-  ]
+function collectDefinitions(
+  children: readonly RootContent[],
+  definitions: Map<string, RootContent[]>,
+): void {
+  for (const child of children) {
+    if (!isElement(child)) continue
+
+    if (child.tagName === "ol") {
+      for (const item of child.children) {
+        if (!isElement(item) || item.tagName !== "li") continue
+        const key = stripFnPrefix(String(item.properties?.id ?? ""))
+        if (key) definitions.set(key, cleanFootnoteContent(item.children))
+      }
+      continue
+    }
+
+    collectDefinitions(child.children, definitions)
+  }
 }
 
-function isInsideHeading(node: Element, parent: Element | Root | null): boolean {
-  if (isElement(node) && HEADING_TAGS.has(node.tagName)) return true
-  if (isElement(parent) && HEADING_TAGS.has(parent.tagName)) return true
-  return false
+function makeBackref(
+  counter: number,
+  refId: string,
+  label: (n: number) => string,
+  backrefChildren: ElementContent[],
+): Element {
+  return {
+    type: "element",
+    tagName: "a",
+    properties: {
+      href: `#${refId}`,
+      className: ["sidenote-backref"],
+      ariaLabel: label(counter),
+    },
+    children: structuredClone(backrefChildren),
+  }
 }
 
-function stripFnPrefix(s: string): string {
-  return s.replace("user-content-fn-", "").replace("fn-", "")
+function findFootnoteLink(children: readonly RootContent[]): Element | null {
+  for (const child of children) {
+    if (
+      isElement(child) &&
+      child.tagName === "a" &&
+      (hasProperty(child, "dataFootnoteRef") ||
+        String(child.properties?.href ?? "").includes("#user-content-fn-") ||
+        String(child.properties?.href ?? "").includes("#fn-"))
+    ) {
+      return child
+    }
+  }
+  return null
 }
 
-function rehypeSidenotes(options: SidenoteOptions = {}) {
+function isInsideHeading(
+  node: Element,
+  parent: RootContent | undefined,
+): boolean {
+  return (
+    HEADING_TAGS.has(node.tagName) ||
+    (isElement(parent) && HEADING_TAGS.has(parent.tagName))
+  )
+}
+
+function rewriteFootnotesList(
+  ol: Element,
+  refMap: Map<string, FootnoteRef>,
+  backrefChildren: ElementContent[],
+  label: (n: number) => string,
+): ElementContent[] {
+  return ol.children.map((child: ElementContent) => {
+    if (!isElement(child) || child.tagName !== "li") {
+      return cloneNode(child)
+    }
+
+    const key = stripFnPrefix(String(child.properties?.id ?? ""))
+    const ref = refMap.get(key)
+    if (!ref) return cloneNode(child)
+
+    return {
+      ...cloneNode(child),
+      children: [
+        ...cleanFootnoteContent(child.children),
+        { type: "text", value: " " },
+        {
+          type: "element",
+          tagName: "a",
+          properties: {
+            href: `#${ref.refId}`,
+            className: ["footnote-backref"],
+            ariaLabel: label(ref.counter),
+          },
+          children: structuredClone(backrefChildren),
+        },
+      ],
+    }
+  }) as ElementContent[]
+}
+
+function rewriteFootnoteChildren(
+  children: readonly RootContent[],
+  refMap: Map<string, FootnoteRef>,
+  backrefChildren: ElementContent[],
+  label: (n: number) => string,
+): RootContent[] {
+  return children.map((child) => {
+    if (!isElement(child)) return cloneNode(child)
+
+    if (child.tagName === "ol") {
+      return {
+        ...cloneNode(child),
+        children: rewriteFootnotesList(child, refMap, backrefChildren, label),
+      }
+    }
+
+    return {
+      ...cloneNode(child),
+      children: rewriteFootnoteChildren(
+        child.children,
+        refMap,
+        backrefChildren,
+        label,
+      ) as ElementContent[],
+    }
+  })
+}
+
+export function rehypeSidenotes(options: SidenoteOptions = {}) {
   const {
     rewriteFootnotes = true,
     backrefLabel = "Back to reference {n}",
-    backrefContent
+    backrefContent,
   } = options
+
+  const definitions = new Map<string, RootContent[]>()
+  const refMap = new Map<string, FootnoteRef>()
   const backrefChildren: ElementContent[] = backrefContent
     ? Array.isArray(backrefContent)
       ? backrefContent
@@ -97,174 +234,120 @@ function rehypeSidenotes(options: SidenoteOptions = {}) {
     : [{ type: "text", value: " " }, BACKREF_ICON]
   const label = (n: number) => backrefLabel.replace("{n}", String(n))
 
-  return (tree: Root) => {
-    // Pass 1: Collect footnote definitions
-    const definitions = new Map<string, ElementContent[]>()
-    let footnotesSection: Element | null = null
+  return [
+    defineHastPlugin({
+      name: "sidenotes-collect-footnotes",
+      element: {
+        filter: ["section"],
+        visit(node) {
+          if (!hasProperty(node, "dataFootnotes")) return
+          collectDefinitions(node.children, definitions)
+        },
+      },
+    }),
+    defineHastPlugin({
+      name: "sidenotes-replace-references",
+      element: {
+        filter: ["sup"],
+        visit(node, ctx) {
+          const link = findFootnoteLink(node.children)
+          if (!link) return
 
-    visit(tree, "element", (node: Element) => {
-      if (node.tagName !== "section" || !node.properties || !("dataFootnotes" in node.properties))
-        return
-      footnotesSection = node
+          const key = stripFnPrefix(
+            String(link.properties?.href ?? "").replace("#", ""),
+          )
+          const content = definitions.get(key)
+          if (!content) return
 
-      const findOl = (children: ElementContent[]) => {
-        for (const child of children) {
-          if (isElement(child) && child.tagName === "ol") {
-            for (const li of child.children) {
-              if (!isElement(li) || li.tagName !== "li") continue
-              const key = stripFnPrefix(String(li.properties?.id ?? ""))
-              if (key) definitions.set(key, cleanFootnoteContent(li.children))
-            }
-          } else if (isElement(child) && child.children) {
-            findOl(child.children)
-          }
-        }
-      }
-      findOl(node.children)
-    })
+          const counter = refMap.size + 1
+          const snId = `sn-${counter}`
+          const refId = `snref-${counter}`
+          refMap.set(key, { counter, refId })
 
-    if (definitions.size === 0) return
-
-    // Pass 2: Replace each footnote ref <sup> with sidenote markup
-    let counter = 0
-    const refMap = new Map<string, FootnoteRef>()
-
-    visit(tree, "element", (node: Element, index, parent) => {
-      if (!parent || index === undefined || node.tagName !== "sup") return
-
-      const link = node.children.find(
-        (c): c is Element =>
-          isElement(c) &&
-          c.tagName === "a" &&
-          ("dataFootnoteRef" in (c.properties ?? {}) ||
-            String(c.properties?.href ?? "").includes("#user-content-fn-") ||
-            String(c.properties?.href ?? "").includes("#fn-"))
-      )
-      if (!link) return
-
-      const key = stripFnPrefix(String(link.properties?.href ?? "").replace("#", ""))
-      const content = definitions.get(key)
-      if (!content) return
-
-      counter++
-      const snId = `sn-${counter}`
-      const refId = `snref-${counter}`
-
-      refMap.set(key, { counter, refId })
-
-      const inHeading = isInsideHeading(node, parent as Element | Root | null)
-
-      if (inHeading) {
-        const indicator: Element = {
-          type: "element",
-          tagName: "span",
-          properties: { className: ["sidenote-wrapper"] },
-          children: [
-            {
-              type: "element",
-              tagName: "label",
-              properties: { id: refId, className: ["sidenote-toggle", "sidenote-number"] },
-              children: [{ type: "text", value: String(counter) }]
-            }
-          ]
-        }
-        ;(parent as Element).children.splice(index as number, 1, indicator)
-      } else {
-        const backref: Element = {
-          type: "element",
-          tagName: "a",
-          properties: {
-            href: `#${refId}`,
-            className: ["sidenote-backref"],
-            ariaLabel: label(counter)
-          },
-          children: structuredClone(backrefChildren)
-        }
-
-        const wrapper: Element = {
-          type: "element",
-          tagName: "span",
-          properties: { className: ["sidenote-wrapper"] },
-          children: [
-            {
-              type: "element",
-              tagName: "label",
-              properties: {
-                htmlFor: snId,
-                id: refId,
-                className: ["sidenote-toggle", "sidenote-number"]
-              },
-              children: [{ type: "text", value: String(counter) }]
-            },
-            {
-              type: "element",
-              tagName: "input",
-              properties: { type: "checkbox", id: snId, className: ["sidenote-toggle-checkbox"] },
-              children: []
-            },
-            {
+          const parent = ctx.parent(node)
+          if (isInsideHeading(node, parent as RootContent | undefined)) {
+            ctx.replaceNode(node, {
               type: "element",
               tagName: "span",
-              properties: {
-                className: ["sidenote"],
-                id: `sn-note-${counter}`,
-                dataSidenoteNumber: String(counter)
-              },
-              children: [...content, backref]
-            }
-          ]
-        }
-        ;(parent as Element).children.splice(index as number, 1, wrapper)
-      }
-    })
-
-    // Pass 3: Rewrite bottom footnotes section
-    if (rewriteFootnotes) {
-      const fnSection = footnotesSection as Element | null
-      if (fnSection) {
-        const findOl = (children: ElementContent[]) => {
-          for (const child of children) {
-            if (isElement(child) && child.tagName === "ol") {
-              rewriteFootnotesList(child, refMap, backrefChildren, label)
-            } else if (isElement(child) && child.children) {
-              findOl(child.children)
-            }
+              properties: { className: ["sidenote-wrapper"] },
+              children: [
+                {
+                  type: "element",
+                  tagName: "label",
+                  properties: {
+                    id: refId,
+                    className: ["sidenote-toggle", "sidenote-number"],
+                  },
+                  children: [{ type: "text", value: String(counter) }],
+                },
+              ],
+            })
+            return
           }
-        }
-        findOl(fnSection.children)
-      }
-    }
-  }
-}
 
-function rewriteFootnotesList(
-  ol: Element,
-  refMap: Map<string, FootnoteRef>,
-  backrefChildren: ElementContent[],
-  label: (n: number) => string
-): void {
-  for (const li of ol.children) {
-    if (!isElement(li) || li.tagName !== "li") continue
-
-    const key = stripFnPrefix(String(li.properties?.id ?? ""))
-    const ref = refMap.get(key)
-    if (!ref) continue
-
-    li.children = [
-      ...cleanFootnoteContent(li.children),
-      { type: "text", value: " " },
-      {
-        type: "element",
-        tagName: "a",
-        properties: {
-          href: `#${ref.refId}`,
-          className: ["footnote-backref"],
-          ariaLabel: label(ref.counter)
+          ctx.replaceNode(node, {
+            type: "element",
+            tagName: "span",
+            properties: { className: ["sidenote-wrapper"] },
+            children: [
+              {
+                type: "element",
+                tagName: "label",
+                properties: {
+                  htmlFor: snId,
+                  id: refId,
+                  className: ["sidenote-toggle", "sidenote-number"],
+                },
+                children: [{ type: "text", value: String(counter) }],
+              },
+              {
+                type: "element",
+                tagName: "input",
+                properties: {
+                  type: "checkbox",
+                  id: snId,
+                  className: ["sidenote-toggle-checkbox"],
+                },
+                children: [],
+              },
+              {
+                type: "element",
+                tagName: "span",
+                properties: {
+                  className: ["sidenote"],
+                  id: `sn-note-${counter}`,
+                  dataSidenoteNumber: String(counter),
+                },
+                children: [
+                  ...(structuredClone(content) as ElementContent[]),
+                  makeBackref(counter, refId, label, backrefChildren),
+                ],
+              },
+            ],
+          })
         },
-        children: structuredClone(backrefChildren)
-      }
-    ]
-  }
+      },
+    }),
+    defineHastPlugin({
+      name: "sidenotes-rewrite-footnote-list",
+      element: {
+        filter: ["section"],
+        visit(node, ctx) {
+          if (!rewriteFootnotes || !hasProperty(node, "dataFootnotes")) return
+          ctx.setProperty(
+            node,
+            "children",
+            rewriteFootnoteChildren(
+              node.children,
+              refMap,
+              backrefChildren,
+              label,
+            ),
+          )
+        },
+      },
+    }),
+  ]
 }
 
 export default rehypeSidenotes

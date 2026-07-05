@@ -2,7 +2,6 @@
 import { SITE } from "@site-config"
 import { getShareActions } from "@/lib/blog/share"
 import type { AuthorData } from "@/lib/blog/types"
-import { cn } from "@/lib/utils"
 import CopyButton from "@/components/base/CopyButton.astro"
 import Icon from "@/components/base/Icon.astro"
 
@@ -16,40 +15,76 @@ interface Props {
 }
 
 const { title, url, authors, markdown, class: className } = Astro.props
-const shareActions = getShareActions(SITE.blog.shareActions, title, url, authors)
-
-const btnClass =
-  "hover:bg-accent hover:text-accent-foreground active:bg-accent/80 inline-flex cursor-pointer items-center rounded-md p-2 gap-1 text-sm font-medium transition-all select-none"
+const shareActions = getShareActions(
+  SITE.blog.shareActions,
+  title,
+  url,
+  authors,
+)
 ---
 
-<div class={cn("flex flex-wrap items-center gap-2", className)} aria-label="Post actions">
-  {/** Copy actions */}
-  {
-    markdown && (
+<div class:list={["share-actions", className]} aria-label="Post actions">
+  {markdown && (
       <CopyButton
         text={markdown}
         label="Copy Markdown"
         title="Copy as Markdown"
         size="1rem"
-        class={btnClass}
+        class="share-action"
       />
-    )
-  }
-  <CopyButton text={url} label="Copy URL" title="Copy post URL" size="1rem" class={btnClass} />
-
-  {/** Share actions */}
-  {
-    shareActions.map((action) => (
+    )}
+  <CopyButton
+    text={url}
+    label="Copy URL"
+    title="Copy post URL"
+    size="1rem"
+    class="share-action"
+  />
+  {shareActions.map((action) => (
       <a
         href={action.href}
         target="_blank"
         rel="noopener noreferrer"
-        class={btnClass}
+        class="share-action"
         title={action.label}
       >
         <Icon name={action.icon} size="1rem" />
         <span>{action.label}</span>
       </a>
-    ))
-  }
+    ))}
 </div>
+
+<style>
+  .share-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  :global(.share-action) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    padding: var(--space-2xs);
+    border-radius: var(--radius-md);
+    color: var(--foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  :global(.share-action:hover) {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  :global(.share-action:active) {
+    background: color-mix(in oklab, var(--accent) 80%, transparent);
+  }
+</style>

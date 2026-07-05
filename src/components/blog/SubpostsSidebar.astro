@@ -16,54 +16,90 @@ const { postNavItems = [], activePostNavItem, class: className } = Astro.props
 const shouldRender = postNavItems.length > 0 || !!activePostNavItem
 ---
 
-{
-  shouldRender && activePostNavItem && (
+{shouldRender && activePostNavItem && (
     <aside
       id="subposts-sidebar-container"
-      class={className}
+      class:list={["subposts-sidebar", className]}
       role="complementary"
       aria-label="Subposts navigation"
     >
-      <header class="border-border sticky top-0 mb-2 border-b pb-1">
-        <h2 id="subposts-heading" class="text-foreground/80 text-sm font-semibold">
+      <header>
+        <h2 id="subposts-heading">
           Post Navigation
         </h2>
       </header>
-      <ScrollArea
-        class="flex max-h-[calc(100vh_-_var(--header-height,4rem))] flex-col"
-        data-scroll-container
-      >
-        <nav aria-label="Post and subposts" class="space-y-1 p-2">
+      <ScrollArea class="subposts-sidebar-scroll" data-scroll-container>
+        <nav aria-label="Post and subposts">
           <PostNavItem {...activePostNavItem} />
-          <h3
-            id="subposts-heading"
-            class="text-muted-foreground my-1 text-xs font-semibold tracking-wider uppercase"
-          >
+          <h3 id="subposts-list-heading">
             Subposts
           </h3>
           <SubpostsList items={postNavItems} />
         </nav>
       </ScrollArea>
     </aside>
-  )
-}
+  )}
+
+<style>
+  .subposts-sidebar header {
+    position: sticky;
+    top: 0;
+    margin-block-end: var(--space-2xs);
+    padding-block-end: var(--space-3xs);
+    border-block-end: 1px solid var(--border);
+  }
+
+  h2 {
+    color: color-mix(in oklab, var(--foreground) 80%, transparent);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  :global(.subposts-sidebar-scroll) {
+    display: flex;
+    max-block-size: calc(100vh - var(--header-height, 4rem));
+    flex-direction: column;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    padding: var(--space-2xs);
+  }
+
+  h3 {
+    margin-block: var(--space-3xs);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+  }
+</style>
 
 <script>
   function initSidebar() {
     const container = document.getElementById("subposts-sidebar-container")
     if (!container) return
 
-    const scrollArea = container.querySelector<HTMLElement>(".scroll-area-viewport")
+    const scrollArea = container.querySelector<HTMLElement>(
+      ".scroll-area-viewport",
+    )
     if (!scrollArea) return
 
-    const activeItem = scrollArea.querySelector<HTMLElement>("[aria-current='page']")
+    const activeItem = scrollArea.querySelector<HTMLElement>(
+      "[aria-current='page']",
+    )
     if (!activeItem) return
 
     // Scroll active item into view
     const areaRect = scrollArea.getBoundingClientRect()
     const itemRect = activeItem.getBoundingClientRect()
     const itemTop = itemRect.top - areaRect.top + scrollArea.scrollTop
-    const targetScroll = Math.max(0, itemTop - (areaRect.height - itemRect.height) / 2)
+    const targetScroll = Math.max(
+      0,
+      itemTop - (areaRect.height - itemRect.height) / 2,
+    )
     scrollArea.scrollTop = targetScroll
   }
 

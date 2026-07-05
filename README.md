@@ -25,7 +25,7 @@ This website serves as a digital portfolio and blog where I share my work, insig
 
 ## Built With
 
-This website is built on enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite) template and references from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s digital garden.
+This website is built on enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite) v2.0.1 and references from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s digital garden.
 
 Other inspirations:
 
