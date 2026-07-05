@@ -349,5 +349,3 @@ export function rehypeSidenotes(options: SidenoteOptions = {}) {
     }),
   ]
 }
-
-export default rehypeSidenotes

@@ -104,49 +104,6 @@ export async function getTOCSections(
   return sections
 }
 
-export function getActiveSections(
-  sections: TOCSection[],
-  activeHeadingIds: string[],
-): Set<string> {
-  const activeSections = new Set<string>()
-  const activeIdSet = new Set(activeHeadingIds)
-
-  for (const section of sections) {
-    const hasActiveHeading = section.headings.some((heading) =>
-      activeIdSet.has(heading.slug),
-    )
-
-    if (hasActiveHeading) {
-      activeSections.add(section.postId)
-    }
-  }
-
-  return activeSections
-}
-
-export function getTOCUrl(
-  heading: { slug: string },
-  section: TOCSection,
-  isActiveSection: boolean,
-): string {
-  if (isActiveSection) {
-    return `#${heading.slug}`
-  }
-  return `/blog/${section.postId}#${heading.slug}`
-}
-
-/** Get margin class for TOCHeadingLink headings */
-export function getHeadingMargin(depth: number): string {
-  const margins: Record<number, string> = {
-    2: "",
-    3: "ml-4",
-    4: "ml-8",
-    5: "ml-12",
-    6: "ml-16",
-  }
-  return margins[depth] || ""
-}
-
 /** Get width class for TOCFloat headings */
 export function getHeadingWidth(depth: number): string {
   const widths: Record<number, string> = {

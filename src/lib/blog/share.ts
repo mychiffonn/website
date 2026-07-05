@@ -20,10 +20,7 @@ export interface ShareActionConfig {
  * Extract a platform handle from a profile URL.
  * Returns the handle without @ prefix, or null if unrecognized.
  */
-export function extractHandle(
-  url: string,
-  platform: "x" | "bluesky",
-): string | null {
+function extractHandle(url: string, platform: "x" | "bluesky"): string | null {
   try {
     const parsed = new URL(url)
     if (platform === "x") {

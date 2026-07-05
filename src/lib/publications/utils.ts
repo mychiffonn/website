@@ -291,34 +291,12 @@ export function parseBibTeX(bibContent: string): Publication[] {
 }
 
 /**
- * Format a citation in the specified style
- * @param entry - Publication entry
- * @param style - Citation style ('apa', 'mla', 'chicago')
- * @returns Formatted citation string
- */
-export function formatCitation(
-  entry: Publication,
-  style: string = "apa",
-): string {
-  try {
-    const cite = new Cite(entry)
-    return cite.format("bibliography", {
-      format: "text",
-      template: `${style}`,
-      lang: "en-US",
-    })
-  } catch {
-    return `${entry.authors.join(", ")}. (${entry.year}). ${entry.title}.`
-  }
-}
-
-/**
  * Highlight author names in bold based on configuration
  * @param authors - Array of author names
  * @param highlightConfig - Configuration for author highlighting
  * @returns Array of authors with highlighted names in HTML
  */
-export function highlightAuthorName(
+function highlightAuthorName(
   authors: string[],
   highlightConfig: PublicationConfig["highlightAuthor"],
 ): string[] {
@@ -419,7 +397,7 @@ function applyEqualMarkers(
  * @param maxLast - Maximum number of last authors to show (optional)
  * @returns Object with truncated author list and metadata
  */
-export function truncateAuthors(
+function truncateAuthors(
   authors: string[],
   maxFirst: number,
   maxLast: number = 0,
@@ -456,7 +434,7 @@ export function truncateAuthors(
  * @param entry - Publication entry
  * @returns Array of action link objects with proper icon names
  */
-export function getPublicationLinks(entry: Publication): PublicationLink[] {
+function getPublicationLinks(entry: Publication): PublicationLink[] {
   const links: PublicationLink[] = []
 
   for (const field of LINK_FIELD_NAMES) {

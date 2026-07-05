@@ -84,16 +84,6 @@ export const getProcessedProfileLinks = (
 }
 
 /**
- * Get the icon for a platform
- * @param platform The social/academic/professional platform to get the icon for
- * @returns The icon name for the platform, e.g., "mingcute:linkedin-line"
- */
-export const getIconForPlatform = (platform: string): string => {
-  const iconConfig = PROFILE_ICON_MAP[platform as ProfileLinkType]
-  return iconConfig?.iconName || "mingcute:external-link-line"
-}
-
-/**
  * Return the email in the desired variant, display or encoded
  * @param email The email to transform
  * @param variant The variant to return, display or encoded

@@ -73,7 +73,7 @@ export function getProjectCategoryCounts(projects: Project[]) {
  * @param projects - Array of projects to sort
  * @returns Sorted array of projects
  */
-export function sortProjects(projects: Project[]): Project[] {
+function sortProjects(projects: Project[]): Project[] {
   return projects.sort((a, b) => {
     // First, prioritize highlighted projects
     if (a.data.isHighlighted && !b.data.isHighlighted) return -1

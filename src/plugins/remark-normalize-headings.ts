@@ -35,5 +35,3 @@ export function remarkNormalizeHeadings() {
     },
   })
 }
-
-export default remarkNormalizeHeadings

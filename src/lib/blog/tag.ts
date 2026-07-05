@@ -8,10 +8,6 @@ export type TagCount = {
   count: number
 }
 
-export type TagPageData = {
-  posts: import("./types").PostMeta[]
-}
-
 /**
  * Retrieves all unique tags for static path generation.
  * Tags from subposts are attributed to their parent posts.

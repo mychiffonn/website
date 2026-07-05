@@ -1,8 +1,8 @@
 import customFieldDefinitions from "./custom-fields.json"
 import venuePatternGroups from "./venue-patterns.json"
 
-export type BibTeXFieldType = "field" | "list" | "separated"
-export type BibTeXValueType =
+type BibTeXFieldType = "field" | "list" | "separated"
+type BibTeXValueType =
   | "literal"
   | "title"
   | "name"

@@ -6,9 +6,7 @@ import type { Post } from "./types"
  * Calculates word count from HTML content, excluding code blocks and math expressions.
  * Uses Intl.Segmenter for accurate Unicode support with fallback for older environments.
  */
-export function calculateWordCountFromHtml(
-  html: string | null | undefined,
-): number {
+function calculateWordCountFromHtml(html: string | null | undefined): number {
   if (!html) return 0
 
   let content = html
@@ -63,10 +61,6 @@ export function sortByDateDesc<T extends { data: { createdAt: Date } }>(
 
 export function formatSubpostCount(count: number): string {
   return `${count} subpost${count === 1 ? "" : "s"}`
-}
-
-export function generatePostHref(postId: string, baseUrl: string): string {
-  return `${baseUrl}/${postId}`
 }
 
 export function getPostIconName(

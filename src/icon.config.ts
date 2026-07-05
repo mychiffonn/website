@@ -184,4 +184,3 @@ export const PUBLICATION_LINK_TYPES = {
 export type ProfileLinkType = keyof typeof PROFILE_ICON_MAP
 export type SemanticIconName = keyof typeof SEMANTIC_ICONS
 export type ProjectLinkType = keyof typeof PROJECT_LINK_TYPES
-export type PublicationLinkType = keyof typeof PUBLICATION_LINK_TYPES
