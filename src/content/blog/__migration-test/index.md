@@ -10,7 +10,7 @@ authors:
   - mychiffon
 stage: seedling
 audience: Migration reviewers checking responsive blog behavior.
-draft: false
+draft: true
 ---
 
 ## Overview
@@ -32,11 +32,11 @@ The migration should prefer native CSS custom elements, cascade layers, containe
 
 ## Data Table
 
-| Surface | Expected behavior | Risk |
-| --- | --- | --- |
-| TOC | Current heading tracks while scrolling | Medium |
-| Subposts | Parent and child links stay smooth | High |
-| Cards | Hover and selected states match the deployed site | Medium |
+| Surface  | Expected behavior                                 | Risk   |
+| -------- | ------------------------------------------------- | ------ |
+| TOC      | Current heading tracks while scrolling            | Medium |
+| Subposts | Parent and child links stay smooth                | High   |
+| Cards    | Hover and selected states match the deployed site | Medium |
 
 ## Callouts
 

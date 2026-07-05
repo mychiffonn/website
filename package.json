@@ -37,6 +37,7 @@
     "hast-util-to-html": "^9.0.5",
     "hastscript": "^9.0.1",
     "husky": "^9.1.7",
+    "satori": "^0.26.0",
     "satteri": "^0.9.4",
     "satteri-expressive-code": "^0.1.17",
     "temml": "^0.13.3",

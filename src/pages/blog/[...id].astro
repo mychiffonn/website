@@ -62,12 +62,15 @@ const {
 } = context
 
 const rawMarkdown = post.body ?? null
+const socialImage =
+  typeof post.data.image === "string" ? post.data.image : post.data.image?.src
+const generatedSocialImage = `/og/blog/${post.id}.png`
 ---
 
 <Layout
   title={post.data.title}
   description={post.data.description}
-  image={typeof post.data.image === "string" ? post.data.image : post.data.image?.src}
+  image={socialImage ?? generatedSocialImage}
   type="article"
   publishedTime={post.data.createdAt}
   modifiedTime={post.data.updatedAt}
