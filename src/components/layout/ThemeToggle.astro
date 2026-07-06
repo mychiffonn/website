@@ -50,15 +50,15 @@ import Icon from "@/components/base/Icon.astro"
   }
   .theme-icon-dark {
     opacity: 0;
-    transform: scale(0);
+    transform: scale(0.6) rotate(-45deg);
   }
   :global([data-theme="dark"]) .theme-icon-light {
     opacity: 0;
-    transform: scale(0);
+    transform: scale(0.6) rotate(-45deg);
   }
   :global([data-theme="dark"]) .theme-icon-dark {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
   }
 
   button[data-dropdown-item] {
@@ -75,8 +75,10 @@ import Icon from "@/components/base/Icon.astro"
       background-color var(--motion-duration) var(--motion-ease),
       color var(--motion-duration-fast) var(--motion-ease);
   }
-  button[data-dropdown-item]:hover {
-    background-color: color-mix(in oklch, var(--accent) 50%, transparent);
+  @media (hover: hover) and (pointer: fine) {
+    button[data-dropdown-item]:hover {
+      background-color: color-mix(in oklch, var(--accent) 50%, transparent);
+    }
   }
   button[data-dropdown-item][data-active] {
     background-color: color-mix(in oklch, var(--primary) 80%, transparent);

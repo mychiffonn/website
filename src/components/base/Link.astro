@@ -8,13 +8,15 @@ interface Props {
 }
 
 const { href, external, class: className, underline, ...rest } = Astro.props
+const isExternal = external ?? /^https?:\/\//.test(href)
 ---
 
 <a
   href={href}
-  target={external ? "_blank" : undefined}
-  rel={external ? "noopener noreferrer nofollow" : undefined}
+  target={isExternal ? "_blank" : undefined}
+  rel={isExternal ? "noopener noreferrer nofollow" : undefined}
   data-link
+  data-external={isExternal || undefined}
   data-underline={underline || undefined}
   class={className}
   {...rest}
@@ -30,8 +32,10 @@ const { href, external, class: className, underline, ...rest } = Astro.props
       text-decoration-color var(--motion-duration) var(--motion-ease);
   }
 
-  [data-link]:hover {
-    color: var(--accent);
+  @media (hover: hover) and (pointer: fine) {
+    [data-link]:hover {
+      color: var(--accent);
+    }
   }
 
   [data-link][data-underline] {

@@ -66,7 +66,11 @@ import Icon from "@/components/base/Icon.astro"
     transition: transform var(--motion-duration) var(--motion-ease);
   }
 
-  :global(.scroll-to-top:hover .scroll-to-top-icon) {
-    transform: translateY(-0.25rem);
+  @media (hover: hover) and (pointer: fine) and (
+      prefers-reduced-motion: no-preference
+    ) {
+    :global(.scroll-to-top:hover .scroll-to-top-icon) {
+      transform: translateY(-0.25rem);
+    }
   }
 </style>

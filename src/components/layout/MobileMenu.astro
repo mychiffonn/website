@@ -20,10 +20,10 @@ import Icon from "@/components/base/Icon.astro"
 
   <div>
     {NAV_LINKS.map((item) => (
-      <a href={item.href} data-dropdown-item data-nav-link={item.href}>
-        {item.label}
-      </a>
-    ))}
+        <a href={item.href} data-dropdown-item data-nav-link={item.href}>
+          {item.label}
+        </a>
+      ))}
   </div>
 </Dropdown>
 
@@ -79,6 +79,8 @@ import Icon from "@/components/base/Icon.astro"
   }
 
   :global(.mobile-menu-content) {
+    padding-block: 0;
+
     @media (width >= 40rem) {
       display: none;
     }
@@ -92,7 +94,7 @@ import Icon from "@/components/base/Icon.astro"
     inline-size: 100%;
     padding: var(--space-2xs) var(--space-xs);
     border: 1px solid transparent;
-    border-radius: var(--radius-md);
+
     color: var(--foreground);
     text-decoration: none;
     white-space: nowrap;
@@ -102,13 +104,30 @@ import Icon from "@/components/base/Icon.astro"
       color var(--motion-duration-fast) var(--motion-ease);
   }
 
+  a[data-dropdown-item]:first-child {
+    border-start-start-radius: calc(var(--radius-md) - 1px);
+    border-start-end-radius: calc(var(--radius-md) - 1px);
+  }
+
+  a[data-dropdown-item]:last-child {
+    border-end-start-radius: calc(var(--radius-md) - 1px);
+    border-end-end-radius: calc(var(--radius-md) - 1px);
+  }
+
   a[data-dropdown-item]:hover {
-    background: color-mix(in oklab, var(--accent) 20%, transparent);
+    border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
+    background-color: color-mix(in oklab, var(--accent) 24%, transparent);
+    color: var(--foreground);
   }
 
   a[data-dropdown-item][aria-current] {
-    background: var(--primary);
+    background-color: var(--primary);
     color: var(--primary-foreground);
     font-weight: var(--font-weight-medium);
+  }
+
+  a[data-dropdown-item][aria-current]:hover {
+    background-color: color-mix(in oklab, var(--primary) 88%, var(--accent));
+    color: var(--primary-foreground);
   }
 </style>

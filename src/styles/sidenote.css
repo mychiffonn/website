@@ -60,10 +60,18 @@
     transform var(--motion-duration) var(--motion-ease);
 }
 
-.sidenote-backref:hover,
-.footnote-backref:hover {
-  color: var(--primary);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .sidenote-backref:hover,
+  .footnote-backref:hover {
+    color: var(--primary);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .sidenote-backref:hover,
+  .footnote-backref:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .sidenote-backref-icon {
@@ -79,13 +87,15 @@
 }
 
 /* Highlight sidenote when hovering its footnote number */
-.sidenote-toggle:hover ~ .sidenote {
-  background-color: color-mix(in oklab, var(--primary) 20%, transparent);
-}
+@media (hover: hover) and (pointer: fine) {
+  .sidenote-toggle:hover ~ .sidenote {
+    background-color: color-mix(in oklab, var(--primary) 20%, transparent);
+  }
 
-/* Reverse: highlight footnote number when hovering the sidenote */
-.sidenote-wrapper:has(.sidenote:hover) > .sidenote-toggle {
-  background-color: color-mix(in oklab, var(--primary) 15%, transparent);
+  /* Reverse: highlight footnote number when hovering the sidenote */
+  .sidenote-wrapper:has(.sidenote:hover) > .sidenote-toggle {
+    background-color: color-mix(in oklab, var(--primary) 15%, transparent);
+  }
 }
 
 /* Bottom footnotes section */

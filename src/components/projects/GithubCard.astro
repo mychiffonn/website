@@ -180,11 +180,11 @@ const [owner, repoName] = repo.split("/")
     color: transparent;
     border-radius: var(--radius-sm);
     background-color: var(--primary-foreground);
-    animation: pulsate 2s infinite linear;
+    animation: pulsate 1.2s infinite ease-in-out;
     user-select: none;
   }
   .loading .gh-text:nth-child(2) {
-    animation-delay: 1s;
+    animation-delay: 150ms;
   }
 </style>
 

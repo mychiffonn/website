@@ -9,10 +9,6 @@
     box-shadow var(--motion-duration) var(--motion-ease);
 }
 
-.card:not(.card-clickable):hover {
-  border-color: color-mix(in oklab, var(--border) 80%, transparent);
-}
-
 .card-content {
   display: flex;
   flex-direction: column;
@@ -23,13 +19,7 @@
   cursor: pointer;
 }
 
-.card-clickable:hover {
-  border-color: color-mix(in oklab, var(--primary) 30%, transparent);
-  box-shadow: 0 0.5rem 1.5rem -0.25rem color-mix(in oklab, var(--ring) 8%, transparent);
-}
-
 .card-clickable:active,
-.card-clickable:focus,
 .card-clickable:focus-visible {
   border-color: color-mix(in oklab, var(--primary) 90%, transparent);
   background-color: color-mix(in oklab, var(--primary) 8%, transparent);
@@ -81,11 +71,7 @@
   background-size: 0% 85%;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
-  transition: background-size 400ms ease;
-}
-
-.card-title-link:hover .card-title {
-  background-size: 100% 85%;
+  transition: background-size 250ms var(--motion-ease);
 }
 
 .card-description {
@@ -113,8 +99,23 @@
     color var(--motion-duration-fast) var(--motion-ease);
 }
 
-.card-button:hover {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--accent-foreground);
+@media (hover: hover) and (pointer: fine) {
+  .card:not(.card-clickable):hover {
+    border-color: color-mix(in oklab, var(--border) 80%, transparent);
+  }
+
+  .card-clickable:hover {
+    border-color: color-mix(in oklab, var(--primary) 30%, transparent);
+    box-shadow: 0 0.5rem 1.5rem -0.25rem color-mix(in oklab, var(--ring) 8%, transparent);
+  }
+
+  .card-title-link:hover .card-title {
+    background-size: 100% 85%;
+  }
+
+  .card-button:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
 }
