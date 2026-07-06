@@ -1,1 +1,13 @@
+# Merge strategies
+public/** merge=ours
+src/assets/** merge=ours
+src/content/** merge=ours
+src/pages/index.astro merge=ours
+src/pages/*.md merge=ours
+src/pages/**/*.md merge=ours
+
 *.md linguist-vendored
+*.xsl -linguist-detectable
+src/content/** linguist-documentation
+*.bib linguist-documentation
+*.csl linguist-vendor

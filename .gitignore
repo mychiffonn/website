@@ -11,3 +11,4 @@ pnpm-debug.log*
 .idea/
 
 .claude/worktrees/
+.playwright-cli/
