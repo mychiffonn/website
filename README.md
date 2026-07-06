@@ -1,6 +1,6 @@
 # My (Chiffon) Nguyen's Academic Website
 
-[![Version](https://img.shields.io/badge/version-v1.3.0-blue?style=for-the-badge)](https://github.com/mychiffonn/website/releases) [![License](https://img.shields.io/badge/License-Apache%202.0-blue?style=for-the-badge)](LICENSE) [![Astro 7](https://img.shields.io/badge/Astro_7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![MDX](https://img.shields.io/badge/MDX-1B1F24?style=for-the-badge&logo=mdx&logoColor=white)](https://mdxjs.com/) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![TailwindCSS 4](https://img.shields.io/badge/TailwindCSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/) [![Catppuccin](https://img.shields.io/badge/Catppuccin-F5E0DC?style=for-the-badge&logo=catppuccin&logoColor=11111b)](https://catppuccin.com/palette/) [![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://prettier.io/) [![oxlint](https://img.shields.io/badge/oxlint-000000?style=for-the-badge&logo=rust&logoColor=white)](https://oxc-project.github.io/docs/guide/usage/linter.html)
+[![Version](https://img.shields.io/badge/version-v2.0.0-blue?style=for-the-badge)](https://github.com/mychiffonn/website/releases) [![Astro 7](https://img.shields.io/badge/Astro_7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Catppuccin](https://img.shields.io/badge/Catppuccin-F5E0DC?style=for-the-badge&logo=catppuccin&logoColor=11111b)](https://catppuccin.com/palette/) [![oxlint](https://img.shields.io/badge/oxlint-000000?style=for-the-badge&logo=rust&logoColor=white)](https://oxc-project.github.io/docs/guide/usage/linter.html)
 
 ![](public/img/social-preview.png)
 
@@ -20,7 +20,7 @@ This website serves as a digital portfolio and blog where I share my work, insig
 - 👩‍💻 Developer experience: type-safe with zod-first schema and TypeScript
 - 🔎 SEO friendly and ARIA accessibility compliant
 - 🔧 Easily configure [theme](src/styles/global.css), [page & personal information](src/config.ts), [content](src/content)
-- 💬 Show mentions of a post across the web (via [webmention.io](https://webmention.io)) in lieu of comment section
+- 💬 [PLANNED] Show mentions of a post across the web (via [webmention.io](https://webmention.io)) in lieu of comment section
 - [UPCOMING] Search with pagefind/typesense
 
 ## Built With
