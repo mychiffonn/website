@@ -1,7 +1,7 @@
 ---
-title: Mini Llama2 (CMU Advanced NLP)
-description: Minimalist Llama2 implementation using PyTorch, exploring LLM components like RoPE, self-attention, and AdamW optimizer.
-code: https://github.com/mychiffonn/cmu-advanced-nlp-minllama-assignment
+title: Mini-LLaMA2 PyTorch Implementation
+description: Minimal Llama-2 implementation in PyTorch with RoPE, RMSNorm, SwiGLU, self-attention, and transformer blocks.
+code: https://github.com/mychiffonn/cmu-advanced-nlp-minllama
 fromDate: 2024-05-21
 toDate: 2024-05-24
 category:
@@ -10,6 +10,9 @@ isHighlighted: true
 tags:
   - Large Language Model (LLM)
   - PyTorch
+  - Transformers
 ---
 
-Completed a CMU Advanced NLP assignment, where I developed a minimalist version of Llama2 by working with PyTorch and pretrained weights `stories42M.pt` (an 8-layer, 42M parameter language model pretrained on the [TinyStories] dataset). I learned about essential components of an LLM (rotary position embedding (RoPE), scaled dot product attention, `AdamW` optimizer) and sentence classification.
+I implemented a minimalist Llama-2 language model from scratch in PyTorch, including self-attention, Rotary Positional Embeddings (RoPE), RMSNorm, SwiGLU activation functions, and core transformer blocks.
+
+I pretrained and evaluated an 8-layer, roughly 42M-parameter model on TinyStories, then tested it on text completion, zero-shot sentiment classification, and task-specific finetuning.
