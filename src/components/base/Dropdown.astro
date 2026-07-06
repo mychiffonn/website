@@ -152,6 +152,14 @@ const {
       scale var(--motion-duration) var(--motion-ease);
   }
 
+  [data-dropdown-content][data-align="end"] {
+    transform-origin: top right;
+  }
+
+  [data-dropdown-content][data-align="center"] {
+    transform-origin: top center;
+  }
+
   [data-dropdown-root][data-state="open"] [data-dropdown-content] {
     display: block;
     opacity: 1;
@@ -174,7 +182,9 @@ const {
       color var(--motion-duration-fast) var(--motion-ease);
   }
 
-  [data-dropdown-item]:hover {
-    background: var(--muted);
+  @media (hover: hover) and (pointer: fine) {
+    [data-dropdown-item]:hover {
+      background: var(--muted);
+    }
   }
 </style>

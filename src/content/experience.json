@@ -2,33 +2,87 @@
   {
     "id": "lida-safety-2026",
     "category": "research",
-    "title": "AI Safety Research Intern",
-    "org": "Lida Safety Research",
+    "title": "Research Intern (AI Safety)",
+    "org": "Lida Safety Research Group",
     "orgUrl": "https://www.lidasafety.org/",
     "startDate": "2026-06",
     "location": "Remote",
-    "description": "Contributing to technical AI safety & AI governance simulation research."
+    "description": "Working on automating formal verification for vibecoding and AI governance simulations, mentored by Dr. Linh Le and Dr. David Williams-King."
+  },
+  {
+    "id": "cohere-riddles-2026",
+    "category": "research",
+    "title": "Analysis Subteam Lead (Multicultural Riddles Benchmarking)",
+    "org": "Cohere Labs Open Science Community",
+    "orgUrl": "https://cohere.com/research",
+    "startDate": "2026-04",
+    "location": "Remote",
+    "description": "Co-leading a 15-person analysis subteam inside a 100+ researcher initiative studying LLM factuality, hallucination, topic patterns, and cross-cultural reasoning failures on multicultural riddles."
+  },
+  {
+    "id": "futurekind-2026",
+    "category": "research",
+    "title": "Futurekind Research Fellow (Animals-Aligned Agentic AI Benchmarking)",
+    "org": "Electric Sheep, Futurekind Spring Fellowship 2026",
+    "orgUrl": "https://www.futurekind.org/",
+    "startDate": "2026-04",
+    "endDate": "2026-07",
+    "location": "Remote",
+    "description": "Evaluating whether implicit values in agentic LLMs are inclusive of animals through animals-aligned agentic AI benchmarking."
   },
   {
     "id": "seacrowd-2026",
     "category": "research",
     "title": "AI Research Mentee (Multilingual Agentic Evaluation)",
-    "org": "SEACrowd",
-    "orgUrl": "https://seacrowd.github.io",
+    "org": "SEACrowd, SEACrowd 2026 Research Apprenticeship",
+    "orgUrl": "https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented",
     "startDate": "2026-02",
     "endDate": "2026-06",
     "location": "Remote",
-    "description": "Evaluating conversational agents on Tau2-Bench across five settings with increasing language and cultural adaptation. Mentors: Dr. Samuel Cahyawijaya (Cohere) & Patomporn Payoungkhamdee (VISTEC). In Submission"
+    "description": "Extended Tau2-Bench into SEATauBench across five Southeast Asian languages, localizing executable agent-user-tool tasks and analyzing multi-turn trajectory failures."
   },
   {
     "id": "algoverse-2025",
     "category": "research",
-    "title": "AI Research Mentee (Chain-of-thought Monitoring)",
-    "org": "Algoverse AI Research",
+    "title": "AI Research Lead Mentee (Scalable Oversight & Chain-of-Thought Monitoring)",
+    "org": "Algoverse AI Research, AI Research Program Fall 2025",
     "orgUrl": "https://algoverseairesearch.org/",
     "startDate": "2025-10",
+    "endDate": "2026-06",
     "location": "Remote",
-    "description": "Lead project studying the boundaries of weak-to-strong chain-of-thought monitoring on safety-relevant evals (WMDP & SWEBench-Verified) using sandbagging as a case study."
+    "description": "Led weak-to-strong chain-of-thought monitoring research for sandbagging detection, building an Inspect AI and Inspect Scout pipeline across 30+ Qwen, DeepSeek, Gemma, and GPT-OSS model pairs."
+  },
+  {
+    "id": "curious-cardinals-2025",
+    "category": "teaching",
+    "title": "Mentor, AI & Data Science",
+    "org": "Curious Cardinals",
+    "orgUrl": "https://www.curiouscardinals.com/",
+    "startDate": "2025-11",
+    "location": "Remote",
+    "description": "Mentoring a student project on robustness of fact-checking language models under evidence corruption and language shifts."
+  },
+  {
+    "id": "minerva-pr51-2025",
+    "category": "teaching",
+    "title": "Lead Tutor, PR51 Programming with Python",
+    "org": "Minerva University",
+    "orgUrl": "https://minerva.edu",
+    "startDate": "2025-01",
+    "endDate": "2025-05",
+    "location": "San Francisco, CA, USA",
+    "description": "Taught 40+ first-year students from 20+ countries in weekly Python labs for 11 weeks and analyzed student data to identify 12 bottlenecks, improving engagement metrics for the next cohort."
+  },
+  {
+    "id": "landshut-2024",
+    "category": "research",
+    "title": "Applied Machine Learning Research Intern (3D Object Detection for BMW)",
+    "org": "Landshut University of Applied Sciences, AI & Mixed Reality Lab",
+    "orgUrl": "https://www.haw-landshut.de/",
+    "startDate": "2024-06",
+    "endDate": "2024-08",
+    "location": "Landshut, Bavaria, Germany",
+    "description": "Researched 3D object detection for BMW using synthetic point cloud data, PointPillarNet, and semantic segmentation, supervised by Prof. Eduard Kromer and Prof. Sandra Eisenreich."
   },
   {
     "id": "minerva-2025",
@@ -39,6 +93,28 @@
     "startDate": "2021-09",
     "endDate": "2025-05",
     "location": "San Francisco, CA, USA (+ Seoul, Taipei, Hyderabad, Buenos Aires, Berlin)",
-    "description": "Relevant Coursework: Machine Learning, Bayesian Modeling, Statistical Modeling & Causal Inference, Optimization Methods."
+    "description": "Relevant coursework: Machine Learning, Bayesian Modeling, Statistical Modeling & Causal Inference, Optimization Methods."
+  },
+  {
+    "id": "minerva-fa50-fa51-2022",
+    "category": "teaching",
+    "title": "Lead Teaching Assistant, FA50/FA51 Logic, Probability & Statistics",
+    "org": "Minerva University",
+    "orgUrl": "https://minerva.edu",
+    "startDate": "2022-09",
+    "endDate": "2024-05",
+    "location": "Remote",
+    "description": "Supported 150+ students each semester in formal logic, probability, statistics, algorithmic thinking, and simulation through office hours, formative assessment, and grading."
+  },
+  {
+    "id": "thub-2023",
+    "category": "research",
+    "title": "Qualitative Research Intern (Mental Health)",
+    "org": "Human Resources Department, T-Hub",
+    "orgUrl": "https://t-hub.co/",
+    "startDate": "2023-02",
+    "endDate": "2023-04",
+    "location": "Hyderabad, Telangana, India",
+    "description": "Designed a preliminary mental health framework for 1,500 employees across 650+ startups by analyzing 30+ hours of interviews, employee databases, and survey responses."
   }
 ]

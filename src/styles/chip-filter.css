@@ -9,6 +9,10 @@
   gap: var(--space-2xs);
 }
 
+.chip-filter-bar:empty {
+  display: none;
+}
+
 .chip-active-filter {
   display: inline-flex;
   align-items: center;
@@ -31,7 +35,9 @@
     color var(--motion-duration-fast) var(--motion-ease);
 }
 
-.chip-clear-filter:hover {
-  border-color: var(--destructive);
-  color: var(--destructive);
+@media (hover: hover) and (pointer: fine) {
+  .chip-clear-filter:hover {
+    border-color: var(--destructive);
+    color: var(--destructive);
+  }
 }

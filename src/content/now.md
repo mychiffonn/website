@@ -1,4 +1,4 @@
-- AI safety research internship at [Lida Safety Research](https://www.lidasafety.org/)
+- AI safety research internship at [Lida Safety Research](https://www.lidasafety.org/), working on formal verification automation for vibecoding and AI governance simulations.
+- Co-leading the analysis subteam for a multicultural riddles benchmarking project at Cohere Labs Open Science Community, focusing on factual accuracy, hallucination behavior, topic-level patterns, and cross-cultural reasoning failures.
 - Finalizing [scaling behavior of chain-of-thought monitoring in LLMs](/projects/2025-cot-monitoring) from [Algoverse AI Research](https://algoverseairesearch.org/).
-- Co-leading multi-cultural riddles benchmarking project @ Cohere Labs Open Science Community with 7 leads for 100+ community researchers, spearheading analysis workflow and coordinating with model benchmarking and human evaluation teams
-- Contributing to [MatrAIx](https://matraix.ai)'s collection of projects, on persona and environment team
+- Contributing to [MatrAIx](https://matraix.ai)'s collection of projects, especially harbor-based runtime environments.

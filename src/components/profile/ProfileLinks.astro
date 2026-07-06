@@ -56,8 +56,9 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
     list-style: none;
   }
 
+  /* The hover fill is the element's own background so it always sits flush
+     against the border, whatever the border width or radius becomes. */
   .profile-link {
-    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -65,34 +66,15 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
     block-size: 2.625rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
+    background-color: transparent;
     color: var(--muted-foreground);
     text-decoration: none;
     touch-action: manipulation;
-    overflow: hidden;
     transition:
+      background-color var(--motion-duration) var(--motion-ease),
       border-color var(--motion-duration) var(--motion-ease),
       box-shadow var(--motion-duration) var(--motion-ease),
       color var(--motion-duration-fast) var(--motion-ease);
-  }
-
-  .profile-link::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    border-radius: inherit;
-    background: var(--accent);
-    opacity: 0;
-    transform: scale(0.92);
-    transition:
-      opacity var(--motion-duration) var(--motion-ease),
-      transform var(--motion-duration) var(--motion-ease);
-  }
-
-  .profile-link :global(svg),
-  .profile-link :global(.sr-only) {
-    position: relative;
-    z-index: 1;
   }
 
   .profile-link :global(svg) {
@@ -101,17 +83,32 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
     transition: transform var(--motion-duration) var(--motion-ease);
   }
 
-  .profile-link:hover::before {
-    opacity: 1;
-    transform: scale(1);
+  @media (hover: hover) and (pointer: fine) {
+    .profile-link:hover,
+    .profile-link[data-link]:hover {
+      background-color: var(--accent);
+      border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
+      color: var(--accent-foreground);
+      box-shadow: 0 0.35rem 1rem
+        color-mix(in oklab, var(--accent) 16%, transparent);
+    }
+
+    .profile-link[data-primary="true"]:hover,
+    .profile-link[data-primary="true"][data-link]:hover {
+      background-color: var(--background);
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: 0 0.35rem 1rem
+        color-mix(in oklab, var(--primary) 18%, transparent);
+    }
   }
 
-  .profile-link:hover,
-  .profile-link[data-link]:hover {
-    border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
-    color: var(--accent-foreground);
-    box-shadow: 0 0.35rem 1rem
-      color-mix(in oklab, var(--accent) 16%, transparent);
+  @media (hover: hover) and (pointer: fine) and (
+      prefers-reduced-motion: no-preference
+    ) {
+    .profile-link:hover :global(svg) {
+      transform: scale(1.08);
+    }
   }
 
   .profile-link:focus-visible {
@@ -121,20 +118,8 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
 
   .profile-link[data-primary="true"] {
     border-color: var(--primary);
-    background: var(--primary);
+    background-color: var(--primary);
     color: var(--primary-foreground);
-  }
-
-  .profile-link[data-primary="true"]::before {
-    background: var(--background);
-  }
-
-  .profile-link[data-primary="true"]:hover,
-  .profile-link[data-primary="true"][data-link]:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    box-shadow: 0 0.35rem 1rem
-      color-mix(in oklab, var(--primary) 18%, transparent);
   }
 
   @media (width >= 40rem) {

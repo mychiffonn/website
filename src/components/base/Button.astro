@@ -22,6 +22,7 @@ const {
   size = "default",
   class: className,
   href,
+  external,
   type = "button",
   ...rest
 } = Astro.props
@@ -30,6 +31,7 @@ const {
 {href ? (
     <Link
       href={href}
+      external={external}
       data-button
       data-variant={variant}
       data-size={size}
@@ -53,13 +55,15 @@ const {
 
 <style is:global>
   [data-button] {
+    --button-line-width: 1px;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-2xs);
     min-block-size: 44px;
     padding: var(--space-2xs) var(--space-xs);
-    border: 1px solid transparent;
+    border: var(--button-line-width) solid transparent;
     border-radius: var(--radius-md);
     font-size: var(--step--1);
     font-weight: var(--font-weight-medium);
@@ -71,9 +75,12 @@ const {
     transition:
       background-color var(--motion-duration) var(--motion-ease),
       border-color var(--motion-duration) var(--motion-ease),
-      color var(--motion-duration-fast) var(--motion-ease);
+      color var(--motion-duration-fast) var(--motion-ease),
+      transform var(--motion-duration-fast) var(--motion-ease);
 
     @media (width >= 40rem) {
+      --button-line-width: 0.5px;
+
       min-block-size: 2rem;
     }
   }
@@ -115,48 +122,54 @@ const {
     color: var(--foreground);
   }
 
-  [data-button][data-variant="default"]:hover {
-    border-color: var(--primary);
-    background: var(--primary);
-    color: var(--primary-foreground);
+  [data-button]:active {
+    transform: scale(0.97);
   }
 
-  [data-button][data-variant="primary"]:hover {
-    border-color: var(--primary);
-    background: var(--background);
-    color: var(--foreground);
-  }
+  @media (hover: hover) and (pointer: fine) {
+    [data-button][data-variant="default"]:hover {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
 
-  [data-button][data-variant="accent"]:hover {
-    border-color: var(--accent);
-    background: var(--background);
-    color: var(--foreground);
-  }
+    [data-button][data-variant="primary"]:hover {
+      border-color: var(--primary);
+      background: var(--background);
+      color: var(--foreground);
+    }
 
-  [data-button][data-variant="destructive"]:hover {
-    border-color: var(--destructive);
-    background: var(--background);
-    color: var(--foreground);
-  }
+    [data-button][data-variant="accent"]:hover {
+      border-color: var(--accent);
+      background: var(--background);
+      color: var(--foreground);
+    }
 
-  [data-button][data-variant="outline"]:hover,
-  [data-button][data-variant="accent-outline"]:hover,
-  [data-button][data-variant="ghost"]:hover {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: var(--accent-foreground);
-  }
+    [data-button][data-variant="destructive"]:hover {
+      border-color: var(--destructive);
+      background: var(--background);
+      color: var(--foreground);
+    }
 
-  [data-button][data-variant="primary-outline"]:hover {
-    border-color: var(--primary);
-    background: var(--primary);
-    color: var(--primary-foreground);
-  }
+    [data-button][data-variant="outline"]:hover,
+    [data-button][data-variant="accent-outline"]:hover,
+    [data-button][data-variant="ghost"]:hover {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-foreground);
+    }
 
-  [data-button][data-variant="destructive-outline"]:hover {
-    border-color: var(--destructive);
-    background: var(--destructive);
-    color: var(--accent-foreground);
+    [data-button][data-variant="primary-outline"]:hover {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    [data-button][data-variant="destructive-outline"]:hover {
+      border-color: var(--destructive);
+      background: var(--destructive);
+      color: var(--accent-foreground);
+    }
   }
 
   [data-button][aria-disabled="true"],

@@ -8,8 +8,10 @@
   cursor: pointer;
   transition: background-color var(--motion-duration) var(--motion-ease);
 
-  &:hover {
-    background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+    }
   }
 
   svg {

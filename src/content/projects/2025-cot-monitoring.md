@@ -16,7 +16,9 @@ tags:
 
 ## Overview
 
-I lead a research project mentored by [Eyon Jang](https://www.eyonjang.me/) (MATS 8 Scholar) focused on how chain-of-thought monitoring scales as the gap between monitor and target model capabilities grows. The core goal is to test whether weaker monitors can reliably separate sandbagging behavior from genuine model incapability.
+I led a research project mentored by [Yeonwoo Jang](https://www.eyonjang.me/) (MATS 8.2) focused on how chain-of-thought monitoring scales as the gap between monitor and target model capabilities grows. The core goal was to test whether weaker monitors can reliably separate sandbagging behavior from genuine model incapability.
+
+I designed a reproducible monitoring pipeline with [Inspect AI](https://inspect.aisi.org.uk/) and [Inspect Scout](https://meridianlabs-ai.github.io/inspect_scout/), and evaluated monitor behavior across 30+ pairs of reasoning models, including Qwen, DeepSeek, Gemma, and GPT-OSS model families.
 
 ## Motivation
 
