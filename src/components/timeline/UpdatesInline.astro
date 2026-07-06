@@ -13,13 +13,13 @@ const { renderedUpdates, class: className, itemClass } = Astro.props
 
 <div class:list={["updates-inline", className]}>
   {renderedUpdates.map((item) => (
-    <article>
-      <FormattedDate date={item.date} class="update-date" />
-      <div class:list={["update-content prose", itemClass]}>
-        <item.Content />
-      </div>
-    </article>
-  ))}
+      <article class="update-item">
+        <FormattedDate date={item.date} class="update-date" />
+        <prose-content class={itemClass}>
+          <item.Content />
+        </prose-content>
+      </article>
+    ))}
 </div>
 
 <style>
