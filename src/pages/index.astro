@@ -29,6 +29,11 @@ const hasServices = servicesRaw().trim().length > 0
 const hasMisc = miscRaw().trim().length > 0
 
 const careerHighlights = await getCollection("experience")
+const careerHighlightCount = SITE.home.careerHighlightCount
+const cvHref =
+  typeof PROFILE.links.cv === "object"
+    ? PROFILE.links.cv?.href
+    : PROFILE.links.cv
 const renderedUpdates = await getLatestUpdates(3)
 const selectedPublications = await loadSelectedPublications()
 
@@ -43,13 +48,13 @@ const recentPostsMetadata = await Promise.all(
 <Layout title="Home">
   <Profile profile={PROFILE} />
 
-  {careerHighlights.length > 0 && (
+  {careerHighlightCount > 0 && careerHighlights.length > 0 && (
       <Section
         title="Career highlights"
-        moreLink="/doc/My_Chiffon_Nguyen_CV.pdf"
+        moreLink={cvHref}
         moreText="see CV →"
       >
-        <ExperienceTimeline entries={careerHighlights} />
+        <ExperienceTimeline entries={careerHighlights} limit={careerHighlightCount} />
       </Section>
     )}
 

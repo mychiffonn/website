@@ -9,9 +9,10 @@ import TimelineItem from "./TimelineItem.astro"
 
 interface Props {
   entries: CollectionEntry<"experience">[]
+  limit?: number
 }
 
-const { entries } = Astro.props
+const { entries, limit } = Astro.props
 
 const sorted = [...entries].sort((a, b) => {
   const endA = a.data.endDate?.getTime() ?? Infinity
@@ -19,10 +20,12 @@ const sorted = [...entries].sort((a, b) => {
   if (endB !== endA) return endB - endA
   return b.data.startDate.getTime() - a.data.startDate.getTime()
 })
+
+const displayed = typeof limit === "number" ? sorted.slice(0, limit) : sorted
 ---
 
 <Timeline>
-  {sorted.map((entry) => (
+  {displayed.map((entry) => (
     <TimelineItem>
       <DateRange
         slot="date"

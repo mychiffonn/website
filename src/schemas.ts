@@ -70,6 +70,12 @@ export const SiteConfigSchema = z.object({
       .default(["email", "x"]),
   }),
 
+  /** Home page settings */
+  home: z.object({
+    /** Number of career highlights to show on the home page. Set to 0 to hide. */
+    careerHighlightCount: z.number().int().nonnegative().default(5),
+  }),
+
   // Theme settings
   favicon: z.string().default("/favicon.ico"),
   prerender: z.boolean().default(true),

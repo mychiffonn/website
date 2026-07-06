@@ -34,6 +34,10 @@ export const SITE: SiteConfig = {
     shareActions: ["x"],
   },
 
+  home: {
+    careerHighlightCount: 5,
+  },
+
   // Theme settings
   favicon: "/favicon.ico",
   prerender: true,
