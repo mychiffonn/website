@@ -73,10 +73,10 @@ const { pub, filterableTags = true } = Astro.props
   <div class="card-actions">
     {pub.abstract && (
         <details class="publication-abstract">
-          <summary data-button data-variant="accent-outline" class="abstract-summary">Abstract</summary>
-          <div class="abstract-content">
-            {pub.abstract}
-          </div>
+          <summary data-button data-variant="accent-outline" class="abstract-summary">
+            Abstract
+          </summary>
+          <article class="abstract-content">{pub.abstract}</article>
         </details>
       )}
 
@@ -97,7 +97,7 @@ const { pub, filterableTags = true } = Astro.props
             </Chip>
           ) : (
             <Badge variant="muted">{keyword}</Badge>
-          )
+          ),
         )}
       </div>
     )}
@@ -195,12 +195,8 @@ const { pub, filterableTags = true } = Astro.props
   }
 
   .abstract-content {
-    margin-block-start: var(--space-2xs);
-    padding: var(--space-xs);
-    border-radius: var(--radius-md);
-    background: color-mix(in oklab, var(--muted) 45%, transparent);
-    font-size: var(--step--1);
-    line-height: var(--leading-relaxed);
+    margin-block: var(--space-2xs);
+    font-size: var(--step--2);
   }
 
   .expanded-authors:hover {
