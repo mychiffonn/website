@@ -79,55 +79,8 @@ import Icon from "@/components/base/Icon.astro"
   }
 
   :global(.mobile-menu-content) {
-    padding-block: 0;
-
     @media (width >= 40rem) {
       display: none;
     }
-  }
-
-  a[data-dropdown-item] {
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-    min-block-size: 44px;
-    inline-size: 100%;
-    padding: var(--space-2xs) var(--space-xs);
-    border: 1px solid transparent;
-
-    color: var(--foreground);
-    text-decoration: none;
-    white-space: nowrap;
-    transition:
-      background-color var(--motion-duration) var(--motion-ease),
-      border-color var(--motion-duration) var(--motion-ease),
-      color var(--motion-duration-fast) var(--motion-ease);
-  }
-
-  a[data-dropdown-item]:first-child {
-    border-start-start-radius: calc(var(--radius-md) - 1px);
-    border-start-end-radius: calc(var(--radius-md) - 1px);
-  }
-
-  a[data-dropdown-item]:last-child {
-    border-end-start-radius: calc(var(--radius-md) - 1px);
-    border-end-end-radius: calc(var(--radius-md) - 1px);
-  }
-
-  a[data-dropdown-item]:hover {
-    border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
-    background-color: color-mix(in oklab, var(--accent) 24%, transparent);
-    color: var(--foreground);
-  }
-
-  a[data-dropdown-item][aria-current] {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    font-weight: var(--font-weight-medium);
-  }
-
-  a[data-dropdown-item][aria-current]:hover {
-    background-color: color-mix(in oklab, var(--primary) 88%, var(--accent));
-    color: var(--primary-foreground);
   }
 </style>

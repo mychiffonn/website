@@ -136,7 +136,7 @@ const {
     max-inline-size: calc(100vw - 1.25rem);
     max-block-size: min(24rem, calc(100vh - 6rem));
     overflow: auto;
-    padding-block: var(--space-3xs);
+    padding-block: 0;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     background: var(--background);
@@ -175,16 +175,60 @@ const {
   }
 
   [data-dropdown-item] {
-    display: block;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
     inline-size: 100%;
+    min-block-size: 44px;
+    margin: 0;
+    padding: var(--space-2xs) var(--space-xs);
+    border: 1px solid transparent;
+    appearance: none;
+    background: transparent;
+    color: var(--foreground);
+    font: inherit;
+    text-align: start;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
     transition:
       background-color var(--motion-duration) var(--motion-ease),
+      border-color var(--motion-duration) var(--motion-ease),
       color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  [data-dropdown-item]:first-child {
+    border-start-start-radius: calc(var(--radius-md) - 1px);
+    border-start-end-radius: calc(var(--radius-md) - 1px);
+  }
+
+  [data-dropdown-item]:last-child {
+    border-end-start-radius: calc(var(--radius-md) - 1px);
+    border-end-end-radius: calc(var(--radius-md) - 1px);
   }
 
   @media (hover: hover) and (pointer: fine) {
     [data-dropdown-item]:hover {
-      background: var(--muted);
+      border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
+      background-color: color-mix(in oklab, var(--accent) 24%, transparent);
+      color: var(--foreground);
+    }
+  }
+
+  [data-dropdown-item][aria-current],
+  [data-dropdown-item][aria-selected="true"],
+  [data-dropdown-item][data-active] {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    font-weight: var(--font-weight-medium);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-dropdown-item][aria-current]:hover,
+    [data-dropdown-item][aria-selected="true"]:hover,
+    [data-dropdown-item][data-active]:hover {
+      background-color: color-mix(in oklab, var(--primary) 88%, var(--accent));
+      color: var(--primary-foreground);
     }
   }
 </style>

@@ -62,32 +62,7 @@ import Icon from "@/components/base/Icon.astro"
   }
 
   button[data-dropdown-item] {
-    display: flex;
-    align-items: center;
     gap: 0.5rem;
-    width: 100%;
-    min-height: 2.75rem; /* 44px */
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.375rem;
-    border: 1px solid transparent;
-    white-space: nowrap;
-    transition:
-      background-color var(--motion-duration) var(--motion-ease),
-      color var(--motion-duration-fast) var(--motion-ease);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    button[data-dropdown-item]:hover {
-      background-color: color-mix(in oklch, var(--accent) 50%, transparent);
-    }
-  }
-  button[data-dropdown-item][data-active] {
-    background-color: color-mix(in oklch, var(--primary) 80%, transparent);
-    color: var(--primary-foreground);
-    font-weight: 500;
-  }
-
-  .theme-menu {
-    background: var(--background);
   }
 
   :global(.theme-no-transition *),
