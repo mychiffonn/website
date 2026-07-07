@@ -1,6 +1,6 @@
 # My (Chiffon) Nguyen's Academic Website
 
-[![Version](https://img.shields.io/badge/version-v2.0.0-blue?style=for-the-badge)](https://github.com/mychiffonn/website/releases) [![Astro 7](https://img.shields.io/badge/Astro_7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Catppuccin](https://img.shields.io/badge/Catppuccin-F5E0DC?style=for-the-badge&logo=catppuccin&logoColor=11111b)](https://catppuccin.com/palette/) [![oxlint](https://img.shields.io/badge/oxlint-000000?style=for-the-badge&logo=rust&logoColor=white)](https://oxc-project.github.io/docs/guide/usage/linter.html)
+[![Version](https://img.shields.io/badge/version-v2.0.0-blue?style=for-the-badge)](https://github.com/mychiffonn/website/releases) [![Astro 7](https://img.shields.io/badge/Astro_7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
 ![](public/img/social-preview.png)
 
@@ -31,6 +31,8 @@ Other inspirations:
 
 - [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's [pure](https://astro-pure.js.org/) theme
 - Publications from [al-folio](https://github.com/alshedivat/al-folio)
+
+Version <2.0.0 uses Astro v6 & TailwindCSS.
 
 ## Getting Started
 
