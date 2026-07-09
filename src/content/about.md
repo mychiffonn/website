@@ -7,6 +7,6 @@ I research **current and future AI for human plurality and broader world**. Towa
 
 For technical research, I'm interested in data work and [evaluation](https://aimslab.stanford.edu/textbook/) to make grounded, predictive, specific claims about _long-horizon_ AI capability and safety, then improve them.
 
-I'm interning at [Lida Safety Research](https://www.lidasafety.org/). I also contribute to community research and infrastructure projects at various capacities, including Cohere Labs Community, [MatrAIx](https://matraix.ai/), and [BenchFlow](https://www.benchflow.ai/). Recently I worked on [SEATauBench](https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented), and [CoT monitoring behavior](/projects/2025-cot-monitoring).
+I'm interning at [Lida Safety Research](https://www.lidasafety.org/). I also contribute to community research at various capacities, including Cohere Labs Community (leadership & analysis), [MatrAIx](https://matraix.ai/) (AI simulation apps), and [BenchFlow](https://www.benchflow.ai/) (evaluation infrastructure). Recently I worked on [SEATauBench](https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented), and [CoT monitoring behavior](/projects/2025-cot-monitoring).
 
-I am **applying to research-oriented Master's in Computer Science, AI, NLP, or related fields for Spring/Fall 2027** and seeking research opportunities (internships, research assistantships, collaborations). For research collaborations, drop me an email!
+I am **seeking industry roles in SWE & AI Engineering** and **research-oriented Master's in Computer Science, AI, NLP, or related fields for Fall 2027 or later**. For research collaborations, drop me an email!

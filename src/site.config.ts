@@ -62,7 +62,7 @@ export const PROFILE: ProfileConfig = {
   // hover or click on "links" to see all profile links supported. or search PROFILE_ICON_MAP in icon.config.ts, the keys are what used here
   links: {
     cv: "/doc/My_Chiffon_Nguyen_CV.pdf",
-    // resume: "/doc/resume.pdf",
+    resume: "/doc/My_Chiffon_Nguyen_Resume.pdf",
     github: "https://github.com/mychiffonn",
     googleScholar: "https://scholar.google.com/citations?user=a25a-rUAAAAJ",
     orcid: "https://orcid.org/0009-0002-5787-3948",
