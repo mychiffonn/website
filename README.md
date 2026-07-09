@@ -1,46 +1,87 @@
-# My (Chiffon) Nguyen's Academic Website
+# Astro Scholar
 
-[![Version](https://img.shields.io/badge/version-v2.0.0-blue?style=for-the-badge)](https://github.com/mychiffonn/website/releases) [![Astro 7](https://img.shields.io/badge/Astro_7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Version](https://img.shields.io/badge/version-v2.0.0-blue?style=for-the-badge)](https://github.com/mychiffonn/astro-scholar/releases) [![Astro 7](https://img.shields.io/badge/Astro_7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
 ![](public/img/social-preview.png)
 
-[View design on Canva](https://www.canva.com/design/DAGsRHHhIqQ/ePJ1pDEP4iyrbvmgUiuwIA/edit?utm_content=DAGsRHHhIqQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+Astro Scholar is an Astro theme for academic personal sites, research blogs,
+projects, publications, and now pages. It is currently being extracted from
+[My (Chiffon) Nguyen's website](https://mychiffonn.com) into a reusable open
+source template.
 
-This website serves as a digital portfolio and blog where I share my work, insights, and journey in academia (NLP+HCI), technology, and anything I'm interested in. Co-created with Claude Code.
+## Previews
 
-> 🌱 Theme will be refactored to "astro-scholar" and posted to Astro community once all features are complete.
+| Home | Projects |
+| --- | --- |
+| ![Home page preview](docs/assets/previews/home.png) | ![Projects page preview](docs/assets/previews/projects.png) |
+
+| Publications | Uses |
+| --- | --- |
+| ![Publications page preview](docs/assets/previews/publications.png) | ![Uses page preview](docs/assets/previews/uses.png) |
 
 ## Features
 
-- ⚡ Fast loading, build, and previewing with Astro 5 as static generator
-- 💻 Showcase projects, news, blog posts, and publications from .bib file
-- ✏️ Writing in Github-flavored markdown, a subset of Obsidian-flavored markdown (wikilinks + callouts), KaTeX-rendered math, code (block and inline, supported by Expressive Code), and embeds
-- 📝 Blog supports post-subpost system, with tags and multiple authors
-- 🌐 i18n: Support non-English scripts, and (upcoming) i18n page routing and language toggle
-- 👩‍💻 Developer experience: type-safe with zod-first schema and TypeScript
-- 🔎 SEO friendly and ARIA accessibility compliant
-- 🔧 Easily configure [theme](src/styles/global.css), [page & personal information](src/config.ts), [content](src/content)
-- 💬 [PLANNED] Show mentions of a post across the web (via [webmention.io](https://webmention.io)) in lieu of comment section
-- [UPCOMING] Search with pagefind/typesense
+- Fast static output with Astro 7.
+- Academic profile, projects, updates, blog posts, authors, and publications.
+- Publications rendered from a BibTeX file.
+- Markdown-first writing with Sätteri, callouts, math, code highlighting, heading
+  anchors, and sidenotes.
+- Blog post/subpost system with tags, stages, table of contents, share actions,
+  and multiple authors.
+- Native CSS tokens for color, typography, spacing, shape, and motion.
+- Local and Iconify-backed SVG icon system.
+- Type-safe config and content schemas with Zod.
+- RSS, sitemap, robots.txt, Open Graph metadata, and generated social images.
 
 ## Built With
 
-This website is built on enscribe's [astro-erudite](https://github.com/jktrn/astro-erudite) v2.0.1 and references from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s digital garden.
+This theme is built on enscribe's
+[astro-erudite](https://github.com/jktrn/astro-erudite) v2.0.1 and references
+from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s
+digital garden.
 
 Other inspirations:
 
-- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's [pure](https://astro-pure.js.org/) theme
+- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's
+  [pure](https://astro-pure.js.org/) theme
 - Publications from [al-folio](https://github.com/alshedivat/al-folio)
 
 Version <2.0.0 uses Astro v6 & TailwindCSS.
 
 ## Getting Started
 
-Have Node.js >= 22 (tested with Node 24) and pnpm installed:
+Have Node.js `>=22.12.0` and pnpm installed:
 
 1. Clone the repository
-2. Install dependencies: `pnpm install`
-3. Start development server: `pnpm dev`
-4. Visit `http://localhost:4321`
-5. Read docs or search `TODO` across the codebase to complete setup
-6. Search `OPTIONAL` to customize as needed (color themes, icons, etc)
+2. Run `corepack enable`
+3. Install dependencies: `pnpm install`
+4. Start development server: `pnpm dev`
+5. Visit `http://localhost:4321`
+6. Read [docs/INSTALL.md](docs/INSTALL.md)
+7. Customize with [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md)
+
+## Development
+
+- [DEVELOPMENT.md](DEVELOPMENT.md): architecture, commands, Erudite v2
+  principles, and theme publishing checklist.
+- [CONTRIBUTING.md](CONTRIBUTING.md): contribution workflow and pull request
+  expectations.
+
+Common checks:
+
+```bash
+pnpm format:check
+pnpm lint
+pnpm astro check
+pnpm build
+```
+
+## Publishing Checklist
+
+- Create a fresh `astro-scholar` template repository.
+- Create a separate deployed demo repo or deployment.
+- Mark the GitHub repo as a template.
+- Add GitHub topics: `astro`, `astro-theme`, `astro-template`, `academic`,
+  `blog`, `portfolio`, `publications`, `research`.
+- Add the live demo URL to the GitHub repository sidebar.
+- Submit the demo and source repository to the Astro themes directory.

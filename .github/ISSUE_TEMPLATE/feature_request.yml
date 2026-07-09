@@ -1,0 +1,28 @@
+name: Feature request
+description: Suggest an improvement to the theme.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: What should become easier or better?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What would you change?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and tradeoffs
+      description: Does this add dependencies, client JavaScript, routes, or schemas?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

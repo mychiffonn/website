@@ -1,0 +1,37 @@
+name: Bug report
+description: Report something broken in the theme.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What broke, and what did you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: route
+    attributes:
+      label: Page or command
+      placeholder: /publications or pnpm build
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Run ...
+        2. Open ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Node version, pnpm version, OS, browser
+  - type: textarea
+    id: extra
+    attributes:
+      label: Extra context
+      description: Logs, screenshots, or links.
