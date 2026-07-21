@@ -1,7 +1,11 @@
 ---
 import { FOOTER, PROFILE } from "@site-config"
 import techStack from "@/content/tech-stack.json"
-import { getProjectCategoryCounts, getProjects } from "@/lib/projects"
+import {
+  getProjectSkillCounts,
+  getProjectTypeCounts,
+  getProjects,
+} from "@/lib/projects"
 import CommonLayout from "@/layouts/CommonLayout.astro"
 import Icon from "@/components/base/Icon.astro"
 import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
@@ -24,7 +28,8 @@ const featuredProjects = allProjects.filter(
 const otherProjects = allProjects.filter(
   (project) => !project.data.isHighlighted,
 )
-const categoryCounts = getProjectCategoryCounts(allProjects)
+const typeCounts = getProjectTypeCounts(allProjects)
+const skillCounts = getProjectSkillCounts(allProjects)
 
 const githubRepo = FOOTER.sourceCode
 const githubProfile =
@@ -42,29 +47,61 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
 >
   <div class="projects-page">
     <div class="projects-featured">
-      {categoryCounts.length > 0 && (
-          <div
-            class="chip-filter-bar"
-            role="group"
-            aria-label="Filter projects by type"
-          >
-            {categoryCounts.map(({ slug, label, count }) => (
-              <TaxonomyChip
-                label={label}
-                count={count}
-                countNoun="projects"
-                data-project-category-filter={slug}
-                aria-pressed="false"
-                aria-label={`Filter projects by ${label}; ${count} ${count === 1 ? "project" : "projects"}`}
-              />
-            ))}
+      {(typeCounts.length > 0 || skillCounts.length > 0) && (
+          <div class="project-filters" role="group" aria-label="Project filters">
+            {typeCounts.length > 0 && (
+              <div
+                class="project-filter-row"
+                role="group"
+                aria-labelledby="project-type-filter-label"
+              >
+                <span class="project-filter-label" id="project-type-filter-label">
+                  Type
+                </span>
+                <div class="chip-filter-bar">
+                  {typeCounts.map(({ slug, label, count }) => (
+                    <TaxonomyChip
+                      label={label}
+                      count={count}
+                      countNoun="projects"
+                      data-project-type-filter={slug}
+                      aria-pressed="false"
+                      aria-label={`Filter projects by type ${label}; ${count} ${count === 1 ? "project" : "projects"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            {skillCounts.length > 0 && (
+              <div
+                class="project-filter-row"
+                role="group"
+                aria-labelledby="project-skill-filter-label"
+              >
+                <span class="project-filter-label" id="project-skill-filter-label">
+                  Skill
+                </span>
+                <div class="chip-filter-bar">
+                  {skillCounts.map(({ slug, label, count }) => (
+                    <TaxonomyChip
+                      label={label}
+                      count={count}
+                      countNoun="projects"
+                      data-project-skill-filter={slug}
+                      aria-pressed="false"
+                      aria-label={`Filter projects by skill ${label}; ${count} ${count === 1 ? "project" : "projects"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
             <span class="chip-active-filter" data-active-filter hidden>
               <TaxonomyChip
-                label="Clear"
+                label="Clear filters"
                 prefix="×"
                 tone="destructive"
-                data-clear-filter
-                aria-label="Clear project filter"
+                data-clear-project-filters
+                aria-label="Clear project filters"
               />
             </span>
             <span
@@ -75,6 +112,10 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
             />
           </div>
         )}
+      <div class="project-filter-empty" data-project-filter-empty hidden>
+        <h2>No matching projects</h2>
+        <p>Try clearing either the project type or skill filter.</p>
+      </div>
       {featuredProjects.length > 0 && (
           <div data-project-section>
             <Section title="Featured Projects">
@@ -119,7 +160,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
 </CommonLayout>
 
 <script>
-  import { initChipFilter } from "@/lib/chip-filter"
+  import { initFacetedChipFilter } from "@/lib/chip-filter"
 
   function initProjectControls() {
     // astro:page-load and astro:after-swap both fire per navigation; skip the
@@ -130,28 +171,50 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
     if (!anchor || anchor.dataset.controlsInitialized === "true") return
     anchor.dataset.controlsInitialized = "true"
 
-    const controller = initChipFilter({
-      itemSelector: "[data-project-categories]",
-      itemAttr: "projectCategories",
-      filterButtonSelector: "[data-project-category-filter]",
-      filterButtonAttr: "projectCategoryFilter",
-      chipSelector: "[data-project-category]",
-      chipAttr: "projectCategory",
+    const controller = initFacetedChipFilter({
+      itemSelector: "[data-project-types]",
+      facets: [
+        {
+          key: "type",
+          itemAttr: "projectTypes",
+          filterButtonSelector: "[data-project-type-filter]",
+          filterButtonAttr: "projectTypeFilter",
+        },
+        {
+          key: "skill",
+          itemAttr: "projectSkills",
+          filterButtonSelector: "[data-project-skill-filter]",
+          filterButtonAttr: "projectSkillFilter",
+        },
+      ],
       groupSelector: "[data-project-section]",
-      clearButtonSelector: "[data-clear-filter]",
+      clearButtonSelector: "[data-clear-project-filters]",
       activeIndicatorSelector: "[data-active-filter]",
       statusSelector: "[data-project-filter-status]",
+      emptyStateSelector: "[data-project-filter-empty]",
+      resultNoun: "projects",
     })
 
     const otherProjects =
       document.querySelector<HTMLDetailsElement>(".other-projects")
+    let openedForFilter = false
+    otherProjects?.querySelector("summary")?.addEventListener("click", () => {
+      openedForFilter = false
+    })
     anchor.addEventListener("click", (event) => {
       const filterTrigger = (event.target as Element).closest(
-        "[data-project-category-filter], [data-project-category]",
+        "[data-project-type-filter], [data-project-skill-filter], [data-clear-project-filters]",
       )
       if (!filterTrigger) return
       requestAnimationFrame(() => {
-        if (controller.getActive() && otherProjects) otherProjects.open = true
+        if (!otherProjects) return
+        if (controller.hasActive() && !otherProjects.open) {
+          otherProjects.open = true
+          openedForFilter = true
+        } else if (!controller.hasActive() && openedForFilter) {
+          otherProjects.open = false
+          openedForFilter = false
+        }
       })
     })
   }
@@ -180,8 +243,63 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
     gap: var(--space-s);
   }
 
+  .project-filters,
+  .project-filter-row {
+    display: flex;
+  }
+
+  .project-filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2xs);
+  }
+
+  .project-filter-row {
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+
+  .project-filter-label {
+    min-inline-size: 2.75rem;
+    padding-block: 0.25rem;
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.2;
+  }
+
+  .project-filter-row .chip-filter-bar {
+    gap: var(--space-3xs);
+  }
+
   .chip-active-filter[hidden] {
     display: none;
+  }
+
+  .project-filter-empty {
+    padding: var(--space-l);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--muted) 34%, transparent);
+    text-align: center;
+  }
+
+  .project-filter-empty[hidden] {
+    display: none;
+  }
+
+  .project-filter-empty h2,
+  .project-filter-empty p {
+    margin: 0;
+  }
+
+  .project-filter-empty h2 {
+    font-size: var(--step-1);
+  }
+
+  .project-filter-empty p {
+    margin-block-start: var(--space-3xs);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
   }
 
   .projects-featured :global(.section-block) {
@@ -261,6 +379,16 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
   }
 
   @media (width < 40rem) {
+    .project-filter-row {
+      flex-direction: column;
+      gap: var(--space-3xs);
+    }
+
+    .project-filter-label {
+      min-inline-size: 0;
+      padding-block: 0;
+    }
+
     .other-projects-grid {
       padding: 0 var(--space-xs) var(--space-xs);
     }

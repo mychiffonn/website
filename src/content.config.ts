@@ -2,7 +2,8 @@ import { defineCollection, reference } from "astro:content"
 import { file, glob } from "astro/loaders"
 import { z } from "astro/zod"
 
-import { ProfileLinkConfigSchema, ProjectCategorySchema } from "@/schemas"
+import techStack from "@/content/tech-stack.json"
+import { ProfileLinkConfigSchema, ProjectTypeSchema } from "@/schemas"
 
 import { createLocalDate } from "@/lib/date-utils"
 import {
@@ -14,6 +15,13 @@ import {
 const yearMonthDateSchema = z
   .union([z.date(), z.string().transform(createLocalDate)])
   .describe("Should be valid YYYY-MM format.")
+
+const projectSkills = new Set(techStack.groups.flatMap((group) => group.items))
+const projectSkillSchema = z
+  .string()
+  .refine((skill) => projectSkills.has(skill), {
+    message: "Project skills must be listed in src/content/tech-stack.json",
+  })
 
 const dateSchema = z
   .union([z.date(), z.string().transform(createLocalDate)])
@@ -81,7 +89,11 @@ const projects = defineCollection({
       paper: z.url().optional(),
       url: z.url().optional(),
       release: z.url().optional(),
-      category: z.array(ProjectCategorySchema).default([]),
+      types: z.array(ProjectTypeSchema).default([]),
+      skills: z
+        .array(projectSkillSchema)
+        .default([])
+        .transform((arr) => dedupPreserveCase(arr)),
       description: z.string().max(200).optional(),
       tags: z
         .array(z.string())

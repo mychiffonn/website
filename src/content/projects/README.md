@@ -11,8 +11,10 @@ Simple frontmatter
 title: "Synthetic Control Analysis"
 description: "Replication study of Philadelphia excise tax impact using synthetic control methods in R with causal inference."
 code: "https://github.com/username/synthetic-control"
-category:
-  - "data"
+types:
+  - "research"
+skills:
+  - "R"
 ---
 ```
 
@@ -27,15 +29,16 @@ toDate: "2023-12"
 code: "https://github.com/username/synthetic-control"
 doc: "https://docs.example.com/synthetic-control"
 url: "https://synthetic-control.example.com"
-category:
-  - "data"
+types:
   - "research"
+  - "coursework"
+skills:
+  - "R"
 isHighlighted: true
 selected: true
 release: "https://github.com/username/synthetic-control/releases/tag/v1.0.0"
 tags:
-  - "data-science"
-  - "python"
+  - "causal inference"
   - "statistics"
 ---
 ```
@@ -50,12 +53,14 @@ tags:
 | `toDate` | Date | ❌ | End date of the project | YYYY-MM or YYYY-MM-DD format. Must be ≥ fromDate |
 | `code` | URL | ❌ | Link to source code repository | Must be a valid URL |
 | `doc` | URL | ❌ | Link to project documentation | Must be a valid URL |
+| `paper` | URL | ❌ | Link to a paper or preprint | Must be a valid URL |
 | `url` | URL | ❌ | Link to live site or demo | Must be a valid URL |
-| `category` | Enum[] | ❌ | Any of: `ai-ml`, `web`, `data`, `tool`, `simulation`, `research`, `fun-creativity` | Filterable on the projects page; a project can have multiple categories |
+| `types` | Enum[] | ❌ | Any of: `research`, `product`, `tool`, `open-source`, `coursework` | Describes what the project is; filterable on the projects page |
+| `skills` | String[] | ❌ | Canonical skills from `src/content/tech-stack.json` | Describes how the project was built; filterable on the projects page |
 | `isHighlighted` | Boolean | ❌ | Whether to feature this project | Defaults to `false` |
 | `selected` | Boolean | ❌ | Whether this project is a substantial/research-relevant selected project | Defaults to `false` |
 | `release` | URL | ❌ | Link to release or deployment | Must be a valid URL |
-| `tags` | String[] | ❌ | Project keywords, frameworks, languages, etc | Free-form, display-only badges (not filterable); will be deduplicated |
+| `tags` | String[] | ❌ | Free-form topics, methods, organizations, and keywords | Display-only badges; will be deduplicated |
 
 ## Notes
 

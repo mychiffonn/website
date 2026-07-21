@@ -214,25 +214,23 @@ export const ToolSchema = z.object({
 })
 
 /**
- * Taxonomy of project domains, used for the `category` field on the projects
- * collection and for rendering filterable category chips on /projects.
+ * Taxonomy of project forms. Technical domains and tools belong in `skills`
+ * so the project type and skill filters remain semantically independent.
  */
-export const PROJECT_CATEGORIES = [
-  { slug: "ai-ml", label: "AI/ML" },
-  { slug: "web", label: "Web" },
-  { slug: "data", label: "Data" },
-  { slug: "tool", label: "Tool" },
-  { slug: "simulation", label: "Simulation" },
+export const PROJECT_TYPES = [
   { slug: "research", label: "Research" },
-  { slug: "fun-creativity", label: "Fun & Creativity" },
+  { slug: "product", label: "Product" },
+  { slug: "tool", label: "Tool" },
+  { slug: "open-source", label: "Open Source" },
+  { slug: "coursework", label: "Coursework" },
 ] as const
 
-export type ProjectCategorySlug = (typeof PROJECT_CATEGORIES)[number]["slug"]
+export type ProjectTypeSlug = (typeof PROJECT_TYPES)[number]["slug"]
 
-export const ProjectCategorySchema = z.enum(
-  PROJECT_CATEGORIES.map((c) => c.slug) as [
-    ProjectCategorySlug,
-    ...ProjectCategorySlug[],
+export const ProjectTypeSchema = z.enum(
+  PROJECT_TYPES.map((type) => type.slug) as [
+    ProjectTypeSlug,
+    ...ProjectTypeSlug[],
   ],
 )
 

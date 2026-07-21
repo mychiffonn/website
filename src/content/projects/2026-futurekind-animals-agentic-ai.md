@@ -5,9 +5,12 @@ fromDate: 2026-04
 toDate: 2026-07
 selected: true
 doc: https://docs.google.com/document/d/1LoJAJvjseK2JcR-zi1t63eVeXS3_nZcaie-kXhn6_fo/edit?usp=sharing
-category:
-  - ai-ml
+types:
   - research
+skills:
+  - LLM
+  - evaluation
+  - agents
 tags:
   - AI Safety
   - Agentic AI

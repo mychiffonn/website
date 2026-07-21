@@ -4,10 +4,16 @@ description: AI chatbot generating memorable English and Mandarin mnemonics with
 fromDate: 2024-10
 toDate: 2025-03
 code: https://github.com/mychiffonn/mnemonic-gen
-category:
-  - ai-ml
+types:
   - research
   - tool
+skills:
+  - Python
+  - LLM
+  - Fine-tuning
+  - PyTorch
+  - Hugging Face ecosystem
+  - Unsloth
 tags:
   - unsloth
   - QLoRA

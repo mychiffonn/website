@@ -4,8 +4,12 @@ description: Minimal Llama-2 implementation in PyTorch with RoPE, RMSNorm, SwiGL
 code: https://github.com/mychiffonn/cmu-advanced-nlp-minllama
 fromDate: 2024-05-21
 toDate: 2024-05-24
-category:
-  - ai-ml
+types:
+  - coursework
+skills:
+  - Python
+  - LLM
+  - PyTorch
 isHighlighted: true
 tags:
   - Large Language Model (LLM)
