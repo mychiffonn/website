@@ -1,7 +1,7 @@
 ---
 import { PROFILE } from "@site-config"
+import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
-import Link from "@/components/base/Link.astro"
 
 import { getProcessedProfileLinks, type ProfileLinkConfig } from "./helper"
 
@@ -30,17 +30,19 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
       const isPrimary = highlight && highlightKeys.has(key)
       return (
         <li>
-          <Link
+          <Button
             href={href}
+            external={isExternal}
+            variant={isPrimary ? "primary" : "outline"}
+            size="square"
             title={label}
             rel="me"
             class="profile-link"
             data-primary={isPrimary ? "true" : undefined}
-            external={isExternal}
           >
             <Icon name={iconName} />
             <span class="sr-only" set:html={label} />
-          </Link>
+          </Button>
         </li>
       )
     })}
@@ -59,17 +61,7 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
   /* The hover fill is the element's own background so it always sits flush
      against the border, whatever the border width or radius becomes. */
   .profile-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    inline-size: 2.625rem;
-    block-size: 2.625rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background-color: transparent;
     color: var(--muted-foreground);
-    text-decoration: none;
-    touch-action: manipulation;
     transition:
       background-color var(--motion-duration) var(--motion-ease),
       border-color var(--motion-duration) var(--motion-ease),
@@ -78,9 +70,16 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
   }
 
   .profile-link :global(svg) {
-    inline-size: 1.375rem;
-    block-size: 1.375rem;
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
     transition: transform var(--motion-duration) var(--motion-ease);
+  }
+
+  @media (pointer: coarse), (pointer: none), (any-pointer: coarse) {
+    .profile-link :global(svg) {
+      inline-size: 1.375rem;
+      block-size: 1.375rem;
+    }
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -120,17 +119,5 @@ const processedLinks = getProcessedProfileLinks(links, includeRss, includeEmail)
     border-color: var(--primary);
     background-color: var(--primary);
     color: var(--primary-foreground);
-  }
-
-  @media (width >= 40rem) {
-    .profile-link {
-      inline-size: 2.25rem;
-      block-size: 2.25rem;
-    }
-
-    .profile-link :global(svg) {
-      inline-size: 1.125rem;
-      block-size: 1.125rem;
-    }
   }
 </style>

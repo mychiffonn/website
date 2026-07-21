@@ -2,50 +2,35 @@
 import { PostManager } from "@/lib/blog"
 import { getSortedTags } from "@/lib/blog/tag"
 import Layout from "@/layouts/Layout.astro"
-import Badge from "@/components/base/Badge.astro"
-import Icon from "@/components/base/Icon.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
 
 const postManager = PostManager.getInstance()
 const sortedTags = await getSortedTags(() => postManager.getMainPosts())
 ---
 
-<Layout title="Tags">
-  <Breadcrumbs
-    items={[
-      { label: "Blog", icon: "blog", href: "/blog" },
-      { label: "Tags", icon: "tags", href: "/blog/tags" }
-    ]}
-  />
-
-  <tag-list>
-    <tag-cloud>
-      {sortedTags.map(({ tag, count }) => (
-          <Badge href={`/blog/tags/${tag}`} variant="tag">
-            <Icon name="hashtag" size="0.75rem" />
-            {tag}
-            <span>({count})</span>
-          </Badge>
+<Layout
+  title="Tags"
+  breadcrumbs={[
+    { label: "Blog", icon: "blog", href: "/blog" },
+    { label: "Tags", icon: "tags", href: "/blog/tags" },
+  ]}
+>
+  <nav class="tag-cloud" aria-label="All blog tags">
+    {sortedTags.map(({ tag, count }) => (
+          <TaxonomyChip
+            href={`/blog/tags/${tag}`}
+            label={tag}
+            count={count}
+            countNoun="posts"
+          />
         ))}
-    </tag-cloud>
-  </tag-list>
+  </nav>
 </Layout>
 
 <style>
-  tag-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-s);
-  }
-
-  tag-cloud {
+  .tag-cloud {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2xs);
-  }
-
-  tag-cloud span {
-    margin-inline-start: 0.375rem;
-    opacity: 0.7;
   }
 </style>

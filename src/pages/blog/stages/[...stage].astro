@@ -4,7 +4,6 @@ import { getStageConfig } from "@/lib/blog/stage"
 import Layout from "@/layouts/Layout.astro"
 import Icon from "@/components/base/Icon.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
 export async function getStaticPaths() {
   const { STAGE_NAMES } = await import("@/lib/blog/stage")
@@ -29,15 +28,12 @@ const postsMetadata: PostMeta[] = await Promise.all(
   title={`${stage} posts`}
   description={`Blog posts at the ${stage} stage of growth.`}
   noindex
+  breadcrumbs={[
+    { href: "/blog", label: "Blog", icon: "blog" },
+    { href: "/blog/stages", label: "Stages", icon: "seedling" },
+    { label: stage, icon: stage },
+  ]}
 >
-  <Breadcrumbs
-    items={[
-      { href: "/blog", label: "Blog", icon: "blog" },
-      { href: "/blog/stages", label: "Stages", icon: "seedling" },
-      { label: stage, icon: stage }
-    ]}
-  />
-
   <stage-header>
     <stage-title>
       <Icon name={stage} />

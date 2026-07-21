@@ -7,6 +7,7 @@ import { loadSelectedPublications } from "@/lib/publications/loader"
 import { getLatestUpdates } from "@/lib/updates"
 import Layout from "@/layouts/Layout.astro"
 import Button from "@/components/base/Button.astro"
+import { CardGroup } from "@/components/base/card"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Section from "@/components/layout/Section.astro"
 import Profile from "@/components/profile/Profile.astro"
@@ -66,11 +67,11 @@ const recentPostsMetadata = await Promise.all(
 
   {selectedPublications.length > 0 && (
       <Section title="Selected publications" moreLink="/publications">
-        <div class="selected-publications">
+        <CardGroup class="selected-publications">
           {selectedPublications.slice(0, 3).map((pub) => (
             <PubCard pub={pub} filterableTags={false} />
           ))}
-        </div>
+        </CardGroup>
       </Section>
     )}
   {recentPostsMetadata.length > 0 && (
@@ -112,8 +113,6 @@ const recentPostsMetadata = await Promise.all(
 
 <style>
   .selected-publications {
-    display: flex;
-    flex-direction: column;
     gap: var(--space-s);
   }
 

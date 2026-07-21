@@ -1,0 +1,175 @@
+---
+export interface Props extends astroHTML.JSX.HTMLAttributes {
+  label: string
+  count?: number
+  countNoun?: string
+  prefix?: string
+  href?: string
+  static?: boolean
+  tone?: "accent" | "destructive"
+  type?: "button" | "submit" | "reset"
+}
+
+const {
+  label,
+  count,
+  countNoun = "items",
+  prefix = "#",
+  href,
+  static: isStatic = false,
+  tone = "accent",
+  type = "button",
+  class: className,
+  "aria-label": ariaLabel,
+  ...rest
+} = Astro.props
+
+const accessibleLabel =
+  ariaLabel ??
+  (count === undefined
+    ? label
+    : `${label}, ${count} ${count === 1 ? countNoun.replace(/s$/, "") : countNoun}`)
+---
+
+{href ? (
+    <a
+      href={href}
+      data-taxonomy-chip
+      data-tone={tone}
+      class={className}
+      aria-label={accessibleLabel}
+      {...rest}
+    >
+      <span data-taxonomy-surface>
+        <span data-taxonomy-prefix aria-hidden="true">{prefix}</span>
+        <span>{label}</span>
+        {count !== undefined && (
+          <span data-taxonomy-count aria-hidden="true">({count})</span>
+        )}
+      </span>
+    </a>
+  ) : isStatic ? (
+    <span data-taxonomy-chip data-static data-tone={tone} class={className} {...rest}>
+      <span data-taxonomy-surface>
+        <span data-taxonomy-prefix aria-hidden="true">{prefix}</span>
+        <span>{label}</span>
+        {count !== undefined && (
+          <span data-taxonomy-count aria-hidden="true">({count})</span>
+        )}
+      </span>
+    </span>
+  ) : (
+    <button
+      type={type}
+      data-taxonomy-chip
+      data-tone={tone}
+      class={className}
+      aria-label={accessibleLabel}
+      {...rest}
+    >
+      <span data-taxonomy-surface>
+        <span data-taxonomy-prefix aria-hidden="true">{prefix}</span>
+        <span>{label}</span>
+        {count !== undefined && (
+          <span data-taxonomy-count aria-hidden="true">({count})</span>
+        )}
+      </span>
+    </button>
+  )}
+
+<style is:global>
+  [data-taxonomy-chip] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  [data-taxonomy-surface] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: transparent;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      border-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  :is(a, button)[data-taxonomy-chip] {
+    min-block-size: var(--control-size-compact);
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    transition: scale var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  :is(a, button)[data-taxonomy-chip]:hover [data-taxonomy-surface] {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  :is(a, button)[data-taxonomy-chip][data-tone="destructive"]:hover
+    [data-taxonomy-surface] {
+    border-color: var(--destructive);
+    color: var(--destructive);
+  }
+
+  :is(a, button)[data-taxonomy-chip]:focus-visible {
+    outline: none;
+  }
+
+  :is(a, button)[data-taxonomy-chip]:focus-visible [data-taxonomy-surface] {
+    outline: 2px solid var(--ring);
+    outline-offset: 0.25rem;
+  }
+
+  :is(a, button)[data-taxonomy-chip]:active {
+    scale: 0.96;
+  }
+
+  button[data-taxonomy-chip][aria-pressed="true"] [data-taxonomy-surface] {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  [data-taxonomy-prefix] {
+    color: inherit;
+    font-weight: inherit;
+  }
+
+  [data-taxonomy-count] {
+    margin-inline-start: 0.125rem;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+  }
+
+  @media (pointer: coarse), (pointer: none), (any-pointer: coarse) {
+    :is(a, button)[data-taxonomy-chip] [data-taxonomy-surface] {
+      min-block-size: var(--control-size-compact);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :is(a, button)[data-taxonomy-chip],
+    [data-taxonomy-surface] {
+      transition-duration: 0.01ms;
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import "@/styles/card.css"
+
+type CardElement = "article" | "div" | "li" | "section"
+
+export interface Props extends astroHTML.JSX.HTMLAttributes {
+  as?: CardElement
+  href?: string
+  label?: string
+  external?: boolean
+  selected?: boolean
+  orientation?: "stacked" | "inline"
+  padding?: "none" | "compact" | "default"
+}
+
+const {
+  as: Tag = "article",
+  href,
+  label,
+  external = false,
+  selected = false,
+  orientation = "stacked",
+  padding = "default",
+  class: className,
+  ...rest
+} = Astro.props
+
+const isClickable = Boolean(href)
+---
+
+<Tag
+  data-slot="card"
+  data-clickable={isClickable || undefined}
+  data-selected={selected || undefined}
+  data-orientation={orientation}
+  data-padding={padding}
+  class={className}
+  {...rest}
+>
+  {href && (
+    <a
+      href={href}
+      class="card-overlay"
+      aria-label={label}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer nofollow" : undefined}
+    ></a>
+  )}
+  <slot />
+</Tag>

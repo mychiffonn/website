@@ -1,14 +1,12 @@
 ---
 import { getAllAuthors } from "@/lib/blog/author"
 import Layout from "@/layouts/Layout.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import AuthorCard from "@/components/people/AuthorCard.astro"
 
 const authors = await getAllAuthors()
 ---
 
-<Layout title="People">
-  <Breadcrumbs slot="breadcrumb" items={[{ label: "People", icon: "group" }]} />
+<Layout title="People" breadcrumbs={[{ label: "People", icon: "group" }]}>
   {authors.length > 0 ? (
       <ul class="people-list">
         {authors.map((author) => (

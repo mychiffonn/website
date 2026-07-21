@@ -9,9 +9,9 @@ import { SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
 import { getStageVariant } from "@/lib/blog/stage"
 import Layout from "@/layouts/Layout.astro"
-import BackToTop from "@/components/base/BackToTop.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
+import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
 import AboutAuthors from "@/components/blog/AboutAuthors.astro"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
 import PostNav from "@/components/blog/PostNavigation.astro"
@@ -22,7 +22,6 @@ import SubpostsSidebar from "@/components/blog/SubpostsSidebar.astro"
 import TOCFloat from "@/components/blog/TOCFloat.astro"
 import TOCHeader from "@/components/blog/TOCHeader.astro"
 import TOCSidebar from "@/components/blog/TOCSidebar.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import SlideOut from "@/components/layout/SlideOut.astro"
 
 export async function getStaticPaths() {
@@ -77,6 +76,29 @@ const generatedSocialImage = `/og/blog/${post.id}.png`
   author={metadata.authors[0]?.name}
   tags={post.data.tags}
   section="Blog"
+  breadcrumbs={[
+    { href: "/blog", label: "Blog", icon: "blog" },
+    ...(isSubpost && parentPost
+      ? [
+          {
+            href: `/blog/${parentPost.id}`,
+            label: parentPost.title,
+            icon: "parent-post",
+          },
+          {
+            href: `/blog/${currentPostId}`,
+            label: post.data.title,
+            icon: "subpost",
+          },
+        ]
+      : [
+          {
+            href: `/blog/${currentPostId}`,
+            label: post.data.title,
+            icon: "post-active",
+          },
+        ]),
+  ]}
 >
   {(hasSubposts || isSubpost) && activePostNavItem && (
       <SubpostsHeader
@@ -89,32 +111,6 @@ const generatedSocialImage = `/og/blog/${post.id}.png`
       />
     )}
   {headings.length > 1 && <TOCHeader slot="toc-header" headings={headings} />}
-  <Breadcrumbs
-    slot="breadcrumb"
-    items={[
-      { href: "/blog", label: "Blog", icon: "blog" },
-      ...(isSubpost && parentPost
-        ? [
-            {
-              href: `/blog/${parentPost.id}`,
-              label: parentPost.title,
-              icon: "parent-post"
-            },
-            {
-              href: `/blog/${currentPostId}`,
-              label: post.data.title,
-              icon: "subpost"
-            }
-          ]
-        : [
-            {
-              href: `/blog/${currentPostId}`,
-              label: post.data.title,
-              icon: "post-active"
-            }
-          ])
-    ]}
-  />
   {post.data.image && (
       <Image
         src={post.data.image}
@@ -149,10 +145,7 @@ const generatedSocialImage = `/og/blog/${post.id}.png`
           )}
           {post.data.tags.map((tag: string) => (
             <li>
-              <Badge href={`/blog/tags/${tag}`} variant="tag">
-                <Icon name="hashtag" size="0.75rem" />
-                {tag}
-              </Badge>
+              <TaxonomyChip href={`/blog/tags/${tag}`} label={tag} countNoun="posts" />
             </li>
           ))}
         </ul>
@@ -217,8 +210,6 @@ const generatedSocialImage = `/og/blog/${post.id}.png`
     parentPost={navigation.parent}
   />
 </Layout>
-
-<BackToTop />
 
 <style>
   .post-hero-image {

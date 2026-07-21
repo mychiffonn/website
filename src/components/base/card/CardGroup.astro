@@ -1,0 +1,35 @@
+---
+import "@/styles/card.css"
+
+type GroupElement = "div" | "section"
+
+export interface Props extends astroHTML.JSX.HTMLAttributes {
+  as?: GroupElement
+  columns?: 1 | 2 | 3
+  orientation?: "stacked" | "inline"
+  separated?: boolean
+  outlined?: boolean
+}
+
+const {
+  as: Tag = "div",
+  columns = 1,
+  orientation = "stacked",
+  separated = true,
+  outlined = false,
+  class: className,
+  ...rest
+} = Astro.props
+---
+
+<Tag
+  data-slot="card-group"
+  data-columns={columns}
+  data-orientation={orientation}
+  data-separated={separated ? "true" : "false"}
+  data-outlined={outlined || undefined}
+  class={className}
+  {...rest}
+>
+  <slot />
+</Tag>

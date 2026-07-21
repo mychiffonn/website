@@ -6,6 +6,9 @@ import BackToTop from "@/components/base/BackToTop.astro"
 import Head from "@/components/layout/Head.astro"
 import Footer from "@/components/layout/Footer.astro"
 import Header from "@/components/layout/Header.astro"
+import Breadcrumbs, {
+  type BreadcrumbItem,
+} from "@/components/layout/Breadcrumbs.astro"
 
 interface Props {
   class?: string
@@ -19,6 +22,7 @@ interface Props {
   author?: string
   tags?: string[]
   section?: string
+  breadcrumbs?: BreadcrumbItem[]
 }
 
 const {
@@ -33,6 +37,7 @@ const {
   author,
   tags,
   section,
+  breadcrumbs,
 } = Astro.props
 ---
 
@@ -62,9 +67,9 @@ const {
         <slot name="toc-header" aria-label="Table of contents" />
       )}
     </div>
-    {Astro.slots.has("breadcrumb") && (
+    {(breadcrumbs || Astro.slots.has("breadcrumb")) && (
       <div class="breadcrumb-region">
-        <slot name="breadcrumb" />
+        {breadcrumbs ? <Breadcrumbs items={breadcrumbs} /> : <slot name="breadcrumb" />}
       </div>
     )}
     <main class={className}>
@@ -74,6 +79,9 @@ const {
     <Footer />
 
     <script>
+      let headerResizeObserver: ResizeObserver | undefined
+      let observedHeader: HTMLElement | null = null
+
       function updateHeaderHeight() {
         const header = document.getElementById("main-header")
         if (!header) return
@@ -83,10 +91,24 @@ const {
         )
       }
 
-      updateHeaderHeight()
-      window.addEventListener("resize", updateHeaderHeight)
-      document.addEventListener("astro:page-load", updateHeaderHeight)
-      document.addEventListener("astro:after-swap", updateHeaderHeight)
+      function observeHeaderHeight() {
+        const header = document.getElementById("main-header")
+        if (!header) return
+
+        if (header === observedHeader) {
+          updateHeaderHeight()
+          return
+        }
+
+        headerResizeObserver?.disconnect()
+        headerResizeObserver = new ResizeObserver(updateHeaderHeight)
+        headerResizeObserver.observe(header)
+        observedHeader = header
+        updateHeaderHeight()
+      }
+
+      observeHeaderHeight()
+      document.addEventListener("astro:after-swap", observeHeaderHeight)
     </script>
   </body>
 </html>

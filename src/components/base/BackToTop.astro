@@ -3,59 +3,70 @@ import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
 ---
 
-<Button
-  variant="outline"
-  size="square"
-  class="scroll-to-top"
-  id="scroll-to-top"
-  hidden
-  title="Scroll to top"
-  aria-label="Scroll to top"
->
-  <Icon name="to-top" size="1.25rem" class="scroll-to-top-icon" />
-</Button>
+<back-to-top>
+  <Button
+    variant="outline"
+    size="square"
+    class="scroll-to-top"
+    hidden
+    title="Back to top"
+    aria-label="Back to top"
+  >
+    <Icon name="to-top" size="1.25rem" class="scroll-to-top-icon" />
+  </Button>
+</back-to-top>
 
 <script>
-  const initializeScrollToTop = () => {
-    const scrollToTopButton = document.getElementById("scroll-to-top")
-    const footer = document.querySelector("footer")
+  class BackToTop extends HTMLElement {
+    private button: HTMLButtonElement | null = null
 
-    if (!scrollToTopButton || !footer) return
-
-    const updateVisibility = () => {
-      const footerRect = footer.getBoundingClientRect()
-      const isFooterVisible = footerRect.top <= window.innerHeight
-
-      scrollToTopButton.toggleAttribute(
-        "hidden",
-        window.scrollY <= 300 || isFooterVisible,
-      )
+    private readonly updateVisibility = () => {
+      this.button?.toggleAttribute("hidden", window.scrollY <= 300)
     }
 
-    scrollToTopButton.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" })
-    })
+    private readonly scrollToTop = () => {
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion ? "instant" : "smooth",
+      })
+    }
 
-    window.addEventListener("scroll", updateVisibility, { passive: true })
-    updateVisibility()
+    connectedCallback(): void {
+      this.button = this.querySelector("button")
+      if (!this.button) return
+      this.button.addEventListener("click", this.scrollToTop)
+      window.addEventListener("scroll", this.updateVisibility, {
+        passive: true,
+      })
+      this.updateVisibility()
+    }
+
+    disconnectedCallback(): void {
+      this.button?.removeEventListener("click", this.scrollToTop)
+      window.removeEventListener("scroll", this.updateVisibility)
+    }
   }
 
-  document.addEventListener("astro:page-load", () => {
-    initializeScrollToTop()
-  })
-
-  document.addEventListener("astro:after-swap", () => {
-    initializeScrollToTop()
-  })
+  if (!customElements.get("back-to-top")) {
+    customElements.define("back-to-top", BackToTop)
+  }
 </script>
 
 <style>
-  :global(.scroll-to-top) {
+  back-to-top {
     position: fixed;
-    right: var(--space-xs);
-    bottom: var(--space-xl);
     z-index: 50;
+    inset-inline-end: max(var(--space-xs), env(safe-area-inset-right));
+    inset-block-end: max(var(--space-xl), env(safe-area-inset-bottom));
+  }
+
+  :global(.scroll-to-top) {
     background: var(--background);
+    box-shadow: 0 0.5rem 1.5rem -0.75rem
+      color-mix(in oklab, var(--foreground) 28%, transparent);
   }
 
   :global(.scroll-to-top[hidden]) {
