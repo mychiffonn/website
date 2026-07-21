@@ -55,7 +55,7 @@ export const PROFILE: ProfileConfig = {
   othernames: "Nguyễn Trà My / 阮沐茶 / 윈자미",
   tagline: "AI Research for Broader World & Life-long Learning",
   email: "hi@mychiffonn.com",
-  // location: "San Francisco, CA, USA",
+  location: "Hanoi, Vietnam",
   pronouns: "she/her",
   pronunciation:
     "My = /me/, Chiffon = /shi-FON/. I'm Chiffon in English-speaking context.",
