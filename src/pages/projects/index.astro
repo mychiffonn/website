@@ -136,7 +136,9 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
             </span>
             <span class="other-projects-toggle">
               <span data-disclosure-show>Show {otherProjects.length} projects</span>
-              <span data-disclosure-hide>Hide projects</span>
+              <span data-disclosure-hide>
+                Hide {otherProjects.length} projects
+              </span>
               <Icon name="chevron-down" class="other-projects-chevron" />
             </span>
           </summary>
@@ -197,6 +199,26 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
 
     const otherProjects =
       document.querySelector<HTMLDetailsElement>(".other-projects")
+    const disclosureShow = otherProjects?.querySelector<HTMLElement>(
+      "[data-disclosure-show]",
+    )
+    const disclosureHide = otherProjects?.querySelector<HTMLElement>(
+      "[data-disclosure-hide]",
+    )
+
+    function updateOtherProjectCount() {
+      if (!otherProjects) return
+      const visibleCount = [
+        ...otherProjects.querySelectorAll<HTMLElement>("[data-project-types]"),
+      ].filter((project) => project.style.display !== "none").length
+      const noun = visibleCount === 1 ? "project" : "projects"
+      if (disclosureShow)
+        disclosureShow.textContent = `Show ${visibleCount} ${noun}`
+      if (disclosureHide)
+        disclosureHide.textContent = `Hide ${visibleCount} ${noun}`
+    }
+
+    updateOtherProjectCount()
     let openedForFilter = false
     otherProjects?.querySelector("summary")?.addEventListener("click", () => {
       openedForFilter = false
@@ -208,6 +230,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
       if (!filterTrigger) return
       requestAnimationFrame(() => {
         if (!otherProjects) return
+        updateOtherProjectCount()
         if (controller.hasActive() && !otherProjects.open) {
           otherProjects.open = true
           openedForFilter = true
@@ -260,8 +283,10 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
   }
 
   .project-filter-label {
+    display: flex;
+    align-items: center;
     min-inline-size: 2.75rem;
-    padding-block: 0.25rem;
+    min-block-size: calc(var(--control-size-compact) + 2 * var(--space-3xs));
     color: var(--muted-foreground);
     font-size: var(--step--1);
     font-weight: var(--font-weight-medium);
@@ -386,7 +411,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
 
     .project-filter-label {
       min-inline-size: 0;
-      padding-block: 0;
+      min-block-size: 0;
     }
 
     .other-projects-grid {
