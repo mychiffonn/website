@@ -5,6 +5,7 @@ fromDate: 2026-02
 toDate: 2026-06
 isHighlighted: true
 code: https://github.com/sierra-research/tau2-bench
+paper: https://arxiv.org/abs/2606.28715
 url: https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented
 category:
   - ai-ml
