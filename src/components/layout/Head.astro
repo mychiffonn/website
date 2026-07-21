@@ -166,7 +166,6 @@ const structuredData = {
     content="telephone=no,date=no,address=no,email=no,url=no"
   >
 
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -193,32 +192,60 @@ const structuredData = {
       href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
     >
   </noscript>
-  <link
-    rel="preload"
-    href="/styles/zoom.css"
-    as="style"
-    onload={`this.onload=null;this.rel='stylesheet'`}
-  >
-  <noscript><link rel="stylesheet" href="/styles/zoom.css"></noscript>
-  <script
-    src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"
-  ></script>
   <script is:inline define:vars={{ siteLocale: SITE.locale.lang }}>
-    document.addEventListener("DOMContentLoaded", function () {
-      if (typeof mediumZoom !== "undefined") {
-        const images = document.querySelectorAll(
-          "main img:not(a img):not(.card img)",
-        )
-
-        if (images.length) {
-          mediumZoom(images, {
-            margin: 24,
-            scrollOffset: 40,
-          })
-        }
-      }
-    })
     window.__SITE_LOCALE__ = siteLocale
+
+    function loadZoomAssets() {
+      if (!document.querySelector("link[data-medium-zoom-styles]")) {
+        const styles = document.createElement("link")
+        styles.rel = "stylesheet"
+        styles.href = "/styles/zoom.css"
+        styles.dataset.mediumZoomStyles = "true"
+        document.head.append(styles)
+      }
+
+      if (window.mediumZoom) return Promise.resolve()
+      if (window.__mediumZoomPromise) return window.__mediumZoomPromise
+
+      window.__mediumZoomPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script")
+        script.src =
+          "https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"
+        script.async = true
+        script.addEventListener("load", resolve, { once: true })
+        script.addEventListener("error", reject, { once: true })
+        document.head.append(script)
+      })
+
+      return window.__mediumZoomPromise
+    }
+
+    async function initializeImageZoom() {
+      const images = document.querySelectorAll(
+        "main img:not(a img):not(.card img)",
+      )
+      if (!images.length) return
+
+      try {
+        await loadZoomAssets()
+        window.__mediumZoomInstance?.detach()
+        window.__mediumZoomInstance = window.mediumZoom(images, {
+          margin: 24,
+          scrollOffset: 40,
+        })
+      } catch {
+        // Images remain fully usable if the optional enhancement cannot load.
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initializeImageZoom, {
+        once: true,
+      })
+    } else {
+      initializeImageZoom()
+    }
+    document.addEventListener("astro:after-swap", initializeImageZoom)
   </script>
 
   <slot />
