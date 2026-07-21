@@ -1,6 +1,5 @@
 ---
 import { FOOTER, PROFILE } from "@site-config"
-import techStack from "@/content/tech-stack.json"
 import {
   getProjectSkillCounts,
   getProjectTypeCounts,
@@ -30,6 +29,7 @@ const otherProjects = allProjects.filter(
 )
 const typeCounts = getProjectTypeCounts(allProjects)
 const skillCounts = getProjectSkillCounts(allProjects)
+const allSkills = getProjectSkillCounts(allProjects, 1)
 
 const githubRepo = FOOTER.sourceCode
 const githubProfile =
@@ -150,7 +150,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
         </details>
       )}
     <Section title="Tech Stack" class="tech-stack-section">
-      <TechStack {...techStack} />
+      <TechStack skills={allSkills} />
     </Section>
     {githubRepo && (
         <Section title="On GitHub" class="github-showcase">
