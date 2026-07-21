@@ -8,11 +8,12 @@ types:
   - research
   - coursework
 skills:
-  - R
+  - Python
+  - PyMC
+  - statistics
 tags:
   - bayesian modeling
   - hierarchical models
-  - PyMC
   - missing data imputation
   - healthcare analytics
   - statistical inference
