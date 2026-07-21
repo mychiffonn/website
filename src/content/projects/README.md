@@ -56,7 +56,7 @@ tags:
 | `paper` | URL | ❌ | Link to a paper or preprint | Must be a valid URL |
 | `url` | URL | ❌ | Link to live site or demo | Must be a valid URL |
 | `types` | Enum[] | ❌ | Any of: `research`, `product`, `tool`, `open-source`, `coursework` | Describes what the project is; filterable on the projects page |
-| `skills` | String[] | ❌ | Canonical skills from `src/content/tech-stack.json` | Describes how the project was built; filterable on the projects page |
+| `skills` | String[] | ❌ | Free-form skills and technologies used by the project | Filterable on the projects page; unique values are aggregated into the Tech Stack section |
 | `isHighlighted` | Boolean | ❌ | Whether to feature this project | Defaults to `false` |
 | `selected` | Boolean | ❌ | Whether this project is a substantial/research-relevant selected project | Defaults to `false` |
 | `release` | URL | ❌ | Link to release or deployment | Must be a valid URL |
