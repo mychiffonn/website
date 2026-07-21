@@ -78,6 +78,7 @@ const projects = defineCollection({
       toDate: yearMonthDateSchema.optional(),
       code: z.url().optional(),
       doc: z.url().optional(),
+      paper: z.url().optional(),
       url: z.url().optional(),
       release: z.url().optional(),
       category: z.array(ProjectCategorySchema).default([]),

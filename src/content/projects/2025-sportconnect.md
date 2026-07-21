@@ -6,6 +6,7 @@ doc: https://github.com/mychiffonn/sport-connect/blob/main/README.md
 url: https://sport-connect-ccmg.onrender.com/
 fromDate: 2025-11-10
 toDate: 2025-11-19
+isHighlighted: true
 category:
   - web
   - tool

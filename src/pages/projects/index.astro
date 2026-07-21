@@ -1,11 +1,18 @@
 ---
-import { PROFILE } from "@site-config"
+import { FOOTER, PROFILE } from "@site-config"
+import techStack from "@/content/tech-stack.json"
 import { getProjectCategoryCounts, getProjects } from "@/lib/projects"
 import CommonLayout from "@/layouts/CommonLayout.astro"
-import Chip from "@/components/base/Chip.astro"
 import Icon from "@/components/base/Icon.astro"
+import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
+import { CardGroup } from "@/components/base/card"
 import Section from "@/components/layout/Section.astro"
-import { GithubActivity, ProjectCard } from "@/components/projects"
+import {
+  GithubActivity,
+  GithubCard,
+  ProjectCard,
+  TechStack,
+} from "@/components/projects"
 
 import "@/styles/chip-filter.css"
 
@@ -19,11 +26,12 @@ const otherProjects = allProjects.filter(
 )
 const categoryCounts = getProjectCategoryCounts(allProjects)
 
-// Get GitHub URL for GithubActivity
-const githubUrl =
-  (typeof PROFILE.links.github === "object"
+const githubRepo = FOOTER.sourceCode
+const githubProfile =
+  typeof PROFILE.links.github === "object"
     ? PROFILE.links.github?.href
-    : PROFILE.links.github) || "https://github.com"
+    : PROFILE.links.github
+const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
 ---
 
 <CommonLayout
@@ -33,44 +41,80 @@ const githubUrl =
   breadcrumbs={[{ label: "Projects", icon: "folder-open" }]}
 >
   <div class="projects-page">
-    {categoryCounts.length > 0 && (
-        <div class="chip-filter-bar">
-          {categoryCounts.map(({ slug, label, count }) => (
-            <Chip data-project-category-filter={slug} aria-pressed="false">
-              {label}
-              <span class="chip-count">({count})</span>
-            </Chip>
-          ))}
-          <span class="chip-active-filter" data-active-filter hidden>
-            <button class="chip-clear-filter" data-clear-filter aria-label="Clear filter">
-              <Icon name="close" size={12} />
-              Clear
-            </button>
-          </span>
-        </div>
-      )}
-    {featuredProjects.length > 0 && (
-        <div data-project-section>
-          <Section title="Featured Projects">
-            <project-grid>
-              {featuredProjects.map((project) => (
-                <ProjectCard {project} />
-              ))}
-            </project-grid>
-          </Section>
-        </div>
-      )}
+    <div class="projects-featured">
+      {categoryCounts.length > 0 && (
+          <div
+            class="chip-filter-bar"
+            role="group"
+            aria-label="Filter projects by type"
+          >
+            {categoryCounts.map(({ slug, label, count }) => (
+              <TaxonomyChip
+                label={label}
+                count={count}
+                countNoun="projects"
+                data-project-category-filter={slug}
+                aria-pressed="false"
+                aria-label={`Filter projects by ${label}; ${count} ${count === 1 ? "project" : "projects"}`}
+              />
+            ))}
+            <span class="chip-active-filter" data-active-filter hidden>
+              <TaxonomyChip
+                label="Clear"
+                prefix="×"
+                tone="destructive"
+                data-clear-filter
+                aria-label="Clear project filter"
+              />
+            </span>
+            <span
+              class="sr-only"
+              aria-live="polite"
+              aria-atomic="true"
+              data-project-filter-status
+            />
+          </div>
+        )}
+      {featuredProjects.length > 0 && (
+          <div data-project-section>
+            <Section title="Featured Projects">
+              <CardGroup columns={2} class="project-grid">
+                {featuredProjects.map((project) => (
+                  <ProjectCard {project} />
+                ))}
+              </CardGroup>
+            </Section>
+          </div>
+        )}
+    </div>
     {otherProjects.length > 0 && (
-        <section data-project-section>
-          <h2 class="projects-section-title">Other Projects</h2>
-          <project-grid>
+        <details class="other-projects" data-project-section>
+          <summary>
+            <span class="other-projects-title" role="heading" aria-level="2">
+              Other Projects
+            </span>
+            <span class="other-projects-toggle">
+              <span data-disclosure-show>Show {otherProjects.length} projects</span>
+              <span data-disclosure-hide>Hide projects</span>
+              <Icon name="chevron-down" class="other-projects-chevron" />
+            </span>
+          </summary>
+          <CardGroup columns={2} class="project-grid other-projects-grid">
             {otherProjects.map((project) => (
               <ProjectCard {project} />
             ))}
-          </project-grid>
-        </section>
+          </CardGroup>
+        </details>
       )}
-    <GithubActivity githubUrl={githubUrl} />
+    <Section title="Tech Stack" class="tech-stack-section">
+      <TechStack {...techStack} />
+    </Section>
+    {githubRepo && (
+        <Section title="On GitHub" class="github-showcase">
+          <GithubCard repo={githubRepo} contributor={githubUsername} />
+        </Section>
+      )}
+    {githubProfile && <GithubActivity githubUrl={githubProfile} />}
   </div>
 </CommonLayout>
 
@@ -82,11 +126,11 @@ const githubUrl =
     // second call so we don't double-bind listeners on this DOM instance.
     // Anchor the flag to a swapped-in element (not document.body, which
     // persists across navigations) so it resets on the next real navigation.
-    const anchor = document.querySelector<HTMLElement>("[data-project-section]")
-    if (anchor?.dataset.controlsInitialized === "true") return
-    if (anchor) anchor.dataset.controlsInitialized = "true"
+    const anchor = document.querySelector<HTMLElement>(".projects-page")
+    if (!anchor || anchor.dataset.controlsInitialized === "true") return
+    anchor.dataset.controlsInitialized = "true"
 
-    initChipFilter({
+    const controller = initChipFilter({
       itemSelector: "[data-project-categories]",
       itemAttr: "projectCategories",
       filterButtonSelector: "[data-project-category-filter]",
@@ -96,6 +140,19 @@ const githubUrl =
       groupSelector: "[data-project-section]",
       clearButtonSelector: "[data-clear-filter]",
       activeIndicatorSelector: "[data-active-filter]",
+      statusSelector: "[data-project-filter-status]",
+    })
+
+    const otherProjects =
+      document.querySelector<HTMLDetailsElement>(".other-projects")
+    anchor.addEventListener("click", (event) => {
+      const filterTrigger = (event.target as Element).closest(
+        "[data-project-category-filter], [data-project-category]",
+      )
+      if (!filterTrigger) return
+      requestAnimationFrame(() => {
+        if (controller.getActive() && otherProjects) otherProjects.open = true
+      })
     })
   }
 
@@ -117,29 +174,100 @@ const githubUrl =
     gap: var(--space-xl);
   }
 
-  .chip-count {
-    margin-inline-start: 0.125rem;
-    opacity: 0.6;
+  .projects-featured {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
   }
 
   .chip-active-filter[hidden] {
     display: none;
   }
 
-  .projects-section-title {
-    margin-block: 0 var(--space-s);
-    font-size: var(--step-2);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  [data-project-section]:first-child :global(.section-block) {
+  .projects-featured :global(.section-block) {
     margin-block-start: 0;
   }
 
-  project-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+  .other-projects {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--muted) 24%, transparent);
+  }
+
+  .other-projects summary,
+  .other-projects-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  .other-projects summary {
+    justify-content: space-between;
     gap: var(--space-s);
+    min-block-size: var(--control-size);
+    padding: var(--space-xs) var(--space-s);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    list-style: none;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .other-projects summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .other-projects-title {
+    font-size: var(--step-2);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .other-projects-toggle {
+    flex: none;
+    gap: var(--space-2xs);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+  }
+
+  [data-disclosure-hide] {
+    display: none;
+  }
+
+  .other-projects[open] [data-disclosure-show] {
+    display: none;
+  }
+
+  .other-projects[open] [data-disclosure-hide] {
+    display: inline;
+  }
+
+  :global(.other-projects-chevron) {
+    transition: rotate var(--motion-duration) var(--motion-ease);
+  }
+
+  .other-projects[open] :global(.other-projects-chevron) {
+    rotate: 180deg;
+  }
+
+  .other-projects-grid {
+    padding: 0 var(--space-s) var(--space-s);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .other-projects summary:hover {
+      background: color-mix(in oklab, var(--primary) 10%, transparent);
+      color: var(--primary);
+    }
+  }
+
+  @media (width < 40rem) {
+    .other-projects-grid {
+      padding: 0 var(--space-xs) var(--space-xs);
+    }
+  }
+
+  :global(.project-grid[data-columns="2"]) {
+    grid-template-columns: 1fr;
 
     @media (width >= 64rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));

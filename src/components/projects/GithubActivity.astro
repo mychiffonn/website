@@ -1,73 +1,792 @@
 ---
-import { Image } from "astro:assets"
-
 import Link from "@/components/base/Link.astro"
+import Tooltip from "@/components/base/Tooltip.astro"
 import Section from "@/components/layout/Section.astro"
 
 interface Props {
   class?: string
   username?: string
   githubUrl?: string
+  pollMs?: number
 }
 
 const {
   class: className,
   username,
   githubUrl = "https://github.com",
+  pollMs = 300_000,
 } = Astro.props
 
-// Extract username from githubUrl if not provided
-const ghUser = username || githubUrl?.split("/").pop() || ""
+const ghUser = username || githubUrl.replace(/\/$/, "").split("/").pop() || ""
+
+interface GithubContributionDay {
+  date: string
+  count: number
+}
+
+async function fetchContributionYear(
+  username: string,
+  year: number,
+): Promise<GithubContributionDay[]> {
+  const response = await fetch(
+    `https://github.com/users/${encodeURIComponent(username)}/contributions?from=${year}-01-01&to=${year}-12-31`,
+    {
+      headers: {
+        Accept: "text/html",
+        "User-Agent": "astro-scholar",
+      },
+    },
+  )
+  if (!response.ok) throw new Error(`GitHub returned ${response.status}`)
+
+  const html = await response.text()
+  const tooltipCounts = new Map<string, number>()
+  for (const match of html.matchAll(
+    /<tool-tip\b[^>]*\bfor="([^"]+)"[^>]*>([^<]*)<\/tool-tip>/g,
+  )) {
+    const count = match[2].match(/^([\d,]+) contributions?/i)
+    tooltipCounts.set(
+      match[1],
+      count ? Number(count[1].replaceAll(",", "")) : 0,
+    )
+  }
+
+  const days: GithubContributionDay[] = []
+  for (const match of html.matchAll(
+    /<td\b[^>]*\bdata-date="(\d{4}-\d{2}-\d{2})"[^>]*>/g,
+  )) {
+    const id = match[0].match(/\bid="([^"]+)"/)?.[1]
+    days.push({ date: match[1], count: id ? tooltipCounts.get(id) || 0 : 0 })
+  }
+  return days
+}
+
+async function getContributionDays(
+  username: string,
+): Promise<GithubContributionDay[]> {
+  if (!username) return []
+  const today = new Date()
+  const earliest = new Date(
+    Date.UTC(
+      today.getUTCFullYear(),
+      today.getUTCMonth(),
+      today.getUTCDate() - 364,
+    ),
+  )
+  const years = [
+    ...new Set([earliest.getUTCFullYear(), today.getUTCFullYear()]),
+  ]
+
+  try {
+    const days = (
+      await Promise.all(
+        years.map((year) => fetchContributionYear(username, year)),
+      )
+    ).flat()
+    const earliestKey = earliest.toISOString().slice(0, 10)
+    const todayKey = today.toISOString().slice(0, 10)
+    return days.filter(({ date }) => date >= earliestKey && date <= todayKey)
+  } catch {
+    return []
+  }
+}
+
+const contributionDays = await getContributionDays(ghUser)
+const activityTooltipId = `github-activity-tooltip-${ghUser.replace(/[^a-z0-9_-]/gi, "-")}`
 ---
 
 {ghUser && (
     <Section title="GitHub Activity" class:list={["github-activity", className]}>
-      <p>
-        My{" "}
-        <Link href={githubUrl} external class="github-activity-link">
-          GitHub ↗
-        </Link>{" "}
-        contributions over the past year. Colored squares represent days with commits.
-      </p>
-      <div class="github-activity-chart">
-        <Image
-          src={`https://ghchart.rshah.org/659eb9/${ghUser}`}
-          alt="GitHub contribution chart"
-          width={896}
-          height={128}
-          loading="lazy"
-          class="github-activity-image"
+      <github-activity
+        data-username={ghUser}
+        data-poll-ms={pollMs}
+        data-state="loading"
+      >
+        <div class="github-activity-intro">
+          <p>
+            Recent public activity from{" "}
+            <Link href={githubUrl} external class="github-activity-link">
+              @{ghUser}
+            </Link>
+            . Hover over a day, or focus the heatmap and use the arrow keys, to
+            inspect the past year.
+          </p>
+          <span class="github-activity-status" data-activity-status aria-live="polite">
+            Syncing with GitHub…
+          </span>
+        </div>
+
+        <div class="github-activity-panel">
+          <div class="github-activity-chart">
+            <div class="github-activity-weekdays" aria-hidden="true">
+              <span>Sun</span>
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+            </div>
+            <div class="github-activity-scroll">
+              <div
+                class="github-activity-grid"
+                data-activity-grid
+                role="grid"
+                tabindex="0"
+                aria-label={`GitHub contributions over the past year for ${ghUser}`}
+                aria-rowcount="7"
+                aria-colcount="53"
+                aria-busy="true"
+              />
+            </div>
+          </div>
+
+          <div class="github-activity-footer">
+            <span class="github-activity-legend" aria-label="Activity intensity legend">
+              <span>Less</span>
+              {[0, 1, 2, 3, 4].map((level) => (
+                <i data-level={level} aria-hidden="true" />
+              ))}
+              <span>More</span>
+            </span>
+          </div>
+
+          <Tooltip id={activityTooltipId} manual delayDuration={0} closeDelay={0} />
+        </div>
+
+        <script
+          is:inline
+          type="application/json"
+          data-contribution-days
+          set:html={JSON.stringify(contributionDays)}
         />
-      </div>
+
+        <noscript>
+          <p>
+            JavaScript is required for the live heatmap. Visit{" "}
+            <a href={githubUrl}>GitHub</a> to view activity directly.
+          </p>
+        </noscript>
+      </github-activity>
     </Section>
   )}
 
 <style>
-  :global(.github-activity) {
+  github-activity {
     display: flex;
     flex-direction: column;
     gap: var(--space-s);
   }
 
-  .github-activity p {
+  .github-activity-intro,
+  .github-activity-footer,
+  .github-activity-legend,
+  .github-activity-chart {
+    display: flex;
+    align-items: center;
+  }
+
+  .github-activity-intro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .github-activity-intro p {
+    max-inline-size: 68ch;
+    margin: 0;
     color: var(--muted-foreground);
+    font-size: var(--step--1);
+    text-wrap: pretty;
   }
 
   :global(.github-activity-link) {
     color: var(--primary);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .github-activity-status {
+    flex: none;
+    color: var(--muted-foreground);
+    font-size: var(--step--2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .github-activity-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-s);
+    border: 1px solid color-mix(in oklab, var(--primary) 22%, var(--border));
+    border-radius: var(--radius-xl);
+    background:
+      linear-gradient(
+        145deg,
+        color-mix(in oklab, var(--primary) 7%, transparent),
+        transparent 48%
+      ),
+      var(--background);
+    box-shadow: 0 0.75rem 2rem -1.75rem
+      color-mix(in oklab, var(--ring) 30%, transparent);
   }
 
   .github-activity-chart {
-    display: flex;
-    justify-content: center;
-    margin-block-end: var(--space-s);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    background: var(--background);
+    align-items: stretch;
+    gap: var(--space-2xs);
   }
 
-  :global(.github-activity-image) {
-    inline-size: 100%;
-    padding: var(--space-s);
+  .github-activity-weekdays {
+    display: grid;
+    flex: none;
+    grid-template-rows: repeat(7, 0.75rem);
+    gap: 0.25rem;
+    color: var(--muted-foreground);
+    font-size: 0.625rem;
+    line-height: 0.75rem;
+  }
+
+  .github-activity-weekdays span {
+    inline-size: 1.75rem;
+  }
+
+  .github-activity-weekdays span:nth-child(even) {
+    visibility: hidden;
+  }
+
+  .github-activity-scroll {
+    min-inline-size: 0;
+    overflow-x: auto;
+    padding: 0.25rem;
+    scrollbar-width: thin;
+  }
+
+  .github-activity-grid {
+    display: grid;
+    inline-size: max-content;
+    grid-auto-columns: 0.75rem;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, 0.75rem);
+    gap: 0.25rem;
+    border-radius: var(--radius-sm);
+    outline: none;
+  }
+
+  .github-activity-grid:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 0.25rem;
+  }
+
+  .github-activity-grid :global([data-activity-day]),
+  .github-activity-legend i {
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    border-radius: 0.125rem;
+    background: color-mix(in oklab, var(--muted) 76%, var(--background));
+  }
+
+  .github-activity-grid :global([data-activity-day]) {
+    transition:
+      box-shadow var(--motion-duration-fast) var(--motion-ease),
+      scale var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .github-activity-grid :global([data-activity-day][data-level="1"]),
+  .github-activity-legend i[data-level="1"] {
+    background: color-mix(in oklab, var(--primary) 30%, var(--background));
+  }
+
+  .github-activity-grid :global([data-activity-day][data-level="2"]),
+  .github-activity-legend i[data-level="2"] {
+    background: color-mix(in oklab, var(--primary) 52%, var(--background));
+  }
+
+  .github-activity-grid :global([data-activity-day][data-level="3"]),
+  .github-activity-legend i[data-level="3"] {
+    background: color-mix(in oklab, var(--primary) 74%, var(--background));
+  }
+
+  .github-activity-grid :global([data-activity-day][data-level="4"]),
+  .github-activity-legend i[data-level="4"] {
+    background: var(--primary);
+  }
+
+  .github-activity-grid :global([data-future]) {
+    opacity: 0.24;
+  }
+
+  .github-activity-grid :global([aria-selected="true"]) {
+    z-index: 1;
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--accent);
+    scale: 1.08;
+  }
+
+  .github-activity-footer {
+    justify-content: flex-end;
+    gap: var(--space-s);
+    color: var(--muted-foreground);
+    font-size: var(--step--2);
+  }
+
+  .github-activity-legend {
+    flex: none;
+    gap: var(--space-3xs);
+  }
+
+  github-activity[data-state="loading"] .github-activity-grid {
+    opacity: 0.62;
+  }
+
+  github-activity[data-state="error"] .github-activity-status {
+    color: var(--destructive);
+  }
+
+  @media (width < 40rem) {
+    .github-activity-intro {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: var(--space-2xs);
+    }
+
+    .github-activity-panel {
+      padding: var(--space-xs);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .github-activity-grid :global([data-activity-day]:hover) {
+      box-shadow:
+        0 0 0 2px var(--background),
+        0 0 0 4px var(--accent);
+      scale: 1.08;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .github-activity-grid :global([data-activity-day]) {
+      transition-duration: 0.01ms;
+    }
   }
 </style>
+
+<script>
+  interface GithubEvent {
+    id: string
+    type: string
+    created_at: string
+  }
+
+  interface GithubActivityCache {
+    fetchedAt: number
+    events: GithubEvent[]
+  }
+
+  interface GithubContributionDay {
+    date: string
+    count: number
+  }
+
+  interface ActivityDay {
+    date: string
+    total: number
+    eventTotal: number
+    types: Map<string, number>
+    future: boolean
+  }
+
+  interface TooltipController extends HTMLElement {
+    show(anchor: HTMLElement, content?: string, immediate?: boolean): void
+    hide(immediate?: boolean): void
+  }
+
+  class GithubActivityHeatmap extends HTMLElement {
+    private grid: HTMLElement | null = null
+    private tooltip: TooltipController | null = null
+    private status: HTMLElement | null = null
+    private contributions: GithubContributionDay[] = []
+    private days: ActivityDay[] = []
+    private selectedIndex = 0
+    private timer: number | undefined
+    private lastFetchedAt = 0
+    private pollMs = 300_000
+
+    private readonly handleVisibility = () => {
+      if (
+        document.visibilityState === "visible" &&
+        Date.now() - this.lastFetchedAt >= this.pollMs
+      ) {
+        void this.refresh(false)
+      }
+    }
+
+    private readonly handleKeydown = (event: KeyboardEvent) => {
+      const moves: Record<string, number> = {
+        ArrowUp: -1,
+        ArrowDown: 1,
+        ArrowLeft: -7,
+        ArrowRight: 7,
+      }
+
+      if (event.key === "Home") {
+        event.preventDefault()
+        this.selectDay(0, true, true)
+        return
+      }
+      if (event.key === "End") {
+        event.preventDefault()
+        this.selectDay(this.days.length - 1, true, true)
+        return
+      }
+
+      const move = moves[event.key]
+      if (!move) return
+      event.preventDefault()
+      this.selectDay(this.selectedIndex + move, true, true)
+    }
+
+    private readonly handlePointer = (event: Event) => {
+      const cell = (event.target as Element).closest<HTMLElement>(
+        "[data-activity-day]",
+      )
+      const index = Number(cell?.dataset.index)
+      if (!Number.isNaN(index)) {
+        this.selectDay(index)
+        if (cell) this.showTooltip(cell)
+      }
+    }
+
+    private readonly handlePointerLeave = () => {
+      if (document.activeElement !== this.grid) this.hideTooltip()
+    }
+
+    private readonly handleFocus = () => {
+      const cell = this.grid?.querySelector<HTMLElement>(
+        `[data-index="${this.selectedIndex}"]`,
+      )
+      if (cell) this.showTooltip(cell)
+    }
+
+    private readonly handleBlur = () => this.hideTooltip()
+    private readonly handleResize = () => this.hideTooltip()
+
+    private cacheKey(username: string): string {
+      return `github-activity:${username}`
+    }
+
+    private readCache(
+      username: string,
+      freshOnly: boolean,
+    ): GithubActivityCache | null {
+      try {
+        const value = sessionStorage.getItem(this.cacheKey(username))
+        if (!value) return null
+        const cache = JSON.parse(value) as GithubActivityCache
+        if (!Array.isArray(cache.events) || !Number.isFinite(cache.fetchedAt))
+          return null
+        if (freshOnly && Date.now() - cache.fetchedAt >= this.pollMs)
+          return null
+        return cache
+      } catch {
+        return null
+      }
+    }
+
+    private writeCache(username: string, events: GithubEvent[]): void {
+      try {
+        sessionStorage.setItem(
+          this.cacheKey(username),
+          JSON.stringify({ fetchedAt: Date.now(), events }),
+        )
+      } catch {
+        // The live view still works when storage is unavailable.
+      }
+    }
+
+    private async fetchEvents(username: string): Promise<GithubEvent[]> {
+      const events: GithubEvent[] = []
+
+      for (let page = 1; page <= 3; page += 1) {
+        const url = new URL(
+          `https://api.github.com/users/${encodeURIComponent(username)}/events/public`,
+        )
+        url.searchParams.set("per_page", "100")
+        url.searchParams.set("page", String(page))
+
+        const response = await fetch(url, {
+          headers: {
+            Accept: "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2026-03-10",
+          },
+          referrerPolicy: "no-referrer",
+        })
+        if (!response.ok) throw new Error(`GitHub returned ${response.status}`)
+
+        const batch = (await response.json()) as GithubEvent[]
+        if (!Array.isArray(batch)) throw new Error("Unexpected GitHub response")
+        events.push(...batch)
+        if (batch.length < 100) break
+      }
+
+      return [...new Map(events.map((event) => [event.id, event])).values()]
+    }
+
+    private eventLabel(type: string, count: number): string {
+      const labels: Record<string, [string, string]> = {
+        CreateEvent: ["created ref", "created refs"],
+        ForkEvent: ["fork", "forks"],
+        IssueCommentEvent: ["comment", "comments"],
+        IssuesEvent: ["issue", "issues"],
+        PullRequestEvent: ["pull request", "pull requests"],
+        PullRequestReviewEvent: ["review", "reviews"],
+        PushEvent: ["push", "pushes"],
+        ReleaseEvent: ["release", "releases"],
+        WatchEvent: ["star", "stars"],
+      }
+      const label = labels[type] || ["other event", "other events"]
+      return label[count === 1 ? 0 : 1]
+    }
+
+    private level(total: number): number {
+      if (total === 0) return 0
+      if (total === 1) return 1
+      if (total <= 3) return 2
+      if (total <= 6) return 3
+      return 4
+    }
+
+    private daySummary(day: ActivityDay): string {
+      const date = new Intl.DateTimeFormat("en-US", {
+        dateStyle: "long",
+        timeZone: "UTC",
+      }).format(new Date(`${day.date}T00:00:00Z`))
+
+      if (day.future) return `${date}: not reached yet.`
+      if (day.total === 0 && day.eventTotal === 0)
+        return `${date}: no GitHub contributions shown.`
+
+      const breakdown = [...day.types.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([type, count]) => `${count} ${this.eventLabel(type, count)}`)
+        .join(", ")
+      const contributionSummary =
+        day.total === 0
+          ? "no GitHub contributions shown"
+          : `${day.total} GitHub ${day.total === 1 ? "contribution" : "contributions"}`
+      if (!breakdown) return `${date}: ${contributionSummary}.`
+      return `${date}: ${contributionSummary}; recent public activity includes ${breakdown}.`
+    }
+
+    private buildDays(events: GithubEvent[]): ActivityDay[] {
+      const today = new Date()
+      const todayUtc = new Date(
+        Date.UTC(
+          today.getUTCFullYear(),
+          today.getUTCMonth(),
+          today.getUTCDate(),
+        ),
+      )
+      const earliest = new Date(todayUtc)
+      earliest.setUTCDate(earliest.getUTCDate() - 364)
+      const start = new Date(todayUtc)
+      start.setTime(earliest.getTime())
+      start.setUTCDate(start.getUTCDate() - start.getUTCDay())
+      const end = new Date(todayUtc)
+      end.setUTCDate(end.getUTCDate() + (6 - end.getUTCDay()))
+
+      const activity = new Map<string, ActivityDay>()
+      const totalDays =
+        Math.round((end.getTime() - start.getTime()) / 86_400_000) + 1
+      for (let index = 0; index < totalDays; index += 1) {
+        const date = new Date(start)
+        date.setUTCDate(start.getUTCDate() + index)
+        const key = date.toISOString().slice(0, 10)
+        activity.set(key, {
+          date: key,
+          total: 0,
+          eventTotal: 0,
+          types: new Map(),
+          future: date > todayUtc,
+        })
+      }
+
+      for (const contribution of this.contributions) {
+        const day = activity.get(contribution.date)
+        if (day) day.total = contribution.count
+      }
+
+      for (const event of events) {
+        const day = activity.get(event.created_at.slice(0, 10))
+        if (!day) continue
+        day.eventTotal += 1
+        day.types.set(event.type, (day.types.get(event.type) || 0) + 1)
+      }
+
+      if (this.contributions.length === 0) {
+        for (const day of activity.values()) day.total = day.eventTotal
+      }
+
+      return [...activity.values()]
+    }
+
+    private render(events: GithubEvent[]): void {
+      if (!this.grid) return
+      this.days = this.buildDays(events)
+      const fragment = document.createDocumentFragment()
+
+      this.days.forEach((day, index) => {
+        const cell = document.createElement("span")
+        cell.id = `${this.grid?.id || "github-activity"}-day-${index}`
+        cell.dataset.activityDay = ""
+        cell.dataset.index = String(index)
+        cell.dataset.level = String(this.level(day.total))
+        cell.dataset.tooltipId = `github-activity-tooltip-${(this.dataset.username || "user").replace(/[^a-z0-9_-]/gi, "-")}`
+        cell.dataset.tooltipContent = this.daySummary(day)
+        if (day.future) cell.dataset.future = ""
+        cell.setAttribute("role", "gridcell")
+        cell.setAttribute("aria-label", this.daySummary(day))
+        cell.setAttribute("aria-selected", "false")
+        fragment.append(cell)
+      })
+
+      this.grid.replaceChildren(fragment)
+      this.grid.setAttribute("aria-busy", "false")
+      this.grid.setAttribute(
+        "aria-colcount",
+        String(Math.ceil(this.days.length / 7)),
+      )
+
+      const scroller = this.grid.parentElement
+      if (scroller && !scroller.dataset.initialScroll) {
+        scroller.dataset.initialScroll = "true"
+        requestAnimationFrame(() => {
+          scroller.scrollLeft = scroller.scrollWidth
+        })
+      }
+
+      const todayIndex = this.days.findLastIndex((day) => !day.future)
+      this.selectDay(todayIndex, false)
+    }
+
+    private selectDay(index: number, focus = false, reveal = false): void {
+      if (!this.grid || this.days.length === 0) return
+      const next = Math.max(0, Math.min(index, this.days.length - 1))
+      const current = this.grid.querySelector<HTMLElement>(
+        '[aria-selected="true"]',
+      )
+      current?.setAttribute("aria-selected", "false")
+
+      const cell = this.grid.querySelector<HTMLElement>(
+        `[data-index="${next}"]`,
+      )
+      if (!cell) return
+      cell.setAttribute("aria-selected", "true")
+      this.grid.setAttribute("aria-activedescendant", cell.id)
+      this.selectedIndex = next
+      if (focus) this.grid.focus()
+      if (reveal) this.showTooltip(cell)
+    }
+
+    private showTooltip(cell: HTMLElement): void {
+      if (!this.tooltip) return
+      this.tooltip.show(cell, undefined, true)
+    }
+
+    private hideTooltip(): void {
+      this.tooltip?.hide(true)
+    }
+
+    private setStatus(message: string): void {
+      if (this.status) this.status.textContent = message
+    }
+
+    private async refresh(preferCache: boolean): Promise<void> {
+      const username = this.dataset.username
+      if (!username || this.dataset.refreshing === "true") return
+      this.dataset.refreshing = "true"
+
+      try {
+        const cached = this.readCache(username, true)
+        if (preferCache && cached) {
+          this.lastFetchedAt = cached.fetchedAt
+          this.render(cached.events)
+          this.dataset.state = "ready"
+          this.setStatus("Past year · recent activity cached")
+          return
+        }
+
+        const events = await this.fetchEvents(username)
+        this.lastFetchedAt = Date.now()
+        this.writeCache(username, events)
+        this.render(events)
+        this.dataset.state = "ready"
+        this.setStatus(
+          `Past year · recent activity updated ${new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date())}`,
+        )
+      } catch {
+        const stale = this.readCache(username, false)
+        if (stale) {
+          this.render(stale.events)
+          this.dataset.state = "ready"
+          this.setStatus("Past year · recent activity sync unavailable")
+        } else {
+          this.dataset.state = "error"
+          this.grid?.setAttribute("aria-busy", "false")
+          this.setStatus("GitHub activity is temporarily unavailable")
+        }
+      } finally {
+        delete this.dataset.refreshing
+      }
+    }
+
+    connectedCallback(): void {
+      if (this.dataset.initialized === "true") return
+      this.dataset.initialized = "true"
+      this.pollMs = Math.max(Number(this.dataset.pollMs) || 300_000, 60_000)
+      this.grid = this.querySelector<HTMLElement>("[data-activity-grid]")
+      this.tooltip = this.querySelector<TooltipController>("base-tooltip")
+      this.status = this.querySelector<HTMLElement>("[data-activity-status]")
+      const contributionData = this.querySelector<HTMLScriptElement>(
+        "[data-contribution-days]",
+      )
+      try {
+        this.contributions = JSON.parse(contributionData?.textContent || "[]")
+      } catch {
+        this.contributions = []
+      }
+      if (!this.grid) return
+
+      this.grid.id = `github-activity-${this.dataset.username || "user"}-grid`
+      this.grid.addEventListener("keydown", this.handleKeydown)
+      this.grid.addEventListener("pointerover", this.handlePointer)
+      this.grid.addEventListener("click", this.handlePointer)
+      this.grid.addEventListener("pointerleave", this.handlePointerLeave)
+      this.grid.addEventListener("focus", this.handleFocus)
+      this.grid.addEventListener("blur", this.handleBlur)
+      window.addEventListener("resize", this.handleResize)
+      document.addEventListener("visibilitychange", this.handleVisibility)
+      void this.refresh(true)
+      this.timer = window.setInterval(() => {
+        if (document.visibilityState === "visible") void this.refresh(false)
+      }, this.pollMs)
+    }
+
+    disconnectedCallback(): void {
+      if (this.timer) window.clearInterval(this.timer)
+      this.grid?.removeEventListener("keydown", this.handleKeydown)
+      this.grid?.removeEventListener("pointerover", this.handlePointer)
+      this.grid?.removeEventListener("click", this.handlePointer)
+      this.grid?.removeEventListener("pointerleave", this.handlePointerLeave)
+      this.grid?.removeEventListener("focus", this.handleFocus)
+      this.grid?.removeEventListener("blur", this.handleBlur)
+      window.removeEventListener("resize", this.handleResize)
+      document.removeEventListener("visibilitychange", this.handleVisibility)
+    }
+  }
+
+  if (!customElements.get("github-activity")) {
+    customElements.define("github-activity", GithubActivityHeatmap)
+  }
+</script>

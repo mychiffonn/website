@@ -146,6 +146,7 @@ export const PROFILE_ICON_MAP = {
 export const PROJECT_LINK_TYPES = {
   code: { label: "Code", iconName: "mingcute:code-line" },
   doc: { label: "Documentation", iconName: "mingcute:document-line" },
+  paper: { label: "Paper", iconName: "academicons:arxiv" },
   release: { label: "Release", iconName: "mingcute:download-line" },
   url: { label: "Website", iconName: "mingcute:globe-2-line" },
 } as const

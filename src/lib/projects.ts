@@ -13,12 +13,14 @@ export type Project = CollectionEntry<"projects">
 export const getProjectLinks = (
   code?: string,
   doc?: string,
+  paper?: string,
   url?: string,
   release?: string,
 ) => {
   const linkData = [
     { type: "code" as const, href: code },
     { type: "doc" as const, href: doc },
+    { type: "paper" as const, href: paper },
     { type: "url" as const, href: url },
     { type: "release" as const, href: release },
   ]

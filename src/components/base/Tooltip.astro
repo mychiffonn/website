@@ -1,0 +1,404 @@
+---
+interface Props {
+  id: string
+  side?: "top" | "right" | "bottom" | "left"
+  align?: "start" | "center" | "end"
+  sideOffset?: number
+  collisionPadding?: number
+  delayDuration?: number
+  closeDelay?: number
+  manual?: boolean
+  class?: string
+}
+
+const {
+  id,
+  side = "top",
+  align = "center",
+  sideOffset = 8,
+  collisionPadding = 8,
+  delayDuration = 180,
+  closeDelay = 80,
+  manual = false,
+  class: className,
+} = Astro.props
+---
+
+<base-tooltip
+  data-tooltip-id={id}
+  data-side={side}
+  data-align={align}
+  data-side-offset={sideOffset}
+  data-collision-padding={collisionPadding}
+  data-delay-duration={delayDuration}
+  data-close-delay={closeDelay}
+  data-manual={manual ? "true" : undefined}
+>
+  <span
+    id={id}
+    class:list={["tooltip-positioner", className]}
+    data-tooltip-popup
+    data-side={side}
+    role="tooltip"
+    aria-hidden="true"
+  >
+    <span data-tooltip-content><slot /></span>
+    <span class="tooltip-arrow" data-tooltip-arrow aria-hidden="true"></span>
+  </span>
+</base-tooltip>
+
+<style>
+  base-tooltip {
+    display: contents;
+  }
+
+  .tooltip-positioner {
+    position: fixed;
+    z-index: 60;
+    inset: 0 auto auto 0;
+    inline-size: max-content;
+    max-inline-size: min(22rem, calc(100vw - 1rem));
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-md);
+    visibility: hidden;
+    opacity: 0;
+    background: var(--foreground);
+    box-shadow: 0 0.5rem 1.25rem -0.5rem oklch(0 0 0 / 0.28);
+    color: var(--background);
+    font-size: var(--step--2);
+    line-height: var(--line-height-normal);
+    pointer-events: none;
+    text-wrap: pretty;
+    transition:
+      opacity var(--motion-duration-fast) var(--motion-ease),
+      translate var(--motion-duration-fast) var(--motion-ease),
+      visibility 0s linear var(--motion-duration-fast);
+  }
+
+  .tooltip-positioner[data-open] {
+    visibility: visible;
+    opacity: 1;
+    translate: 0;
+    transition-delay: 0s;
+  }
+
+  .tooltip-positioner[data-side="top"] {
+    translate: 0 0.125rem;
+  }
+
+  .tooltip-positioner[data-side="right"] {
+    translate: -0.125rem 0;
+  }
+
+  .tooltip-positioner[data-side="bottom"] {
+    translate: 0 -0.125rem;
+  }
+
+  .tooltip-positioner[data-side="left"] {
+    translate: 0.125rem 0;
+  }
+
+  .tooltip-arrow {
+    position: absolute;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 0.0625rem;
+    background: inherit;
+    rotate: 45deg;
+  }
+
+  .tooltip-positioner[data-side="top"] .tooltip-arrow,
+  .tooltip-positioner[data-side="bottom"] .tooltip-arrow {
+    inset-inline-start: var(--tooltip-arrow-offset, 50%);
+    translate: -50% 0;
+  }
+
+  .tooltip-positioner[data-side="top"] .tooltip-arrow {
+    inset-block-end: -0.25rem;
+  }
+
+  .tooltip-positioner[data-side="bottom"] .tooltip-arrow {
+    inset-block-start: -0.25rem;
+  }
+
+  .tooltip-positioner[data-side="left"] .tooltip-arrow,
+  .tooltip-positioner[data-side="right"] .tooltip-arrow {
+    inset-block-start: var(--tooltip-arrow-offset, 50%);
+    translate: 0 -50%;
+  }
+
+  .tooltip-positioner[data-side="left"] .tooltip-arrow {
+    inset-inline-end: -0.25rem;
+  }
+
+  .tooltip-positioner[data-side="right"] .tooltip-arrow {
+    inset-inline-start: -0.25rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tooltip-positioner {
+      transition-duration: 0.01ms;
+    }
+  }
+</style>
+
+<script>
+  type TooltipSide = "top" | "right" | "bottom" | "left"
+  type TooltipAlign = "start" | "center" | "end"
+
+  class BaseTooltip extends HTMLElement {
+    private popup: HTMLElement | null = null
+    private content: HTMLElement | null = null
+    private anchor: HTMLElement | null = null
+    private openTimer: number | undefined
+    private closeTimer: number | undefined
+    private describedAnchor: HTMLElement | null = null
+
+    private get tooltipId(): string {
+      return this.dataset.tooltipId || ""
+    }
+
+    private get numberOptions() {
+      return {
+        sideOffset: Number(this.dataset.sideOffset) || 8,
+        collisionPadding: Number(this.dataset.collisionPadding) || 8,
+        delayDuration: Math.max(Number(this.dataset.delayDuration) || 0, 0),
+        closeDelay: Math.max(Number(this.dataset.closeDelay) || 0, 0),
+      }
+    }
+
+    private get preferredSide(): TooltipSide {
+      const side = this.dataset.side
+      return side === "right" || side === "bottom" || side === "left"
+        ? side
+        : "top"
+    }
+
+    private get preferredAlign(): TooltipAlign {
+      const align = this.dataset.align
+      return align === "start" || align === "end" ? align : "center"
+    }
+
+    private readonly handlePointerOver = (event: PointerEvent) => {
+      const anchor = this.findAnchor(event.target)
+      if (!anchor || anchor.contains(event.relatedTarget as Node | null)) return
+      this.show(anchor)
+    }
+
+    private readonly handlePointerOut = (event: PointerEvent) => {
+      const anchor = this.findAnchor(event.target)
+      if (!anchor || anchor.contains(event.relatedTarget as Node | null)) return
+      this.hide()
+    }
+
+    private readonly handleFocusIn = (event: FocusEvent) => {
+      const anchor = this.findAnchor(event.target)
+      if (anchor) this.show(anchor, undefined, true)
+    }
+
+    private readonly handleFocusOut = (event: FocusEvent) => {
+      const anchor = this.findAnchor(event.target)
+      if (!anchor || anchor.contains(event.relatedTarget as Node | null)) return
+      this.hide(true)
+    }
+
+    private readonly handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") this.hide(true)
+    }
+
+    private readonly handleViewportChange = () => {
+      if (!this.anchor || !this.popup?.hasAttribute("data-open")) return
+      requestAnimationFrame(() => {
+        if (this.anchor) this.position(this.anchor)
+      })
+    }
+
+    private findAnchor(target: EventTarget | null): HTMLElement | null {
+      if (!(target instanceof Element) || !this.tooltipId) return null
+      const anchor = target.closest<HTMLElement>("[data-tooltip-id]")
+      return anchor?.dataset.tooltipId === this.tooltipId ? anchor : null
+    }
+
+    private setDescription(anchor: HTMLElement, content: string): void {
+      if (!this.popup || anchor.getAttribute("aria-label") === content) return
+      const ids = new Set(
+        (anchor.getAttribute("aria-describedby") || "")
+          .split(/\s+/)
+          .filter(Boolean),
+      )
+      ids.add(this.popup.id)
+      anchor.setAttribute("aria-describedby", [...ids].join(" "))
+      this.describedAnchor = anchor
+    }
+
+    private clearDescription(): void {
+      if (!this.popup || !this.describedAnchor) return
+      const ids = (this.describedAnchor.getAttribute("aria-describedby") || "")
+        .split(/\s+/)
+        .filter((id) => id && id !== this.popup?.id)
+      if (ids.length > 0) {
+        this.describedAnchor.setAttribute("aria-describedby", ids.join(" "))
+      } else {
+        this.describedAnchor.removeAttribute("aria-describedby")
+      }
+      this.describedAnchor = null
+    }
+
+    private opposite(side: TooltipSide): TooltipSide {
+      return { top: "bottom", right: "left", bottom: "top", left: "right" }[
+        side
+      ] as TooltipSide
+    }
+
+    private sideFits(
+      side: TooltipSide,
+      anchor: DOMRect,
+      popup: DOMRect,
+      padding: number,
+      offset: number,
+    ): boolean {
+      if (side === "top") return anchor.top - popup.height - offset >= padding
+      if (side === "bottom")
+        return anchor.bottom + popup.height + offset <= innerHeight - padding
+      if (side === "left") return anchor.left - popup.width - offset >= padding
+      return anchor.right + popup.width + offset <= innerWidth - padding
+    }
+
+    private position(anchor: HTMLElement): void {
+      if (!this.popup) return
+      const anchorRect = anchor.getBoundingClientRect()
+      const popupRect = this.popup.getBoundingClientRect()
+      const { sideOffset, collisionPadding } = this.numberOptions
+      const preferred = this.preferredSide
+      const side = this.sideFits(
+        preferred,
+        anchorRect,
+        popupRect,
+        collisionPadding,
+        sideOffset,
+      )
+        ? preferred
+        : this.opposite(preferred)
+      const align = this.preferredAlign
+      const horizontal = side === "top" || side === "bottom"
+      let left = horizontal
+        ? align === "start"
+          ? anchorRect.left
+          : align === "end"
+            ? anchorRect.right - popupRect.width
+            : anchorRect.left + (anchorRect.width - popupRect.width) / 2
+        : side === "left"
+          ? anchorRect.left - popupRect.width - sideOffset
+          : anchorRect.right + sideOffset
+      let top = horizontal
+        ? side === "top"
+          ? anchorRect.top - popupRect.height - sideOffset
+          : anchorRect.bottom + sideOffset
+        : align === "start"
+          ? anchorRect.top
+          : align === "end"
+            ? anchorRect.bottom - popupRect.height
+            : anchorRect.top + (anchorRect.height - popupRect.height) / 2
+
+      left = Math.max(
+        collisionPadding,
+        Math.min(left, innerWidth - popupRect.width - collisionPadding),
+      )
+      top = Math.max(
+        collisionPadding,
+        Math.min(top, innerHeight - popupRect.height - collisionPadding),
+      )
+
+      const anchorCenter = horizontal
+        ? anchorRect.left + anchorRect.width / 2 - left
+        : anchorRect.top + anchorRect.height / 2 - top
+      const arrowOffset = Math.max(
+        8,
+        Math.min(
+          anchorCenter,
+          (horizontal ? popupRect.width : popupRect.height) - 8,
+        ),
+      )
+      this.popup.dataset.side = side
+      this.popup.style.left = `${left}px`
+      this.popup.style.top = `${top}px`
+      this.popup.style.setProperty("--tooltip-arrow-offset", `${arrowOffset}px`)
+    }
+
+    show(
+      anchor: HTMLElement,
+      content = anchor.dataset.tooltipContent,
+      immediate = false,
+    ): void {
+      if (!this.popup || !this.content || !content) return
+      window.clearTimeout(this.closeTimer)
+      window.clearTimeout(this.openTimer)
+      if (this.anchor && this.anchor !== anchor) this.clearDescription()
+      this.anchor = anchor
+      this.content.textContent = content
+      this.setDescription(anchor, content)
+      const open = () => {
+        if (!this.popup || this.anchor !== anchor) return
+        this.popup.setAttribute("aria-hidden", "false")
+        this.position(anchor)
+        this.popup.dataset.open = ""
+      }
+      if (immediate || this.popup.hasAttribute("data-open")) open()
+      else
+        this.openTimer = window.setTimeout(
+          open,
+          this.numberOptions.delayDuration,
+        )
+    }
+
+    hide(immediate = false): void {
+      window.clearTimeout(this.openTimer)
+      window.clearTimeout(this.closeTimer)
+      const close = () => {
+        if (!this.popup) return
+        delete this.popup.dataset.open
+        this.popup.setAttribute("aria-hidden", "true")
+        this.clearDescription()
+        this.anchor = null
+      }
+      if (immediate) close()
+      else
+        this.closeTimer = window.setTimeout(
+          close,
+          this.numberOptions.closeDelay,
+        )
+    }
+
+    connectedCallback(): void {
+      if (this.dataset.initialized === "true") return
+      this.dataset.initialized = "true"
+      this.popup = this.querySelector<HTMLElement>("[data-tooltip-popup]")
+      this.content = this.querySelector<HTMLElement>("[data-tooltip-content]")
+      if (this.dataset.manual !== "true") {
+        document.addEventListener("pointerover", this.handlePointerOver)
+        document.addEventListener("pointerout", this.handlePointerOut)
+        document.addEventListener("focusin", this.handleFocusIn)
+        document.addEventListener("focusout", this.handleFocusOut)
+      }
+      document.addEventListener("keydown", this.handleKeydown)
+      window.addEventListener("resize", this.handleViewportChange)
+      window.addEventListener("scroll", this.handleViewportChange, true)
+    }
+
+    disconnectedCallback(): void {
+      window.clearTimeout(this.openTimer)
+      window.clearTimeout(this.closeTimer)
+      document.removeEventListener("pointerover", this.handlePointerOver)
+      document.removeEventListener("pointerout", this.handlePointerOut)
+      document.removeEventListener("focusin", this.handleFocusIn)
+      document.removeEventListener("focusout", this.handleFocusOut)
+      document.removeEventListener("keydown", this.handleKeydown)
+      window.removeEventListener("resize", this.handleViewportChange)
+      window.removeEventListener("scroll", this.handleViewportChange, true)
+    }
+  }
+
+  if (!customElements.get("base-tooltip")) {
+    customElements.define("base-tooltip", BaseTooltip)
+  }
+</script>

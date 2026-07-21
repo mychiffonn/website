@@ -2,13 +2,18 @@
 import type { CollectionEntry } from "astro:content"
 
 import { getProjectLinks } from "@/lib/projects"
-import { cn } from "@/lib/utils"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
 import Icon from "@/components/base/Icon.astro"
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardMeta,
+  CardTitle,
+} from "@/components/base/card"
 import DateRange from "@/components/projects/DateRange.astro"
-
-import "@/styles/card.css"
 
 interface Props {
   project: CollectionEntry<"projects">
@@ -22,86 +27,60 @@ const {
   toDate,
   code,
   doc,
+  paper,
   url,
   release,
   category,
   tags,
 } = project.data
 
-const links = getProjectLinks(code, doc, url, release)
+const links = getProjectLinks(code, doc, paper, url, release)
 
 const hasDetailPage = !!project.body?.trim()
-
-const cardClasses = cn(
-  "card card-content",
-  isHighlighted && "card-selected",
-  hasDetailPage && "card-clickable project-card-clickable",
-)
 ---
 
-<article
-  class={cardClasses}
+<Card
+  href={hasDetailPage ? `/projects/${project.id}` : undefined}
+  label={hasDetailPage ? `View details for ${title}` : undefined}
+  selected={isHighlighted}
+  class="project-card"
   data-project-categories={category?.join(",") ?? ""}
 >
-  {hasDetailPage && (
-      <a
-        href={`/projects/${project.id}`}
-        class="project-card-link"
-        aria-label={`View details for ${title}`}
-      />
-    )}
+  <CardHeader>
+    <CardTitle>{title}</CardTitle>
+  </CardHeader>
 
-  <div class="card-header">
-    <h3 class="card-title">{title}</h3>
-  </div>
-
-  <div class="card-meta">
+  <CardMeta>
     <DateRange fromDate={fromDate} toDate={toDate} class="project-date-range" />
-  </div>
+  </CardMeta>
 
-  {project.data.description && <p class="card-description">{project.data.description}</p>}
+  {project.data.description && (
+    <CardDescription>{project.data.description}</CardDescription>
+  )}
   {tags && tags.length > 0 && (
-      <div class="card-tags">
+      <CardFooter class="project-tags">
         {tags.map((tag: string) => (
           <Badge variant="muted" class="project-tag">
             {tag}
           </Badge>
         ))}
-      </div>
+      </CardFooter>
     )}
   {links.length > 0 && (
-      <div class="card-actions">
+      <CardFooter class="project-actions">
         {links.map(({ href, icon, label }) => (
           <Button href={href} variant="accent-outline">
             <Icon name={icon} />
             <span>{label}</span>
           </Button>
         ))}
-      </div>
+      </CardFooter>
     )}
-</article>
+</Card>
 
 <style>
-  .project-card-clickable {
-    position: relative;
-  }
-
-  .project-card-link {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-  }
-
-  .card-header,
-  .card-meta,
-  .card-description,
-  .card-tags,
-  .card-actions {
-    position: relative;
-  }
-
-  .card-title,
-  .card-meta {
+  .project-card :global([data-slot="card-title"]),
+  .project-card :global([data-slot="card-meta"]) {
     font-size: var(--step-0);
   }
 
@@ -116,7 +95,7 @@ const cardClasses = cn(
     line-height: 1.15;
   }
 
-  .card-actions {
+  .project-actions {
     z-index: 2;
   }
 </style>
