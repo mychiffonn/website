@@ -175,6 +175,16 @@ Use BibTeX fields consistently. Link-like fields are mapped to icons by
 `PUBLICATION_LINK_TYPES` in `src/icon.config.ts`. If you add a custom BibTeX
 field for links, add a matching entry there.
 
+Publication cards also support optional representative media. Add a public or
+remote image URL with `image`, plus concise alternative text with `imagealt`:
+
+```bibtex
+image={/img/publications/example.svg},
+imagealt={Diagram summarizing the publication's method},
+```
+
+Entries without these fields keep the standard text-only card layout.
+
 ## 10. Agent workflow
 
 When using a coding agent:

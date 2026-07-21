@@ -60,6 +60,18 @@
     "category": "metadata"
   },
   {
+    "name": "image",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
+    "name": "imagealt",
+    "fieldType": "field",
+    "valueType": "literal",
+    "category": "metadata"
+  },
+  {
     "name": "code",
     "fieldType": "field",
     "valueType": "uri",

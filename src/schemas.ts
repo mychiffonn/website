@@ -268,6 +268,8 @@ export const ProcessedPublicationSchema = z.object({
   year: z.number().or(z.string()).optional(),
   abstract: z.string().optional(),
   award: z.string().optional(),
+  image: z.string().optional(),
+  imageAlt: z.string().optional(),
 
   // Main URL (derived from doi, url, or other primary link)
   mainUrl: z.string().optional(),
