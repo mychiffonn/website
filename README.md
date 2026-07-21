@@ -11,12 +11,12 @@ source template.
 
 ## Previews
 
-| Home | Projects |
-| --- | --- |
+| Home                                                | Projects                                                    |
+| --------------------------------------------------- | ----------------------------------------------------------- |
 | ![Home page preview](docs/assets/previews/home.png) | ![Projects page preview](docs/assets/previews/projects.png) |
 
-| Publications | Uses |
-| --- | --- |
+| Publications                                                        | Uses                                                |
+| ------------------------------------------------------------------- | --------------------------------------------------- |
 | ![Publications page preview](docs/assets/previews/publications.png) | ![Uses page preview](docs/assets/previews/uses.png) |
 
 ## Features
@@ -39,12 +39,6 @@ This theme is built on enscribe's
 [astro-erudite](https://github.com/jktrn/astro-erudite) v2.0.1 and references
 from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s
 digital garden.
-
-Other inspirations:
-
-- [PreviewCard](src/components/blog/PreviewCard.astro) inspired by cworld1's
-  [pure](https://astro-pure.js.org/) theme
-- Publications from [al-folio](https://github.com/alshedivat/al-folio)
 
 Version <2.0.0 uses Astro v6 & TailwindCSS.
 
