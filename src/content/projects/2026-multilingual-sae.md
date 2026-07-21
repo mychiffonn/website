@@ -6,9 +6,13 @@ toDate: 2026-03
 selected: true
 code: https://github.com/mychiffonn/inside-tiny-aya
 url: https://huggingface.co/Farseen0/tiny-aya-saes
-category:
-  - ai-ml
+types:
   - research
+skills:
+  - Python
+  - LLM
+  - PyTorch
+  - Hugging Face ecosystem
 tags:
   - Sparse Autoencoders
   - Mechanistic Interpretability

@@ -5,9 +5,9 @@ import "@/styles/sidenote.css"
 import { render, type CollectionEntry } from "astro:content"
 
 import {
-  getCategoryLabel,
   getProjectLinks,
   getProjectNavigation,
+  getProjectTypeLabel,
   getProjects,
 } from "@/lib/projects"
 import Layout from "@/layouts/Layout.astro"
@@ -46,7 +46,8 @@ const {
   paper,
   url,
   release,
-  category,
+  types,
+  skills,
   tags,
 } = project.data
 
@@ -73,9 +74,9 @@ const rawMarkdown = project.body ?? null
         )}
     </div>
     <div class="project-meta-row">
-      {category &&
-          category.length > 0 &&
-          category.map((slug: string) => <Badge variant="muted">{getCategoryLabel(slug)}</Badge>)}
+      {types.map((slug) => (
+        <Badge variant="muted">{getProjectTypeLabel(slug)}</Badge>
+      ))}
       <DateRange
         fromDate={fromDate}
         toDate={toDate}
@@ -83,9 +84,14 @@ const rawMarkdown = project.body ?? null
         showIcon={true}
       />
     </div>
-    {tags && tags.length > 0 && (
+    {(skills.length > 0 || tags.length > 0) && (
         <div class="project-tags">
-          {tags.map((tag: string) => (
+          {skills.map((skill) => (
+            <Badge variant="accent" class="project-tag">
+              {skill}
+            </Badge>
+          ))}
+          {tags.map((tag) => (
             <Badge variant="muted" class="project-tag">
               {tag}
             </Badge>

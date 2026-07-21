@@ -4,9 +4,12 @@ description: Created and maintain a personal academic Astro theme for research p
 fromDate: 2025-06
 code: https://github.com/mychiffonn/website
 url: https://mychiffonn.com/
-category:
-  - web
+types:
   - tool
+  - open-source
+skills:
+  - TypeScript
+  - Astro
 tags:
   - Astro
   - TypeScript

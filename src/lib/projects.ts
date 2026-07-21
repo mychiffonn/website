@@ -1,10 +1,14 @@
 import { getCollection, type CollectionEntry } from "astro:content"
 
-import { PROJECT_CATEGORIES } from "@/schemas"
+import { PROJECT_TYPES } from "@/schemas"
+import { slugify } from "@/lib/string-manipulation"
 
 import { PROJECT_LINK_TYPES, type ProjectLinkType } from "@icon-config"
 
 export type Project = CollectionEntry<"projects">
+
+export const getProjectTypeLabel = (slug: string) =>
+  PROJECT_TYPES.find((type) => type.slug === slug)?.label ?? slug
 
 // ========================================
 // Project Utilities
@@ -37,31 +41,36 @@ export const getProjectLinks = (
     }))
 }
 
-/** Human-readable label for a project category slug */
-export const getCategoryLabel = (slug: string) =>
-  PROJECT_CATEGORIES.find((c) => c.slug === slug)?.label ?? slug
-
-/**
- * Counts how many projects fall under each category, for rendering the
- * category filter bar on the projects page.
- *
- * @param projects - Array of projects to count categories for
- * @returns Categories with at least one project, sorted by count (desc) then label
- */
-export function getProjectCategoryCounts(projects: Project[]) {
+export function getProjectTypeCounts(projects: Project[]) {
   const counts = new Map<string, number>()
   for (const project of projects) {
-    for (const category of project.data.category ?? []) {
-      counts.set(category, (counts.get(category) || 0) + 1)
+    for (const type of project.data.types) {
+      counts.set(type, (counts.get(type) || 0) + 1)
     }
   }
 
-  return PROJECT_CATEGORIES.map(({ slug, label }) => ({
+  return PROJECT_TYPES.map(({ slug, label }) => ({
     slug,
     label,
     count: counts.get(slug) || 0,
   }))
     .filter((c) => c.count > 0)
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+}
+
+export function getProjectSkillCounts(projects: Project[], minimum = 2) {
+  const counts = new Map<string, { label: string; count: number }>()
+  for (const project of projects) {
+    for (const label of project.data.skills) {
+      const slug = slugify(label)
+      const current = counts.get(slug)
+      counts.set(slug, { label, count: (current?.count || 0) + 1 })
+    }
+  }
+
+  return [...counts.entries()]
+    .map(([slug, value]) => ({ slug, ...value }))
+    .filter(({ count }) => count >= minimum)
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
 }
 

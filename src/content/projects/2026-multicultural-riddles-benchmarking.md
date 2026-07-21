@@ -3,9 +3,12 @@ title: Multicultural Riddles Benchmarking
 description: Analysis of LLM factuality, hallucination, topic patterns, and cross-cultural reasoning failures on multicultural riddles.
 fromDate: 2026-04
 selected: true
-category:
-  - ai-ml
+types:
   - research
+skills:
+  - Python
+  - LLM
+  - evaluation
 tags:
   - LLM Evaluation
   - Multicultural AI

@@ -4,9 +4,11 @@ description: Designed the SEACrowd website and managed social content for a Sout
 fromDate: 2025-08-16
 url: https://seacrowd.org
 code: https://github.com/SEACrowd/seacrowd.github.io
-category:
-  - web
-  - research
+types:
+  - product
+  - open-source
+skills:
+  - JavaScript
 tags:
   - Jekyll
   - Bootstrap

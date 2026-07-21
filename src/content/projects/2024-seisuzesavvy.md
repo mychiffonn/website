@@ -5,9 +5,13 @@ fromDate: 2024-02-01
 toDate: 2024-04-19
 code: https://github.com/mychiffonn/cs162-SeisureSavvy
 doc: https://github.com/mychiffonn/cs162-SeisureSavvy
-category:
-  - web
-  - ai-ml
+types:
+  - product
+  - coursework
+skills:
+  - Python
+  - React
+  - Flask
 tags:
   - Progressive Web App (PWA)
   - React

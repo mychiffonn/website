@@ -7,9 +7,14 @@ url: https://sport-connect-ccmg.onrender.com/
 fromDate: 2025-11-10
 toDate: 2025-11-19
 isHighlighted: true
-category:
-  - web
-  - tool
+types:
+  - product
+skills:
+  - TypeScript
+  - React
+  - Express.js
+  - PostgreSQL
+  - Tailwind CSS
 tags:
   - TypeScript
   - React

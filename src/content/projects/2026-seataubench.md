@@ -7,9 +7,14 @@ isHighlighted: true
 code: https://github.com/sierra-research/tau2-bench
 paper: https://arxiv.org/abs/2606.28715
 url: https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented
-category:
-  - ai-ml
+types:
   - research
+  - open-source
+skills:
+  - Python
+  - LLM
+  - evaluation
+  - agents
 tags:
   - LLM Evaluation
   - Agentic AI

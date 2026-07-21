@@ -2,7 +2,7 @@
  * Generic single-value chip filter controller for client-side islands.
  *
  * Drives "click a chip to filter a list of cards, click again to clear" UX,
- * shared by the publication keyword filter and the project category filter.
+ * shared by the publication keyword filter and other single-facet controls.
  * Knows nothing about tags/keywords/categories specifically — only about
  * selectors and dataset attribute names, supplied by the caller.
  */
@@ -36,6 +36,32 @@ export interface ChipFilterController {
   applyFilter: () => void
   setActive: (value: string | null) => void
   getActive: () => string | null
+}
+
+export interface ChipFilterFacet {
+  key: string
+  itemAttr: string
+  filterButtonSelector: string
+  filterButtonAttr: string
+}
+
+export interface FacetedChipFilterConfig {
+  itemSelector: string
+  facets: ChipFilterFacet[]
+  groupSelector?: string
+  clearButtonSelector?: string
+  activeIndicatorSelector?: string
+  statusSelector?: string
+  emptyStateSelector?: string
+  resultNoun?: string
+  getScope?: () => HTMLElement | Document
+}
+
+export interface FacetedChipFilterController {
+  applyFilter: () => void
+  setActive: (facetKey: string, value: string | null) => void
+  getActive: (facetKey: string) => string | null
+  hasActive: () => boolean
 }
 
 /**
@@ -163,4 +189,128 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
   }
 
   return { applyFilter, setActive, getActive: () => active }
+}
+
+/**
+ * Multi-facet variant of the chip filter. Each facet allows one active value;
+ * items must match every active facet.
+ */
+export function initFacetedChipFilter(
+  config: FacetedChipFilterConfig,
+): FacetedChipFilterController {
+  const {
+    itemSelector,
+    facets,
+    groupSelector,
+    clearButtonSelector,
+    activeIndicatorSelector,
+    statusSelector,
+    emptyStateSelector,
+    resultNoun = "results",
+    getScope = () => document,
+  } = config
+  const active = new Map(facets.map(({ key }) => [key, null as string | null]))
+
+  function hasActive(): boolean {
+    return [...active.values()].some(Boolean)
+  }
+
+  function applyFilter(): void {
+    const scope = getScope()
+    const items = scope.querySelectorAll<HTMLElement>(itemSelector)
+
+    items.forEach((item) => {
+      const matches = facets.every(({ key, itemAttr }) => {
+        const selected = active.get(key)
+        if (!selected) return true
+        return (item.dataset[itemAttr] || "")
+          .split(",")
+          .map((value) => value.trim())
+          .includes(selected)
+      })
+      item.style.display = matches ? "" : "none"
+    })
+
+    if (groupSelector) {
+      scope.querySelectorAll<HTMLElement>(groupSelector).forEach((group) => {
+        const visibleItems = group.querySelectorAll<HTMLElement>(
+          `${itemSelector}:not([style*="display: none"])`,
+        )
+        group.style.display = visibleItems.length === 0 ? "none" : ""
+      })
+    }
+
+    if (activeIndicatorSelector) {
+      document
+        .querySelector<HTMLElement>(activeIndicatorSelector)
+        ?.toggleAttribute("hidden", !hasActive())
+    }
+
+    for (const facet of facets) {
+      document
+        .querySelectorAll<HTMLButtonElement>(facet.filterButtonSelector)
+        .forEach((button) => {
+          button.setAttribute(
+            "aria-pressed",
+            button.dataset[facet.filterButtonAttr] === active.get(facet.key)
+              ? "true"
+              : "false",
+          )
+        })
+    }
+
+    const visibleCount = [...items].filter(
+      (item) => item.style.display !== "none",
+    ).length
+
+    if (emptyStateSelector) {
+      document
+        .querySelector<HTMLElement>(emptyStateSelector)
+        ?.toggleAttribute("hidden", visibleCount > 0)
+    }
+
+    if (statusSelector) {
+      const noun =
+        visibleCount === 1 ? resultNoun.replace(/s$/, "") : resultNoun
+      const status = document.querySelector<HTMLElement>(statusSelector)
+      if (status) {
+        status.textContent = hasActive()
+          ? `${visibleCount} filtered ${noun} shown.`
+          : `All ${visibleCount} ${noun} shown.`
+      }
+    }
+  }
+
+  function setActive(facetKey: string, value: string | null): void {
+    if (!active.has(facetKey)) return
+    active.set(facetKey, active.get(facetKey) === value ? null : value)
+    applyFilter()
+  }
+
+  for (const facet of facets) {
+    document
+      .querySelectorAll<HTMLButtonElement>(facet.filterButtonSelector)
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          const value = button.dataset[facet.filterButtonAttr]
+          if (value) setActive(facet.key, value)
+        })
+      })
+  }
+
+  if (clearButtonSelector) {
+    document
+      .querySelector<HTMLButtonElement>(clearButtonSelector)
+      ?.addEventListener("click", () => {
+        for (const key of active.keys()) active.set(key, null)
+        applyFilter()
+      })
+  }
+
+  return {
+    applyFilter,
+    setActive,
+    getActive: (facetKey) => active.get(facetKey) || null,
+    hasActive,
+  }
 }

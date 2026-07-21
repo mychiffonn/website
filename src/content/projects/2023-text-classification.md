@@ -2,9 +2,10 @@
 title: Text classification using SVM and Naive Bayes
 description: Text classification system to automatically classify notes and assignments using SVM and Naive Bayes with 87% accuracy.
 toDate: 2023-10
-category:
-  - ai-ml
-  - data
+types:
+  - coursework
+skills:
+  - Python
 tags:
   - statistical machine learning
   - scikit-learn

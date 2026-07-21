@@ -4,9 +4,11 @@ description: Replicated and extended a synthetic control analysis of Philadelphi
 toDate: 2023-12
 code: https://github.com/mychiffonn/synthetic-control-rep
 doc: https://github.com/mychiffonn/synthetic-control-rep/blob/main/CS130%20Final%20Assignment.pdf
-category:
+types:
   - research
-  - data
+  - coursework
+skills:
+  - R
 tags:
   - R
   - rmarkdown

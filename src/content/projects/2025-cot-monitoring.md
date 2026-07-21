@@ -4,9 +4,13 @@ fromDate: 2025-10-05
 isHighlighted: true
 description: Studying how monitor effectiveness changes as the capability gap between monitor and target models widens, with a case study on distinguishing sandbagging from genuine incapability.
 code: https://github.com/yoenoo/algoverse_nacm
-category:
-  - ai-ml
+types:
   - research
+skills:
+  - Python
+  - LLM
+  - evaluation
+  - Inspect AI
 tags:
   - Chain of Thought
   - Sandbagging

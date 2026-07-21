@@ -4,9 +4,11 @@ description: "Analyze GP visit patterns using Zero-Inflated Poisson models with 
 toDate: 2023-11-28
 isHighlighted: false
 code: https://github.com/mychiffonn/jupyter-notebooks/blob/main/CS146-project-2.ipynb
-category:
+types:
   - research
-  - data
+  - coursework
+skills:
+  - R
 tags:
   - bayesian modeling
   - hierarchical models
