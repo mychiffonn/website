@@ -26,6 +26,8 @@ export interface ChipFilterConfig {
   clearButtonSelector?: string
   /** Optional selector for an element toggled visible while a filter is active */
   activeIndicatorSelector?: string
+  /** Optional polite live region that announces the number of visible results */
+  statusSelector?: string
   /** Scope to query items/groups within; defaults to the whole document */
   getScope?: () => HTMLElement | Document
 }
@@ -56,6 +58,7 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
     groupSelector,
     clearButtonSelector,
     activeIndicatorSelector,
+    statusSelector,
     getScope = () => document,
   } = config
 
@@ -89,6 +92,18 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
       document
         .querySelector<HTMLElement>(activeIndicatorSelector)
         ?.toggleAttribute("hidden", !active)
+    }
+
+    if (statusSelector) {
+      const visibleCount = [...items].filter(
+        (item) => item.style.display !== "none",
+      ).length
+      const status = document.querySelector<HTMLElement>(statusSelector)
+      if (status) {
+        status.textContent = active
+          ? `${visibleCount} filtered ${visibleCount === 1 ? "result" : "results"} shown.`
+          : `All ${visibleCount} ${visibleCount === 1 ? "result" : "results"} shown.`
+      }
     }
 
     document

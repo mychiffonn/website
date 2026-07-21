@@ -1,10 +1,17 @@
 ---
-export type Props = astroHTML.JSX.ButtonHTMLAttributes
+export interface Props extends astroHTML.JSX.ButtonHTMLAttributes {
+  size?: "default" | "compact"
+}
 
-const { class: className, type = "button", ...rest } = Astro.props
+const {
+  class: className,
+  type = "button",
+  size = "default",
+  ...rest
+} = Astro.props
 ---
 
-<button type={type} data-chip class={className} {...rest}>
+<button type={type} data-chip data-size={size} class={className} {...rest}>
   <slot />
 </button>
 
@@ -15,7 +22,7 @@ const { class: className, type = "button", ...rest } = Astro.props
     justify-content: center;
     gap: 0.25rem;
     inline-size: fit-content;
-    min-block-size: 2rem;
+    min-block-size: var(--control-size);
     padding: 0.125rem 0.5rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -42,5 +49,10 @@ const { class: className, type = "button", ...rest } = Astro.props
     border-color: var(--primary);
     background: var(--primary);
     color: var(--primary-foreground);
+  }
+
+  [data-chip][data-size="compact"] {
+    min-block-size: var(--control-size-compact);
+    font-weight: var(--font-weight-normal);
   }
 </style>

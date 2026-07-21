@@ -3,7 +3,6 @@ import { PostManager, type PostMeta } from "@/lib/blog"
 import { getAllTags } from "@/lib/blog/tag"
 import Layout from "@/layouts/Layout.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
 export async function getStaticPaths() {
   const postManager = PostManager.getInstance()
@@ -24,15 +23,12 @@ const batchMetadata: PostMeta[] = await postManager.getPostsByTag(tag)
   title={`Posts tagged with "${tag}"`}
   description={`A collection of posts tagged with ${tag}.`}
   noindex
+  breadcrumbs={[
+    { href: "/blog", label: "Blog", icon: "blog" },
+    { href: "/blog/tags", label: "Tags", icon: "tags" },
+    { label: tag, icon: "hashtag" },
+  ]}
 >
-  <Breadcrumbs
-    items={[
-      { href: "/blog", label: "Blog", icon: "blog" },
-      { href: "/blog/tags", label: "Tags", icon: "tags" },
-      { label: tag, icon: "hashtag" }
-    ]}
-  />
-
   <ul class="post-list">
     {batchMetadata.map((metadata) => (
         <li>

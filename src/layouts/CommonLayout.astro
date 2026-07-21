@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro"
 import CopyMarkdown from "@/components/base/CopyMarkdown.astro"
 import FormattedDate from "@/components/base/FormattedDate.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import type { BreadcrumbItem } from "@/components/layout/Breadcrumbs.astro"
 
 interface Props {
   title: string
@@ -10,11 +10,7 @@ interface Props {
   modifiedTime?: Date
   prose?: boolean
   markdown?: string
-  breadcrumbs?: Array<{
-    href?: string
-    label: string
-    icon?: string
-  }>
+  breadcrumbs?: BreadcrumbItem[]
   [key: string]: any // Allow any additional props to pass through to Layout
 }
 
@@ -29,9 +25,12 @@ const {
 } = Astro.props
 ---
 
-<Layout title={title} description={description} {...layoutProps}>
-  {breadcrumbs && <Breadcrumbs slot="breadcrumb" items={breadcrumbs} />}
-
+<Layout
+  title={title}
+  description={description}
+  breadcrumbs={breadcrumbs}
+  {...layoutProps}
+>
   <section class="page-heading">
     <h1>{title}</h1>
     {description && <p class="page-description">{description}</p>}

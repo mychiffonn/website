@@ -7,6 +7,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2xs);
+  padding-block: var(--space-3xs);
 }
 
 .chip-filter-bar:empty {
@@ -18,26 +19,8 @@
   align-items: center;
 }
 
-.chip-clear-filter {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.125rem 0.5rem;
-  font-size: 0.75rem;
-  line-height: 1.25rem;
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  background: transparent;
-  color: var(--muted-foreground);
-  cursor: pointer;
-  transition:
-    border-color var(--motion-duration) var(--motion-ease),
-    color var(--motion-duration-fast) var(--motion-ease);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .chip-clear-filter:hover {
-    border-color: var(--destructive);
-    color: var(--destructive);
+@media (width >= 64rem) {
+  .chip-filter-bar {
+    row-gap: 0;
   }
 }

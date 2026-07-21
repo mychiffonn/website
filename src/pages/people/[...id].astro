@@ -3,7 +3,6 @@ import { PostManager } from "@/lib/blog"
 import { getAllAuthors, getAuthorById } from "@/lib/blog/author"
 import Layout from "@/layouts/Layout.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 import AuthorCard from "@/components/people/AuthorCard.astro"
 
 export async function getStaticPaths() {
@@ -33,15 +32,11 @@ if (!author) {
   description={author.bio || `Profile of ${author.name}.`}
   noindex
   type="profile"
+  breadcrumbs={[
+    { href: "/people", label: "People", icon: "group" },
+    { label: author.name, icon: "person" },
+  ]}
 >
-  <Breadcrumbs
-    slot="breadcrumb"
-    items={[
-      { href: "/people", label: "People", icon: "group" },
-      { label: author.name, icon: "person" }
-    ]}
-  />
-
   <section>
     <AuthorCard author={author} />
   </section>

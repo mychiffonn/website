@@ -1,6 +1,14 @@
 ---
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardMedia,
+  CardTitle,
+} from "@/components/base/card"
 
 import { getTagVariant, ToolTag } from "./tags"
 
@@ -21,46 +29,42 @@ const getSafeIcon = (icon: string): string => {
 const safeIcon = getSafeIcon(icon)
 ---
 
-<a
-  class="tool-link"
+<Card
   href={href}
-  target="_blank"
-  rel="noopener noreferrer nofollow"
-  aria-label={`${name}: ${description}`}
+  external
+  label={`${name}: ${description}`}
+  orientation="inline"
+  padding="compact"
+  class="tool-card"
 >
-  <Icon name={safeIcon} size="2rem" aria-hidden="true" />
-  <div class="tool-body">
-    <div class="tool-heading">
-      <span class="tool-name">{name}</span>
+  <CardMedia class="tool-icon">
+    <Icon name={safeIcon} size="2rem" aria-hidden="true" />
+  </CardMedia>
+  <CardContent class="tool-body">
+    <CardHeader class="tool-heading">
+      <CardTitle>{name}</CardTitle>
       {tags?.map((tag: ToolTag) => (
           <Badge variant={getTagVariant(tag)} class="tool-tag">
             {tag}
           </Badge>
         ))}
-    </div>
-    <p>{description}</p>
-  </div>
-</a>
+    </CardHeader>
+    <CardDescription>{description}</CardDescription>
+  </CardContent>
+</Card>
 
 <style>
-  .tool-link {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2xs);
-    padding: var(--space-2xs) var(--space-xs);
-    border: 1px solid transparent;
-    border-radius: var(--radius-lg);
-    color: inherit;
+  .tool-card {
     font-size: var(--step--1);
-    text-decoration: none;
-    transition:
-      background-color var(--motion-duration) var(--motion-ease),
-      border-color var(--motion-duration) var(--motion-ease);
   }
 
-  .tool-link:hover {
-    border-color: var(--border);
-    background: var(--muted);
+  .tool-icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    outline: none;
   }
 
   .tool-body {
@@ -70,14 +74,15 @@ const safeIcon = getSafeIcon(icon)
 
   .tool-heading {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2xs);
     margin-block-end: 0.25rem;
   }
 
-  .tool-name {
-    color: var(--foreground);
+  .tool-heading :global([data-slot="card-title"]) {
+    font-size: var(--step--1);
     font-weight: var(--font-weight-medium);
   }
 
@@ -85,8 +90,7 @@ const safeIcon = getSafeIcon(icon)
     font-size: var(--step--1);
   }
 
-  p {
-    color: var(--muted-foreground);
+  .tool-card :global([data-slot="card-description"]) {
     font-size: var(--step--1);
   }
 </style>

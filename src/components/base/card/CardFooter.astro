@@ -1,0 +1,9 @@
+---
+export type Props = astroHTML.JSX.HTMLAttributes
+
+const { class: className, ...rest } = Astro.props
+---
+
+<footer data-slot="card-footer" class={className} {...rest}>
+  <slot />
+</footer>

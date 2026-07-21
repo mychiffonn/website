@@ -24,4 +24,15 @@
   --motion-duration-slow: 420ms;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --motion-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Fine-pointer controls stay compact; coarse and hybrid input overrides below. */
+  --control-size: 2.5rem;
+  --control-size-compact: 2rem;
+}
+
+@media (pointer: coarse), (pointer: none), (any-pointer: coarse) {
+  :root {
+    --control-size: 2.75rem;
+    --control-size-compact: 2.75rem;
+  }
 }

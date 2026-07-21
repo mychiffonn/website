@@ -1,0 +1,9 @@
+---
+export type Props = astroHTML.JSX.HTMLAttributes
+
+const { class: className, ...rest } = Astro.props
+---
+
+<div data-slot="card-action" class={className} {...rest}>
+  <slot />
+</div>

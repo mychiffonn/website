@@ -1,10 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 ---
 
-<Layout title="404" noindex>
-  <Breadcrumbs slot="breadcrumb" items={[{ label: "404", icon: "question" }]} />
+<Layout title="404" noindex breadcrumbs={[{ label: "404", icon: "question" }]}>
   <prose-content>
     <h1>404</h1>
     <p>This page does not exist.</p>

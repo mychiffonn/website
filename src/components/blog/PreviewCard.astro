@@ -5,9 +5,16 @@ import { getStageVariant } from "@/lib/blog/stage"
 import type { PostMeta } from "@/lib/blog/types"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
+import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardMeta,
+  CardTitle,
+} from "@/components/base/card"
 import PostMetadata from "@/components/blog/PostMetadata.astro"
-
-import "@/styles/card.css"
 
 interface Props {
   metadata: PostMeta
@@ -18,16 +25,12 @@ const tags = metadata.tags
 const hasBadges = metadata.stage || (tags && tags.length > 0)
 ---
 
-<article
-  class="card card-clickable preview-card"
+<Card
+  href={`/blog/${metadata.id}`}
+  label={`Post: ${metadata.title}`}
+  class="preview-card"
   data-has-image={metadata.image ? "true" : "false"}
 >
-  <a
-    href={`/blog/${metadata.id}`}
-    class="preview-card-link"
-    aria-label={`Post: ${metadata.title}`}
-  > </a>
-
   {metadata.image && (
       <Image
         src={metadata.image}
@@ -40,53 +43,36 @@ const hasBadges = metadata.stage || (tags && tags.length > 0)
       />
     )}
 
-  <div class="card-content preview-card-content">
-    <preview-card-heading>
-      <h3 class="card-title">
-        {metadata.title}
-      </h3>
-    </preview-card-heading>
-    <p class="card-description">
-      {metadata.description}
-    </p>
-    <PostMetadata {...metadata} variant="card" />
+  <CardContent class="preview-card-content">
+    <CardTitle>{metadata.title}</CardTitle>
+    <CardDescription>{metadata.description}</CardDescription>
+    <CardMeta>
+      <PostMetadata {...metadata} variant="card" />
+    </CardMeta>
     {hasBadges && (
-        <div class="card-tags preview-card-badges">
+        <CardFooter class="preview-card-badges">
           {metadata.stage && (
               <Badge variant={getStageVariant(metadata.stage)}>
                 <Icon name={metadata.stage} />
                 {metadata.stage}
               </Badge>
-            )}
+          )}
           {tags && tags.map((tag: string) => (
-              <Badge variant={"muted"} class="tag-badge">
-                <Icon name="hashtag" />
-                {tag}
-              </Badge>
+              <TaxonomyChip label={tag} static />
             ))}
-        </div>
+        </CardFooter>
       )}
-  </div>
-</article>
+  </CardContent>
+</Card>
 
 <style>
-  .card:hover {
+  .preview-card:hover {
     background-color: oklch(from var(--muted) l c h / 0.5);
-
-    & .tag-badge {
-      background-color: oklch(from var(--muted) l c h / 0.5);
-    }
   }
 
   .preview-card {
     position: relative;
     overflow: hidden;
-  }
-
-  .preview-card-link {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
   }
 
   .preview-card-content {
@@ -105,18 +91,12 @@ const hasBadges = metadata.stage || (tags && tags.length > 0)
     }
   }
 
-  .preview-card .card-title {
+  .preview-card :global([data-slot="card-title"]) {
     transition: color var(--motion-duration) var(--motion-ease);
   }
 
-  .preview-card:hover .card-title {
+  .preview-card:hover :global([data-slot="card-title"]) {
     color: var(--primary);
-  }
-
-  preview-card-heading {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2xs);
   }
 
   .preview-card-badges {

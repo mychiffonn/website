@@ -9,8 +9,8 @@ import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 import Pagination from "@/components/base/Pagination.astro"
+import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
 export async function getStaticPaths({
   paginate,
@@ -69,14 +69,13 @@ if (!hasNoPosts) {
 }
 ---
 
-<Layout title="Blog">
-  <Breadcrumbs
-    slot="breadcrumb"
-    items={[
-      { label: "Blog", href: "/blog", icon: "blog" },
-      { label: `Page ${page.currentPage}`, icon: "copy" }
-    ]}
-  />
+<Layout
+  title="Blog"
+  breadcrumbs={[
+    { label: "Blog", href: "/blog", icon: "blog" },
+    { label: `Page ${page.currentPage}`, icon: "copy" },
+  ]}
+>
   {(stageCounts.length > 0 || numTags > 0) && (
       <nav class="blog-filters" aria-label="Browse posts">
         {stageCounts.length > 0 && (
@@ -102,11 +101,12 @@ if (!hasNoPosts) {
             </h2>
             <filter-chips>
               {displayTags.map(({ tag, count }) => (
-                <Badge href={`/blog/tags/${tag}`} variant="tag">
-                  <Icon name="hashtag" size="0.75rem" />
-                  {tag}
-                  <span class="count">({count})</span>
-                </Badge>
+                <TaxonomyChip
+                  href={`/blog/tags/${tag}`}
+                  label={tag}
+                  count={count}
+                  countNoun="posts"
+                />
               ))}
               {moreTagsButton && (
                 <Badge href="/blog/tags" variant="outline">

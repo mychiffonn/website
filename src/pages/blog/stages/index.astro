@@ -4,7 +4,6 @@ import { STAGES } from "@/lib/blog/stage"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
 
 const postManager = PostManager.getInstance()
 const allPosts = await postManager.getMainPosts()
@@ -15,14 +14,13 @@ const stageCounts = STAGES.map((s) => ({
 }))
 ---
 
-<Layout title="Growth Stages">
-  <Breadcrumbs
-    items={[
-      { href: "/blog", label: "Blog", icon: "blog" },
-      { label: "Stages", icon: "seedling" }
-    ]}
-  />
-
+<Layout
+  title="Growth Stages"
+  breadcrumbs={[
+    { href: "/blog", label: "Blog", icon: "blog" },
+    { label: "Stages", icon: "seedling" },
+  ]}
+>
   <stage-list>
     <stage-cloud>
       {stageCounts.map(({ name, variant, count }) => (

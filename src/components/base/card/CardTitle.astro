@@ -1,0 +1,13 @@
+---
+type TitleElement = "h2" | "h3" | "h4" | "span"
+
+export interface Props extends astroHTML.JSX.HTMLAttributes {
+  as?: TitleElement
+}
+
+const { as: Tag = "h3", class: className, ...rest } = Astro.props
+---
+
+<Tag data-slot="card-title" class={className} {...rest}>
+  <slot />
+</Tag>
