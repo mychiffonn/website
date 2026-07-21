@@ -5,11 +5,11 @@ import { PROFILE } from "@site-config"
 import { loadAllPublications } from "@/lib/publications/loader"
 import { slugify } from "@/lib/string-manipulation"
 import Layout from "@/layouts/Layout.astro"
-import Chip from "@/components/base/Chip.astro"
 import Dropdown from "@/components/base/Dropdown.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
-import Breadcrumbs from "@/components/layout/Breadcrumbs.astro"
+import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
+import { CardGroup } from "@/components/base/card"
 import Section from "@/components/layout/Section.astro"
 import PubCard from "@/components/publications/PubCard.astro"
 
@@ -35,12 +35,8 @@ const equalContributionNote = [
 <Layout
   title="Publications"
   description="Publications, preprints, and conference tutorials"
+  breadcrumbs={[{ label: "Publications", icon: "research" }]}
 >
-  <Breadcrumbs
-    slot="breadcrumb"
-    items={[{ label: "Publications", icon: "research" }]}
-  />
-
   <Section title="Publications">
     <p class="publication-intro">
       Publications, preprints, and conference tutorials.{ggScholarUrl && (
@@ -87,19 +83,36 @@ const equalContributionNote = [
     </div>
 
     {allKeywords.length > 0 && (
-        <div class="chip-filter-bar">
+        <div
+          class="chip-filter-bar"
+          role="group"
+          aria-label="Filter publications by tag"
+        >
           {allKeywords.map(({ keyword, count }) => (
-            <Chip data-pub-tag-filter={slugify(keyword)} aria-pressed="false">
-              {keyword}
-              <span class="chip-count">({count})</span>
-            </Chip>
+            <TaxonomyChip
+              label={keyword}
+              count={count}
+              countNoun="publications"
+              data-pub-tag-filter={slugify(keyword)}
+              aria-pressed="false"
+              aria-label={`Filter publications by ${keyword}; ${count} ${count === 1 ? "publication" : "publications"}`}
+            />
           ))}
           <span class="chip-active-filter" data-active-filter hidden>
-            <button class="chip-clear-filter" data-clear-filter aria-label="Clear filter">
-              <Icon name="close" size={12} />
-              Clear
-            </button>
+            <TaxonomyChip
+              label="Clear"
+              prefix="×"
+              tone="destructive"
+              data-clear-filter
+              aria-label="Clear publication filter"
+            />
           </span>
+          <span
+            class="sr-only"
+            aria-live="polite"
+            aria-atomic="true"
+            data-publication-filter-status
+          />
         </div>
     )}
     {equalContributionNote && (
@@ -110,7 +123,9 @@ const equalContributionNote = [
   <!-- Relevance view (default visible) -->
   <div data-pub-view="relevance">
     {allPublicationsFlat.length > 0 ? (
-        allPublicationsFlat.map((pub: ProcessedPublication) => <PubCard pub={pub} />)
+        <CardGroup>
+          {allPublicationsFlat.map((pub: ProcessedPublication) => <PubCard pub={pub} />)}
+        </CardGroup>
       ) : (
         <div class="empty-state">
           <h2>No publications found</h2>
@@ -125,9 +140,11 @@ const equalContributionNote = [
         years.map((year) => (
           <div data-pub-year-section={year}>
             <Section title={year.toString()}>
-              {publicationsByYear[year].map((pub: ProcessedPublication) => (
-                <PubCard pub={pub} />
-              ))}
+              <CardGroup>
+                {publicationsByYear[year].map((pub: ProcessedPublication) => (
+                  <PubCard pub={pub} />
+                ))}
+              </CardGroup>
             </Section>
           </div>
         ))
@@ -174,6 +191,7 @@ const equalContributionNote = [
       groupSelector: "[data-pub-year-section]",
       clearButtonSelector: "[data-clear-filter]",
       activeIndicatorSelector: "[data-active-filter]",
+      statusSelector: "[data-publication-filter-status]",
       getScope: () =>
         currentSort === "relevance" ? relevanceView! : yearView!,
     })
@@ -243,22 +261,6 @@ const equalContributionNote = [
     color: var(--foreground);
   }
 
-  .chip-count {
-    margin-inline-start: 0.125rem;
-    opacity: 0.6;
-  }
-
-  .chip-filter-bar :global([data-pub-tag-filter]) {
-    min-block-size: 1.5rem;
-    padding-block: 0.0625rem;
-  }
-
-  .chip-clear-filter {
-    min-block-size: 1.5rem;
-    padding-block: 0.0625rem;
-    line-height: 1.2;
-  }
-
   .equal-contribution-note {
     inline-size: 100%;
     font-size: var(--step--1);
@@ -303,20 +305,12 @@ const equalContributionNote = [
   }
 
   .pub-sort-option {
-    display: block;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
-    text-align: left;
-    background: inherit;
-    border: none;
-    color: var(--foreground);
-    cursor: pointer;
   }
 
   .pub-sort-option[aria-selected="true"] {
-    font-weight: 600;
-    color: var(--primary);
+    color: var(--primary-foreground);
+    font-weight: var(--font-weight-semibold);
   }
 
   [data-pub-view][hidden],

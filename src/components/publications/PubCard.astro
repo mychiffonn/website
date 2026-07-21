@@ -2,13 +2,17 @@
 import type { ProcessedPublication } from "@/types"
 
 import { slugify } from "@/lib/string-manipulation"
-import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
-import Chip from "@/components/base/Chip.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
-
-import "@/styles/card.css"
+import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/base/card"
 
 interface Props {
   pub: ProcessedPublication
@@ -16,94 +20,174 @@ interface Props {
 }
 
 const { pub, filterableTags = true } = Astro.props
+const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknown"}-authors`
 ---
 
-<article
-  class:list={["card", "card-content", { "card-selected": pub.selected }]}
+<Card
+  selected={pub.selected}
+  class="publication-card"
   data-pub-year={pub.year ?? ""}
   data-pub-selected={pub.selected ? "true" : "false"}
   data-pub-author-position={pub.authorPosition ?? Infinity}
   data-pub-keywords={pub.expandedKeywords?.map((k) => slugify(k)).join(",") ?? ""}
+  data-has-image={pub.image ? "true" : undefined}
 >
-  {pub.award && <span class="publication-award">🏆 {pub.award}</span>}
-
-  <span class="bibliography-title">
-    {pub.mainUrl ? (
-        <Link href={pub.mainUrl} external class="card-title-link">
-          <h3 class="card-title">{pub.title}</h3>
-        </Link>
-      ) : (
-        <h3 class="card-title">{pub.title}</h3>
-      )}
-  </span>
-
-  <div class="bibliography-authors">
-    <span set:html={pub.authorData.displayFirstAuthors} />
-    {pub.authorData.hasMore && (
-        <>
-          <button
-            class="author-toggle"
-            data-hidden-authors={pub.authorData.hiddenAuthors}
-            data-hidden-count={pub.authorData.hiddenCount}
-            data-last-authors={pub.authorData.displayLastAuthors || ""}
-            aria-expanded="false"
-            aria-label={`Show ${pub.authorData.hiddenCount} hidden authors`}
-          >
-            ...and {pub.authorData.hiddenCount} more authors...
-          </button>
-          <span class="hidden-authors" hidden />
-        </>
-      )}
-    {pub.authorData.displayLastAuthors && pub.authorData.hasMore && (
-        <span>
-          ,
-          <span set:html={pub.authorData.displayLastAuthors} />
-        </span>
-      )}
-  </div>
-
-  {(pub.publisher || pub.year) && (
-      <div class="bibliography-details">
-        {pub.publisher && <span class="publication-publisher">{pub.publisher}</span>}
-        {pub.publisher && pub.year && <span> • </span>}
-        {pub.year && <span>{pub.year}</span>}
+  {pub.image && (
+      <div class="publication-media">
+        <img
+          src={pub.image}
+          alt={pub.imageAlt ?? `Visual summary for “${pub.title}”`}
+          width="1200"
+          height="720"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     )}
 
-  <div class="card-actions">
-    {pub.abstract && (
-        <details class="publication-abstract">
-          <summary data-button data-variant="accent-outline" class="abstract-summary">
-            Abstract
-          </summary>
-          <article class="abstract-content">{pub.abstract}</article>
-        </details>
-      )}
-
-    {pub.links.map(({ href, icon, label }) => (
-        <Button href={href} external variant="accent-outline">
-          <Icon name={icon} />
-          <span>{label}</span>
-        </Button>
-      ))}
-  </div>
-
-  {pub.keywords && pub.keywords.length > 0 && (
-      <div class="card-tags">
-        {pub.keywords.map((keyword: string) =>
-          filterableTags ? (
-            <Chip data-pub-tag={slugify(keyword)} aria-pressed="false">
-              {keyword}
-            </Chip>
-          ) : (
-            <Badge variant="muted">{keyword}</Badge>
-          ),
+  <div class="publication-body">
+    <CardHeader>
+      {pub.award && <span class="publication-award">🏆 {pub.award}</span>}
+      {pub.mainUrl ? (
+          <Link href={pub.mainUrl} external class="card-title-link">
+            <CardTitle>{pub.title}</CardTitle>
+          </Link>
+        ) : (
+          <CardTitle>{pub.title}</CardTitle>
         )}
+    </CardHeader>
+
+    <CardContent>
+      <div class="bibliography-authors">
+        <span set:html={pub.authorData.displayFirstAuthors} />
+        {pub.authorData.hasMore && (
+            <>
+              <button
+                class="author-toggle"
+                data-show-label={`...and ${pub.authorData.hiddenCount} more authors...`}
+                data-hide-label={`...hide ${pub.authorData.hiddenCount} authors...`}
+                aria-expanded="false"
+                aria-controls={hiddenAuthorsId}
+                aria-label={`Show ${pub.authorData.hiddenCount} hidden authors`}
+              >
+                ...and {pub.authorData.hiddenCount} more authors...
+              </button>
+              <span
+                id={hiddenAuthorsId}
+                class="hidden-authors"
+                hidden
+                set:html={` ${pub.authorData.hiddenAuthors}`}
+              />
+            </>
+          )}
+        {pub.authorData.displayLastAuthors && pub.authorData.hasMore && (
+            <span>
+              ,
+              <span set:html={pub.authorData.displayLastAuthors} />
+            </span>
+          )}
       </div>
-    )}
-</article>
+
+      {(pub.publisher || pub.year) && (
+          <div class="bibliography-details">
+            {pub.publisher && (
+              <span class="publication-publisher">{pub.publisher}</span>
+            )}
+            {pub.publisher && pub.year && <span> • </span>}
+            {pub.year && <span>{pub.year}</span>}
+          </div>
+        )}
+    </CardContent>
+
+    <CardFooter class="publication-actions">
+      {pub.abstract && (
+          <details class="publication-abstract">
+            <summary data-button data-variant="accent-outline" class="abstract-summary">
+              Abstract
+            </summary>
+            <div class="abstract-content">{pub.abstract}</div>
+          </details>
+        )}
+
+      {pub.links.map(({ href, icon, label }) => (
+          <Button href={href} external variant="accent-outline">
+            <Icon name={icon} />
+            <span>{label}</span>
+          </Button>
+        ))}
+    </CardFooter>
+
+    {pub.keywords && pub.keywords.length > 0 && (
+        <CardFooter class="publication-tags">
+          {pub.keywords.map((keyword: string) =>
+            filterableTags ? (
+              <TaxonomyChip
+                label={keyword}
+                data-pub-tag={slugify(keyword)}
+                aria-pressed="false"
+                aria-label={`Filter publications by ${keyword}`}
+              />
+            ) : (
+              <TaxonomyChip label={keyword} static />
+            ),
+          )}
+        </CardFooter>
+      )}
+  </div>
+</Card>
 
 <style>
+  .publication-body {
+    display: flex;
+    min-inline-size: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--card-gap);
+  }
+
+  .publication-media {
+    position: relative;
+    flex: none;
+    aspect-ratio: 5 / 3;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(
+        circle at 25% 20%,
+        color-mix(in oklab, var(--primary) 22%, transparent),
+        transparent 42%
+      ),
+      var(--muted);
+    overflow: hidden;
+  }
+
+  .publication-media img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform var(--motion-duration-slow) var(--motion-ease);
+  }
+
+  @media (width >= 52rem) {
+    :global(.publication-card[data-has-image="true"]) {
+      display: grid;
+      grid-template-columns: minmax(10rem, 12rem) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .publication-media {
+      aspect-ratio: 5 / 4;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :global(.publication-card[data-has-image="true"]:hover)
+      .publication-media
+      img {
+      transform: scale(1.025);
+    }
+  }
+
   .publication-award {
     display: inline-flex;
     align-items: center;
@@ -134,11 +218,6 @@ const { pub, filterableTags = true } = Astro.props
     cursor: pointer;
   }
 
-  .card-tags :global([data-pub-tag]) {
-    min-block-size: 1.5rem;
-    padding-block: 0.0625rem;
-  }
-
   .publication-abstract summary::-webkit-details-marker {
     display: none;
   }
@@ -155,14 +234,14 @@ const { pub, filterableTags = true } = Astro.props
   }
 
   .author-toggle {
-    display: inline-flex;
-    align-items: center;
+    display: inline;
     border: 0;
     padding: 0;
     background: transparent;
     color: var(--accent);
     font: inherit;
     cursor: pointer;
+    line-height: inherit;
     text-decoration-line: underline;
     text-decoration-color: transparent;
     text-decoration-style: dotted;
@@ -179,17 +258,6 @@ const { pub, filterableTags = true } = Astro.props
     text-underline-offset: 0.18em;
   }
 
-  .expanded-authors {
-    cursor: pointer;
-    text-decoration-line: underline;
-    text-decoration-color: transparent;
-    text-decoration-style: dotted;
-    text-underline-offset: 0.12em;
-    transition:
-      text-decoration-color var(--motion-duration) var(--motion-ease),
-      text-underline-offset var(--motion-duration) var(--motion-ease);
-  }
-
   .hidden-authors[hidden] {
     display: none;
   }
@@ -199,16 +267,17 @@ const { pub, filterableTags = true } = Astro.props
     font-size: var(--step--2);
   }
 
-  .expanded-authors:hover {
-    text-decoration-color: currentColor;
-    text-underline-offset: 0.18em;
-  }
-
   .bibliography-authors :global(.author-highlight) {
     color: var(--primary);
     font-weight: 700;
     text-decoration: underline;
     text-decoration-color: var(--primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .publication-media img {
+      transition-duration: 0.01ms;
+    }
   }
 </style>
 <script>
@@ -222,40 +291,25 @@ const { pub, filterableTags = true } = Astro.props
       if (button.dataset.initialized === "true") return
       button.dataset.initialized = "true"
 
-      // Add keyboard support
-      button.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault()
-          button.click()
-        }
-      })
-
       button.addEventListener("click", (e) => {
         e.preventDefault()
-        const hiddenAuthors = button.dataset.hiddenAuthors || ""
-        const hiddenSpan = button.nextElementSibling as HTMLElement
+        const hiddenAuthors = button.nextElementSibling as HTMLElement | null
+        if (!hiddenAuthors) return
+
         const isExpanded = button.getAttribute("aria-expanded") === "true"
+        const nextExpanded = !isExpanded
 
-        if (!isExpanded) {
-          // Show hidden authors - replace button with clickable author list
-          hiddenSpan.innerHTML = ` ${hiddenAuthors}`
-          hiddenSpan.hidden = false
-          hiddenSpan.classList.add("expanded-authors")
-          button.style.display = "none"
-          button.setAttribute("aria-expanded", "true")
-
-          // Make the author span clickable to hide
-          hiddenSpan.addEventListener("click", hideAuthors, { once: true })
-        }
-
-        function hideAuthors() {
-          // Hide hidden authors - show button again
-          hiddenSpan.hidden = true
-          hiddenSpan.classList.remove("expanded-authors")
-          hiddenSpan.innerHTML = ""
-          button.style.display = "inline-flex"
-          button.setAttribute("aria-expanded", "false")
-        }
+        hiddenAuthors.hidden = !nextExpanded
+        button.setAttribute("aria-expanded", String(nextExpanded))
+        button.setAttribute(
+          "aria-label",
+          nextExpanded
+            ? button.dataset.hideLabel || "Hide authors"
+            : button.dataset.showLabel || "Show authors",
+        )
+        button.textContent = nextExpanded
+          ? button.dataset.hideLabel || "Hide authors"
+          : button.dataset.showLabel || "Show authors"
       })
     })
   }

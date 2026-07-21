@@ -61,6 +61,8 @@ export interface Publication {
   keywords?: string
   abstract?: string
   award?: string
+  image?: string
+  imagealt?: string
   arxiv?: string
   eprint?: string
   venue?: string
@@ -598,6 +600,8 @@ export function getPublicationData(
     year: publication.year,
     abstract: publication.abstract,
     award: publication.award,
+    image: publication.image,
+    imageAlt: publication.imagealt,
     mainUrl: mainUrl || undefined,
     authorData: {
       displayFirstAuthors: authorData.displayFirstAuthors,
