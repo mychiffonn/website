@@ -10,8 +10,8 @@ import { calloutDirective } from "./src/lib/callout"
 import { externalLinks } from "./src/lib/external-links"
 import { headingNamespace } from "./src/lib/heading-namespace"
 import { headingAnchors } from "./src/lib/heading-anchors"
-import { rehypeSidenotes } from "./src/plugins/rehype-sidenotes"
-import { remarkNormalizeHeadings } from "./src/plugins/remark-normalize-headings"
+import { satteriSidenotes } from "./src/plugins/satteri-sidenotes"
+import { normalizeHeadings } from "./src/plugins/satteri-normalize-headings"
 
 export default defineConfig({
   site: "https://mychiffonn.com",
@@ -40,9 +40,9 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: false,
     processor: satteri({
-      features: { directive: true, math: true },
+      features: { directive: true, math: true, wikilinks: true },
       mdastPlugins: [
-        remarkNormalizeHeadings,
+        normalizeHeadings,
         calloutDirective,
         inlineExpressiveCode,
         temmlMath,
@@ -50,7 +50,7 @@ export default defineConfig({
       hastPlugins: [
         externalLinks,
         blockExpressiveCode,
-        ...rehypeSidenotes(),
+        ...satteriSidenotes(),
         headingNamespace,
         headingAnchors,
       ],

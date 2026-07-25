@@ -17,60 +17,64 @@ const isSubpost = !!parentPost
   <Button
     href={nextPost ? `/${nextPost.collection}/${nextPost.id}#post-title` : undefined}
     variant="outline"
-    class="post-navigation-link"
-    data-direction="previous"
     aria-disabled={!nextPost}
   >
-    <Icon name="arrow-left" class="post-navigation-icon" />
-    <post-navigation-label>
-      <span>
-        {isSubpost ? "Previous Subpost" : "Previous Post"}
-      </span>
-      <strong>
-        {nextPost?.data.title || (isSubpost ? "No older subpost" : "You're at the oldest post!")}
-      </strong>
-    </post-navigation-label>
+    <post-navigation-content data-direction="previous">
+      <post-navigation-icon><Icon name="arrow-left" /></post-navigation-icon>
+      <post-navigation-label>
+        <span>
+          {isSubpost ? "Previous Subpost" : "Previous Post"}
+        </span>
+        <strong>
+          {nextPost?.data.title || (isSubpost ? "No older subpost" : "You're at the oldest post!")}
+        </strong>
+      </post-navigation-label>
+    </post-navigation-content>
   </Button>
 
   {isSubpost && (
       <Button
         href={parentPost ? `/${parentPost.collection}/${parentPost.id}#post-title` : undefined}
         variant="outline"
-        class="post-navigation-link"
-        data-direction="parent"
         aria-disabled={!parentPost}
       >
-        <Icon name="arrow-left-up" class="post-navigation-icon" />
-        <post-navigation-label>
-          <span>Parent Post</span>
-          <strong>
-            {parentPost?.data.title || "No parent post"}
-          </strong>
-        </post-navigation-label>
+        <post-navigation-content data-direction="parent">
+          <post-navigation-icon><Icon name="arrow-left-up" /></post-navigation-icon>
+          <post-navigation-label>
+            <span>Parent Post</span>
+            <strong>
+              {parentPost?.data.title || "No parent post"}
+            </strong>
+          </post-navigation-label>
+        </post-navigation-content>
       </Button>
     )}
 
   <Button
     href={prevPost ? `/${prevPost.collection}/${prevPost.id}#post-title` : undefined}
     variant="outline"
-    class="post-navigation-link"
-    data-direction="next"
     aria-disabled={!prevPost}
   >
-    <post-navigation-label>
-      <span>
-        {isSubpost ? "Next Subpost" : "Next Post"}
-      </span>
-      <strong>
-        {prevPost?.data.title || (isSubpost ? "No newer subpost" : "You're at the newest post!")}
-      </strong>
-    </post-navigation-label>
-    <Icon name="arrow-right" class="post-navigation-icon" />
+    <post-navigation-content data-direction="next">
+      <post-navigation-label>
+        <span>
+          {isSubpost ? "Next Subpost" : "Next Post"}
+        </span>
+        <strong>
+          {prevPost?.data.title || (isSubpost ? "No newer subpost" : "You're at the newest post!")}
+        </strong>
+      </post-navigation-label>
+      <post-navigation-icon><Icon name="arrow-right" /></post-navigation-icon>
+    </post-navigation-content>
   </Button>
 </nav>
 
 <style>
   .post-navigation {
+    --button-border-radius: var(--radius-lg);
+    --button-inline-size: 100%;
+    --button-min-block-size: 4rem;
+
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-s);
@@ -88,27 +92,22 @@ const isSubpost = !!parentPost
     }
   }
 
-  :global(.post-navigation-link) {
+  post-navigation-content {
+    display: flex;
     inline-size: 100%;
-    min-block-size: 4rem;
-    border-radius: var(--radius-lg);
+    align-items: center;
+    gap: var(--space-2xs);
   }
 
-  :global(.post-navigation-link[aria-disabled="true"]) {
-    opacity: 0.5;
-    pointer-events: none;
-    cursor: not-allowed;
-  }
-
-  :global(.post-navigation-link[data-direction="previous"]) {
+  post-navigation-content[data-direction="previous"] {
     justify-content: flex-start;
   }
 
-  :global(.post-navigation-link[data-direction="parent"]) {
+  post-navigation-content[data-direction="parent"] {
     justify-content: center;
   }
 
-  :global(.post-navigation-link[data-direction="next"]) {
+  post-navigation-content[data-direction="next"] {
     justify-content: flex-end;
   }
 
@@ -120,17 +119,17 @@ const isSubpost = !!parentPost
     text-wrap: pretty;
   }
 
-  [data-direction="previous"] post-navigation-label {
+  post-navigation-content[data-direction="previous"] post-navigation-label {
     align-items: flex-start;
     text-align: start;
   }
 
-  [data-direction="parent"] post-navigation-label {
+  post-navigation-content[data-direction="parent"] post-navigation-label {
     align-items: center;
     text-align: center;
   }
 
-  [data-direction="next"] post-navigation-label {
+  post-navigation-content[data-direction="next"] post-navigation-label {
     align-items: flex-end;
     text-align: end;
   }
@@ -153,26 +152,25 @@ const isSubpost = !!parentPost
     -webkit-line-clamp: 2;
   }
 
-  :global(.post-navigation-icon) {
+  post-navigation-icon {
+    display: inline-flex;
     flex-shrink: 0;
     transition: transform var(--motion-duration) var(--motion-ease);
   }
 
-  :global(
-    .post-navigation-link[data-direction="previous"]:hover .post-navigation-icon
-  ) {
-    transform: translateX(-0.25rem);
-  }
+  @media (hover: hover) and (pointer: fine) {
+    post-navigation-content[data-direction="previous"]:hover
+      post-navigation-icon {
+      transform: translateX(-0.25rem);
+    }
 
-  :global(
-    .post-navigation-link[data-direction="parent"]:hover .post-navigation-icon
-  ) {
-    transform: translate(-0.125rem, -0.125rem);
-  }
+    post-navigation-content[data-direction="parent"]:hover
+      post-navigation-icon {
+      transform: translate(-0.125rem, -0.125rem);
+    }
 
-  :global(
-    .post-navigation-link[data-direction="next"]:hover .post-navigation-icon
-  ) {
-    transform: translateX(0.25rem);
+    post-navigation-content[data-direction="next"]:hover post-navigation-icon {
+      transform: translateX(0.25rem);
+    }
   }
 </style>

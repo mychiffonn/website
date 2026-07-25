@@ -18,9 +18,14 @@ const { class: className, ...rest } = Astro.props
   }
 
   .scroll-area-viewport {
+    display: var(--scroll-area-display, block);
+    block-size: var(--scroll-area-block-size, 100%);
+    max-block-size: var(--scroll-area-max-block-size, none);
+    flex-direction: var(--scroll-area-flex-direction, row);
+    gap: var(--scroll-area-gap, 0);
     overflow-y: auto;
-    height: 100%;
-    width: 100%;
+    inline-size: 100%;
+    padding: var(--scroll-area-padding, 0);
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
 

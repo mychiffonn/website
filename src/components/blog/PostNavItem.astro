@@ -27,32 +27,35 @@ const effectiveCombinedWordCount = isSubpost ? undefined : combinedWordCount
 
 {isActive ? (
     <div class="post-nav-item is-active" aria-current="page">
-      <Icon
-        name={iconName}
-        class="post-nav-item-icon"
-        aria-label={isSubpost ? "Current subpost" : "Current post"}
-      />
+      <post-nav-item-icon>
+        <Icon
+          name={iconName}
+          aria-label={isSubpost ? "Current subpost" : "Current post"}
+        />
+      </post-nav-item-icon>
       <post-nav-item-content>
         <span>{title}</span>
         {!isSubpost && !!subpostCount && subpostCount > 0 && (
           <SubpostCountBadge count={subpostCount} variant="full" />
         )}
         {wordCount > 0 && (
-          <ReadingTime
-            wordCount={wordCount}
-            combinedWordCount={effectiveCombinedWordCount}
-            class="post-nav-item-meta"
-          />
+          <post-nav-item-meta>
+            <ReadingTime
+              wordCount={wordCount}
+              combinedWordCount={effectiveCombinedWordCount}
+            />
+          </post-nav-item-meta>
         )}
       </post-nav-item-content>
     </div>
   ) : (
     <Link href={href} class="post-nav-item">
-      <Icon
-        name={iconName}
-        class="post-nav-item-icon"
-        aria-label={isSubpost ? "Subpost" : "Parent post"}
-      />
+      <post-nav-item-icon>
+        <Icon
+          name={iconName}
+          aria-label={isSubpost ? "Subpost" : "Parent post"}
+        />
+      </post-nav-item-icon>
       <post-nav-item-content>
         <span>
           {title}
@@ -86,14 +89,20 @@ const effectiveCombinedWordCount = isSubpost ? undefined : combinedWordCount
       color var(--motion-duration-fast) var(--motion-ease);
   }
 
-  .post-nav-item:hover {
-    background: color-mix(in oklab, var(--accent) 50%, transparent);
-    color: var(--accent-foreground);
-  }
-
   .post-nav-item:focus-visible {
+    background: var(--interactive-background);
+    color: var(--interactive-foreground);
+    box-shadow: inset 0 0 0 1px var(--interactive-border);
     outline: 2px solid var(--ring);
     outline-offset: 2px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .post-nav-item[data-link]:hover {
+      background: var(--interactive-background);
+      color: var(--interactive-foreground);
+      box-shadow: inset 0 0 0 1px var(--interactive-border);
+    }
   }
 
   .post-nav-item.is-active {
@@ -102,7 +111,8 @@ const effectiveCombinedWordCount = isSubpost ? undefined : combinedWordCount
     font-weight: var(--font-weight-medium);
   }
 
-  :global(.post-nav-item-icon) {
+  post-nav-item-icon {
+    display: inline-flex;
     align-self: flex-start;
     flex-shrink: 0;
     margin-block-start: 0.125rem;
@@ -128,8 +138,7 @@ const effectiveCombinedWordCount = isSubpost ? undefined : combinedWordCount
     -webkit-line-clamp: 2;
   }
 
-  post-nav-item-meta,
-  :global(.post-nav-item-meta) {
+  post-nav-item-meta {
     display: flex;
     align-items: center;
     gap: var(--space-2xs);

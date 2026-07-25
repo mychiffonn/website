@@ -1,0 +1,30 @@
+[data-disclosure] > summary {
+  list-style: none;
+}
+
+[data-disclosure] > summary::-webkit-details-marker {
+  display: none;
+}
+
+[data-disclosure-chevron] {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+  rotate: 0deg;
+  transition: rotate var(--motion-duration) var(--motion-ease);
+}
+
+[data-disclosure][open] [data-disclosure-chevron] {
+  rotate: 180deg;
+}
+
+[data-disclosure][data-disclosure-rotation="quarter"][open]
+  [data-disclosure-chevron] {
+  rotate: 90deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-disclosure-chevron] {
+    transition-duration: 0.01ms;
+  }
+}
