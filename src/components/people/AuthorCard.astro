@@ -27,6 +27,7 @@ const isClickable = !isCompact && !isAuthorPage
 <Card
   href={isClickable ? `/people/${id}` : undefined}
   label={isClickable ? `View profile for ${name}` : undefined}
+  orientation="inline"
   padding={isCompact ? "compact" : "default"}
   class:list={[
     "author-card",

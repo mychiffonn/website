@@ -11,7 +11,7 @@ type HeadingDepth = Heading["depth"]
  * becomes H2, each newly encountered deeper source depth gets the next level,
  * and emitted headings are capped at H6.
  */
-export function remarkNormalizeHeadings() {
+export function normalizeHeadings() {
   let currentLevel: HeadingDepth = 2
   const levelMap = new Map<HeadingDepth, HeadingDepth>()
 

@@ -10,8 +10,14 @@ function calculateWordCountFromHtml(html: string | null | undefined): number {
   if (!html) return 0
 
   let content = html
+    .replace(/<(?:style|script)[^>]*>.*?<\/(?:style|script)>/gs, "")
     .replace(/<pre[^>]*>.*?<\/pre>/gs, "")
     .replace(/<code[^>]*>.*?<\/code>/g, "")
+    .replace(
+      /<math-(?:inline|display)[^>]*>.*?<\/math-(?:inline|display)>/gs,
+      "",
+    )
+    .replace(/<math(?:\s[^>]*)?>.*?<\/math>/gs, "")
     .replace(/\$\$.*?\$\$/g, "")
     .replace(/\$.*?\$/g, "")
     .replace(/<[^>]+>/g, "")

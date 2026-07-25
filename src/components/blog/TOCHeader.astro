@@ -15,7 +15,7 @@ const hasHeadings = headings && headings.length > 0
 
 {hasHeadings && (
     <nav id="mobile-toc-container" class="mobile-toc" aria-label="Table of contents">
-      <details aria-expanded="false">
+      <details data-disclosure>
         <summary>
           <toc-progress role="img" aria-label="Reading progress indicator">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -46,15 +46,13 @@ const hasHeadings = headings && headings.length > 0
           <toc-current id="mobile-toc-current-section">
             Overview
           </toc-current>
-          <Icon
-            name="mingcute:down-line"
-            class="mobile-toc-chevron"
-            aria-hidden="true"
-          />
+          <span data-disclosure-chevron class="mobile-toc-chevron">
+            <Icon name="mingcute:down-line" aria-hidden="true" />
+          </span>
         </summary>
 
         <toc-panel data-scroll-container>
-          <ScrollArea class="mobile-toc-scroll" data-scroll-area>
+          <ScrollArea data-scroll-area>
             <ul id="mobile-toc">
               {headings.map((heading) => (
                 <TOCHeadingLink heading={heading} class="toc-heading-link" />
@@ -68,6 +66,10 @@ const hasHeadings = headings && headings.length > 0
 
 <style>
   .mobile-toc {
+    --scroll-area-display: flex;
+    --scroll-area-flex-direction: column;
+    --scroll-area-max-block-size: 30dvh;
+
     inline-size: 100%;
 
     @media (width >= 80rem) {
@@ -87,10 +89,6 @@ const hasHeadings = headings && headings.length > 0
     padding: var(--space-s);
     cursor: pointer;
     list-style: none;
-  }
-
-  summary::-webkit-details-marker {
-    display: none;
   }
 
   summary:focus-visible {
@@ -138,27 +136,14 @@ const hasHeadings = headings && headings.length > 0
     white-space: nowrap;
   }
 
-  :global(.mobile-toc-chevron) {
-    flex-shrink: 0;
+  .mobile-toc-chevron {
     margin-inline-start: auto;
-    color: var(--muted-foreground);
-    transition: transform var(--motion-duration) var(--motion-ease);
-  }
-
-  details[open] :global(.mobile-toc-chevron) {
-    transform: rotate(180deg);
   }
 
   toc-panel {
     display: block;
     border-block-start: 1px solid
       color-mix(in oklab, var(--border) 50%, transparent);
-  }
-
-  :global(.mobile-toc-scroll) {
-    display: flex;
-    max-block-size: 30vh;
-    flex-direction: column;
   }
 
   ul {

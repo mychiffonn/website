@@ -26,7 +26,7 @@ const hasSections = sections.length > 0
           Table of Contents
         </h2>
       </header>
-      <ScrollArea class="toc-sidebar-scroll" data-scroll-area>
+      <ScrollArea data-scroll-area>
         <ol role="navigation" aria-labelledby="toc-heading">
           {sections.map((section: TOCSection, index: number) => {
             const isFirstSubpost = section.isSubpost && !sections[index - 1]?.isSubpost
@@ -57,6 +57,14 @@ const hasSections = sections.length > 0
   )}
 
 <style>
+  .toc-sidebar {
+    --scroll-area-display: flex;
+    --scroll-area-flex-direction: column;
+    --scroll-area-gap: var(--space-2xs);
+    --scroll-area-max-block-size: calc(100dvh - var(--header-height, 4rem));
+    --scroll-area-padding: var(--space-2xs);
+  }
+
   .toc-sidebar header {
     position: sticky;
     top: 0;
@@ -69,14 +77,6 @@ const hasSections = sections.length > 0
     color: color-mix(in oklab, var(--foreground) 80%, transparent);
     font-size: var(--step--1);
     font-weight: var(--font-weight-semibold);
-  }
-
-  :global(.toc-sidebar-scroll) {
-    display: flex;
-    max-block-size: calc(100vh - var(--header-height, 4rem));
-    flex-direction: column;
-    gap: var(--space-2xs);
-    padding: var(--space-2xs);
   }
 
   ol {

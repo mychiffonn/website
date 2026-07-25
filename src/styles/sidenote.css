@@ -67,7 +67,9 @@
   }
 }
 
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+@media (hover: hover) and (pointer: fine) and (
+    prefers-reduced-motion: no-preference
+  ) {
   .sidenote-backref:hover,
   .footnote-backref:hover {
     transform: translateY(-2px);
@@ -116,6 +118,7 @@
 /* Desktop: margin notes in the right column */
 @media (min-width: 1200px) {
   .sidenote-wrapper {
+    display: contents;
     position: static;
   }
 

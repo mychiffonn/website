@@ -36,14 +36,15 @@ const subpostCount = postNavItems.length
       class="mobile-subposts"
       aria-label="Subposts navigation"
     >
-      <details aria-expanded="false">
+      <details data-disclosure>
         <summary>
           <subposts-current>
-            <Icon
-              name="post-active"
-              class="subposts-current-icon"
-              aria-label={isSubpost ? "Active subpost" : "Active post"}
-            />
+            <subposts-current-icon>
+              <Icon
+                name="post-active"
+                aria-label={isSubpost ? "Active subpost" : "Active post"}
+              />
+            </subposts-current-icon>
             <span>
               {currentTitle}
             </span>
@@ -52,12 +53,14 @@ const subpostCount = postNavItems.length
             {subpostCount > 0 && !isSubpost && (
               <SubpostCountBadge count={subpostCount} variant="full" />
             )}
-            <Icon name="chevron-down" class="subposts-chevron" />
+            <span data-disclosure-chevron>
+              <Icon name="chevron-down" />
+            </span>
           </subposts-actions>
         </summary>
 
         <subposts-panel data-scroll-container>
-          <ScrollArea class="mobile-subposts-scroll" data-scroll-area>
+          <ScrollArea data-scroll-area>
             <subposts-listbox>
               {activePostNavItem && <PostNavItem {...activePostNavItem} />}
 
@@ -71,6 +74,10 @@ const subpostCount = postNavItems.length
 
 <style>
   .mobile-subposts {
+    --scroll-area-display: flex;
+    --scroll-area-flex-direction: column;
+    --scroll-area-max-block-size: 30dvh;
+
     inline-size: 100%;
 
     @media (width >= 80rem) {
@@ -86,10 +93,6 @@ const subpostCount = postNavItems.length
     padding: var(--space-s);
     cursor: pointer;
     list-style: none;
-  }
-
-  summary::-webkit-details-marker {
-    display: none;
   }
 
   summary:focus-visible {
@@ -117,7 +120,8 @@ const subpostCount = postNavItems.length
     white-space: nowrap;
   }
 
-  :global(.subposts-current-icon) {
+  subposts-current-icon {
+    display: inline-flex;
     flex-shrink: 0;
     inline-size: 1.25rem;
     block-size: 1.25rem;
@@ -131,25 +135,10 @@ const subpostCount = postNavItems.length
     gap: var(--space-2xs);
   }
 
-  :global(.subposts-chevron) {
-    color: var(--muted-foreground);
-    transition: transform var(--motion-duration) var(--motion-ease);
-  }
-
-  details[open] :global(.subposts-chevron) {
-    transform: rotate(180deg);
-  }
-
   subposts-panel {
     display: block;
     border-block-start: 1px solid
       color-mix(in oklab, var(--border) 50%, transparent);
-  }
-
-  :global(.mobile-subposts-scroll) {
-    display: flex;
-    max-block-size: 30vh;
-    flex-direction: column;
   }
 
   subposts-listbox {
@@ -174,9 +163,8 @@ const subpostCount = postNavItems.length
 
     const detailsElement = container.querySelector("details")
     const links = container.querySelectorAll("a")
-    const scrollArea = container.querySelector<HTMLElement>(
-      ".scroll-area-viewport",
-    )
+    const scrollArea =
+      container.querySelector<HTMLElement>("[data-scroll-area]")
 
     if (detailsElement) {
       // This logic should only be attached once.
