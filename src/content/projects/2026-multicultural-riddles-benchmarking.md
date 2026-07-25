@@ -6,14 +6,13 @@ selected: true
 types:
   - research
 skills:
-  - Python
-  - LLM
-  - evaluation
-tags:
-  - LLM Evaluation
+  - LLM evaluation
+  - Leadership
   - Multicultural AI
-  - Hallucination
+tags:
+  - Multicultural AI
   - Cohere Labs
+  - Community evaluation
 ---
 
 At Cohere Labs Open Science Community, I co-lead the analysis subteam for a multicultural riddles benchmarking project studying how LLMs handle culturally grounded reasoning tasks.

@@ -239,7 +239,8 @@ input:where([type="button"], [type="reset"], [type="submit"]),
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
-    transition-property: color, background-color, border-color, outline-color,
+    transition-property:
+      color, background-color, border-color, outline-color,
       text-decoration-color, opacity, box-shadow, background-size !important;
   }
 }

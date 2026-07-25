@@ -1,27 +1,47 @@
 ---
 import Badge from "@/components/base/Badge.astro"
+import Icon from "@/components/base/Icon.astro"
+import {
+  Card,
+  CardContent,
+  CardGroup,
+  CardHeader,
+  CardTitle,
+} from "@/components/base/card"
 
-interface ProjectSkill {
-  label: string
-  count: number
+interface TechGroup {
+  name: string
+  icon: string
+  items: string[]
 }
 
 interface Props {
-  skills: ProjectSkill[]
+  description: string
+  groups: TechGroup[]
 }
 
-const { skills } = Astro.props
+const { description, groups } = Astro.props
 ---
 
 <div class="tech-stack">
-  <p class="tech-stack-description">
-    Skills and technologies represented across these projects.
-  </p>
-  <ul class="tech-stack-items" aria-label="Project skills and technologies">
-    {skills.map(({ label }) => (
-      <li><Badge variant="muted">{label}</Badge></li>
+  <p class="tech-stack-description">{description}</p>
+  <CardGroup columns={2} class="tech-stack-grid">
+    {groups.map((group) => (
+      <Card as="section" padding="compact" class="tech-stack-group">
+        <CardHeader class="tech-stack-heading">
+          <Icon name={group.icon} aria-hidden="true" />
+          <CardTitle>{group.name}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul class="tech-stack-items" aria-label={`${group.name} technologies`}>
+            {group.items.map((item) => (
+              <li><Badge variant="muted">{item}</Badge></li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
     ))}
-  </ul>
+  </CardGroup>
 </div>
 
 <style>
@@ -39,10 +59,35 @@ const { skills } = Astro.props
     text-wrap: pretty;
   }
 
+  .tech-stack-grid {
+    gap: var(--space-2xs);
+  }
+
+  .tech-stack-group {
+    align-content: start;
+    border-color: color-mix(in oklab, var(--border) 72%, transparent);
+  }
+
+  .tech-stack-heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  .tech-stack-heading :global(svg) {
+    flex: none;
+    color: var(--accent);
+  }
+
+  .tech-stack-heading :global([data-slot="card-title"]) {
+    font-size: var(--step-0);
+  }
+
   .tech-stack-items {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2xs) var(--space-3xs);
+    gap: var(--space-3xs);
     padding: 0;
     margin: 0;
     list-style: none;

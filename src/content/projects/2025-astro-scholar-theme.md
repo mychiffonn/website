@@ -10,11 +10,9 @@ types:
 skills:
   - TypeScript
   - Astro
+  - Web accessibility
 tags:
-  - Astro
-  - TypeScript
   - Academic Portfolio
-  - Satteri
 ---
 
 I created and maintain Scholar, an Astro-based academic website theme for researchers who want a personal site with publications, projects, blog posts, profile links, and academic content collections.

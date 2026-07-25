@@ -17,7 +17,7 @@
   --line-height-tight: 1.15;
 
   --prose-foreground: color-mix(in oklab, var(--foreground) 80%, transparent);
-  --prose-marker:     var(--primary);
+  --prose-marker: var(--primary);
 
   --measure: 44rem;
 }

@@ -1,5 +1,6 @@
 ---
 import { FOOTER, PROFILE } from "@site-config"
+import techStack from "@/content/tech-stack.json"
 import {
   getProjectSkillCounts,
   getProjectTypeCounts,
@@ -28,8 +29,9 @@ const otherProjects = allProjects.filter(
   (project) => !project.data.isHighlighted,
 )
 const typeCounts = getProjectTypeCounts(allProjects)
-const skillCounts = getProjectSkillCounts(allProjects)
-const allSkills = getProjectSkillCounts(allProjects, 1)
+const skillCounts = getProjectSkillCounts(allProjects, 1)
+const recurringSkillCounts = skillCounts.filter(({ count }) => count > 1)
+const uniqueSkillCounts = skillCounts.filter(({ count }) => count === 1)
 
 const githubRepo = FOOTER.sourceCode
 const githubProfile =
@@ -81,17 +83,44 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
                 <span class="project-filter-label" id="project-skill-filter-label">
                   Skill
                 </span>
-                <div class="chip-filter-bar">
-                  {skillCounts.map(({ slug, label, count }) => (
-                    <TaxonomyChip
-                      label={label}
-                      count={count}
-                      countNoun="projects"
-                      data-project-skill-filter={slug}
-                      aria-pressed="false"
-                      aria-label={`Filter projects by skill ${label}; ${count} ${count === 1 ? "project" : "projects"}`}
-                    />
-                  ))}
+                <div class="project-skill-controls">
+                  <div class="chip-filter-bar">
+                    {recurringSkillCounts.map(({ slug, label, count }) => (
+                      <TaxonomyChip
+                        label={label}
+                        count={count}
+                        countNoun="projects"
+                        data-project-skill-filter={slug}
+                        aria-pressed="false"
+                        aria-label={`Filter projects by skill ${label}; ${count} projects`}
+                      />
+                    ))}
+                  </div>
+                  {uniqueSkillCounts.length > 0 && (
+                    <details class="project-skill-more" data-disclosure>
+                      <summary>
+                        <span data-skill-more-show>
+                          Show {uniqueSkillCounts.length} more skills
+                        </span>
+                        <span data-skill-more-hide>Hide additional skills</span>
+                        <span data-disclosure-chevron>
+                          <Icon name="chevron-down" />
+                        </span>
+                      </summary>
+                      <div class="chip-filter-bar project-skill-more-chips">
+                        {uniqueSkillCounts.map(({ slug, label, count }) => (
+                          <TaxonomyChip
+                            label={label}
+                            count={count}
+                            countNoun="project"
+                            data-project-skill-filter={slug}
+                            aria-pressed="false"
+                            aria-label={`Filter projects by skill ${label}; ${count} project`}
+                          />
+                        ))}
+                      </div>
+                    </details>
+                  )}
                 </div>
               </div>
             )}
@@ -118,8 +147,8 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
       </div>
       {featuredProjects.length > 0 && (
           <div data-project-section>
-            <Section title="Featured Projects">
-              <CardGroup columns={2} class="project-grid">
+            <Section title="Featured Projects" spacing="none">
+              <CardGroup columns={2} breakpoint="large" class="project-grid">
                 {featuredProjects.map((project) => (
                   <ProjectCard {project} />
                 ))}
@@ -129,7 +158,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
         )}
     </div>
     {otherProjects.length > 0 && (
-        <details class="other-projects" data-project-section>
+        <details class="other-projects" data-project-section data-disclosure>
           <summary>
             <span class="other-projects-title" role="heading" aria-level="2">
               Other Projects
@@ -139,10 +168,16 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
               <span data-disclosure-hide>
                 Hide {otherProjects.length} projects
               </span>
-              <Icon name="chevron-down" class="other-projects-chevron" />
+              <span data-disclosure-chevron>
+                <Icon name="chevron-down" />
+              </span>
             </span>
           </summary>
-          <CardGroup columns={2} class="project-grid other-projects-grid">
+          <CardGroup
+            columns={2}
+            breakpoint="large"
+            class="project-grid other-projects-grid"
+          >
             {otherProjects.map((project) => (
               <ProjectCard {project} />
             ))}
@@ -150,7 +185,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
         </details>
       )}
     <Section title="Tech Stack" class="tech-stack-section">
-      <TechStack skills={allSkills} />
+      <TechStack {...techStack} />
     </Section>
     {githubRepo && (
         <Section title="On GitHub" class="github-showcase">
@@ -210,7 +245,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
       if (!otherProjects) return
       const visibleCount = [
         ...otherProjects.querySelectorAll<HTMLElement>("[data-project-types]"),
-      ].filter((project) => project.style.display !== "none").length
+      ].filter((project) => !project.hidden).length
       const noun = visibleCount === 1 ? "project" : "projects"
       if (disclosureShow)
         disclosureShow.textContent = `Show ${visibleCount} ${noun}`
@@ -297,6 +332,47 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
     gap: var(--space-3xs);
   }
 
+  .project-skill-controls {
+    min-inline-size: 0;
+  }
+
+  .project-skill-more {
+    margin-block-start: var(--space-3xs);
+  }
+
+  .project-skill-more summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    min-block-size: var(--control-size-compact);
+    padding-inline: var(--space-2xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    cursor: pointer;
+    list-style: none;
+    transition:
+      border-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  [data-skill-more-hide] {
+    display: none;
+  }
+
+  .project-skill-more[open] [data-skill-more-show] {
+    display: none;
+  }
+
+  .project-skill-more[open] [data-skill-more-hide] {
+    display: inline;
+  }
+
+  .project-skill-more-chips {
+    margin-block-start: var(--space-3xs);
+  }
+
   .chip-active-filter[hidden] {
     display: none;
   }
@@ -327,10 +403,6 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
     font-size: var(--step--1);
   }
 
-  .projects-featured :global(.section-block) {
-    margin-block-start: 0;
-  }
-
   .other-projects {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
@@ -354,10 +426,6 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
     transition:
       background-color var(--motion-duration) var(--motion-ease),
       color var(--motion-duration-fast) var(--motion-ease);
-  }
-
-  .other-projects summary::-webkit-details-marker {
-    display: none;
   }
 
   .other-projects-title {
@@ -384,19 +452,16 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
     display: inline;
   }
 
-  :global(.other-projects-chevron) {
-    transition: rotate var(--motion-duration) var(--motion-ease);
-  }
-
-  .other-projects[open] :global(.other-projects-chevron) {
-    rotate: 180deg;
-  }
-
   .other-projects-grid {
     padding: 0 var(--space-s) var(--space-s);
   }
 
   @media (hover: hover) and (pointer: fine) {
+    .project-skill-more summary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .other-projects summary:hover {
       background: color-mix(in oklab, var(--primary) 10%, transparent);
       color: var(--primary);
@@ -414,16 +479,12 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
       min-block-size: 0;
     }
 
+    .project-skill-controls {
+      inline-size: 100%;
+    }
+
     .other-projects-grid {
       padding: 0 var(--space-xs) var(--space-xs);
-    }
-  }
-
-  :global(.project-grid[data-columns="2"]) {
-    grid-template-columns: 1fr;
-
-    @media (width >= 64rem) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 </style>

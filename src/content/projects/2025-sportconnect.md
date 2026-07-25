@@ -12,17 +12,10 @@ types:
 skills:
   - TypeScript
   - React
-  - Express.js
   - PostgreSQL
-  - Tailwind CSS
 tags:
-  - TypeScript
-  - React
-  - Express
-  - PostgreSQL
-  - TailwindCSS
-  - DaisyUI
-  - BetterAuth
+  - Sports events
+  - RSVP management
 ---
 
 SportConnect is a scalable full-stack web application for connecting people through local recreational sport events. It supports event creation and management, event discovery and filtering, and real-time RSVP tracking.

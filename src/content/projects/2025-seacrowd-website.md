@@ -8,12 +8,14 @@ types:
   - product
   - open-source
 skills:
+  - Web design
   - JavaScript
-tags:
   - Jekyll
   - Bootstrap
-  - JavaScript
-  - SCSS
+tags:
+  - Southeast Asian AI
+  - Community website
+  - Social content
 ---
 
 I designed and maintained the public website for [SEACrowd](https://seacrowd.org/), a Southeast Asian AI research community, and supported growth through content campaigns that made community projects, events, and apprenticeship work easier to discover.

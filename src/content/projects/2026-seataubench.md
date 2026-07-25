@@ -12,14 +12,11 @@ types:
   - open-source
 skills:
   - Python
-  - LLM
-  - evaluation
-  - agents
+  - LLM evaluation
+  - AI agents
+  - Multilingual AI
 tags:
-  - LLM Evaluation
-  - Agentic AI
   - Southeast Asian Languages
-  - Localization
   - SEACrowd
 ---
 

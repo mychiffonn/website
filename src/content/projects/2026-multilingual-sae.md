@@ -10,14 +10,10 @@ types:
   - research
 skills:
   - Python
-  - LLM
   - PyTorch
-  - Hugging Face ecosystem
+  - Mechanistic interpretability
 tags:
-  - Sparse Autoencoders
-  - Mechanistic Interpretability
   - Multilingual AI
-  - HuggingFace
   - LaBSE
 ---
 

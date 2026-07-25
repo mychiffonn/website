@@ -7,12 +7,11 @@ import Icon from "@/components/base/Icon.astro"
   <Button
     variant="outline"
     size="square"
-    class="scroll-to-top"
     hidden
     title="Back to top"
     aria-label="Back to top"
   >
-    <Icon name="to-top" size="1.25rem" class="scroll-to-top-icon" />
+    <back-to-top-icon><Icon name="to-top" size="1.25rem" /></back-to-top-icon>
   </Button>
 </back-to-top>
 
@@ -57,30 +56,25 @@ import Icon from "@/components/base/Icon.astro"
 
 <style>
   back-to-top {
+    --button-background: var(--background);
+    --button-box-shadow: 0 0.5rem 1.5rem -0.75rem
+      color-mix(in oklab, var(--foreground) 28%, transparent);
+
     position: fixed;
     z-index: 50;
     inset-inline-end: max(var(--space-xs), env(safe-area-inset-right));
     inset-block-end: max(var(--space-xl), env(safe-area-inset-bottom));
   }
 
-  :global(.scroll-to-top) {
-    background: var(--background);
-    box-shadow: 0 0.5rem 1.5rem -0.75rem
-      color-mix(in oklab, var(--foreground) 28%, transparent);
-  }
-
-  :global(.scroll-to-top[hidden]) {
-    display: none;
-  }
-
-  :global(.scroll-to-top-icon) {
+  back-to-top-icon {
+    display: inline-flex;
     transition: transform var(--motion-duration) var(--motion-ease);
   }
 
   @media (hover: hover) and (pointer: fine) and (
       prefers-reduced-motion: no-preference
     ) {
-    :global(.scroll-to-top:hover .scroll-to-top-icon) {
+    back-to-top:hover back-to-top-icon {
       transform: translateY(-0.25rem);
     }
   }

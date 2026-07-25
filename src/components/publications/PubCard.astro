@@ -101,11 +101,20 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
 
     <CardFooter class="publication-actions">
       {pub.abstract && (
-          <details class="publication-abstract">
-            <summary data-button data-variant="accent-outline" class="abstract-summary">
-              Abstract
-            </summary>
-            <div class="abstract-content">{pub.abstract}</div>
+          <details
+            class="publication-abstract"
+            data-disclosure
+            data-disclosure-rotation="quarter"
+          >
+            <Button as="summary" variant="accent-outline" class="abstract-summary">
+              <span data-disclosure-chevron>
+                <Icon name="right" aria-hidden="true" />
+              </span>
+              <span>Abstract</span>
+            </Button>
+            <div class="abstract-reveal">
+              <div class="abstract-content">{pub.abstract}</div>
+            </div>
           </details>
         )}
 
@@ -206,31 +215,29 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
     font-weight: var(--font-weight-bold);
   }
 
-  .publication-abstract[open] summary {
-    margin-bottom: 0.5rem;
-  }
-
-  .publication-abstract summary::marker {
-    content: "";
-  }
-
   .abstract-summary {
     cursor: pointer;
   }
 
-  .publication-abstract summary::-webkit-details-marker {
-    display: none;
+  .abstract-reveal {
+    display: grid;
+    transform-origin: top;
   }
 
-  .publication-abstract summary:before {
-    content: "⏵";
-    display: inline-block;
-    margin-right: 0.5em;
-    transition: transform var(--motion-duration) var(--motion-ease);
+  .publication-abstract[open] .abstract-reveal {
+    animation: abstract-reveal var(--motion-duration-slow) var(--motion-ease);
   }
 
-  .publication-abstract[open] summary:before {
-    transform: rotate(90deg);
+  @keyframes abstract-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(-0.35rem) scaleY(0.96);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scaleY(1);
+    }
   }
 
   .author-toggle {
@@ -263,7 +270,7 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
   }
 
   .abstract-content {
-    margin-block: var(--space-2xs);
+    margin-block-start: var(--space-2xs);
     font-size: var(--step--2);
   }
 
@@ -275,9 +282,16 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .publication-media img {
+    .publication-media img,
+    .publication-abstract[open] .abstract-reveal {
+      animation-duration: 0.01ms;
       transition-duration: 0.01ms;
     }
+  }
+</style>
+<style is:global>
+  .publication-abstract .abstract-summary [data-disclosure-chevron] {
+    color: inherit;
   }
 </style>
 <script>

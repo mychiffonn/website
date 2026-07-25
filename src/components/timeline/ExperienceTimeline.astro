@@ -5,6 +5,7 @@ import Link from "@/components/base/Link.astro"
 import DateRange from "@/components/projects/DateRange.astro"
 
 import Timeline from "./Timeline.astro"
+import TimelineDate from "./TimelineDate.astro"
 import TimelineItem from "./TimelineItem.astro"
 
 interface Props {
@@ -27,12 +28,9 @@ const displayed = typeof limit === "number" ? sorted.slice(0, limit) : sorted
 <Timeline>
   {displayed.map((entry) => (
     <TimelineItem>
-      <DateRange
-        slot="date"
-        fromDate={entry.data.startDate}
-        toDate={entry.data.endDate}
-        class="timeline-date"
-      />
+      <TimelineDate slot="date">
+        <DateRange fromDate={entry.data.startDate} toDate={entry.data.endDate} />
+      </TimelineDate>
       <p class="experience-title">
         <span>{entry.data.title}</span>
         {" @ "}
@@ -51,15 +49,6 @@ const displayed = typeof limit === "number" ? sorted.slice(0, limit) : sorted
 </Timeline>
 
 <style>
-  :global(.timeline-date) {
-    display: block;
-    margin-block-end: var(--space-3xs);
-    color: var(--muted-foreground);
-    font-size: var(--step--1);
-    font-weight: var(--font-weight-medium);
-    text-transform: uppercase;
-  }
-
   .experience-title {
     font-size: var(--step--1);
     line-height: calc(var(--leading-offset) + 1em);

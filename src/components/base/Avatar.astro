@@ -48,7 +48,7 @@ const shouldInferSize =
     )}
 </span>
 
-<style is:global>
+<style>
   [data-avatar] {
     display: inline-flex;
     align-items: center;
@@ -62,7 +62,7 @@ const shouldInferSize =
     text-transform: uppercase;
   }
 
-  [data-avatar] img {
+  [data-avatar] :global(img) {
     inline-size: 100%;
     block-size: 100%;
     object-fit: cover;

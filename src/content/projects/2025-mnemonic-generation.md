@@ -9,16 +9,12 @@ types:
   - tool
 skills:
   - Python
-  - LLM
   - Fine-tuning
   - PyTorch
-  - Hugging Face ecosystem
-  - Unsloth
 tags:
-  - unsloth
-  - QLoRA
-  - DPO
-  - trl
+  - Mnemonic generation
+  - Vocabulary learning
+  - Mandarin
   - Gemma
   - DeepSeek
 ---

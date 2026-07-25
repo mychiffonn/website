@@ -8,14 +8,12 @@ types:
   - research
 skills:
   - Python
-  - LLM
-  - evaluation
-  - Inspect AI
+  - LLM evaluation
+  - Chain-of-thought monitoring
 tags:
-  - Chain of Thought
-  - Sandbagging
-  - Inspect AI
-  - OpenRouter API
+  - AI oversight
+  - Monitorability
+  - OpenRouter
 ---
 
 ## Overview

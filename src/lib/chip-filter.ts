@@ -96,21 +96,21 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
 
     items.forEach((item) => {
       if (!active) {
-        item.style.display = ""
+        item.hidden = false
         return
       }
       const values = (item.dataset[itemAttr] || "")
         .split(",")
         .map((v) => v.trim())
-      item.style.display = values.includes(active) ? "" : "none"
+      item.hidden = !values.includes(active)
     })
 
     if (groupSelector) {
       scope.querySelectorAll<HTMLElement>(groupSelector).forEach((group) => {
-        const visibleItems = group.querySelectorAll<HTMLElement>(
-          `${itemSelector}:not([style*="display: none"])`,
-        )
-        group.style.display = visibleItems.length === 0 ? "none" : ""
+        const hasVisibleItems = [
+          ...group.querySelectorAll<HTMLElement>(itemSelector),
+        ].some((item) => !item.hidden)
+        group.hidden = !hasVisibleItems
       })
     }
 
@@ -121,9 +121,7 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
     }
 
     if (statusSelector) {
-      const visibleCount = [...items].filter(
-        (item) => item.style.display !== "none",
-      ).length
+      const visibleCount = [...items].filter((item) => !item.hidden).length
       const status = document.querySelector<HTMLElement>(statusSelector)
       if (status) {
         status.textContent = active
@@ -228,15 +226,15 @@ export function initFacetedChipFilter(
           .map((value) => value.trim())
           .includes(selected)
       })
-      item.style.display = matches ? "" : "none"
+      item.hidden = !matches
     })
 
     if (groupSelector) {
       scope.querySelectorAll<HTMLElement>(groupSelector).forEach((group) => {
-        const visibleItems = group.querySelectorAll<HTMLElement>(
-          `${itemSelector}:not([style*="display: none"])`,
-        )
-        group.style.display = visibleItems.length === 0 ? "none" : ""
+        const hasVisibleItems = [
+          ...group.querySelectorAll<HTMLElement>(itemSelector),
+        ].some((item) => !item.hidden)
+        group.hidden = !hasVisibleItems
       })
     }
 
@@ -259,9 +257,7 @@ export function initFacetedChipFilter(
         })
     }
 
-    const visibleCount = [...items].filter(
-      (item) => item.style.display !== "none",
-    ).length
+    const visibleCount = [...items].filter((item) => !item.hidden).length
 
     if (emptyStateSelector) {
       document
