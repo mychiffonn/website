@@ -24,14 +24,17 @@
   --grid-columns: 12;
   --grid-edge: max(
     var(--grid-gutter),
-    (100% - var(--grid-max-width)) / 2 + var(--grid-gutter)
+    (100% - var(--grid-max-width)) /
+    2 +
+    var(--grid-gutter)
   );
   --grid-column-width: calc(
     (
-        min(100%, var(--grid-max-width)) -
-          (var(--grid-columns) + 1) * var(--grid-gutter)
-      ) /
-      var(--grid-columns)
+      min(100%, var(--grid-max-width)) -
+      (var(--grid-columns) + 1) *
+      var(--grid-gutter)
+    ) /
+    var(--grid-columns)
   );
   --bar-gutter: max(var(--grid-gutter), (100% - var(--measure)) / 2);
   --bar-border-image: linear-gradient(

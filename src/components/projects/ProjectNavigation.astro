@@ -15,38 +15,46 @@ const { prev, next } = Astro.props
   <Button
     href={prev ? `/projects/${prev.id}` : undefined}
     variant="outline"
-    class="project-navigation-link"
-    data-direction="previous"
     aria-disabled={!prev}
   >
-    <Icon name="arrow-left" class="project-navigation-icon" />
-    <project-navigation-label>
-      <span>Previous Project</span>
-      <strong>
-        {prev?.data.title || "You're at the first project!"}
-      </strong>
-    </project-navigation-label>
+    <project-navigation-content data-direction="previous">
+      <project-navigation-icon
+        ><Icon name="arrow-left" /></project-navigation-icon
+      >
+      <project-navigation-label>
+        <span>Previous Project</span>
+        <strong>
+          {prev?.data.title || "You're at the first project!"}
+        </strong>
+      </project-navigation-label>
+    </project-navigation-content>
   </Button>
 
   <Button
     href={next ? `/projects/${next.id}` : undefined}
     variant="outline"
-    class="project-navigation-link"
-    data-direction="next"
     aria-disabled={!next}
   >
-    <project-navigation-label>
-      <span>Next Project</span>
-      <strong>
-        {next?.data.title || "You're at the last project!"}
-      </strong>
-    </project-navigation-label>
-    <Icon name="arrow-right" class="project-navigation-icon" />
+    <project-navigation-content data-direction="next">
+      <project-navigation-label>
+        <span>Next Project</span>
+        <strong>
+          {next?.data.title || "You're at the last project!"}
+        </strong>
+      </project-navigation-label>
+      <project-navigation-icon
+        ><Icon name="arrow-right" /></project-navigation-icon
+      >
+    </project-navigation-content>
   </Button>
 </nav>
 
 <style>
   .project-navigation {
+    --button-border-radius: var(--radius-lg);
+    --button-inline-size: 100%;
+    --button-min-block-size: 4rem;
+
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-s);
@@ -56,23 +64,18 @@ const { prev, next } = Astro.props
     }
   }
 
-  :global(.project-navigation-link) {
+  project-navigation-content {
+    display: flex;
     inline-size: 100%;
-    min-block-size: 4rem;
-    border-radius: var(--radius-lg);
+    align-items: center;
+    gap: var(--space-2xs);
   }
 
-  :global(.project-navigation-link[aria-disabled="true"]) {
-    opacity: 0.5;
-    pointer-events: none;
-    cursor: not-allowed;
-  }
-
-  :global(.project-navigation-link[data-direction="previous"]) {
+  project-navigation-content[data-direction="previous"] {
     justify-content: flex-start;
   }
 
-  :global(.project-navigation-link[data-direction="next"]) {
+  project-navigation-content[data-direction="next"] {
     justify-content: flex-end;
   }
 
@@ -84,12 +87,13 @@ const { prev, next } = Astro.props
     text-wrap: pretty;
   }
 
-  [data-direction="previous"] project-navigation-label {
+  project-navigation-content[data-direction="previous"]
+    project-navigation-label {
     align-items: flex-start;
     text-align: start;
   }
 
-  [data-direction="next"] project-navigation-label {
+  project-navigation-content[data-direction="next"] project-navigation-label {
     align-items: flex-end;
     text-align: end;
   }
@@ -112,22 +116,21 @@ const { prev, next } = Astro.props
     -webkit-line-clamp: 2;
   }
 
-  :global(.project-navigation-icon) {
+  project-navigation-icon {
+    display: inline-flex;
     flex-shrink: 0;
     transition: transform var(--motion-duration) var(--motion-ease);
   }
 
-  :global(
-    .project-navigation-link[data-direction="previous"]:hover
-      .project-navigation-icon
-  ) {
-    transform: translateX(-0.25rem);
-  }
+  @media (hover: hover) and (pointer: fine) {
+    project-navigation-content[data-direction="previous"]:hover
+      project-navigation-icon {
+      transform: translateX(-0.25rem);
+    }
 
-  :global(
-    .project-navigation-link[data-direction="next"]:hover
-      .project-navigation-icon
-  ) {
-    transform: translateX(0.25rem);
+    project-navigation-content[data-direction="next"]:hover
+      project-navigation-icon {
+      transform: translateX(0.25rem);
+    }
   }
 </style>

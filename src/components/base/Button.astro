@@ -2,6 +2,7 @@
 import Link from "./Link.astro"
 
 export interface Props extends astroHTML.JSX.ButtonHTMLAttributes {
+  as?: "button" | "summary"
   variant?:
     | "default"
     | "primary"
@@ -19,6 +20,7 @@ export interface Props extends astroHTML.JSX.ButtonHTMLAttributes {
 }
 
 const {
+  as = "button",
   variant = "default",
   size = "default",
   class: className,
@@ -41,6 +43,16 @@ const {
     >
       <slot />
     </Link>
+  ) : as === "summary" ? (
+    <summary
+      data-button
+      data-variant={variant}
+      data-size={size}
+      class={className ?? undefined}
+      {...rest}
+    >
+      <slot />
+    </summary>
   ) : (
     <button
       type={type}
@@ -54,18 +66,20 @@ const {
     </button>
   )}
 
-<style is:global>
+<style>
   [data-button] {
     --button-line-width: 0.5px;
 
     display: inline-flex;
+    inline-size: var(--button-inline-size, auto);
     align-items: center;
     justify-content: center;
     gap: var(--space-2xs);
-    min-block-size: var(--control-size);
+    min-block-size: var(--button-min-block-size, var(--control-size));
     padding: var(--space-2xs) var(--space-xs);
     border: var(--button-line-width) solid transparent;
-    border-radius: var(--radius-md);
+    border-radius: var(--button-border-radius, var(--radius-md));
+    box-shadow: var(--button-box-shadow, none);
     font-size: var(--step--1);
     font-weight: var(--font-weight-medium);
     line-height: 1.2;
@@ -104,7 +118,7 @@ const {
   [data-button][data-variant$="outline"],
   [data-button][data-variant="outline"] {
     border-color: var(--border);
-    background: transparent;
+    background: var(--button-background, transparent);
     color: var(--foreground);
   }
 
@@ -143,8 +157,13 @@ const {
     }
 
     [data-button][data-variant="outline"]:hover,
-    [data-button][data-variant="accent-outline"]:hover,
     [data-button][data-variant="ghost"]:hover {
+      border-color: var(--interactive-border);
+      background: var(--interactive-background);
+      color: var(--interactive-foreground);
+    }
+
+    [data-button][data-variant="accent-outline"]:hover {
       border-color: var(--accent);
       background: var(--accent);
       color: var(--accent-foreground);
@@ -161,6 +180,13 @@ const {
       background: var(--destructive);
       color: var(--accent-foreground);
     }
+  }
+
+  [data-button][data-variant="outline"]:focus-visible,
+  [data-button][data-variant="ghost"]:focus-visible {
+    border-color: var(--interactive-border);
+    background: var(--interactive-background);
+    color: var(--interactive-foreground);
   }
 
   [data-button][aria-disabled="true"],

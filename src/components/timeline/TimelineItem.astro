@@ -4,6 +4,7 @@ interface Props {
 }
 
 const { class: className } = Astro.props
+const hasDate = Astro.slots.has("date")
 ---
 
 <li class:list={["timeline-item", className]}>
@@ -12,7 +13,11 @@ const { class: className } = Astro.props
     <div class="timeline-line"></div>
   </div>
   <div class="timeline-content">
-    <slot name="date" />
+    {hasDate && (
+      <div class="timeline-date">
+        <slot name="date" />
+      </div>
+    )}
     <slot />
   </div>
 </li>
@@ -58,5 +63,9 @@ const { class: className } = Astro.props
     flex: 1;
     min-inline-size: 0;
     padding-block-end: var(--space-2xs);
+  }
+
+  .timeline-date {
+    margin-block-end: var(--space-3xs);
   }
 </style>

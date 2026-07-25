@@ -4,6 +4,7 @@ import Link from "@/components/base/Link.astro"
 interface Props {
   title: string
   class?: string
+  spacing?: "default" | "none"
   moreLink?: string
   moreText?: string
 }
@@ -11,12 +12,13 @@ interface Props {
 const {
   class: className,
   title,
+  spacing = "default",
   moreLink,
   moreText = "see all →",
 } = Astro.props
 ---
 
-<section class:list={["section-block", className]}>
+<section class:list={["section-block", className]} data-spacing={spacing}>
   <section-heading>
     <h2 id={title.toLowerCase()}>{title}</h2>
     {moreLink && (
@@ -34,6 +36,10 @@ const {
     flex-direction: column;
     gap: var(--space-s);
     margin-block-start: var(--space-xl);
+  }
+
+  .section-block[data-spacing="none"] {
+    margin-block-start: 0;
   }
 
   section-heading {

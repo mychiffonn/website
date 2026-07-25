@@ -1,0 +1,22 @@
+---
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<span class:list={["timeline-date", className]}>
+  <slot />
+</span>
+
+<style>
+  .timeline-date {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+  }
+</style>

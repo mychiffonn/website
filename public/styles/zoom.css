@@ -8,7 +8,8 @@
 }
 
 /* Zoomable images cursor */
-main img:not(a img):not(.card img):not(.clickable-card img):not(.blog-card img) {
+main
+img:not(a img):not(.card img):not(.clickable-card img):not(.blog-card img) {
   cursor: zoom-in;
   transition: transform 0.3s ease;
   max-width: 100%;

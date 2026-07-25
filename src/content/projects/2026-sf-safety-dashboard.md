@@ -9,11 +9,12 @@ types:
 skills:
   - SQL
   - ClickHouse
+  - Data visualization
 tags:
-  - Hex
-  - ClickHouse
+  - Civic data
+  - Neighborhood safety
   - DataSF
-  - Dashboard
+  - Hex
 ---
 
 I built an AI-powered dashboard on Hex showing safety scores for 41 neighborhoods in San Francisco.

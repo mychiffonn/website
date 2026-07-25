@@ -10,13 +10,10 @@ types:
 skills:
   - Python
   - PyMC
-  - statistics
+  - Bayesian modeling
+  - Data imputation
 tags:
-  - bayesian modeling
-  - hierarchical models
-  - missing data imputation
   - healthcare analytics
-  - statistical inference
 ---
 
 ## The Challenge: When Healthcare Data Goes Missing

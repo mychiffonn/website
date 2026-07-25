@@ -11,14 +11,11 @@ types:
 skills:
   - Python
   - React
-  - Flask
+  - Time-series modeling
 tags:
-  - Progressive Web App (PWA)
-  - React
-  - Flask
-  - XGBoost
-  - LSTM
-  - SQLAlchemy
+  - Healthcare
+  - Seizure tracking
+  - Predictive warnings
 ---
 
 In a team of 4, we researched and developed a full-stack Progressive Web Application that allows users and caregivers to track seizure episodes, symptoms, and medications. Users receive predictive warnings and insights into symptoms correlated with their episodes, powered by XGBoost for symptom-level prediction and LSTM models for time-series modeling.

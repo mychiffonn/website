@@ -179,19 +179,6 @@ const structuredData = {
   >
 
   <ClientRouter />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link
-    rel="preload"
-    href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
-    as="style"
-    onload={`this.onload=null;this.rel='stylesheet'`}
-  >
-  <noscript>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
-    >
-  </noscript>
   <script is:inline define:vars={{ siteLocale: SITE.locale.lang }}>
     window.__SITE_LOCALE__ = siteLocale
 

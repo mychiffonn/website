@@ -19,13 +19,17 @@ const {
 
 <details
   data-collapse
+  data-disclosure
+  data-disclosure-rotation="quarter"
   data-variant={variant}
   class={className}
   {...rest}
   open={defaultOpen}
 >
   <summary>
-    <Icon name="right" aria-hidden="true" />
+    <span data-disclosure-chevron>
+      <Icon name="right" aria-hidden="true" />
+    </span>
     <span>{title}</span>
   </summary>
   <div data-collapse-content>
@@ -33,7 +37,7 @@ const {
   </div>
 </details>
 
-<style is:global>
+<style>
   [data-collapse] {
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -43,7 +47,7 @@ const {
     background: color-mix(in oklab, var(--muted) 35%, transparent);
   }
 
-  [data-collapse] summary {
+  summary {
     display: flex;
     align-items: center;
     gap: var(--space-2xs);
@@ -51,18 +55,6 @@ const {
     cursor: pointer;
     font-weight: var(--font-weight-medium);
     list-style: none;
-  }
-
-  [data-collapse] summary::-webkit-details-marker {
-    display: none;
-  }
-
-  [data-collapse] summary svg {
-    transition: rotate var(--motion-duration) var(--motion-ease);
-  }
-
-  [data-collapse][open] summary svg {
-    rotate: 90deg;
   }
 
   [data-collapse-content] {

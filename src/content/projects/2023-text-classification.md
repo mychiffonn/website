@@ -6,11 +6,10 @@ types:
   - coursework
 skills:
   - Python
-tags:
-  - statistical machine learning
   - scikit-learn
-  - Support Vector Machine (SVM)
-  - Naive Bayes
+tags:
+  - Text classification
+  - Note organization
 ---
 
 My Obsidian vault included a mix of notes and assignments. I tested several classification approaches to automatically organize and categorize my learning resources with 85% test accuracy, F1 and AUC scores for Naive Bayes and 87% for Support Vector Machine. I also performed error analysis and plotted keywords associated the most with "assignments" as identified by Naive Bayes.

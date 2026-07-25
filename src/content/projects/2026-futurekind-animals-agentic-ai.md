@@ -8,14 +8,11 @@ doc: https://docs.google.com/document/d/1LoJAJvjseK2JcR-zi1t63eVeXS3_nZcaie-kXhn
 types:
   - research
 skills:
-  - LLM
-  - evaluation
-  - agents
+  - LLM evaluation
+  - AI agents
+  - AI x animals
 tags:
-  - AI Safety
-  - Agentic AI
   - Animal Welfare
-  - Benchmarking
   - Futurekind
 ---
 

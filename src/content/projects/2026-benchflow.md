@@ -4,18 +4,16 @@ description: Contributed to RL runtime environments and community-based AI bench
 fromDate: 2026-04
 isHighlighted: true
 code: https://github.com/benchflow-ai/benchflow
+url: https://benchflow.ai/
 types:
   - tool
   - open-source
 skills:
   - Python
-  - evaluation
-  - agents
+  - LLM evaluation
+  - AI agents
 tags:
-  - Open Source
-  - Benchmarking
-  - harbor
-  - AI Agents
+  - Research infrastructure
 ---
 
 I contribute to open-source AI research infrastructure projects, including BenchFlow and MatrAIx.
