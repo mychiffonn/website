@@ -44,11 +44,14 @@ interface CitationEntry {
   [key: string]: unknown
 }
 
+const BIBTEX_EXCLUDED_FIELD_PATTERN = /^(?:selected|equal|image)/i
+
 /** Publication return type - normalized fields plus flexible custom metadata/link fields. */
 export interface Publication {
   id: string
   title: string
   authors: string[]
+  bibtex: string
   year?: number
   month?: number
   entryType?: string
@@ -185,6 +188,25 @@ function extractEntryType(entry: CitationEntry): string | undefined {
 }
 
 /**
+ * Generate a clean BibTeX entry with Citation.js.
+ *
+ * Site-only display metadata is excluded from copied citations. Citation.js
+ * currently omits these custom fields itself, but filtering them here keeps the
+ * output clean if its BibTeX mapping changes in the future.
+ */
+function formatBibTeX(entry: CitationEntry): string {
+  const citationEntry = Object.fromEntries(
+    Object.entries(entry).filter(
+      ([fieldName]) =>
+        fieldName !== "_graph" &&
+        !BIBTEX_EXCLUDED_FIELD_PATTERN.test(fieldName),
+    ),
+  )
+
+  return new Cite(citationEntry).format("bibtex").trim()
+}
+
+/**
  * Venue inference patterns: match booktitle/journal substrings to short venue names.
  * Ordered by specificity — first match wins.
  */
@@ -247,6 +269,7 @@ export function parseBibTeX(bibContent: string): Publication[] {
           entry.label ||
           `pub-${Math.random().toString(36).substring(2, 11)}`,
         title: entry.title || customFields.title || "",
+        bibtex: formatBibTeX(entry),
         authors: entry.author
           ? entry.author.map((author) =>
               typeof author === "string"
@@ -597,6 +620,7 @@ export function getPublicationData(
 
   return {
     title: publication.title || "",
+    bibtex: publication.bibtex,
     year: publication.year,
     abstract: publication.abstract,
     award: publication.award,

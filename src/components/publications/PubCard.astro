@@ -3,6 +3,7 @@ import type { ProcessedPublication } from "@/types"
 
 import { slugify } from "@/lib/string-manipulation"
 import Button from "@/components/base/Button.astro"
+import CopyButton from "@/components/base/CopyButton.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
@@ -117,6 +118,13 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
             </div>
           </details>
         )}
+
+      <CopyButton
+        text={pub.bibtex}
+        label="BibTeX"
+        title={`Copy BibTeX for “${pub.title}”`}
+        variant="accent-outline"
+      />
 
       {pub.links.map(({ href, icon, label }) => (
           <Button href={href} external variant="accent-outline">
