@@ -263,6 +263,8 @@ export const PublicationConfigSchema = z.object({
 export const ProcessedPublicationSchema = z.object({
   // Core publication info
   title: z.string(),
+  /** Citation.js-formatted BibTeX entry for the copy action */
+  bibtex: z.string(),
   year: z.number().or(z.string()).optional(),
   abstract: z.string().optional(),
   award: z.string().optional(),
