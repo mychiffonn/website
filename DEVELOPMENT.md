@@ -55,6 +55,8 @@ pnpm sync
 pnpm format
 pnpm format:check
 pnpm lint
+pnpm lint:styles
+pnpm test:markdown
 pnpm astro check
 pnpm build
 pnpm preview
@@ -116,7 +118,7 @@ Minimum local project pieces:
   `bugs`, and `homepage`.
 - GitHub Actions CI.
 - GitHub issue and pull request templates.
-- Preview screenshots under `docs/assets/previews/`.
+- One to four 1600×900 preview screenshots under `docs/assets/previews/`.
 
 Minimum GitHub settings:
 
@@ -132,3 +134,20 @@ Recommended repository split:
 - Template repo: clean sample content and docs.
 - Demo repo: deployed fresh copy that proves the template works without personal
   private content.
+
+Astro theme directory submission:
+
+1. Sign in to the [Astro developer portal](https://portal.astro.build/themes/submit)
+   with GitHub.
+2. Submit the theme name, short description, full description, repository URL,
+   live demo URL, pricing (`Free`), categories (`Portfolio` and `Blog`), and
+   technology (`TypeScript`).
+3. Upload `docs/assets/previews/home.png` as the primary 16:9 image, then add up
+   to three gallery images: `projects.png`, `publications.png`, and `uses.png`.
+4. Confirm that the public repository and live demo work without authentication
+   before submitting for approval. Publish at least one non-draft demo post so
+   the `Blog` category is represented in the live demo.
+
+The Astro catalog renders cards at a 16:9 ratio and supports a primary image plus
+additional gallery images. Re-capture the previews after material visual
+changes; do not submit the tall full-page README captures.

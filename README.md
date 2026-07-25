@@ -1,13 +1,13 @@
 # Astro Scholar
 
-[![Version](https://img.shields.io/badge/version-v2.0.0-blue?style=for-the-badge)](https://github.com/mychiffonn/astro-scholar/releases) [![Astro 7](https://img.shields.io/badge/Astro_7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Version](https://img.shields.io/badge/version-v2.1.0-blue?style=for-the-badge)](https://github.com/mychiffonn/astro-scholar/releases) [![Astro 7](https://img.shields.io/badge/Astro_7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-![](public/img/social-preview.png)
+![Astro Scholar social preview](public/img/social-preview.png)
 
-Astro Scholar is an Astro theme for academic personal sites, research blogs,
-projects, publications, and now pages. It is currently being extracted from
-[My (Chiffon) Nguyen's website](https://mychiffonn.com) into a reusable open
-source template.
+Astro Scholar is an [Astro](https://docs.astro.build/en/concepts/why-astro/) theme for academic personal sites, research blogs,
+projects, publications, and now pages. It packages the design and publishing
+system behind [My (Chiffon) Nguyen's website](https://mychiffonn.com) as a
+reusable open-source starter.
 
 ## Previews
 
@@ -19,40 +19,79 @@ source template.
 | ------------------------------------------------------------------- | --------------------------------------------------- |
 | ![Publications page preview](docs/assets/previews/publications.png) | ![Uses page preview](docs/assets/previews/uses.png) |
 
+| Blog index (light)                                               | Blog post (light)                                                    |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------- |
+| ![Blog index in light mode](docs/assets/previews/blog-light.png) | ![Blog post in light mode](docs/assets/previews/blog-post-light.png) |
+
+| Blog index (dark)                                              | Blog post (dark)                                                   |
+| -------------------------------------------------------------- | ------------------------------------------------------------------ |
+| ![Blog index in dark mode](docs/assets/previews/blog-dark.png) | ![Blog post in dark mode](docs/assets/previews/blog-post-dark.png) |
+
 ## Features
 
-- Fast static output with Astro 7.
+- Astro 7 with a static-first, content-focused build and support for Astro's
+  integration ecosystem.
 - Academic profile, projects, updates, blog posts, authors, and publications.
+- SEO-included: sitemap, robots.txt, Open Graph metadata, and generated social images.
 - Publications rendered from a BibTeX file.
 - Markdown-first writing with Sätteri, callouts, math, code highlighting, heading
   anchors, and sidenotes.
 - Blog post/subpost system with tags, stages, table of contents, share actions,
   and multiple authors.
-- Native CSS tokens for color, typography, spacing, shape, and motion.
+- Native CSS with little interaction scripts shipped.
 - Local and Iconify-backed SVG icon system.
 - Type-safe config and content schemas with Zod.
-- RSS, sitemap, robots.txt, Open Graph metadata, and generated social images.
+
+## Getting Started
+
+Have Node.js `>=22.12.0` and pnpm installed. Create a site directly from the
+GitHub starter:
+
+```bash
+pnpm create astro@latest --template mychiffonn/astro-scholar
+```
+
+Astro's wizard asks for the destination, installs dependencies, and can
+initialize Git. See Astro's official
+[install and starter-template guide](https://docs.astro.build/en/install-and-setup/#use-a-theme-or-starter-template)
+for branch and repository URL options.
+
+Then:
+
+1. Start the development server with `pnpm dev`.
+2. Visit <http://localhost:4321>.
+3. Follow [docs/INSTALL.md](docs/INSTALL.md) to configure the starter.
+4. Personalize content and design with
+   [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md).
+
+To contribute to the theme itself, clone this repository and run
+`corepack enable && pnpm install`.
+
+## Astro and AI-assisted development
+
+Astro's [Build with AI guide](https://docs.astro.build/en/guides/build-with-ai/)
+explains how to give coding agents current Astro documentation instead of
+relying on potentially stale framework knowledge. This repository also includes
+[AGENTS.md](AGENTS.md) with the theme's installation, customization,
+development, validation, and publishing conventions.
+
+For supported adapters and integrations, use Astro's setup command:
+
+```bash
+pnpm astro add <integration>
+```
+
+The command installs the package and updates `astro.config.ts`. Read the
+[Astro integrations guide](https://docs.astro.build/en/guides/integrations/)
+and the selected integration's documentation first; the theme does not require
+a UI framework or server adapter for its default static build.
 
 ## Built With
 
 This theme is built on enscribe's
-[astro-erudite](https://github.com/jktrn/astro-erudite) v2.0.1 and references
+[astro-erudite](https://github.com/jktrn/astro-erudite) v2.0.1, and references
 from [Maggie Appleton](https://github.com/MaggieAppleton/maggieappleton.com-V3)'s
-digital garden.
-
-Version <2.0.0 uses Astro v6 & TailwindCSS.
-
-## Getting Started
-
-Have Node.js `>=22.12.0` and pnpm installed:
-
-1. Clone the repository
-2. Run `corepack enable`
-3. Install dependencies: `pnpm install`
-4. Start development server: `pnpm dev`
-5. Visit `http://localhost:4321`
-6. Read [docs/INSTALL.md](docs/INSTALL.md)
-7. Customize with [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md)
+digital garden and al-folio.
 
 ## Development
 
@@ -66,16 +105,8 @@ Common checks:
 ```bash
 pnpm format:check
 pnpm lint
+pnpm lint:styles
+pnpm test:markdown
 pnpm astro check
 pnpm build
 ```
-
-## Publishing Checklist
-
-- Create a fresh `astro-scholar` template repository.
-- Create a separate deployed demo repo or deployment.
-- Mark the GitHub repo as a template.
-- Add GitHub topics: `astro`, `astro-theme`, `astro-template`, `academic`,
-  `blog`, `portfolio`, `publications`, `research`.
-- Add the live demo URL to the GitHub repository sidebar.
-- Submit the demo and source repository to the Astro themes directory.

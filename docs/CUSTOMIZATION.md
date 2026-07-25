@@ -18,7 +18,7 @@ Most site content lives in `src/content/`.
 - `src/content/people.toml`: authors used by blog posts.
 - `src/content/publications/main.bib`: BibTeX source for `/publications`.
 
-Blog posts use Markdown, not MDX. Required frontmatter is:
+Blog posts use Markdown. Required frontmatter is:
 
 ```yaml
 ---
@@ -149,7 +149,8 @@ Current features include:
 - External-link attributes from `src/lib/external-links.ts`.
 - Heading ids and anchor links from `src/lib/heading-namespace.ts` and
   `src/lib/heading-anchors.ts`.
-- Sidenotes from `src/plugins/rehype-sidenotes.ts`.
+- Heading normalization from `src/plugins/satteri-normalize-headings.ts`.
+- Sidenotes from `src/plugins/satteri-sidenotes.ts`.
 
 Use Markdown directives for callouts:
 
@@ -193,7 +194,7 @@ When using a coding agent:
    `src/content.config.ts`, and `src/icon.config.ts` first.
 2. Replace content before redesigning components.
 3. Run `pnpm build` after content changes.
-4. Run `pnpm format:check`, `pnpm lint`, and `pnpm astro check` before opening a
-   pull request.
+4. Run `pnpm format:check`, `pnpm lint`, `pnpm test:markdown`, and
+   `pnpm astro check` before opening a pull request.
 5. Take screenshots of at least `/`, `/blog`, `/projects`, `/publications`, and
    one post page after visual changes.

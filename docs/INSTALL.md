@@ -1,8 +1,9 @@
 # Install Astro Scholar
 
-Astro Scholar is an Astro theme source repository. Use it like a template: fork
-or clone it, replace the sample personal content with your own, then deploy the
-generated static site.
+Astro Scholar is a source theme for academic portfolios and research blogs. The
+recommended setup uses Astro's project wizard with this GitHub repository as the
+template. This keeps installation aligned with Astro instead of duplicating
+framework setup steps here.
 
 ## Requirements
 
@@ -10,96 +11,116 @@ generated static site.
 - pnpm `10.x`
 - Git
 
-This repository includes `pnpm-lock.yaml`, so use pnpm instead of npm or yarn.
+See Astro's current [installation prerequisites][astro-install] if your local
+toolchain is not ready. This repository includes `pnpm-lock.yaml`, so use pnpm
+for dependency and lockfile changes.
 
-## Start locally
+## Create your site from the theme
+
+Astro's `create astro` command can initialize a project from any public GitHub
+repository:
+
+```bash
+pnpm create astro@latest --template mychiffonn/astro-scholar
+```
+
+Choose a new directory name when prompted. The wizard can install dependencies
+and initialize Git for you. See Astro's
+[theme and starter template instructions][astro-template] for all supported
+template formats and branch selection.
+
+To contribute to Astro Scholar itself, clone this repository instead:
 
 ```bash
 git clone https://github.com/mychiffonn/astro-scholar.git
 cd astro-scholar
 corepack enable
 pnpm install
+```
+
+Start Astro's development server:
+
+```bash
 pnpm dev
 ```
 
 Open <http://localhost:4321>.
 
-If you are working from the current personal-site repository instead of the
-future template repository, clone that repo first and follow the same commands.
+## Personalize the starter
 
-## Verify before publishing
+1. Set your canonical `site` URL in `astro.config.ts`. Astro uses this value for
+   canonical URLs and the sitemap. See the [`site` configuration reference][site].
+2. Update `SITE`, `PROFILE`, `NAV_LINKS`, `PUB_CONFIG`, and `FOOTER` in
+   `src/site.config.ts`.
+3. Replace the example collections in `src/content/`. Astro Scholar uses
+   [Astro content collections][content-collections] for typed blog, project,
+   people, and experience data.
+4. Replace the avatar in `src/assets/` and site files in `public/`.
+5. Follow [CUSTOMIZATION.md](CUSTOMIZATION.md) for content schemas, colors,
+   typography, icons, and Markdown features.
+
+## Astro integrations
+
+The starter already configures the official [`@astrojs/sitemap` integration][sitemap].
+Astro Scholar's RSS feed uses Astro's official [`@astrojs/rss` package][rss].
+Keep `site` accurate so both produce your production URLs.
+
+Use Astro's integration command when you intentionally add an official adapter
+or supported integration:
+
+```bash
+pnpm astro add <integration>
+```
+
+The command installs the package and updates `astro.config.ts`. Read
+[Astro's integrations guide][integrations] and the integration's own guide
+before adding it. A front-end framework or server adapter is not required for
+the theme's default static build.
+
+## Check the production build
 
 ```bash
 pnpm sync
 pnpm format:check
 pnpm lint
+pnpm lint:styles
+pnpm test:markdown
 pnpm astro check
 pnpm build
 pnpm preview
 ```
 
-`pnpm build` writes the production site to `dist/`. `pnpm preview` serves that
-build locally so you can check links, images, RSS, sitemap output, and generated
-Open Graph images.
+`pnpm build` writes the static site to `dist/`. `pnpm preview` serves that build
+locally. Check navigation, images, `/rss.xml`, the generated sitemap, and social
+preview images before deploying.
+
+Astro documents these commands in its
+[develop and build guide][develop-and-build].
 
 ## Deploy
 
-Astro Scholar builds as a static site, so any static host works.
+Astro Scholar uses Astro's default static output, so it does not need a server
+adapter on a static host. Follow the official guide for your provider instead of
+copying provider settings from this repository:
 
-### Vercel
+- [Deployment overview][deploy]
+- [Vercel][vercel] — static Astro sites deploy with zero configuration.
+- [Netlify][netlify] — static Astro sites need no adapter.
+- [GitHub Pages][github-pages] — use Astro's official GitHub Action and configure
+  `site` and, for project pages, `base` as documented.
 
-1. Create a new Vercel project from your GitHub repository.
-2. Use the Astro preset if Vercel detects it.
-3. Set the install command to `pnpm install --frozen-lockfile`.
-4. Set the build command to `pnpm build`.
-5. Set the output directory to `dist`.
+Only add a provider adapter with `pnpm astro add` if you switch to on-demand
+rendering or need provider-specific server features.
 
-### Netlify
-
-1. Create a new Netlify site from your GitHub repository.
-2. Set build command to `pnpm build`.
-3. Set publish directory to `dist`.
-
-### GitHub Pages
-
-1. Change `site` in `astro.config.ts` to the final GitHub Pages URL.
-2. Keep `trailingSlash: "never"` unless you intentionally change URL style.
-3. Add a Pages workflow or deploy `dist/` with your preferred action.
-
-## Fresh demo repository
-
-For a public Astro theme, keep two repositories if possible:
-
-- `astro-scholar`: the template users click "Use this template" from.
-- `astro-scholar-demo`: a freshly deployed demo using the template.
-
-The demo repo can either keep normal sample posts in `src/content/blog` or source
-posts from `docs/` to make the documentation double as demo content. If you want
-the latter, change the blog collection loader in `src/content.config.ts` from:
-
-```ts
-glob({ pattern: "**/*.md", base: "./src/content/blog" })
-```
-
-to:
-
-```ts
-glob({ pattern: "**/*.md", base: "./docs" })
-```
-
-Then keep only publishable demo articles in `docs/`, because every matching
-Markdown file must satisfy the blog schema frontmatter.
-
-## First setup checklist
-
-1. Update `astro.config.ts`:
-   - `site`: canonical production URL.
-   - `image.remotePatterns`: external image hosts you use.
-2. Update `src/site.config.ts`:
-   - `SITE`, `PROFILE`, `NAV_LINKS`, `PUB_CONFIG`, and `FOOTER`.
-3. Replace content in `src/content/`.
-4. Replace static assets in `public/`.
-5. Replace `src/assets/avatar.jpg`.
-6. Run `pnpm build` and fix content schema errors.
-7. Deploy and confirm `/rss.xml`, `/sitemap-index.xml`, `/robots.txt`, and social
-   preview images.
+[astro-install]: https://docs.astro.build/en/install-and-setup/#prerequisites
+[astro-template]: https://docs.astro.build/en/install-and-setup/#use-a-theme-or-starter-template
+[content-collections]: https://docs.astro.build/en/guides/content-collections/
+[deploy]: https://docs.astro.build/en/guides/deploy/
+[develop-and-build]: https://docs.astro.build/en/develop-and-build/
+[github-pages]: https://docs.astro.build/en/guides/deploy/github/
+[integrations]: https://docs.astro.build/en/guides/integrations/
+[netlify]: https://docs.astro.build/en/guides/deploy/netlify/
+[rss]: https://docs.astro.build/en/recipes/rss/
+[site]: https://docs.astro.build/en/reference/configuration-reference/#site
+[sitemap]: https://docs.astro.build/en/guides/integrations-guide/sitemap/
+[vercel]: https://docs.astro.build/en/guides/deploy/vercel/
