@@ -31,6 +31,12 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Style architecture
+        run: pnpm lint:styles
+
+      - name: Markdown plugins
+        run: pnpm test:markdown
+
       - name: Type check
         run: pnpm astro check
 
