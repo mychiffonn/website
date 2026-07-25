@@ -2,7 +2,7 @@
 title: Astro Scholar 2.1.0 is ready
 description: A release built for academic portfolios, research blogs, and technical writing—without giving up plain Markdown or a static-first Astro site.
 createdAt: 2026-07-24T12:00:00
-image: ./assets/astro-scholar-2-1-release.png
+image: ./assets/astro-scholar-release.png
 tags:
   - astro
   - release
@@ -18,13 +18,11 @@ open-source theme for **academic profiles**, _research blogs_, projects, and
 publications. What began as a personal site is now a starter that other
 researchers can install, understand, and make their own.[^portable]
 
-![A light and dark research workspace with connected publication, code, chart, and writing cards.](./assets/astro-scholar-2-1-release.png)
+![A light and dark research workspace with connected publication, code, chart, and writing cards.](./assets/astro-scholar-release.png)
 
 :::note[Start from the theme]
 Create a new site with
-`pnpm create astro@latest --template mychiffonn/astro-scholar`, then follow the
-[installation guide](/projects/2025-astro-scholar-theme) and the repository
-documentation.
+`pnpm create astro@latest --template mychiffonn/astro-scholar`, then follow [the repository documentation](https://github.com/mychiffonn/astro-scholar)
 :::
 
 ## What ships in 2.1
@@ -32,13 +30,13 @@ documentation.
 The release brings the portfolio and the writing system together instead of
 treating the blog as an afterthought:
 
-| Surface | What it is designed to show |
-| --- | --- |
-| Profile and timeline | Research interests, experience, teaching, and updates |
-| Projects | Methods, artifacts, collaborators, code, and outcomes |
-| Publications | BibTeX-backed papers with abstracts and resource links |
-| Research blog | Long-form arguments, working notes, and connected ideas |
-| Uses page | The tools and practices behind the work |
+| Surface              | What it is designed to show                             |
+| -------------------- | ------------------------------------------------------- |
+| Profile and timeline | Research interests, experience, teaching, and updates   |
+| Projects             | Methods, artifacts, collaborators, code, and outcomes   |
+| Publications         | BibTeX-backed papers with abstracts and resource links  |
+| Research blog        | Long-form arguments, working notes, and connected ideas |
+| Uses page            | The tools and practices behind the work                 |
 
 The interface uses native CSS, very little client-side JavaScript, typed content
 collections, and a responsive light/dark theme. Publications, projects, tags,
@@ -113,4 +111,5 @@ a tutorial, a lab note, or a reflection that begins with a ~~perfect result~~
 better question.
 
 [^portable]: Plain Markdown is easy to search, version, migrate, and reuse outside this theme.
+
 [^sidenotes]: Sidenotes keep citations and qualifications near the claim they support while preserving an accessible reading order.
