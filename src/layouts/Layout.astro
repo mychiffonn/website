@@ -6,6 +6,8 @@ import BackToTop from "@/components/base/BackToTop.astro"
 import Head from "@/components/layout/Head.astro"
 import Footer from "@/components/layout/Footer.astro"
 import Header from "@/components/layout/Header.astro"
+import CelestialBackdrop from "@/components/layout/CelestialBackdrop.astro"
+import MenuBar from "@/components/layout/MenuBar.astro"
 import Breadcrumbs, {
   type BreadcrumbItem,
 } from "@/components/layout/Breadcrumbs.astro"
@@ -23,6 +25,7 @@ interface Props {
   tags?: string[]
   section?: string
   breadcrumbs?: BreadcrumbItem[]
+  celestial?: boolean
 }
 
 const {
@@ -38,6 +41,7 @@ const {
   tags,
   section,
   breadcrumbs,
+  celestial = false,
 } = Astro.props
 ---
 
@@ -58,7 +62,8 @@ const {
     <slot name="head" />
   </Head>
   <body>
-    <div id="main-header">
+    {celestial && <CelestialBackdrop />}
+    <MenuBar celestial={celestial}>
       <Header />
       {Astro.slots.has("subposts-navigation-header") && (
         <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
@@ -66,7 +71,7 @@ const {
       {Astro.slots.has("toc-header") && (
         <slot name="toc-header" aria-label="Table of contents" />
       )}
-    </div>
+    </MenuBar>
     {(breadcrumbs || Astro.slots.has("breadcrumb")) && (
       <div class="breadcrumb-region">
         {breadcrumbs ? <Breadcrumbs items={breadcrumbs} /> : <slot name="breadcrumb" />}
@@ -76,7 +81,7 @@ const {
       <slot />
     </main>
     <BackToTop />
-    <Footer />
+    <Footer celestial={celestial} />
 
     <script>
       let headerResizeObserver: ResizeObserver | undefined
@@ -115,6 +120,8 @@ const {
 
 <style>
   body {
+    position: relative;
+    isolation: isolate;
     min-height: 100svh;
     display: flex;
     flex-direction: column;
@@ -122,27 +129,19 @@ const {
     margin-inline: auto;
     padding-inline: var(--grid-gutter);
     font-family: var(--font-sans);
-    overflow-x: clip;
-  }
-
-  #main-header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    margin-inline: calc(-1 * var(--grid-gutter));
-    padding-inline: var(--grid-gutter);
-    border-block-end: 1px solid var(--border);
-    background: color-mix(in oklab, var(--background) 86%, transparent);
-    backdrop-filter: blur(10px);
   }
 
   .breadcrumb-region {
+    position: relative;
+    z-index: 1;
     display: flex;
     width: 100%;
     margin-block: var(--space-s);
   }
 
   main {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -152,11 +151,5 @@ const {
 
   main > :first-child {
     margin-block-start: var(--space-s);
-  }
-
-  @media (width >= 75rem) {
-    body {
-      overflow-x: visible;
-    }
   }
 </style>
