@@ -35,7 +35,9 @@ export const SITE: SiteConfig = {
   },
 
   home: {
-    careerHighlightCount: 5,
+    careerHighlightCount: 4,
+    updateCount: 3,
+    publicationCount: 3,
   },
 
   // Theme settings
