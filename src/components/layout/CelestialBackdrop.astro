@@ -1,0 +1,348 @@
+<div class="celestial-backdrop" data-celestial-backdrop aria-hidden="true">
+  <div class="celestial-field celestial-field-a"></div>
+  <div class="celestial-field celestial-field-b"></div>
+
+  <svg
+    class="celestial-art celestial-art-orbits"
+    viewBox="0 0 320 260"
+    focusable="false"
+  >
+    <g class="celestial-orbits">
+      <ellipse
+        cx="160"
+        cy="130"
+        rx="148"
+        ry="82"
+        transform="rotate(-14 160 130)"
+      />
+      <ellipse
+        cx="160"
+        cy="130"
+        rx="112"
+        ry="60"
+        transform="rotate(-14 160 130)"
+      />
+      <ellipse
+        cx="160"
+        cy="130"
+        rx="70"
+        ry="37"
+        transform="rotate(-14 160 130)"
+      />
+    </g>
+    <circle class="celestial-core" cx="160" cy="130" r="4.5" />
+    <circle
+      class="celestial-node celestial-node-accent"
+      cx="41"
+      cy="167"
+      r="4.5"
+    />
+    <circle
+      class="celestial-node celestial-node-primary"
+      cx="268"
+      cy="86"
+      r="5.5"
+    />
+    <circle class="celestial-node" cx="228" cy="171" r="3.5" />
+    <circle class="celestial-node" cx="103" cy="97" r="3" />
+  </svg>
+
+  <svg
+    class="celestial-art celestial-art-cluster"
+    viewBox="0 0 260 200"
+    focusable="false"
+  >
+    <g class="celestial-constellation">
+      <path d="M22 128 68 96 112 141 168 74 232 108" fill="none" />
+      <path class="celestial-branch" d="M112 141 148 186" fill="none" />
+      <path class="celestial-branch" d="M168 74 152 22" fill="none" />
+      <circle cx="22" cy="128" r="3" />
+      <circle class="celestial-node-accent" cx="68" cy="96" r="4" />
+      <circle cx="112" cy="141" r="3.5" />
+      <circle class="celestial-node-primary" cx="168" cy="74" r="4.5" />
+      <circle cx="232" cy="108" r="3" />
+      <circle cx="148" cy="186" r="2.5" />
+      <circle cx="152" cy="22" r="2.5" />
+    </g>
+  </svg>
+</div>
+
+<script>
+  // The artwork sits under a sticky, backdrop-filtered menu bar. Pause once it
+  // scrolls away so the blur stops recompositing against moving pixels.
+  function observeCelestial() {
+    const el = document.querySelector<HTMLElement>("[data-celestial-backdrop]")
+    if (!el || !("IntersectionObserver" in window)) return
+
+    const io = new IntersectionObserver(
+      ([entry]) => el.toggleAttribute("data-paused", !entry.isIntersecting),
+      { rootMargin: "128px" },
+    )
+    io.observe(el)
+    document.addEventListener("astro:before-swap", () => io.disconnect(), {
+      once: true,
+    })
+  }
+
+  observeCelestial()
+  document.addEventListener("astro:page-load", observeCelestial)
+</script>
+
+<style>
+  .celestial-backdrop {
+    /* Half the text column, plus the breathing room the art keeps from it. */
+    --celestial-column: calc(var(--measure) / 2);
+    --celestial-margin: calc(var(--celestial-column) + var(--space-m));
+
+    position: absolute;
+    inset-block: 0 auto;
+    inset-inline: 50% auto;
+    z-index: 0;
+    inline-size: 100vw;
+    block-size: clamp(64rem, 120svh, 80rem);
+    overflow: clip;
+    opacity: var(--celestial-opacity);
+    pointer-events: none;
+    transform: translateX(-50%);
+    mask-image: linear-gradient(to bottom, black 15%, transparent 88%);
+  }
+
+  /* Ambient glows, capped in rem so they never inflate on ultrawide. */
+  .celestial-backdrop::before,
+  .celestial-backdrop::after {
+    content: "";
+    position: absolute;
+    inline-size: min(44%, 40rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+
+  .celestial-backdrop::before {
+    inset-block-start: -8rem;
+    inset-inline-start: 2%;
+    background: radial-gradient(
+      circle,
+      var(--celestial-primary-soft),
+      transparent 68%
+    );
+  }
+
+  .celestial-backdrop::after {
+    inset-block-start: 3rem;
+    inset-inline-end: -2%;
+    background: radial-gradient(
+      circle,
+      var(--celestial-accent-soft),
+      transparent 70%
+    );
+  }
+
+  .celestial-field {
+    position: absolute;
+    inset: 0;
+    background-repeat: repeat;
+
+    /* Readability: hold the field to --celestial-column-alpha across the text
+       column and let it come up to full strength only out in the margins.
+       Stars stay faintly present behind text so the column doesn't read as a
+       punched-out hole. */
+    mask-image: linear-gradient(
+      to right,
+      rgb(0 0 0 / 0.85) 0,
+      rgb(0 0 0 / 0.85) calc(50% - var(--celestial-margin) - 4rem),
+      rgb(0 0 0 / var(--celestial-column-alpha))
+        calc(50% - var(--celestial-column)),
+      rgb(0 0 0 / var(--celestial-column-alpha))
+        calc(50% + var(--celestial-column)),
+      rgb(0 0 0 / 0.85) calc(50% + var(--celestial-margin) + 4rem),
+      rgb(0 0 0 / 0.85) 100%
+    );
+  }
+
+  .celestial-field-a {
+    background-image:
+      radial-gradient(
+        circle at 18% 24%,
+        var(--celestial-star) 0 1.2px,
+        transparent 1.9px
+      ),
+      radial-gradient(
+        circle at 63% 71%,
+        var(--celestial-star) 0 1px,
+        transparent 1.7px
+      ),
+      radial-gradient(
+        circle at 84% 38%,
+        var(--celestial-star) 0 1.6px,
+        transparent 2.3px
+      );
+    background-size:
+      19rem 15rem,
+      23rem 17rem,
+      31rem 25rem;
+    animation: celestial-twinkle-a 9s ease-in-out infinite;
+  }
+
+  .celestial-field-b {
+    background-image:
+      radial-gradient(circle at 37% 88%, var(--accent) 0 1.3px, transparent 2px),
+      radial-gradient(
+        circle at 9% 57%,
+        var(--celestial-star) 0 1.1px,
+        transparent 1.8px
+      ),
+      radial-gradient(
+        circle at 71% 15%,
+        var(--celestial-star) 0 1.5px,
+        transparent 2.2px
+      );
+    background-size:
+      29rem 21rem,
+      37rem 29rem,
+      43rem 33rem;
+    animation: celestial-twinkle-b 13s ease-in-out infinite;
+  }
+
+  .celestial-art {
+    position: absolute;
+    block-size: auto;
+
+    /* Width comes from the actual free margin, capped so it never inflates. */
+    inline-size: min(
+      20rem,
+      calc((100vw - var(--measure)) / 2 - var(--space-l))
+    );
+  }
+
+  .celestial-art-orbits {
+    inset-block-start: 5rem;
+    inset-inline-end: calc(50% + var(--celestial-margin));
+    aspect-ratio: 320 / 260;
+    animation: celestial-drift 26s ease-in-out infinite alternate;
+  }
+
+  .celestial-art-cluster {
+    inset-block-start: 13rem;
+    inset-inline-start: calc(50% + var(--celestial-margin));
+    aspect-ratio: 260 / 200;
+    animation: celestial-drift 34s ease-in-out infinite alternate-reverse;
+  }
+
+  .celestial-orbits {
+    fill: none;
+    stroke: var(--celestial-line);
+    stroke-dasharray: 3 6;
+    stroke-width: 1.25;
+    opacity: 0.5;
+  }
+
+  .celestial-core {
+    fill: var(--celestial-star);
+    opacity: 0.8;
+  }
+
+  .celestial-node {
+    fill: var(--celestial-star);
+    opacity: 0.85;
+  }
+
+  .celestial-node-accent {
+    fill: var(--accent);
+  }
+
+  .celestial-node-primary {
+    fill: var(--primary);
+  }
+
+  .celestial-constellation {
+    fill: var(--celestial-star);
+    stroke: var(--celestial-line-strong);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.25;
+    opacity: 0.45;
+  }
+
+  .celestial-constellation path {
+    fill: none;
+  }
+
+  .celestial-branch {
+    stroke-dasharray: 2.5 5;
+    opacity: 0.6;
+  }
+
+  /* Composited transform/opacity on HTML-level elements, so neither animation
+     forces a main-thread repaint under the menu bar's backdrop-filter. */
+  @keyframes celestial-drift {
+    from {
+      transform: translate3d(-0.35rem, 0.2rem, 0) rotate(-1.2deg);
+    }
+
+    to {
+      transform: translate3d(0.35rem, -0.2rem, 0) rotate(1.2deg);
+    }
+  }
+
+  @keyframes celestial-twinkle-a {
+    0%,
+    100% {
+      opacity: 0.95;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes celestial-twinkle-b {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+
+    50% {
+      opacity: 0.9;
+    }
+  }
+
+  /* Below this the margins are too thin to hold the art without crowding the
+     column, so the field carries the theme alone.
+
+     The field needs no override here: its mask is written in absolute offsets
+     from centre, so as the viewport narrows the outer stops fall off-screen on
+     their own and the whole field settles to the low column alpha. Dimming is
+     applied to the backdrop rather than the field, because the field's opacity
+     is animated and an animation outranks a normal declaration. */
+  @media (width < 68rem) {
+    .celestial-art {
+      display: none;
+    }
+
+    .celestial-backdrop {
+      opacity: 0.85;
+    }
+  }
+
+  @media (width < 40rem) {
+    .celestial-backdrop {
+      block-size: 52rem;
+      opacity: 0.7;
+    }
+  }
+
+  .celestial-backdrop[data-paused] :is(.celestial-field, .celestial-art) {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .celestial-field,
+    .celestial-art {
+      animation: none;
+    }
+
+    .celestial-field-b {
+      opacity: 0.7;
+    }
+  }
+</style>
