@@ -87,7 +87,7 @@ export function getShareActions(
 
       case "x": {
         const handles = getAuthorHandles(authors, "x")
-        const via = handles[0] ? `&via=${handles[0]}` : ""
+        const via = handles[0] ? `&by=${handles[0]}` : ""
         // Mention additional authors in tweet text
         const mentions =
           handles.length > 1
