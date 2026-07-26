@@ -46,12 +46,43 @@ a {
   text-decoration-skip-ink: none;
   text-underline-position: under;
   text-underline-offset: -0.06em;
+
+  /* Hover emphasis is drawn from the inline start instead of fading in, so it
+     reads as one continuous stroke. The gradient has no fallback on purpose:
+     links that never set --underline-wipe make background-image invalid at
+     computed-value time, which resolves to none. That keeps the wipe off
+     button-, badge- and chip-shaped anchors without enumerating them here. */
+  background-image: linear-gradient(
+    var(--underline-wipe),
+    var(--underline-wipe)
+  );
+  background-repeat: no-repeat;
+  background-position: var(--underline-origin, 0) 100%;
+  background-size: 0% max(1px, 0.0625em);
   transition:
     color var(--motion-duration-fast) var(--motion-ease),
-    text-decoration-color var(--motion-duration) var(--motion-ease);
+    text-decoration-color var(--motion-duration) var(--motion-ease),
+    background-size var(--motion-duration) var(--motion-ease);
 
-  &:hover {
-    text-decoration-color: currentColor;
+  &:hover,
+  &:focus-visible {
+    background-size: 100% max(1px, 0.0625em);
+  }
+}
+
+[dir="rtl"] a {
+  --underline-origin: 100%;
+}
+
+/* The wipe is movement, so reduced motion falls back to the colour change. */
+@media (prefers-reduced-motion: reduce) {
+  a {
+    background-image: none;
+
+    &:hover,
+    &:focus-visible {
+      text-decoration-color: currentColor;
+    }
   }
 }
 

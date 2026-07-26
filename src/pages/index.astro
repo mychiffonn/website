@@ -7,7 +7,7 @@ import { loadSelectedPublications } from "@/lib/publications/loader"
 import { getLatestUpdates } from "@/lib/updates"
 import Layout from "@/layouts/Layout.astro"
 import Button from "@/components/base/Button.astro"
-import { CardGroup } from "@/components/base/card"
+import CardGroup from "@/components/base/card/CardGroup.astro"
 import PreviewCard from "@/components/blog/PreviewCard.astro"
 import Section from "@/components/layout/Section.astro"
 import Profile from "@/components/profile/Profile.astro"
@@ -29,33 +29,47 @@ import "@/styles/callout.css"
 const hasServices = servicesRaw().trim().length > 0
 const hasMisc = miscRaw().trim().length > 0
 
-const careerHighlights = await getCollection("experience")
-const careerHighlightCount = SITE.home.careerHighlightCount
+const {
+  home: { careerHighlightCount, updateCount, publicationCount },
+  blog: { featuredPostCount },
+} = SITE
+
+const careerHighlights =
+  careerHighlightCount > 0 ? await getCollection("experience") : []
 const cvHref =
   typeof PROFILE.links.cv === "object"
     ? PROFILE.links.cv?.href
     : PROFILE.links.cv
-const renderedUpdates = await getLatestUpdates(3)
-const selectedPublications = await loadSelectedPublications()
+const renderedUpdates =
+  updateCount > 0 ? await getLatestUpdates(updateCount) : []
+const selectedPublications =
+  publicationCount > 0
+    ? (await loadSelectedPublications()).slice(0, publicationCount)
+    : []
 
 // Blog
 const postManager = PostManager.getInstance()
-const recentPosts = await postManager.getMainPosts(SITE.blog.featuredPostCount)
+const recentPosts =
+  featuredPostCount > 0 ? await postManager.getMainPosts(featuredPostCount) : []
 const recentPostsMetadata = await Promise.all(
   recentPosts.map((post) => postManager.getMetadata(post.id)),
 )
 ---
 
-<Layout title="Home">
+<Layout title="Home" celestial>
   <Profile profile={PROFILE} />
 
-  {careerHighlightCount > 0 && careerHighlights.length > 0 && (
+  {careerHighlights.length > 0 && (
       <Section
         title="Career highlights"
         moreLink={cvHref}
         moreText="see CV →"
       >
-        <ExperienceTimeline entries={careerHighlights} limit={careerHighlightCount} />
+        <ExperienceTimeline
+          entries={careerHighlights}
+          limit={careerHighlightCount}
+          itemClass="home-experience-content"
+        />
       </Section>
     )}
 
@@ -68,7 +82,7 @@ const recentPostsMetadata = await Promise.all(
   {selectedPublications.length > 0 && (
       <Section title="Selected publications" moreLink="/publications">
         <CardGroup class="selected-publications">
-          {selectedPublications.slice(0, 3).map((pub) => (
+          {selectedPublications.map((pub) => (
             <PubCard pub={pub} filterableTags={false} />
           ))}
         </CardGroup>
@@ -139,6 +153,13 @@ const recentPostsMetadata = await Promise.all(
 
   :global(.home-arrow-button:hover span[aria-hidden="true"]) {
     transform: translateX(0.25rem);
+  }
+
+  :global(.home-experience-content) {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   :global(.home-update-content) {

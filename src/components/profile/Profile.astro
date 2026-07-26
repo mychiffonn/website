@@ -27,8 +27,8 @@ const { profile } = Astro.props
       alt={profile.name}
       fallback={profile.name.charAt(0)}
       data-slot="profile-avatar"
-      width={200}
-      height={200}
+      width={180}
+      height={180}
       loading="eager"
       fetchpriority="high"
       class="profile-avatar"
@@ -62,13 +62,6 @@ const { profile } = Astro.props
 
 <footer class="profile-footer">
   <EmailLink email={profile.email} />
-
-  {profile.location && (
-      <span class="profile-contact-item">
-        <Icon name="mingcute:location-line" />
-        <span>{profile.location}</span>
-      </span>
-    )}
 
   {profile.phone && (
       <span class="profile-contact-item">

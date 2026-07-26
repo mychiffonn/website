@@ -42,15 +42,16 @@
 }
 
 [data-slot="card"][data-selected] {
-  border-color: color-mix(in oklab, var(--primary) 50%, transparent);
+  border-color: color-mix(in oklab, var(--primary) 42%, transparent);
   background: linear-gradient(
     145deg,
-    color-mix(in oklab, var(--primary) 11%, transparent),
-    color-mix(in oklab, var(--background) 96%, transparent) 58%
+    color-mix(in oklab, var(--primary) 14%, transparent),
+    var(--celestial-surface) 58%,
+    color-mix(in oklab, var(--accent) 5%, transparent)
   );
   box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--primary) 8%, transparent),
-    0 0.5rem 1.5rem -1rem color-mix(in oklab, var(--primary) 25%, transparent);
+    0 0 0 1px color-mix(in oklab, var(--primary) 10%, transparent),
+    0 1rem 3rem -1.5rem color-mix(in oklab, var(--primary) 24%, transparent);
 }
 
 .card-overlay {

@@ -41,23 +41,6 @@ export const getProjectLinks = (
     }))
 }
 
-export function getProjectTypeCounts(projects: Project[]) {
-  const counts = new Map<string, number>()
-  for (const project of projects) {
-    for (const type of project.data.types) {
-      counts.set(type, (counts.get(type) || 0) + 1)
-    }
-  }
-
-  return PROJECT_TYPES.map(({ slug, label }) => ({
-    slug,
-    label,
-    count: counts.get(slug) || 0,
-  }))
-    .filter((c) => c.count > 0)
-    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
-}
-
 export function getProjectSkillCounts(projects: Project[], minimum = 2) {
   const counts = new Map<string, { label: string; count: number }>()
   for (const project of projects) {

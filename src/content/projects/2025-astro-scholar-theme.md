@@ -2,15 +2,15 @@
 title: Astro Scholar Theme for Academics
 description: Created and maintain a personal academic Astro theme for research portfolios, publications, projects, and blogs.
 fromDate: 2025-06
-code: https://github.com/mychiffonn/website
+code: https://github.com/mychiffonn/astro-scholar
 url: https://mychiffonn.com/
 types:
   - tool
   - open-source
 skills:
+  - Web design
   - TypeScript
   - Astro
-  - Web accessibility
 tags:
   - Academic Portfolio
 ---

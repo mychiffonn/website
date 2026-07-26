@@ -1,13 +1,12 @@
-# Astro Scholar
+# My (Chiffon) Nguyen website
 
 [![Version](https://img.shields.io/badge/version-v2.1.0-blue?style=for-the-badge)](https://github.com/mychiffonn/astro-scholar/releases) [![Astro 7](https://img.shields.io/badge/Astro_7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build) [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
 ![Astro Scholar social preview](public/img/social-preview.png)
 
-Astro Scholar is an [Astro](https://docs.astro.build/en/concepts/why-astro/) theme for academic personal sites, research blogs,
-projects, publications, and now pages. It packages the design and publishing
-system behind [My (Chiffon) Nguyen's website](https://mychiffonn.com) as a
-reusable open-source starter.
+**If you want to clone my website, see my [Astro theme](https://astro-scholar.pages.dev/)**. The repository with more information is [here](https://astro-scholar.pages.dev/).
+
+Astro Star Scholar is an [Astro](https://docs.astro.build/en/concepts/why-astro/) theme for academic personal sites, research blogs, projects, publications, and more pages. It packages the design and publishing system behind [My (Chiffon) Nguyen's website](https://mychiffonn.com) as a reusable open-source starter.
 
 ## Previews
 
@@ -48,7 +47,7 @@ Have Node.js `>=22.12.0` and pnpm installed. Create a site directly from the
 GitHub starter:
 
 ```bash
-pnpm create astro@latest --template mychiffonn/astro-scholar
+pnpm create astro@latest --template mychiffonn/website
 ```
 
 Astro's wizard asks for the destination, installs dependencies, and can

@@ -158,66 +158,54 @@ const colorGroups = [
 
 <script is:inline data-astro-rerun>
   ;(function () {
-    var hexCtx = document.createElement("canvas").getContext("2d")
+    var colorCanvas = document.createElement("canvas")
+    colorCanvas.width = 1
+    colorCanvas.height = 1
+    var colorCtx = colorCanvas.getContext("2d", { willReadFrequently: true })
+
+    function colorToRgba(color) {
+      if (!color || !colorCtx) return null
+      colorCtx.clearRect(0, 0, 1, 1)
+      colorCtx.fillStyle = color
+      colorCtx.fillRect(0, 0, 1, 1)
+      return colorCtx.getImageData(0, 0, 1, 1).data
+    }
 
     function colorToHex(color) {
-      if (!color) return ""
-      hexCtx.fillStyle = "#000"
-      hexCtx.fillStyle = color
-      var resolved = hexCtx.fillStyle
-      if (resolved.charAt(0) === "#") return resolved
-      var m = resolved.match(/[\d.]+/g)
-      if (!m || m.length < 3) return ""
+      var rgba = colorToRgba(color)
+      if (!rgba) return ""
+      var channels = [rgba[0], rgba[1], rgba[2]]
+      if (rgba[3] < 255) channels.push(rgba[3])
       return (
         "#" +
-        [m[0], m[1], m[2]]
-          .map(function (v) {
-            var h = Math.round(Number(v)).toString(16)
-            return h.length === 1 ? "0" + h : h
+        channels
+          .map(function (channel) {
+            return channel.toString(16).padStart(2, "0")
           })
           .join("")
       )
     }
 
-    function isLight(el) {
-      var color = getComputedStyle(el).backgroundColor
-      hexCtx.fillStyle = "#000"
-      hexCtx.fillStyle = color
-      var resolved = hexCtx.fillStyle
-      var m = resolved.match(/[\d.]+/g)
-      if (!m || m.length < 3) {
-        var hex = resolved.replace("#", "")
-        var r = parseInt(hex.substring(0, 2), 16)
-        var g = parseInt(hex.substring(2, 4), 16)
-        var b = parseInt(hex.substring(4, 6), 16)
-        return r * 0.299 + g * 0.587 + b * 0.114 > 150
-      }
-      return (
-        Number(m[0]) * 0.299 + Number(m[1]) * 0.587 + Number(m[2]) * 0.114 > 150
-      )
+    function isLight(color) {
+      var rgba = colorToRgba(color)
+      if (!rgba) return false
+      return rgba[0] * 0.299 + rgba[1] * 0.587 + rgba[2] * 0.114 > 150
     }
 
     function updateColorValues() {
-      var style = getComputedStyle(document.documentElement)
-
-      document.querySelectorAll("[data-value]").forEach(function (el) {
-        var token = el.getAttribute("data-value")
-        var value = style.getPropertyValue("--" + token).trim()
-        el.textContent = value || "–"
-      })
-
-      document.querySelectorAll("[data-hex]").forEach(function (el) {
-        var token = el.getAttribute("data-hex")
-        var value = style.getPropertyValue("--" + token).trim()
-        el.textContent = value ? colorToHex(value) : "–"
-      })
-
-      document.querySelectorAll("[data-overlay]").forEach(function (pill) {
-        var card = pill.closest("[data-palette-card]")
-        if (!card) return
-        var swatchEl = card.querySelector("[style*=background-color]")
+      document.querySelectorAll("[data-palette-card]").forEach(function (card) {
+        var swatchEl = card.querySelector(".palette-swatch")
         if (!swatchEl) return
-        var light = isLight(swatchEl)
+        var color = getComputedStyle(swatchEl).backgroundColor.trim()
+        var oklchEl = card.querySelector("[data-value]")
+        var hexEl = card.querySelector("[data-hex]")
+        var pill = card.querySelector("[data-overlay]")
+
+        if (oklchEl) oklchEl.textContent = color || "–"
+        if (hexEl) hexEl.textContent = color ? colorToHex(color) : "–"
+        if (!pill) return
+
+        var light = isLight(color)
         pill.style.backgroundColor = light
           ? "rgba(0,0,0,0.75)"
           : "rgba(255,255,255,0.85)"

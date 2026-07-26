@@ -11,9 +11,11 @@ import TimelineItem from "./TimelineItem.astro"
 interface Props {
   entries: CollectionEntry<"experience">[]
   limit?: number
+  /** Extra class on each description, for callers that want to clamp it. */
+  itemClass?: string
 }
 
-const { entries, limit } = Astro.props
+const { entries, limit, itemClass } = Astro.props
 
 const sorted = [...entries].sort((a, b) => {
   const endA = a.data.endDate?.getTime() ?? Infinity
@@ -43,7 +45,9 @@ const displayed = typeof limit === "number" ? sorted.slice(0, limit) : sorted
         )}
         {entry.data.location && <span class="experience-location"> · {entry.data.location}</span>}
       </p>
-      {entry.data.description && <p class="experience-description">{entry.data.description}</p>}
+      {entry.data.description && (
+        <p class:list={["experience-description", itemClass]}>{entry.data.description}</p>
+      )}
     </TimelineItem>
   ))}
 </Timeline>

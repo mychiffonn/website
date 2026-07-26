@@ -10,17 +10,6 @@
     "description": "Mentored by Dr. Linh Le and Dr. David Williams-King."
   },
   {
-    "id": "futurekind-2026",
-    "category": "research",
-    "title": "AIxAnimals Research Fellow",
-    "org": "Electric Sheep, Futurekind Spring Fellowship 2026",
-    "orgUrl": "https://www.futurekind.org/",
-    "startDate": "2026-04",
-    "endDate": "2026-07",
-    "location": "Remote",
-    "description": "Evaluating whether implicit values in agentic LLMs are inclusive of animals through animals-aligned agentic AI benchmarking."
-  },
-  {
     "id": "seacrowd-2026",
     "category": "research",
     "title": "AI Research Mentee",
@@ -40,7 +29,7 @@
     "startDate": "2025-10",
     "endDate": "2026-06",
     "location": "Remote",
-    "description": "Led weak-to-strong chain-of-thought monitoring research for sandbagging detection, building an Inspect AI and Inspect Scout pipeline across 30+ Qwen, DeepSeek, Gemma, and GPT-OSS model pairs."
+    "description": "Led weak-to-strong chain-of-thought monitoring research for sandbagging detection, across 30+ open-weight model pairs."
   },
   {
     "id": "landshut-2024",

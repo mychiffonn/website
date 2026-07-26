@@ -4,12 +4,12 @@ import type { ProcessedPublication } from "@/types"
 import { PROFILE } from "@site-config"
 import { loadAllPublications } from "@/lib/publications/loader"
 import { slugify } from "@/lib/string-manipulation"
-import Layout from "@/layouts/Layout.astro"
+import CommonLayout from "@/layouts/CommonLayout.astro"
 import Dropdown from "@/components/base/Dropdown.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
-import { CardGroup } from "@/components/base/card"
+import CardGroup from "@/components/base/card/CardGroup.astro"
 import Section from "@/components/layout/Section.astro"
 import PubCard from "@/components/publications/PubCard.astro"
 
@@ -32,24 +32,22 @@ const equalContributionNote = [
 ].join(". ")
 ---
 
-<Layout
+<CommonLayout
   title="Publications"
   description="Publications, preprints, and conference tutorials"
   breadcrumbs={[{ label: "Publications", icon: "research" }]}
+  prose={false}
+  celestial
 >
-  <Section title="Publications">
-    <p class="publication-intro">
-      Publications, preprints, and conference tutorials.{ggScholarUrl && (
-          <>
-            {" See my full publication list on "}
-            <Link href={ggScholarUrl} external underline class="publication-scholar-link">
-              {"Google Scholar"}
-            </Link>
-            {"."}
-          </>
-        )}
-    </p>
-  </Section>
+  {ggScholarUrl && (
+      <p class="publication-intro">
+        See my full publication list on{" "}
+        <Link href={ggScholarUrl} external underline class="publication-scholar-link">
+          Google Scholar
+        </Link>
+        .
+      </p>
+    )}
 
   <!-- Controls: sort dropdown + tag filter bar -->
   <div class="pub-controls">
@@ -155,7 +153,7 @@ const equalContributionNote = [
         </div>
       )}
   </div>
-</Layout>
+</CommonLayout>
 
 <script>
   import { initChipFilter } from "@/lib/chip-filter"

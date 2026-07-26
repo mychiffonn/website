@@ -48,8 +48,8 @@ export const SiteConfigSchema = z.object({
 
   /** Blog-specific settings */
   blog: z.object({
-    /** Number of featured posts on home page. Default is 3 */
-    featuredPostCount: z.number().positive().default(3),
+    /** Number of featured posts on home page. Set to 0 to hide the section. */
+    featuredPostCount: z.number().int().nonnegative().default(3),
     /** Number of posts per pagination page. Default is 8. */
     postsPerPage: z.number().positive().default(8),
     /** TOC max depth of markdown headings, between 1 and 6 */
@@ -70,10 +70,17 @@ export const SiteConfigSchema = z.object({
       .default(["email", "x"]),
   }),
 
-  /** Home page settings */
+  /**
+   * Home page settings. Every count hides its section when set to 0.
+   * The recent-posts section is governed by `blog.featuredPostCount`.
+   */
   home: z.object({
     /** Number of career highlights to show on the home page. Set to 0 to hide. */
     careerHighlightCount: z.number().int().nonnegative().default(5),
+    /** Number of recent updates to show on the home page. Set to 0 to hide. */
+    updateCount: z.number().int().nonnegative().default(3),
+    /** Number of selected publications to show on the home page. Set to 0 to hide. */
+    publicationCount: z.number().int().nonnegative().default(3),
   }),
 
   // Theme settings
