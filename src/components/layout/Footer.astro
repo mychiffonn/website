@@ -1,7 +1,14 @@
 ---
 import { FOOTER, PROFILE, SITE } from "@site-config"
+import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import ProfileLinks from "@/components/profile/ProfileLinks.astro"
+
+interface Props {
+  celestial?: boolean
+}
+
+const { celestial = false } = Astro.props
 
 const sourceLinks = [
   FOOTER.sourceCode ? { href: FOOTER.sourceCode, label: "Source Code" } : null,
@@ -13,6 +20,21 @@ const sourceLinks = [
 ---
 
 <footer>
+  {celestial && (
+      <svg
+        class="footer-constellation"
+        viewBox="0 0 124 46"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M9 33 35 19 62 29 90 11 115 21" fill="none" />
+        <circle cx="9" cy="33" r="1.8" />
+        <circle class="fc-accent" cx="35" cy="19" r="2.4" />
+        <circle cx="62" cy="29" r="1.6" />
+        <circle class="fc-primary" cx="90" cy="11" r="2.6" />
+        <circle cx="115" cy="21" r="1.8" />
+      </svg>
+    )}
   <div class="footer-inner">
     <ProfileLinks links={PROFILE.links} includeRss={true} includeEmail={true} />
 
@@ -30,6 +52,13 @@ const sourceLinks = [
           ` All rights reserved.`
         )}
     </p>
+
+    {PROFILE.location && (
+        <p class="footer-location">
+          <Icon name="mingcute:location-line" />
+          <span>{PROFILE.location}</span>
+        </p>
+      )}
 
     {sourceLinks.length > 0 && (
         <p class="footer-small">
@@ -64,10 +93,90 @@ const sourceLinks = [
 
 <style>
   footer {
+    position: relative;
     margin-block-start: var(--space-l);
     padding-block: var(--space-s);
     border-block-start: 1px solid
       color-mix(in oklab, var(--foreground) 20%, transparent);
+  }
+
+  /* Sits out in the right margin, matching the backdrop's anchoring, so it
+     never competes with footer text for space. */
+  .footer-constellation {
+    position: absolute;
+    inset-block-start: var(--space-s);
+    inset-inline-end: calc(-1 * (var(--space-l) + 8.5rem));
+    inline-size: 8.5rem;
+    block-size: auto;
+    fill: var(--celestial-star);
+    stroke: var(--celestial-line-strong);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1;
+    opacity: 0.34;
+    pointer-events: none;
+  }
+
+  .footer-constellation path {
+    fill: none;
+    stroke-dasharray: 2.5 4;
+  }
+
+  .fc-accent {
+    fill: var(--accent);
+  }
+
+  .fc-primary {
+    fill: var(--primary);
+  }
+
+  .footer-constellation circle {
+    animation: footer-twinkle 8s ease-in-out infinite;
+  }
+
+  .footer-constellation circle:nth-of-type(2) {
+    animation-duration: 6s;
+    animation-delay: -3s;
+  }
+
+  .footer-constellation circle:nth-of-type(3) {
+    animation-duration: 10s;
+    animation-delay: -1.5s;
+  }
+
+  .footer-constellation circle:nth-of-type(4) {
+    animation-duration: 7s;
+    animation-delay: -5s;
+  }
+
+  .footer-constellation circle:nth-of-type(5) {
+    animation-duration: 9s;
+    animation-delay: -2s;
+  }
+
+  @keyframes footer-twinkle {
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  /* Same breakpoint as the backdrop art: below this the margins are too thin
+     to hold artwork without crowding the column. */
+  @media (width < 68rem) {
+    .footer-constellation {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-constellation circle {
+      animation: none;
+    }
   }
 
   .footer-inner {
@@ -80,6 +189,12 @@ const sourceLinks = [
 
   .footer-small {
     font-size: var(--step--1);
+  }
+
+  .footer-location {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
   }
 
   .footer-link {
