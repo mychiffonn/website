@@ -29,7 +29,8 @@ const isExternal = external ?? /^https?:\/\//.test(href)
     color: inherit;
     transition:
       color var(--motion-duration-fast) var(--motion-ease),
-      text-decoration-color var(--motion-duration) var(--motion-ease);
+      text-decoration-color var(--motion-duration) var(--motion-ease),
+      background-size var(--motion-duration) var(--motion-ease);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -38,7 +39,10 @@ const isExternal = external ?? /^https?:\/\//.test(href)
     }
   }
 
+  /* Opting in here (rather than on every [data-link]) keeps the wipe off the
+     button- and badge-shaped anchors that also render through this component. */
   [data-link][data-underline] {
     --underline: var(--muted-foreground);
+    --underline-wipe: currentColor;
   }
 </style>

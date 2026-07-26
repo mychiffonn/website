@@ -1,6 +1,8 @@
 prose-content {
   a {
     --underline: var(--muted-foreground);
+    --underline-wipe: currentColor;
+
     color: var(--foreground);
   }
 
