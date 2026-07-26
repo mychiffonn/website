@@ -1,24 +1,6 @@
-import customFieldDefinitions from "./custom-fields.json"
+import { PUBLICATION_LINK_TYPES } from "@icon-config"
+
 import venuePatternGroups from "./venue-patterns.json"
-
-type BibTeXFieldType = "field" | "list" | "separated"
-type BibTeXValueType =
-  | "literal"
-  | "title"
-  | "name"
-  | "date"
-  | "verbatim"
-  | "uri"
-  | "other"
-
-type FieldCategory = "metadata" | "link"
-
-interface CustomFieldDefinition {
-  name: string
-  fieldType: BibTeXFieldType
-  valueType: BibTeXValueType
-  category: FieldCategory
-}
 
 interface VenuePatternDefinition {
   pattern: string
@@ -32,11 +14,58 @@ interface VenuePatternGroups {
   doi: VenuePatternDefinition[]
 }
 
-export interface CustomFieldConfig {
-  fieldType: BibTeXFieldType
-  valueType: BibTeXValueType
-  category: FieldCategory
-}
+/**
+ * Non-standard BibTeX fields copied onto a publication for display. Standard
+ * fields (title, author, year, doi, url, journal, ...) are read directly in
+ * `parseBibTeX` and do not belong here.
+ */
+const METADATA_FIELDS = [
+  "abstract",
+  "arxiv",
+  "award",
+  "eprint",
+  "selected",
+  "equalfirst",
+  "equalsecond",
+  "equalthird",
+  "equallast",
+  "venue",
+  "image",
+  "imagealt",
+] as const
+
+/**
+ * Fields rendered as link buttons, in the order they appear on a card.
+ *
+ * A deliberate subset of PUBLICATION_LINK_TYPES: that map also carries entries
+ * for `abstract`, `doi`, `arxiv`, `award`, `selected` and `venue`, which are
+ * displayed some other way and must not become buttons. `satisfies` keeps a
+ * typo or a removed icon entry from silently dropping a link at build time.
+ */
+const LINK_FIELDS = [
+  "code",
+  "data",
+  "demo",
+  "draft",
+  "models",
+  "pdf",
+  "post",
+  "poster",
+  "proposal",
+  "resources",
+  "slides",
+  "talk",
+  "thread",
+  "video",
+  "website",
+] as const satisfies readonly (keyof typeof PUBLICATION_LINK_TYPES)[]
+
+export const LINK_FIELD_NAMES: readonly string[] = LINK_FIELDS
+
+export const CUSTOM_FIELD_NAMES: readonly string[] = [
+  ...METADATA_FIELDS,
+  ...LINK_FIELDS,
+]
 
 function buildVenuePatterns(
   definitions: VenuePatternDefinition[],
@@ -47,20 +76,7 @@ function buildVenuePatterns(
   ])
 }
 
-const typedCustomFieldDefinitions =
-  customFieldDefinitions as CustomFieldDefinition[]
 const typedVenuePatternGroups = venuePatternGroups as VenuePatternGroups
-
-export const CUSTOM_FIELD_NAMES = typedCustomFieldDefinitions.map(
-  (definition) => definition.name,
-)
-export const LINK_FIELD_NAMES = typedCustomFieldDefinitions
-  .filter((definition) => definition.category === "link")
-  .map((definition) => definition.name)
-
-export const CUSTOM_FIELDS_CONFIG = Object.fromEntries(
-  typedCustomFieldDefinitions.map(({ name, ...config }) => [name, config]),
-) as Record<string, CustomFieldConfig>
 
 export const VENUE_BOOKTITLE_PATTERNS = buildVenuePatterns(
   typedVenuePatternGroups.booktitle,

@@ -12,7 +12,6 @@ import { PUBLICATION_LINK_TYPES } from "@/icon.config"
 
 import {
   CUSTOM_FIELD_NAMES,
-  CUSTOM_FIELDS_CONFIG,
   LINK_FIELD_NAMES,
   VENUE_BOOKTITLE_PATTERNS,
   VENUE_DOI_PATTERNS,
@@ -120,25 +119,13 @@ export function expandHierarchicalKeywords(keywords: string[]): string[] {
 }
 
 /**
- * Configure custom field types for academic publications using the plugin's configuration API
- * Automatically configures all fields from `src/lib/publications/data/custom-fields.json`
+ * Non-standard fields are read straight from the raw entry by
+ * `extractCustomFields`, so they need no registration with the BibTeX plugin.
+ * Lenient parsing does still matter: it keeps those unregistered fields from
+ * failing the parse outright.
  * @see https://www.npmjs.com/package/@citation-js/plugin-bibtex
  */
-const configureCustomFields = (): void => {
-  const config = plugins.config.get("@bibtex")
-
-  // Config format: config.constants.fieldTypes.fieldname = [fieldType, valueType]
-  for (const [fieldName, fieldConfig] of Object.entries(CUSTOM_FIELDS_CONFIG)) {
-    config.constants.fieldTypes[fieldName] = [
-      fieldConfig.fieldType,
-      fieldConfig.valueType,
-    ]
-  }
-
-  config.parse.strict = false
-}
-
-configureCustomFields()
+plugins.config.get("@bibtex").parse.strict = false
 
 /**
  * Extract custom fields from raw BibTeX data
@@ -293,7 +280,7 @@ export function parseBibTeX(bibContent: string): Publication[] {
         url: entry.URL || entry.url || customFields.url,
       }
 
-      // Automatically add all custom fields from CUSTOM_FIELDS_CONFIG
+      // Copy every non-standard field the site knows how to display
       for (const fieldName of CUSTOM_FIELD_NAMES) {
         const value = getField(fieldName)
         // Handle 'selected' field specially (convert to boolean)
@@ -455,7 +442,7 @@ function truncateAuthors(
 
 /**
  * Extract publication action links (excluding doi, url, arxiv which go on title)
- * Automatically includes all fields marked as 'link' category in CUSTOM_FIELDS_CONFIG
+ * Covers every field in LINK_FIELD_NAMES that the entry actually sets.
  * @param entry - Publication entry
  * @returns Array of action link objects with proper icon names
  */
