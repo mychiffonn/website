@@ -7,13 +7,11 @@ import CopyButton from "@/components/base/CopyButton.astro"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import TaxonomyChip from "@/components/base/TaxonomyChip.astro"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/base/card"
+import Card from "@/components/base/card/Card.astro"
+import CardContent from "@/components/base/card/CardContent.astro"
+import CardFooter from "@/components/base/card/CardFooter.astro"
+import CardHeader from "@/components/base/card/CardHeader.astro"
+import CardTitle from "@/components/base/card/CardTitle.astro"
 
 interface Props {
   pub: ProcessedPublication
@@ -154,12 +152,32 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
 </Card>
 
 <style>
+  /* Card height comes from the stacked blocks, not the prose: trim the block
+     gaps and the vertical padding, and leave every line-height alone so the
+     wrapped author list keeps its 1.5 leading. Inline padding stays at
+     --space-s so the card doesn't tighten sideways too.
+
+     Astro's scope attribute lands on the Card root too, so this compiles to
+     .publication-card[data-astro-cid-…] and outranks the base [data-slot=card]
+     rule on specificity — no :global or stylesheet-order luck needed. */
+  .publication-card {
+    --card-padding: var(--space-xs) var(--space-s);
+    --card-gap: var(--space-2xs);
+  }
+
   .publication-body {
     display: flex;
     min-inline-size: 0;
     flex: 1;
     flex-direction: column;
     gap: var(--card-gap);
+  }
+
+  /* Authors and the venue • year line are one citation block; pulling them
+     closer separates them from the actions below more clearly than the
+     uniform gap did. */
+  .publication-body [data-slot="card-content"] {
+    gap: var(--space-3xs);
   }
 
   .publication-media {
@@ -186,7 +204,7 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
   }
 
   @media (width >= 52rem) {
-    :global(.publication-card[data-has-image="true"]) {
+    .publication-card[data-has-image="true"] {
       display: grid;
       grid-template-columns: minmax(10rem, 12rem) minmax(0, 1fr);
       align-items: start;
@@ -198,9 +216,7 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
   }
 
   @media (hover: hover) and (pointer: fine) {
-    :global(.publication-card[data-has-image="true"]:hover)
-      .publication-media
-      img {
+    .publication-card[data-has-image="true"]:hover .publication-media img {
       transform: scale(1.025);
     }
   }
@@ -282,11 +298,17 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
     font-size: var(--step--2);
   }
 
+  /* The only :global that has to stay: .author-highlight is injected through
+     set:html at runtime, so it never receives a scope attribute. */
   .bibliography-authors :global(.author-highlight) {
     color: var(--primary);
     font-weight: 700;
     text-decoration: underline;
     text-decoration-color: var(--primary);
+  }
+
+  .publication-abstract .abstract-summary [data-disclosure-chevron] {
+    color: inherit;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -295,11 +317,6 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
       animation-duration: 0.01ms;
       transition-duration: 0.01ms;
     }
-  }
-</style>
-<style is:global>
-  .publication-abstract .abstract-summary [data-disclosure-chevron] {
-    color: inherit;
   }
 </style>
 <script>
