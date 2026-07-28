@@ -8,6 +8,7 @@ import { render } from "astro:content"
 import { SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
 import { getStageVariant } from "@/lib/blog/stage"
+import { buildMarkdownDocument } from "@/lib/markdown-document"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
@@ -60,7 +61,14 @@ const {
   activePostNavItem,
 } = context
 
-const rawMarkdown = post.body ?? null
+const rawMarkdown = post.body
+  ? buildMarkdownDocument(post.body, {
+      title: post.data.title,
+      description: post.data.description,
+      path: `/blog/${currentPostId}`,
+      date: post.data.updatedAt ?? post.data.createdAt,
+    })
+  : null
 const socialImage =
   typeof post.data.image === "string" ? post.data.image : post.data.image?.src
 const generatedSocialImage = `/og/blog/${post.id}.png`
