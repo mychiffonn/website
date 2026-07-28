@@ -3,6 +3,8 @@ import { NAV_LINKS } from "@site-config"
 import Button from "@/components/base/Button.astro"
 import Dropdown from "@/components/base/Dropdown.astro"
 import Icon from "@/components/base/Icon.astro"
+
+import ThemeOptions from "./ThemeOptions.astro"
 ---
 
 <Dropdown align="end" class="mobile-menu-content">
@@ -24,6 +26,8 @@ import Icon from "@/components/base/Icon.astro"
           {item.label}
         </a>
       ))}
+    <hr class="mobile-menu-separator">
+    <ThemeOptions />
   </div>
 </Dropdown>
 
@@ -76,6 +80,12 @@ import Icon from "@/components/base/Icon.astro"
     @media (width >= 40rem) {
       display: none;
     }
+  }
+
+  .mobile-menu-separator {
+    margin: 0;
+    border: 0;
+    border-block-start: 1px solid var(--border);
   }
 
   :global(.mobile-menu-content) {

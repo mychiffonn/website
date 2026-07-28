@@ -12,6 +12,38 @@ export type ProfileLinkConfig = {
 
 export type EmailVariant = "encoded" | "display"
 
+export type ProfileLinkLocation = "header" | "about" | "footer"
+
+/** Icon-only links shown in the header when no explicit set is configured. */
+const DEFAULT_HEADER_LINKS = ["email", "cv", "googleScholar", "x"]
+
+/**
+ * Resolve which links a location should render.
+ *
+ * `false` or an empty array means the location renders nothing. `true` (or an
+ * omitted field) means that location's default set: the four icons above for
+ * the header, which cannot hold more; every configured link for the about
+ * block; and every configured link plus the mail link and feed for the
+ * footer, where they have always appeared. An array renders exactly those
+ * keys, in the order given.
+ *
+ * @param location Where the links are being rendered
+ * @returns An ordered list of profile link keys, empty when the location is off
+ */
+export const getProfileLinkPlacement = (
+  location: ProfileLinkLocation,
+): string[] => {
+  const configured = PROFILE.linksPlacement?.[location]
+
+  if (configured === false) return []
+  if (Array.isArray(configured)) return configured
+
+  if (location === "header") return DEFAULT_HEADER_LINKS
+
+  const keys = Object.keys(PROFILE.links)
+  return location === "footer" ? ["email", ...keys, "rss"] : keys
+}
+
 export type ProcessedProfileLink = {
   key: ProfileLinkType
   /** Labels from PROFILE_ICON_MAP or user overrides */
@@ -25,62 +57,86 @@ export type ProcessedProfileLink = {
 }
 
 /**
+ * Resolve a single key to a link, drawing on the synthetic sources (`email`
+ * from PROFILE.email, `rss` from the feed route) when the key is not a plain
+ * entry in the links config.
+ * @param key The profile link key to resolve
+ * @param links The links config to read regular entries from
+ * @returns The processed link, or null if the key is not configured
+ */
+const resolveProfileLink = (
+  key: string,
+  links: ProfileLinkConfig | Record<string, string>,
+): ProcessedProfileLink | null => {
+  const iconConfig = PROFILE_ICON_MAP[key as ProfileLinkType]
+  if (!iconConfig) return null
+
+  const value = (links as Record<string, unknown>)[key]
+
+  if (value === undefined) {
+    if (key === "email" && PROFILE.email) {
+      return {
+        key: "email",
+        href: `mailto:${PROFILE.email}`,
+        isExternal: true,
+        label: iconConfig.label,
+        iconName: iconConfig.iconName,
+      }
+    }
+    if (key === "rss") {
+      return {
+        key: "rss",
+        href: normalizeHref("/rss.xml").href,
+        isExternal: false,
+        label: iconConfig.label,
+        iconName: iconConfig.iconName,
+      }
+    }
+    return null
+  }
+
+  const linkData = processProfileLink(
+    value as string | { href: string; label?: string },
+    iconConfig,
+  )
+  const { href, isExternal } = normalizeHref(linkData.href)
+
+  return {
+    key: key as ProfileLinkType,
+    href,
+    isExternal,
+    label: linkData.label,
+    iconName: iconConfig.iconName,
+  }
+}
+
+/**
  * Map links to their corresponding icon and label.
- * @param links The links to process
- * @param includeRss Whether to include the RSS link
- * @param includeEmail Whether to include the email link
+ *
+ * When `keys` is an array the links are returned in exactly that order, and
+ * keys with nothing configured behind them are skipped rather than rendered
+ * broken. When it is `true` (or omitted) every configured link is returned in
+ * config order.
+ *
+ * @param links The links to process, defaulting to the site profile links
+ * @param keys Which links to include: `true` for all, `false` for none, or an
+ *   ordered list of keys
  * @returns {@link ProcessedProfileLink[]} Array of processed profile links
  */
 export const getProcessedProfileLinks = (
   links?: ProfileLinkConfig | Record<string, string>,
-  includeRss = false,
-  includeEmail = false,
+  keys: boolean | string[] = true,
 ): ProcessedProfileLink[] => {
+  if (keys === false) return []
+
   const linksToProcess = links || PROFILE.links
-  const entries: ProcessedProfileLink[] = []
+  const requested = Array.isArray(keys)
+    ? keys
+    : Object.keys(linksToProcess as Record<string, unknown>)
 
-  if (includeEmail && PROFILE.email) {
-    entries.push({
-      key: "email" as ProfileLinkType,
-      href: `mailto:${PROFILE.email}`,
-      isExternal: true,
-      label: "Email",
-      iconName: "mingcute:mail-line",
-    })
-  }
-
-  for (const [key, value] of Object.entries(linksToProcess)) {
-    const iconConfig = PROFILE_ICON_MAP[key as ProfileLinkType]
-    if (!iconConfig) continue
-
-    const linkData = processProfileLink(
-      value as string | { href: string; label?: string },
-      iconConfig,
-    )
-
-    const { href, isExternal } = normalizeHref(linkData.href)
-
-    entries.push({
-      key: key as ProfileLinkType,
-      href,
-      isExternal,
-      label: linkData.label,
-      iconName: iconConfig.iconName,
-    })
-  }
-
-  if (includeRss && !entries.some((entry) => entry.key === "rss")) {
-    const { href } = normalizeHref("/rss.xml")
-    entries.push({
-      key: "rss",
-      href,
-      isExternal: false,
-      label: "RSS",
-      iconName: PROFILE_ICON_MAP.rss.iconName,
-    })
-  }
-
-  return entries
+  return requested
+    .map((key) => resolveProfileLink(key, linksToProcess))
+    .filter((entry): entry is ProcessedProfileLink => entry !== null)
 }
 
 /**

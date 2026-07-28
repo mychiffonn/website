@@ -3,12 +3,15 @@ import { FOOTER, PROFILE, SITE } from "@site-config"
 import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import ProfileLinks from "@/components/profile/ProfileLinks.astro"
+import { getProfileLinkPlacement } from "@/components/profile/helper"
 
 interface Props {
   celestial?: boolean
 }
 
 const { celestial = false } = Astro.props
+
+const footerLinks = getProfileLinkPlacement("footer")
 
 const sourceLinks = [
   FOOTER.sourceCode ? { href: FOOTER.sourceCode, label: "Source Code" } : null,
@@ -36,7 +39,7 @@ const sourceLinks = [
       </svg>
     )}
   <div class="footer-inner">
-    <ProfileLinks links={PROFILE.links} includeRss={true} includeEmail={true} />
+    <ProfileLinks links={PROFILE.links} keys={footerLinks} />
 
     <p>
       &copy; <span id="current-year"></span>

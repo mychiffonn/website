@@ -2,6 +2,8 @@
 import Button from "@/components/base/Button.astro"
 import Dropdown from "@/components/base/Dropdown.astro"
 import Icon from "@/components/base/Icon.astro"
+
+import ThemeOptions from "./ThemeOptions.astro"
 ---
 
 <Dropdown align="end" id="theme-dropdown">
@@ -20,18 +22,7 @@ import Icon from "@/components/base/Icon.astro"
   </Button>
 
   <div class="theme-menu">
-    <button data-dropdown-item data-theme-value="light">
-      <Icon name="mingcute:sun-line" size="1.25rem" />
-      Light
-    </button>
-    <button data-dropdown-item data-theme-value="dark">
-      <Icon name="mingcute:moon-line" size="1.25rem" />
-      Dark
-    </button>
-    <button data-dropdown-item data-theme-value="auto">
-      <Icon name="monitor" size="1.25rem" />
-      Auto
-    </button>
+    <ThemeOptions />
   </div>
 </Dropdown>
 
@@ -61,10 +52,6 @@ import Icon from "@/components/base/Icon.astro"
     transform: scale(1) rotate(0deg);
   }
 
-  button[data-dropdown-item] {
-    gap: 0.5rem;
-  }
-
   :global(.theme-no-transition *),
   :global(.theme-no-transition *::before),
   :global(.theme-no-transition *::after) {
@@ -91,83 +78,4 @@ import Icon from "@/components/base/Icon.astro"
     )
     localStorage.setItem("theme", preference)
   })()
-</script>
-
-<script>
-  function resolveTheme(preference: string): string {
-    if (preference === "auto") {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-    }
-    return preference
-  }
-
-  function applyTheme(resolved: string) {
-    const el = document.documentElement
-    el.classList.add("theme-no-transition")
-    el.setAttribute("data-theme", resolved)
-    el.classList.remove("scheme-dark", "scheme-light")
-    el.classList.add(resolved === "dark" ? "scheme-dark" : "scheme-light")
-
-    window.getComputedStyle(el).getPropertyValue("opacity")
-
-    requestAnimationFrame(() => {
-      el.classList.remove("theme-no-transition")
-    })
-  }
-
-  function updateActiveItem() {
-    const stored = localStorage.getItem("theme") ?? "auto"
-    document
-      .querySelectorAll<HTMLButtonElement>("#theme-dropdown [data-theme-value]")
-      .forEach((btn) => {
-        if (btn.dataset.themeValue === stored) {
-          btn.setAttribute("data-active", "")
-        } else {
-          btn.removeAttribute("data-active")
-        }
-      })
-  }
-
-  function handleThemeItemClick(e: Event) {
-    const btn = (e.target as Element).closest<HTMLButtonElement>(
-      "[data-theme-value]",
-    )
-    if (!btn) return
-    const preference = btn.dataset.themeValue!
-    localStorage.setItem("theme", preference)
-    applyTheme(resolveTheme(preference))
-    updateActiveItem()
-  }
-
-  function bindThemeHandlers() {
-    const container = document.getElementById("theme-dropdown")
-    if (!container || container.hasAttribute("data-theme-bound")) return
-    container.setAttribute("data-theme-bound", "")
-    container.addEventListener("click", handleThemeItemClick)
-  }
-
-  function initThemeDropdown() {
-    bindThemeHandlers()
-    updateActiveItem()
-  }
-
-  // Track OS changes for "auto" mode
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => {
-      const stored = localStorage.getItem("theme") ?? "auto"
-      if (stored === "auto") {
-        applyTheme(resolveTheme("auto"))
-      }
-    })
-
-  initThemeDropdown()
-
-  document.addEventListener("astro:after-swap", () => {
-    const stored = localStorage.getItem("theme") ?? "auto"
-    applyTheme(resolveTheme(stored))
-    initThemeDropdown()
-  })
 </script>
