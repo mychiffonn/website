@@ -50,11 +50,27 @@ const aboutLinks = getProfileLinkPlacement("about")
         {profile.othernames && <p class="profile-othernames">{profile.othernames}</p>}
         <p class="profile-tagline">{profile.tagline}</p>
       </div>
-      {profile.pronunciation && (
-          <Collapse title="Pronunciation" variant="muted">
-            <p class="profile-pronunciation">{profile.pronunciation}</p>
-          </Collapse>
-        )}
+
+      <div class="profile-meta">
+        <EmailLink email={profile.email} />
+
+        {profile.phone && (
+            <span class="profile-contact-item">
+              <Icon name="mingcute:phone-line" />
+              <span>{profile.phone}</span>
+            </span>
+          )}
+
+        {profile.pronunciation && (
+            <Collapse
+              title="Pronunciation"
+              variant="muted"
+              class="profile-pronunciation-collapse"
+            >
+              <p class="profile-pronunciation">{profile.pronunciation}</p>
+            </Collapse>
+          )}
+      </div>
     </div>
   </header>
 </article>
@@ -63,18 +79,11 @@ const aboutLinks = getProfileLinkPlacement("about")
   <AboutContent />
 </prose-content>
 
-<footer class="profile-footer">
-  <EmailLink email={profile.email} />
-
-  {profile.phone && (
-      <span class="profile-contact-item">
-        <Icon name="mingcute:phone-line" />
-        <span>{profile.phone}</span>
-      </span>
-    )}
-
-  <ProfileLinks keys={aboutLinks} />
-</footer>
+{aboutLinks.length > 0 && (
+    <footer class="profile-footer">
+      <ProfileLinks keys={aboutLinks} />
+    </footer>
+  )}
 
 <style>
   .profile-header {
@@ -97,7 +106,18 @@ const aboutLinks = getProfileLinkPlacement("about")
   .profile-content {
     flex: 1;
     display: grid;
-    gap: var(--space-s);
+    gap: var(--space-xs);
+  }
+
+  /* Contact details and the pronunciation disclosure share one wrapping row.
+     Aligned to the start rather than centred so opening the disclosure grows
+     it downwards instead of shifting the email against it. */
+  .profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-2xs) var(--space-s);
+    color: var(--muted-foreground);
   }
 
   .profile-heading {
@@ -140,10 +160,26 @@ const aboutLinks = getProfileLinkPlacement("about")
     color: var(--muted-foreground);
   }
 
+  /* Sized down to sit as a chip beside the email rather than as the
+     full-width panel it is elsewhere. */
+  .profile-pronunciation-collapse {
+    font-size: var(--step--1);
+  }
+
+  .profile-pronunciation-collapse :global(summary) {
+    padding: var(--space-3xs) var(--space-2xs);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .profile-pronunciation-collapse :global([data-collapse-content]) {
+    padding: 0 var(--space-2xs) var(--space-2xs);
+  }
+
   .profile-contact-item {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2xs);
+    min-block-size: var(--control-size-compact);
   }
 
   .profile-contact-item :global(svg) {
