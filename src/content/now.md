@@ -1,3 +1,4 @@
 - Co-leading the analysis subteam for a multicultural riddles benchmarking project at Cohere Labs Open Science Community, focusing on factual accuracy, hallucination behavior, topic-level patterns, and cross-cultural reasoning failures.
 - Finalizing [scaling behavior of chain-of-thought monitoring in LLMs](/projects/2025-cot-monitoring) from [Algoverse AI Research](https://algoverseairesearch.org/).
-- Contributing to [MatrAIx](https://matraix.ai)'s collection of projects, especially harbor-based runtime environments.
+- Contributing to [MatrAIx](https://matraix.ai) and BenchFlow community
+- Upskilling on matters important to me, including [RLHF](https://rlhfbook.com/course), [Technical AI safety through ARENA](https://arena.baseresearch.org/), and [Climate Change AI Summer School](https://www.climatechange.ai/events/summer_school2026).

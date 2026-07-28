@@ -9,10 +9,6 @@ skills:
   - LLM evaluation
   - Leadership
   - Multicultural AI
-tags:
-  - Multicultural AI
-  - Cohere Labs
-  - Community evaluation
 ---
 
 At Cohere Labs Open Science Community, I co-lead the analysis subteam for a multicultural riddles benchmarking project studying how LLMs handle culturally grounded reasoning tasks.

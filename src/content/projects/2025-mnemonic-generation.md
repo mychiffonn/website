@@ -11,12 +11,6 @@ skills:
   - Python
   - Fine-tuning
   - PyTorch
-tags:
-  - Mnemonic generation
-  - Vocabulary learning
-  - Mandarin
-  - Gemma
-  - DeepSeek
 ---
 
 I designed an AI chatbot that generates diverse, memorable, and linguistically grounded mnemonic devices for learning English and Mandarin Chinese vocabulary.

@@ -11,11 +11,6 @@ skills:
   - PyTorch
   - Model training
 isHighlighted: true
-tags:
-  - Llama 2
-  - RoPE
-  - RMSNorm
-  - SwiGLU
 ---
 
 I implemented a minimalist Llama-2 language model from scratch in PyTorch, including self-attention, Rotary Positional Embeddings (RoPE), RMSNorm, SwiGLU activation functions, and core transformer blocks.

@@ -1,0 +1,159 @@
+---
+import Icon from "@/components/base/Icon.astro"
+import Tooltip from "@/components/base/Tooltip.astro"
+
+interface Props {
+  /** Whose name this guide is for, used to name the controls in context */
+  name: string
+  /** Written guide, e.g. a respelling like "shi-FON" */
+  text: string
+  /** Optional recording. The written guide stays regardless: audio-only
+      content would need a text alternative to be accessible anyway. */
+  audio?: string
+}
+
+/*
+ * The trigger is a button rather than a bare hover target so the guide is
+ * reachable three ways: hover, keyboard focus, and tap. Tapping focuses the
+ * button, which is what surfaces the tooltip on touch, where hover does not
+ * exist. Tooltip itself handles Escape and repositioning.
+ *
+ * The guide travels in data-tooltip-content, which Tooltip mirrors into
+ * aria-describedby, so it is announced as the button's description rather
+ * than being visual-only.
+ */
+const { name, text, audio } = Astro.props
+
+const tooltipId = "pronunciation-guide"
+---
+
+<span class="pronunciation">
+  <button
+    type="button"
+    class="pronunciation-trigger"
+    data-tooltip-id={tooltipId}
+    data-tooltip-content={text}
+  >
+    <Icon name="question" aria-hidden="true" />
+    <span>How to pronounce my name</span>
+  </button>
+
+  <Tooltip id={tooltipId} side="top" />
+
+  {audio && (
+      <>
+        <button
+          type="button"
+          class="pronunciation-play"
+          aria-label={`Play the pronunciation of ${name}`}
+          data-pronunciation-play
+        >
+          <Icon name="mingcute:volume-line" />
+        </button>
+        <audio src={audio} preload="none" data-pronunciation-audio></audio>
+      </>
+    )}
+</span>
+
+<style>
+  .pronunciation {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+  }
+
+  .pronunciation-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    min-block-size: var(--control-size-compact);
+    padding: 0;
+    border: 0;
+    appearance: none;
+    background: none;
+    color: var(--muted-foreground);
+    font: inherit;
+    text-align: start;
+    text-decoration: underline dotted;
+    text-underline-offset: 0.25em;
+    touch-action: manipulation;
+    cursor: help;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .pronunciation-trigger :global(svg) {
+    flex-shrink: 0;
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pronunciation-trigger:hover {
+      color: var(--foreground);
+    }
+  }
+
+  .pronunciation-trigger:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  .pronunciation-play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--control-size-compact);
+    min-block-size: var(--control-size-compact);
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    appearance: none;
+    background: transparent;
+    color: var(--muted-foreground);
+    touch-action: manipulation;
+    cursor: pointer;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      border-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .pronunciation-play:active {
+    transform: scale(0.96);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pronunciation-play:hover {
+      border-color: var(--interactive-border);
+      background: var(--interactive-background);
+      color: var(--interactive-foreground);
+    }
+  }
+
+  .pronunciation-play:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  /* Delegated so the control keeps working after a view transition swaps the
+     page without re-running component setup. */
+  document.addEventListener("click", (event) => {
+    const trigger = (event.target as Element).closest(
+      "[data-pronunciation-play]",
+    )
+    if (!trigger) return
+
+    const audio = trigger.parentElement?.querySelector<HTMLAudioElement>(
+      "[data-pronunciation-audio]",
+    )
+    if (!audio) return
+
+    audio.currentTime = 0
+    /* Playback rejects when the file is missing or the browser blocks it;
+       neither is worth an unhandled rejection in the console. */
+    audio.play().catch(() => {})
+  })
+</script>

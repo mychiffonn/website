@@ -7,14 +7,35 @@ interface Props {
   [key: string]: any
 }
 
-const { href, external, class: className, underline, ...rest } = Astro.props
+const {
+  href,
+  external,
+  class: className,
+  underline,
+  rel,
+  ...rest
+} = Astro.props
 const isExternal = external ?? /^https?:\/\//.test(href)
+
+/* A caller-supplied rel has to be merged rather than replaced, since the
+   external hardening applies either way.
+   `rel="me"` claims the target as the author's own profile, so marking it
+   nofollow would contradict the claim and undercut the identity link. The
+   window/referrer hardening still applies. */
+const isIdentityLink = rel?.split(/\s+/).includes("me") ?? false
+const relTokens = [
+  ...(isExternal
+    ? ["noopener", "noreferrer", ...(isIdentityLink ? [] : ["nofollow"])]
+    : []),
+  ...(rel?.split(/\s+/).filter(Boolean) ?? []),
+]
+const relValue = relTokens.length > 0 ? relTokens.join(" ") : undefined
 ---
 
 <a
   href={href}
   target={isExternal ? "_blank" : undefined}
-  rel={isExternal ? "noopener noreferrer nofollow" : undefined}
+  rel={relValue}
   data-link
   data-external={isExternal || undefined}
   data-underline={underline || undefined}

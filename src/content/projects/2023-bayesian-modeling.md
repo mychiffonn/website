@@ -12,8 +12,6 @@ skills:
   - PyMC
   - Bayesian modeling
   - Data imputation
-tags:
-  - healthcare analytics
 ---
 
 ## The Challenge: When Healthcare Data Goes Missing

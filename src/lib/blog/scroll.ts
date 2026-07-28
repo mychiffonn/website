@@ -180,6 +180,16 @@ export class UnifiedTOCController {
       2 * Math.PI * UnifiedTOCController.PROGRESS_CIRCLE_RADIUS
     const offset = circumference * (1 - this.currentProgress)
     this.progressCircle.style.strokeDashoffset = offset.toString()
+
+    /* The ring carries a progressbar role, so the value has to travel with the
+       stroke or assistive tech reads a label that never changes. Rounded and
+       written only on change to keep this off the per-frame mutation path. */
+    const host = this.progressCircle.closest("[role='progressbar']")
+    if (!host) return
+    const percent = Math.round(this.currentProgress * 100).toString()
+    if (host.getAttribute("aria-valuenow") !== percent) {
+      host.setAttribute("aria-valuenow", percent)
+    }
   }
 
   // Public method to handle large jumps (called on heading clicks, page transitions)

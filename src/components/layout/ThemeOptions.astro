@@ -1,0 +1,86 @@
+---
+import Icon from "@/components/base/Icon.astro"
+---
+
+<button data-dropdown-item data-theme-value="light">
+  <Icon name="mingcute:sun-line" size="1.25rem" />
+  Light
+</button>
+<button data-dropdown-item data-theme-value="dark">
+  <Icon name="mingcute:moon-line" size="1.25rem" />
+  Dark
+</button>
+<button data-dropdown-item data-theme-value="auto">
+  <Icon name="monitor" size="1.25rem" />
+  Auto
+</button>
+
+<style>
+  button[data-dropdown-item] {
+    gap: 0.5rem;
+  }
+</style>
+
+<script>
+  function resolveTheme(preference: string): string {
+    if (preference === "auto") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+    }
+    return preference
+  }
+
+  function applyTheme(resolved: string) {
+    const el = document.documentElement
+    el.classList.add("theme-no-transition")
+    el.setAttribute("data-theme", resolved)
+    el.classList.remove("scheme-dark", "scheme-light")
+    el.classList.add(resolved === "dark" ? "scheme-dark" : "scheme-light")
+
+    window.getComputedStyle(el).getPropertyValue("opacity")
+
+    requestAnimationFrame(() => {
+      el.classList.remove("theme-no-transition")
+    })
+  }
+
+  /** Marks the stored preference across every rendered set of theme options. */
+  function updateActiveItems() {
+    const stored = localStorage.getItem("theme") ?? "auto"
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-theme-value]")
+      .forEach((btn) => {
+        btn.toggleAttribute("data-active", btn.dataset.themeValue === stored)
+      })
+  }
+
+  /* Delegated from the document so any number of theme option sets (the
+     desktop dropdown, the mobile menu) share one handler and stay in sync. */
+  document.addEventListener("click", (event) => {
+    const btn = (event.target as Element).closest<HTMLButtonElement>(
+      "[data-theme-value]",
+    )
+    if (!btn) return
+    const preference = btn.dataset.themeValue!
+    localStorage.setItem("theme", preference)
+    applyTheme(resolveTheme(preference))
+    updateActiveItems()
+  })
+
+  // Track OS changes for "auto" mode
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => {
+      if ((localStorage.getItem("theme") ?? "auto") === "auto") {
+        applyTheme(resolveTheme("auto"))
+      }
+    })
+
+  updateActiveItems()
+
+  document.addEventListener("astro:after-swap", () => {
+    applyTheme(resolveTheme(localStorage.getItem("theme") ?? "auto"))
+    updateActiveItems()
+  })
+</script>

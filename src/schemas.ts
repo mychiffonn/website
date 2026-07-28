@@ -136,6 +136,31 @@ export const ProfileLinkConfigSchema = z
   .default({})
 
 /**
+ * Which links a given location renders: `true` for every configured link,
+ * `false` for none, or an explicit list of keys rendered in the order given.
+ */
+const ProfileLinkPlacementSchema = z.union([z.boolean(), z.array(z.string())])
+
+/**
+ * Where profile links appear. Individuals typically keep all three; a lab
+ * site might drop the header set and keep only the about and footer blocks.
+ *
+ * Every field is optional — defaults are applied by
+ * `getProfileLinkPlacement`, since the config object is consumed directly at
+ * runtime and only parsed for validation in dev.
+ */
+export const ProfileLinkPlacementConfigSchema = z
+  .object({
+    /** Icon-only links in the site header, beside the home link */
+    header: ProfileLinkPlacementSchema.optional(),
+    /** Links in the about/profile block on the homepage */
+    about: ProfileLinkPlacementSchema.optional(),
+    /** Links in the site footer */
+    footer: ProfileLinkPlacementSchema.optional(),
+  })
+  .optional()
+
+/**
  * Schema for personal profile configuration including contact info and social links.
  */
 export const ProfileConfigSchema = z.object({
@@ -160,13 +185,18 @@ export const ProfileConfigSchema = z.object({
     .optional(),
   /** Preferred pronouns (e.g., "she/her", "they/them") */
   pronouns: z.string().max(20).optional(),
-  /** Phonetic pronunciation guide for your name */
+  /** Written pronunciation guide, e.g. a respelling like "shi-FON" */
   pronunciation: z.string().optional(),
-  // pronunciationAudioPath: z.string().optional(),
+  /**
+   * Optional recording of the name, served from /public.
+   * `pronunciation` stays required alongside it: a recording on its own has
+   * no text alternative, which WCAG 1.2.1 requires for audio-only content.
+   */
+  pronunciationAudioPath: z.string().optional(),
   /** Social media and professional platform links */
   links: ProfileLinkConfigSchema,
-  /** Link keys (e.g., "cv", "resume") to highlight with primary color in profile */
-  highlightLinks: z.array(z.string()).optional().default([]),
+  /** Where profile links appear across the site */
+  linksPlacement: ProfileLinkPlacementConfigSchema,
 })
 
 /**

@@ -1,7 +1,8 @@
 ---
-title: Astro Scholar 2.1.0 is ready
-description: A release built for academic portfolios, research blogs, and technical writing—without giving up plain Markdown or a static-first Astro site.
+title: Astro Scholar theme is ready
+description: A theme built for academic portfolios, lab site, and technical writing that are easy to use and maintain, thoughtfully designed, and extensible.
 createdAt: 2026-07-24T12:00:00
+updatedAt: 2026-07-28T00:41:00.000-07:00
 image: ./assets/astro-scholar-release.png
 tags:
   - astro

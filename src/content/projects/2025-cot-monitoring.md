@@ -10,10 +10,6 @@ skills:
   - Python
   - LLM evaluation
   - Chain-of-thought monitoring
-tags:
-  - AI oversight
-  - Monitorability
-  - OpenRouter
 ---
 
 ## Overview

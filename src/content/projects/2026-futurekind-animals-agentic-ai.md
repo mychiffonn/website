@@ -11,9 +11,6 @@ skills:
   - LLM evaluation
   - AI agents
   - AI x animals
-tags:
-  - Animal Welfare
-  - Futurekind
 ---
 
 As a Futurekind Research Fellow with Electric Sheep, I worked on benchmarking whether implicit values in agentic LLMs are inclusive of animals.

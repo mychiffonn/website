@@ -1,8 +1,11 @@
 ---
+import { formatCount, type PluralForms } from "@/lib/plural"
+
 export interface Props extends astroHTML.JSX.HTMLAttributes {
   label: string
   count?: number
-  countNoun?: string
+  /** Singular noun the count describes, or explicit forms for irregular plurals */
+  countNoun?: string | PluralForms
   prefix?: string
   href?: string
   static?: boolean
@@ -13,7 +16,7 @@ export interface Props extends astroHTML.JSX.HTMLAttributes {
 const {
   label,
   count,
-  countNoun = "items",
+  countNoun = "item",
   prefix = "#",
   href,
   static: isStatic = false,
@@ -26,9 +29,7 @@ const {
 
 const accessibleLabel =
   ariaLabel ??
-  (count === undefined
-    ? label
-    : `${label}, ${count} ${count === 1 ? countNoun.replace(/s$/, "") : countNoun}`)
+  (count === undefined ? label : `${label}, ${formatCount(count, countNoun)}`)
 ---
 
 {href ? (

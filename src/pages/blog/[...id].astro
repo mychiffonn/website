@@ -8,6 +8,7 @@ import { render } from "astro:content"
 import { SITE } from "@site-config"
 import { PostManager } from "@/lib/blog"
 import { getStageVariant } from "@/lib/blog/stage"
+import { buildMarkdownDocument } from "@/lib/markdown-document"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
@@ -60,7 +61,14 @@ const {
   activePostNavItem,
 } = context
 
-const rawMarkdown = post.body ?? null
+const rawMarkdown = post.body
+  ? buildMarkdownDocument(post.body, {
+      title: post.data.title,
+      description: post.data.description,
+      path: `/blog/${currentPostId}`,
+      date: post.data.updatedAt ?? post.data.createdAt,
+    })
+  : null
 const socialImage =
   typeof post.data.image === "string" ? post.data.image : post.data.image?.src
 const generatedSocialImage = `/og/blog/${post.id}.png`
@@ -145,7 +153,7 @@ const generatedSocialImage = `/og/blog/${post.id}.png`
           )}
           {post.data.tags.map((tag: string) => (
             <li>
-              <TaxonomyChip href={`/blog/tags/${tag}`} label={tag} countNoun="posts" />
+              <TaxonomyChip href={`/blog/tags/${tag}`} label={tag} countNoun="post" />
             </li>
           ))}
         </ul>
@@ -231,7 +239,7 @@ const generatedSocialImage = `/og/blog/${post.id}.png`
 
   #post-title {
     scroll-margin-top: var(--header-height);
-    font-size: var(--step-4);
+    font-size: var(--step-3);
     font-weight: var(--font-weight-medium);
     line-height: var(--line-height-tight);
   }
@@ -269,7 +277,15 @@ const generatedSocialImage = `/og/blog/${post.id}.png`
     justify-content: flex-end;
   }
 
+  /* Stepped rather than jumping straight to the display size: on a phone the
+     title competes with the post body for the whole first screen. */
   @media (width >= 40rem) {
+    #post-title {
+      font-size: var(--step-4);
+    }
+  }
+
+  @media (width >= 64rem) {
     #post-title {
       font-size: var(--step-5);
     }

@@ -1,14 +1,59 @@
 ---
-interface Props {
-  celestial?: boolean
-}
-
-const { celestial = false } = Astro.props
+/*
+ * The bar keeps one appearance everywhere. It previously traded its bottom
+ * border for a decorative "starline" on some pages, which weakened the
+ * boundary a sticky bar needs against content scrolling underneath it.
+ *
+ * The scroll progress line rides that same bottom edge. It is document scroll
+ * position, not reading time, so it means the same thing on every page, and it
+ * is aria-hidden because scroll position is already conveyed by the scrollbar
+ * and by assistive tech's own position reporting.
+ */
 ---
 
-<div id="main-header" class="menu-bar" data-celestial={celestial || undefined}>
+<div id="main-header" class="menu-bar">
   <slot />
+  <div class="menu-bar-progress" aria-hidden="true">
+    <span data-scroll-progress></span>
+  </div>
 </div>
+
+<script>
+  /*
+   * Driven from JS rather than `animation-timeline: scroll()`: the CSS
+   * minifier folds the timeline into the `animation` shorthand, which does not
+   * accept one, so the declaration is dropped and the line never fills. This
+   * also covers browsers without scroll-driven animations.
+   */
+  let fill: HTMLElement | null = null
+  let frame = 0
+
+  function update() {
+    frame = 0
+    if (!fill) return
+
+    const { scrollHeight, clientHeight } = document.documentElement
+    const range = scrollHeight - clientHeight
+    const progress = range > 0 ? Math.min(1, Math.max(0, scrollY / range)) : 0
+    fill.style.scale = `${progress} 1`
+  }
+
+  function schedule() {
+    // Coalesce the scroll burst into one write per frame.
+    if (!frame) frame = requestAnimationFrame(update)
+  }
+
+  function bind() {
+    fill = document.querySelector<HTMLElement>("[data-scroll-progress]")
+    update()
+  }
+
+  addEventListener("scroll", schedule, { passive: true })
+  addEventListener("resize", schedule, { passive: true })
+  document.addEventListener("astro:page-load", bind)
+  document.addEventListener("astro:after-swap", bind)
+  bind()
+</script>
 
 <style>
   .menu-bar {
@@ -37,57 +82,26 @@ const { celestial = false } = Astro.props
     transform: translateX(-50%);
   }
 
-  .menu-bar[data-celestial]::before {
-    border-block-end-color: transparent;
-    background: color-mix(in oklab, var(--background) 68%, transparent);
-  }
-
-  /* Celestial pages trade the solid bottom rule for a faint "starline":
-     a fading meridian with a few points sitting on it. Pure CSS, no extra DOM. */
-  .menu-bar[data-celestial]::after {
-    content: "";
+  /* Sits on the border the ::before draws, bleeding to the same 100vw edge. */
+  .menu-bar-progress {
     position: absolute;
     inset-block-end: 0;
     inset-inline-start: 50%;
-    z-index: -1;
     inline-size: 100vw;
-    block-size: 0.5rem;
-    opacity: 0.75;
+    block-size: 0.125rem;
+    overflow: hidden;
     pointer-events: none;
     transform: translateX(-50%);
+  }
 
-    /* Points are placed in absolute offsets from centre, not percentages, so
-       they stay put relative to the text column instead of spreading apart as
-       the viewport widens. The meridian holds full strength across the column
-       and fades out into the margins. */
-    background:
-      radial-gradient(
-        circle at calc(50% - 16rem) calc(100% - 1px),
-        var(--celestial-star) 0 1.5px,
-        transparent 2px
-      ),
-      radial-gradient(
-        circle at calc(50% - 6rem) calc(100% - 1px),
-        var(--accent) 0 2px,
-        transparent 2.5px
-      ),
-      radial-gradient(
-        circle at calc(50% + 9rem) calc(100% - 1px),
-        var(--celestial-star) 0 1.5px,
-        transparent 2px
-      ),
-      radial-gradient(
-        circle at calc(50% + 19rem) calc(100% - 1px),
-        var(--celestial-star) 0 1.5px,
-        transparent 2px
-      ),
-      linear-gradient(
-        to right,
-        transparent,
-        var(--celestial-line-strong) calc(50% - 30rem),
-        var(--celestial-line-strong) calc(50% + 30rem),
-        transparent
-      )
-      bottom / 100% 1px no-repeat;
+  .menu-bar-progress span {
+    display: block;
+    block-size: 100%;
+    background: var(--primary);
+
+    /* Scaled rather than resized so each scroll frame stays on the compositor.
+       Pages with no scroll range keep the 0 width and stay invisible. */
+    scale: 0 1;
+    transform-origin: left center;
   }
 </style>

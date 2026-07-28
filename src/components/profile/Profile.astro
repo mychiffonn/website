@@ -3,12 +3,13 @@ import type { ProfileConfig } from "@/types"
 
 import Avatar from "@/components/base/Avatar.astro"
 import Badge from "@/components/base/Badge.astro"
-import Collapse from "@/components/base/Collapse.astro"
 import Icon from "@/components/base/Icon.astro"
 import avatar from "@/assets/avatar.jpg"
 
 import EmailLink from "./EmailLink.astro"
+import Pronunciation from "./Pronunciation.astro"
 import ProfileLinks from "./ProfileLinks.astro"
+import { getProfileLinkPlacement } from "./helper"
 import { Content as AboutContent } from "@/content/about.md"
 
 import "@/styles/callout.css"
@@ -18,6 +19,8 @@ interface Props {
 }
 
 const { profile } = Astro.props
+
+const aboutLinks = getProfileLinkPlacement("about")
 ---
 
 <article id="profile">
@@ -47,11 +50,25 @@ const { profile } = Astro.props
         {profile.othernames && <p class="profile-othernames">{profile.othernames}</p>}
         <p class="profile-tagline">{profile.tagline}</p>
       </div>
-      {profile.pronunciation && (
-          <Collapse title="Pronunciation" variant="muted">
-            <p class="profile-pronunciation">{profile.pronunciation}</p>
-          </Collapse>
-        )}
+
+      <div class="profile-meta">
+        <EmailLink email={profile.email} />
+
+        {profile.phone && (
+            <span class="profile-contact-item">
+              <Icon name="mingcute:phone-line" />
+              <span>{profile.phone}</span>
+            </span>
+          )}
+
+        {profile.pronunciation && (
+            <Pronunciation
+              name={profile.name}
+              text={profile.pronunciation}
+              audio={profile.pronunciationAudioPath}
+            />
+          )}
+      </div>
     </div>
   </header>
 </article>
@@ -60,18 +77,11 @@ const { profile } = Astro.props
   <AboutContent />
 </prose-content>
 
-<footer class="profile-footer">
-  <EmailLink email={profile.email} />
-
-  {profile.phone && (
-      <span class="profile-contact-item">
-        <Icon name="mingcute:phone-line" />
-        <span>{profile.phone}</span>
-      </span>
-    )}
-
-  <ProfileLinks highlight />
-</footer>
+{aboutLinks.length > 0 && (
+    <footer class="profile-footer">
+      <ProfileLinks keys={aboutLinks} />
+    </footer>
+  )}
 
 <style>
   .profile-header {
@@ -94,7 +104,19 @@ const { profile } = Astro.props
   .profile-content {
     flex: 1;
     display: grid;
-    gap: var(--space-s);
+    gap: var(--space-xs);
+  }
+
+  /* Contact details and the pronunciation trigger share one wrapping row.
+     The guide is a tooltip now rather than an inline panel, so nothing in
+     this row changes height when it opens and the items can sit centred. */
+  .profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-s);
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
   }
 
   .profile-heading {
@@ -117,8 +139,7 @@ const { profile } = Astro.props
     font-size: var(--step--1);
   }
 
-  .profile-othernames,
-  .profile-pronunciation {
+  .profile-othernames {
     color: var(--muted-foreground);
     font-size: var(--step--1);
   }
@@ -141,6 +162,7 @@ const { profile } = Astro.props
     display: inline-flex;
     align-items: center;
     gap: var(--space-2xs);
+    min-block-size: var(--control-size-compact);
   }
 
   .profile-contact-item :global(svg) {

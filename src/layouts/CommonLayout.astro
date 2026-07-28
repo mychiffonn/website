@@ -11,7 +11,6 @@ interface Props {
   prose?: boolean
   markdown?: string
   breadcrumbs?: BreadcrumbItem[]
-  celestial?: boolean
   [key: string]: any // Allow any additional props to pass through to Layout
 }
 
@@ -22,7 +21,6 @@ const {
   prose = true,
   markdown,
   breadcrumbs,
-  celestial = false,
   ...layoutProps
 } = Astro.props
 ---
@@ -31,7 +29,6 @@ const {
   title={title}
   description={description}
   breadcrumbs={breadcrumbs}
-  celestial={celestial}
   {...layoutProps}
 >
   <section class="page-heading">
@@ -40,7 +37,9 @@ const {
     {modifiedTime && <FormattedDate date={modifiedTime} class="page-modified" />}
   </section>
 
-  {prose && markdown && <CopyMarkdown markdown={markdown} class="common-copy-markdown" />}
+  {prose && markdown && (
+      <CopyMarkdown markdown={markdown} class="common-copy-markdown" />
+    )}
   {prose ? (
       <prose-content>
         <slot />

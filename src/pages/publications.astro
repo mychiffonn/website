@@ -2,6 +2,7 @@
 import type { ProcessedPublication } from "@/types"
 
 import { PROFILE } from "@site-config"
+import { formatCount } from "@/lib/plural"
 import { loadAllPublications } from "@/lib/publications/loader"
 import { slugify } from "@/lib/string-manipulation"
 import CommonLayout from "@/layouts/CommonLayout.astro"
@@ -90,10 +91,10 @@ const equalContributionNote = [
             <TaxonomyChip
               label={keyword}
               count={count}
-              countNoun="publications"
+              countNoun="publication"
               data-pub-tag-filter={slugify(keyword)}
               aria-pressed="false"
-              aria-label={`Filter publications by ${keyword}; ${count} ${count === 1 ? "publication" : "publications"}`}
+              aria-label={`Filter publications by ${keyword}; ${formatCount(count, "publication")}`}
             />
           ))}
           <span class="chip-active-filter" data-active-filter hidden>

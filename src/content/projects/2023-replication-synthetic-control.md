@@ -11,9 +11,6 @@ skills:
   - R
   - Causal inference
   - Synthetic control
-tags:
-  - Policy analysis
-  - SNAP benefits
 ---
 
 In a pair, we replicated and extended Chrisinger (2021)'s paper "[Philadelphia's Excise Tax on Sugar-Sweetened and Artificially Sweetened Beverages and Supplemental Nutrition Assistance Program Benefit Redemption](https://ajph.aphapublications.org/doi/full/10.2105/AJPH.2021.306464)" in R.

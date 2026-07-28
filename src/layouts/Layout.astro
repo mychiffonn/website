@@ -6,7 +6,6 @@ import BackToTop from "@/components/base/BackToTop.astro"
 import Head from "@/components/layout/Head.astro"
 import Footer from "@/components/layout/Footer.astro"
 import Header from "@/components/layout/Header.astro"
-import CelestialBackdrop from "@/components/layout/CelestialBackdrop.astro"
 import MenuBar from "@/components/layout/MenuBar.astro"
 import Breadcrumbs, {
   type BreadcrumbItem,
@@ -25,7 +24,6 @@ interface Props {
   tags?: string[]
   section?: string
   breadcrumbs?: BreadcrumbItem[]
-  celestial?: boolean
 }
 
 const {
@@ -41,7 +39,6 @@ const {
   tags,
   section,
   breadcrumbs,
-  celestial = false,
 } = Astro.props
 ---
 
@@ -62,26 +59,32 @@ const {
     <slot name="head" />
   </Head>
   <body>
-    {celestial && <CelestialBackdrop />}
-    <MenuBar celestial={celestial}>
+    <MenuBar>
       <Header />
       {Astro.slots.has("subposts-navigation-header") && (
-        <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
-      )}
+          <slot
+            name="subposts-navigation-header"
+            aria-label="Post-subposts navigation"
+          />
+        )}
       {Astro.slots.has("toc-header") && (
-        <slot name="toc-header" aria-label="Table of contents" />
-      )}
+          <slot name="toc-header" aria-label="Table of contents" />
+        )}
     </MenuBar>
     {(breadcrumbs || Astro.slots.has("breadcrumb")) && (
-      <div class="breadcrumb-region">
-        {breadcrumbs ? <Breadcrumbs items={breadcrumbs} /> : <slot name="breadcrumb" />}
-      </div>
-    )}
+        <div class="breadcrumb-region">
+          {breadcrumbs ? (
+            <Breadcrumbs items={breadcrumbs} />
+          ) : (
+            <slot name="breadcrumb" />
+          )}
+        </div>
+      )}
     <main class={className}>
       <slot />
     </main>
     <BackToTop />
-    <Footer celestial={celestial} />
+    <Footer />
 
     <script>
       let headerResizeObserver: ResizeObserver | undefined

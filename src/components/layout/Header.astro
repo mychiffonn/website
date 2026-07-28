@@ -1,14 +1,40 @@
 ---
 import { NAV_LINKS, SITE } from "@site-config"
+import Button from "@/components/base/Button.astro"
+import Icon from "@/components/base/Icon.astro"
 import Link from "@/components/base/Link.astro"
 import MobileMenu from "@/components/layout/MobileMenu.astro"
 import ThemeToggle from "@/components/layout/ThemeToggle.astro"
+import ProfileLinks from "@/components/profile/ProfileLinks.astro"
+import { getProfileLinkPlacement } from "@/components/profile/helper"
+
+const headerLinks = getProfileLinkPlacement("header")
+const hasHeaderLinks = headerLinks.length > 0
 ---
 
 <header class="site-header">
-  <Link href="/" class="site-title" transition:persist>
-    <span>{SITE.title}</span>
-  </Link>
+  <div class="site-brand">
+    {hasHeaderLinks ? (
+        <Button
+          href="/"
+          variant="ghost"
+          size="square"
+          class="site-home"
+          title={SITE.title}
+          aria-label={SITE.title}
+          transition:persist
+        >
+          <Icon name="home" size="1.5rem" />
+        </Button>
+      ) : (
+        <Link href="/" class="site-title" transition:persist>
+          <span>{SITE.title}</span>
+        </Link>
+      )}
+    {hasHeaderLinks && (
+        <ProfileLinks as="icon" keys={headerLinks} class="header-links" />
+      )}
+  </div>
   <div class="site-actions">
     <nav class="desktop-nav" aria-label="Site navigation">
       {NAV_LINKS.map((item) => {
@@ -26,7 +52,9 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro"
       })}
     </nav>
     <MobileMenu transition:persist />
-    <ThemeToggle transition:persist />
+    <div class="desktop-theme">
+      <ThemeToggle transition:persist />
+    </div>
   </div>
 </header>
 
@@ -36,20 +64,52 @@ import ThemeToggle from "@/components/layout/ThemeToggle.astro"
     align-items: center;
     justify-content: space-between;
     gap: var(--space-s);
-    min-height: 3rem;
-    padding-block: var(--space-2xs);
+
+    /* The controls already carry their own --control-size height, so the bar
+       only needs enough padding to keep them off the sticky bar's edge. */
+    min-height: var(--control-size);
+    padding-block: var(--space-3xs);
+  }
+
+  .site-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    min-inline-size: 0;
   }
 
   .site-title {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+    flex-shrink: 1;
+    min-inline-size: 0;
+    overflow: hidden;
     color: var(--foreground);
     font-size: var(--step-0);
     font-weight: var(--font-weight-medium);
     text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  /* The square centers a 1.5rem glyph, which would otherwise sit inset from
+     the content edge that the title's text used to meet. Pull it back by that
+     internal gap so the icon optically aligns with the prose below. */
+  .site-home {
+    flex-shrink: 0;
+    margin-inline-start: calc((var(--control-size) - 1.5rem) / -2);
+  }
+
+  /* Theme switching moves into the menu dropdown on small screens, so the
+     standalone toggle would be a duplicate control there. */
+  .desktop-theme {
+    display: none;
+
+    @media (width >= 40rem) {
+      display: flex;
+    }
   }
 
   .site-actions {

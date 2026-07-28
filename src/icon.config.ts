@@ -62,6 +62,7 @@ export const SEMANTIC_ICONS = {
 export const PROFILE_ICON_MAP = {
   // Email & Communication
   discord: { label: "Discord", iconName: "mingcute:discord-line" },
+  email: { label: "Email", iconName: "mingcute:mail-line" },
   kakaotalk: { label: "Kakao Talk", iconName: "mingcute:kakao-talk-line" },
   line: { label: "Line", iconName: "mingcute:line-app-line" },
   skype: { label: "Skype", iconName: "mingcute:skype-line" },

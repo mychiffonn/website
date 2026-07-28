@@ -1,4 +1,5 @@
 ---
+import { formatCount, pluralize } from "@/lib/plural"
 import Badge from "@/components/base/Badge.astro"
 import Icon from "@/components/base/Icon.astro"
 
@@ -9,19 +10,25 @@ interface Props {
 }
 
 const { count, variant = "compact", class: className } = Astro.props
+
+const countLabel = formatCount(count, "subpost")
 ---
 
-<Badge variant="info" class:list={["subpost-count-badge", className]}>
+<Badge
+  variant="info"
+  class:list={["subpost-count-badge", className]}
+  aria-label={countLabel}
+>
   <Icon name="subposts" />
   {variant === "full" ? (
       <>
-        <span class="subpost-count-full">
-          {count}&nbsp;{count === 1 ? "subpost" : "subposts"}
+        <span class="subpost-count-full" aria-hidden="true">
+          {count}&nbsp;{pluralize(count, "subpost")}
         </span>
-        <span class="subpost-count-compact">{count}</span>
+        <span class="subpost-count-compact" aria-hidden="true">{count}</span>
       </>
     ) : (
-      <span>{count}</span>
+      <span aria-hidden="true">{count}</span>
     )}
 </Badge>
 

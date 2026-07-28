@@ -10,6 +10,7 @@ import {
   getProjectTypeLabel,
   getProjects,
 } from "@/lib/projects"
+import { buildMarkdownDocument } from "@/lib/markdown-document"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
@@ -48,11 +49,17 @@ const {
   release,
   types,
   skills,
-  tags,
 } = project.data
 
 const links = getProjectLinks(code, doc, paper, url, release)
-const rawMarkdown = project.body ?? null
+const rawMarkdown = project.body
+  ? buildMarkdownDocument(project.body, {
+      title,
+      description: project.data.description,
+      path: `/projects/${project.id}`,
+      date: toDate ?? fromDate,
+    })
+  : null
 ---
 
 <Layout
@@ -74,26 +81,19 @@ const rawMarkdown = project.body ?? null
         )}
     </div>
     <div class="project-meta-row">
-      {types.map((slug) => (
-        <Badge variant="muted">{getProjectTypeLabel(slug)}</Badge>
-      ))}
       <DateRange
         fromDate={fromDate}
         toDate={toDate}
         class="project-date-range"
         showIcon={true}
       />
+      {types.map((slug) => <Badge variant="muted">{getProjectTypeLabel(slug)}</Badge>)}
     </div>
-    {(skills.length > 0 || tags.length > 0) && (
-        <div class="project-tags">
+    {skills.length > 0 && (
+        <div class="project-skills">
           {skills.map((skill) => (
-            <Badge variant="accent" class="project-tag">
+            <Badge variant="accent" class="project-skill">
               {skill}
-            </Badge>
-          ))}
-          {tags.map((tag) => (
-            <Badge variant="muted" class="project-tag">
-              {tag}
             </Badge>
           ))}
         </div>
@@ -138,10 +138,16 @@ const rawMarkdown = project.body ?? null
 
   .project-title-row h1 {
     margin: 0;
-    font-size: var(--step-4);
-    line-height: var(--leading-tight);
+    font-size: var(--step-3);
+    line-height: var(--line-height-tight);
     font-weight: var(--font-weight-bold);
     text-wrap: balance;
+  }
+
+  @media (width >= 40rem) {
+    .project-title-row h1 {
+      font-size: var(--step-4);
+    }
   }
 
   :global(.featured-badge) {
@@ -155,7 +161,7 @@ const rawMarkdown = project.body ?? null
   }
 
   .project-meta-row,
-  .project-tags,
+  .project-skills,
   .project-links {
     display: flex;
     flex-wrap: wrap;
@@ -174,7 +180,7 @@ const rawMarkdown = project.body ?? null
     color: var(--muted-foreground);
   }
 
-  :global(.project-tag) {
+  :global(.project-skill) {
     font-size: var(--step--1);
   }
 

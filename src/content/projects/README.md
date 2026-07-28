@@ -37,9 +37,6 @@ skills:
 isHighlighted: true
 selected: true
 release: "https://github.com/username/synthetic-control/releases/tag/v1.0.0"
-tags:
-  - "causal inference"
-  - "statistics"
 ---
 ```
 
@@ -60,7 +57,6 @@ tags:
 | `isHighlighted` | Boolean | ❌ | Whether to feature this project | Defaults to `false` |
 | `selected` | Boolean | ❌ | Whether this project is a substantial/research-relevant selected project | Defaults to `false` |
 | `release` | URL | ❌ | Link to release or deployment | Must be a valid URL |
-| `tags` | String[] | ❌ | Free-form topics, methods, organizations, and keywords | Display-only badges; will be deduplicated |
 
 ## Notes
 

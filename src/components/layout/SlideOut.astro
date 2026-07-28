@@ -32,7 +32,11 @@ const { position, class: className } = Astro.props
     }
   }
 
-  .slide-out:hover {
+  /* focus-within alongside hover: the panel holds the only table of contents
+     at this width, so gating it on hover alone left it unreachable by
+     keyboard while its links stayed in the tab order. */
+  .slide-out:hover,
+  .slide-out:focus-within {
     inline-size: 20rem;
   }
 
@@ -69,7 +73,8 @@ const { position, class: className } = Astro.props
     transition: opacity 200ms ease;
   }
 
-  .slide-out:hover .slide-out-main {
+  .slide-out:hover .slide-out-main,
+  .slide-out:focus-within .slide-out-main {
     opacity: 1;
   }
 
@@ -89,7 +94,8 @@ const { position, class: className } = Astro.props
     right: var(--space-2xs);
   }
 
-  .slide-out:hover .slide-out-summary {
+  .slide-out:hover .slide-out-summary,
+  .slide-out:focus-within .slide-out-summary {
     opacity: 0;
   }
 </style>
