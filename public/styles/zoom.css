@@ -7,12 +7,13 @@
   --zoom-overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
-/* Zoomable images cursor. Must stay identical to ZOOMABLE_IMAGES in
-   Head.astro: a zoom-in cursor on an image that has no zoom bound to it is a
-   promise the page cannot keep. */
-main img:not(a img):not([data-clickable] img) {
-  cursor: zoom-in;
-  transition: transform 0.3s ease;
+/* Sizing applies to every image; the zoom affordance deliberately does not.
+   medium-zoom loads from a CDN, and it adds .medium-zoom-image only to images
+   it has actually bound — its own injected stylesheet then gives those the
+   zoom-in cursor and the transform transition. Setting the cursor here
+   instead would show a zoom-in pointer on every image before the script
+   arrives, and permanently if it never does. */
+main img {
   max-width: 100%;
 }
 

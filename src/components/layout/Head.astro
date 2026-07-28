@@ -194,14 +194,28 @@ const structuredData = {
       if (window.mediumZoom) return Promise.resolve()
       if (window.__mediumZoomPromise) return window.__mediumZoomPromise
 
+      /* A rejected promise left in place would be awaited by every later
+         attempt, so one offline moment would disable zoom for the rest of the
+         session even after the network recovers. Clear it, and drop the dead
+         script tag, so the next navigation can retry. */
       window.__mediumZoomPromise = new Promise((resolve, reject) => {
         const script = document.createElement("script")
         script.src =
           "https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"
         script.async = true
         script.addEventListener("load", resolve, { once: true })
-        script.addEventListener("error", reject, { once: true })
+        script.addEventListener(
+          "error",
+          () => {
+            script.remove()
+            reject(new Error("medium-zoom failed to load"))
+          },
+          { once: true },
+        )
         document.head.append(script)
+      }).catch((error) => {
+        window.__mediumZoomPromise = null
+        throw error
       })
 
       return window.__mediumZoomPromise
