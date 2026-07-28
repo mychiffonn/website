@@ -48,15 +48,6 @@ const aboutLinks = getProfileLinkPlacement("about")
             )}
         </h1>
         {profile.othernames && <p class="profile-othernames">{profile.othernames}</p>}
-
-        {profile.pronunciation && (
-            <Pronunciation
-              name={profile.name}
-              text={profile.pronunciation}
-              audio={profile.pronunciationAudioPath}
-            />
-          )}
-
         <p class="profile-tagline">{profile.tagline}</p>
       </div>
 
@@ -68,6 +59,14 @@ const aboutLinks = getProfileLinkPlacement("about")
               <Icon name="mingcute:phone-line" />
               <span>{profile.phone}</span>
             </span>
+          )}
+
+        {profile.pronunciation && (
+            <Pronunciation
+              name={profile.name}
+              text={profile.pronunciation}
+              audio={profile.pronunciationAudioPath}
+            />
           )}
       </div>
     </div>
@@ -108,15 +107,16 @@ const aboutLinks = getProfileLinkPlacement("about")
     gap: var(--space-xs);
   }
 
-  /* Contact details and the pronunciation disclosure share one wrapping row.
-     Aligned to the start rather than centred so opening the disclosure grows
-     it downwards instead of shifting the email against it. */
+  /* Contact details and the pronunciation trigger share one wrapping row.
+     The guide is a tooltip now rather than an inline panel, so nothing in
+     this row changes height when it opens and the items can sit centred. */
   .profile-meta {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--space-2xs) var(--space-s);
     color: var(--muted-foreground);
+    font-size: var(--step--1);
   }
 
   .profile-heading {

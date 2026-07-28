@@ -1,5 +1,6 @@
 ---
 import Icon from "@/components/base/Icon.astro"
+import Tooltip from "@/components/base/Tooltip.astro"
 
 interface Props {
   /** Whose name this guide is for, used to name the controls in context */
@@ -12,18 +13,33 @@ interface Props {
 }
 
 /*
- * The summary keeps "Pronunciation" as visible text and extends it with a
- * screen-reader-only suffix, so the accessible name reads "Pronunciation of
- * <name>" while still starting with what is on screen. Replacing it outright
- * with an aria-label would stop speech input from matching the visible word.
+ * The trigger is a button rather than a bare hover target so the guide is
+ * reachable three ways: hover, keyboard focus, and tap. Tapping focuses the
+ * button, which is what surfaces the tooltip on touch, where hover does not
+ * exist. Tooltip itself handles Escape and repositioning.
  *
- * The recording, when present, is preload="none" so it costs nothing until
- * someone plays it.
+ * The guide travels in data-tooltip-content, which Tooltip mirrors into
+ * aria-describedby, so it is announced as the button's description rather
+ * than being visual-only.
  */
 const { name, text, audio } = Astro.props
+
+const tooltipId = "pronunciation-guide"
 ---
 
 <span class="pronunciation">
+  <button
+    type="button"
+    class="pronunciation-trigger"
+    data-tooltip-id={tooltipId}
+    data-tooltip-content={text}
+  >
+    <Icon name="question" aria-hidden="true" />
+    <span>How to pronounce my name</span>
+  </button>
+
+  <Tooltip id={tooltipId} side="top" />
+
   {audio && (
       <>
         <button
@@ -37,31 +53,50 @@ const { name, text, audio } = Astro.props
         <audio src={audio} preload="none" data-pronunciation-audio></audio>
       </>
     )}
-
-  <details
-    class="pronunciation-details"
-    data-disclosure
-    data-disclosure-rotation="quarter"
-  >
-    <summary>
-      <span data-disclosure-chevron>
-        <Icon name="right" aria-hidden="true" />
-      </span>
-      <span>Pronunciation</span>
-      <span class="sr-only">{` of ${name}`}</span>
-    </summary>
-    <p class="pronunciation-guide">{text}</p>
-  </details>
 </span>
 
 <style>
   .pronunciation {
     display: inline-flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--space-3xs);
-    font-size: var(--step--1);
-    font-weight: var(--font-weight-normal);
+  }
+
+  .pronunciation-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    min-block-size: var(--control-size-compact);
+    padding: 0;
+    border: 0;
+    appearance: none;
+    background: none;
+    color: var(--muted-foreground);
+    font: inherit;
+    text-align: start;
+    text-decoration: underline dotted;
+    text-underline-offset: 0.25em;
+    touch-action: manipulation;
+    cursor: help;
+    transition: color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .pronunciation-trigger :global(svg) {
+    flex-shrink: 0;
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pronunciation-trigger:hover {
+      color: var(--foreground);
+    }
+  }
+
+  .pronunciation-trigger:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
   }
 
   .pronunciation-play {
@@ -99,31 +134,6 @@ const { name, text, audio } = Astro.props
   .pronunciation-play:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
-  }
-
-  /* Capped so opening the guide wraps it into a compact box rather than
-     stretching across the column. */
-  .pronunciation-details {
-    max-inline-size: min(100%, 34ch);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: color-mix(in oklab, var(--muted) 35%, transparent);
-  }
-
-  .pronunciation-details summary {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3xs);
-    min-block-size: var(--control-size-compact);
-    padding-inline: var(--space-2xs);
-    color: var(--muted-foreground);
-    cursor: pointer;
-  }
-
-  .pronunciation-guide {
-    margin: 0;
-    padding: 0 var(--space-2xs) var(--space-2xs);
-    color: var(--muted-foreground);
   }
 </style>
 
