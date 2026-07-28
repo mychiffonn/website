@@ -231,7 +231,7 @@ const generatedSocialImage = `/og/blog/${post.id}.png`
 
   #post-title {
     scroll-margin-top: var(--header-height);
-    font-size: var(--step-4);
+    font-size: var(--step-3);
     font-weight: var(--font-weight-medium);
     line-height: var(--line-height-tight);
   }
@@ -269,7 +269,15 @@ const generatedSocialImage = `/og/blog/${post.id}.png`
     justify-content: flex-end;
   }
 
+  /* Stepped rather than jumping straight to the display size: on a phone the
+     title competes with the post body for the whole first screen. */
   @media (width >= 40rem) {
+    #post-title {
+      font-size: var(--step-4);
+    }
+  }
+
+  @media (width >= 64rem) {
     #post-title {
       font-size: var(--step-5);
     }

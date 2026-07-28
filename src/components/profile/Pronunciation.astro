@@ -1,0 +1,149 @@
+---
+import Icon from "@/components/base/Icon.astro"
+
+interface Props {
+  /** Whose name this guide is for, used to name the controls in context */
+  name: string
+  /** Written guide, e.g. a respelling like "shi-FON" */
+  text: string
+  /** Optional recording. The written guide stays regardless: audio-only
+      content would need a text alternative to be accessible anyway. */
+  audio?: string
+}
+
+/*
+ * The summary keeps "Pronunciation" as visible text and extends it with a
+ * screen-reader-only suffix, so the accessible name reads "Pronunciation of
+ * <name>" while still starting with what is on screen. Replacing it outright
+ * with an aria-label would stop speech input from matching the visible word.
+ *
+ * The recording, when present, is preload="none" so it costs nothing until
+ * someone plays it.
+ */
+const { name, text, audio } = Astro.props
+---
+
+<span class="pronunciation">
+  {audio && (
+      <>
+        <button
+          type="button"
+          class="pronunciation-play"
+          aria-label={`Play the pronunciation of ${name}`}
+          data-pronunciation-play
+        >
+          <Icon name="mingcute:volume-line" />
+        </button>
+        <audio src={audio} preload="none" data-pronunciation-audio></audio>
+      </>
+    )}
+
+  <details
+    class="pronunciation-details"
+    data-disclosure
+    data-disclosure-rotation="quarter"
+  >
+    <summary>
+      <span data-disclosure-chevron>
+        <Icon name="right" aria-hidden="true" />
+      </span>
+      <span>Pronunciation</span>
+      <span class="sr-only">{` of ${name}`}</span>
+    </summary>
+    <p class="pronunciation-guide">{text}</p>
+  </details>
+</span>
+
+<style>
+  .pronunciation {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-3xs);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .pronunciation-play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--control-size-compact);
+    min-block-size: var(--control-size-compact);
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    appearance: none;
+    background: transparent;
+    color: var(--muted-foreground);
+    touch-action: manipulation;
+    cursor: pointer;
+    transition:
+      background-color var(--motion-duration) var(--motion-ease),
+      border-color var(--motion-duration) var(--motion-ease),
+      color var(--motion-duration-fast) var(--motion-ease);
+  }
+
+  .pronunciation-play:active {
+    transform: scale(0.96);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pronunciation-play:hover {
+      border-color: var(--interactive-border);
+      background: var(--interactive-background);
+      color: var(--interactive-foreground);
+    }
+  }
+
+  .pronunciation-play:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Capped so opening the guide wraps it into a compact box rather than
+     stretching across the column. */
+  .pronunciation-details {
+    max-inline-size: min(100%, 34ch);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: color-mix(in oklab, var(--muted) 35%, transparent);
+  }
+
+  .pronunciation-details summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    min-block-size: var(--control-size-compact);
+    padding-inline: var(--space-2xs);
+    color: var(--muted-foreground);
+    cursor: pointer;
+  }
+
+  .pronunciation-guide {
+    margin: 0;
+    padding: 0 var(--space-2xs) var(--space-2xs);
+    color: var(--muted-foreground);
+  }
+</style>
+
+<script>
+  /* Delegated so the control keeps working after a view transition swaps the
+     page without re-running component setup. */
+  document.addEventListener("click", (event) => {
+    const trigger = (event.target as Element).closest(
+      "[data-pronunciation-play]",
+    )
+    if (!trigger) return
+
+    const audio = trigger.parentElement?.querySelector<HTMLAudioElement>(
+      "[data-pronunciation-audio]",
+    )
+    if (!audio) return
+
+    audio.currentTime = 0
+    /* Playback rejects when the file is missing or the browser blocks it;
+       neither is worth an unhandled rejection in the console. */
+    audio.play().catch(() => {})
+  })
+</script>

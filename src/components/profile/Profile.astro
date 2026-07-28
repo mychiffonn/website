@@ -3,11 +3,11 @@ import type { ProfileConfig } from "@/types"
 
 import Avatar from "@/components/base/Avatar.astro"
 import Badge from "@/components/base/Badge.astro"
-import Collapse from "@/components/base/Collapse.astro"
 import Icon from "@/components/base/Icon.astro"
 import avatar from "@/assets/avatar.jpg"
 
 import EmailLink from "./EmailLink.astro"
+import Pronunciation from "./Pronunciation.astro"
 import ProfileLinks from "./ProfileLinks.astro"
 import { getProfileLinkPlacement } from "./helper"
 import { Content as AboutContent } from "@/content/about.md"
@@ -48,6 +48,15 @@ const aboutLinks = getProfileLinkPlacement("about")
             )}
         </h1>
         {profile.othernames && <p class="profile-othernames">{profile.othernames}</p>}
+
+        {profile.pronunciation && (
+            <Pronunciation
+              name={profile.name}
+              text={profile.pronunciation}
+              audio={profile.pronunciationAudioPath}
+            />
+          )}
+
         <p class="profile-tagline">{profile.tagline}</p>
       </div>
 
@@ -59,16 +68,6 @@ const aboutLinks = getProfileLinkPlacement("about")
               <Icon name="mingcute:phone-line" />
               <span>{profile.phone}</span>
             </span>
-          )}
-
-        {profile.pronunciation && (
-            <Collapse
-              title="Pronunciation"
-              variant="muted"
-              class="profile-pronunciation-collapse"
-            >
-              <p class="profile-pronunciation">{profile.pronunciation}</p>
-            </Collapse>
           )}
       </div>
     </div>
@@ -140,8 +139,7 @@ const aboutLinks = getProfileLinkPlacement("about")
     font-size: var(--step--1);
   }
 
-  .profile-othernames,
-  .profile-pronunciation {
+  .profile-othernames {
     color: var(--muted-foreground);
     font-size: var(--step--1);
   }
@@ -158,21 +156,6 @@ const aboutLinks = getProfileLinkPlacement("about")
     padding-block-start: var(--space-s);
     padding-inline: var(--space-s);
     color: var(--muted-foreground);
-  }
-
-  /* Sized down to sit as a chip beside the email rather than as the
-     full-width panel it is elsewhere. */
-  .profile-pronunciation-collapse {
-    font-size: var(--step--1);
-  }
-
-  .profile-pronunciation-collapse :global(summary) {
-    padding: var(--space-3xs) var(--space-2xs);
-    font-weight: var(--font-weight-normal);
-  }
-
-  .profile-pronunciation-collapse :global([data-collapse-content]) {
-    padding: 0 var(--space-2xs) var(--space-2xs);
   }
 
   .profile-contact-item {

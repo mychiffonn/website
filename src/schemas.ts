@@ -185,9 +185,14 @@ export const ProfileConfigSchema = z.object({
     .optional(),
   /** Preferred pronouns (e.g., "she/her", "they/them") */
   pronouns: z.string().max(20).optional(),
-  /** Phonetic pronunciation guide for your name */
+  /** Written pronunciation guide, e.g. a respelling like "shi-FON" */
   pronunciation: z.string().optional(),
-  // pronunciationAudioPath: z.string().optional(),
+  /**
+   * Optional recording of the name, served from /public.
+   * `pronunciation` stays required alongside it: a recording on its own has
+   * no text alternative, which WCAG 1.2.1 requires for audio-only content.
+   */
+  pronunciationAudioPath: z.string().optional(),
   /** Social media and professional platform links */
   links: ProfileLinkConfigSchema,
   /** Where profile links appear across the site */

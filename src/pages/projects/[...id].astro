@@ -138,10 +138,16 @@ const rawMarkdown = project.body ?? null
 
   .project-title-row h1 {
     margin: 0;
-    font-size: var(--step-4);
-    line-height: var(--leading-tight);
+    font-size: var(--step-3);
+    line-height: var(--line-height-tight);
     font-weight: var(--font-weight-bold);
     text-wrap: balance;
+  }
+
+  @media (width >= 40rem) {
+    .project-title-row h1 {
+      font-size: var(--step-4);
+    }
   }
 
   :global(.featured-badge) {
