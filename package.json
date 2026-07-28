@@ -36,7 +36,7 @@
     "format:check": "biome format .",
     "lint": "oxlint --type-aware",
     "lint:styles": "node scripts/check-style-architecture.mjs",
-    "routine": "pnpm lint && pnpm lint:styles && pnpm sync && pnpm format",
+    "routine": "pnpm lint && pnpm lint:styles && pnpm sync && pnpm format:check",
     "clean": "rm -rf dist/ .astro/ node_modules/.astro/data-store.json",
     "prepare": "husky"
   },
