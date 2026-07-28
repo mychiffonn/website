@@ -71,11 +71,9 @@ import Icon from "@/components/base/Icon.astro"
     transition: transform var(--motion-duration) var(--motion-ease);
   }
 
-  @media (hover: hover) and (pointer: fine) and (
-      prefers-reduced-motion: no-preference
-    ) {
+  @media (hover: hover) and (pointer: fine) {
     back-to-top:hover back-to-top-icon {
-      transform: translateY(-0.25rem);
+      transform: translateY(-0.2rem);
     }
   }
 </style>
