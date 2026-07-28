@@ -52,19 +52,21 @@ const blog = defineCollection({
 
 const people = defineCollection({
   loader: file("./src/content/people.toml"),
-  schema: z.object({
-    id: z.string(),
-    name: z.string(),
-    pronouns: z.string().optional(),
-    avatar: z
-      .url()
-      .or(z.string().startsWith("/"))
-      .optional()
-      .describe("Avatar URL or /public path."),
-    bio: z.string().max(200).optional(),
-    affiliation: z.string().max(100).optional(),
-    links: ProfileLinkConfigSchema,
-  }),
+  schema: ({ image }) =>
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      pronouns: z.string().optional(),
+      avatar: z
+        .union([z.url(), z.string().startsWith("/"), image()])
+        .optional()
+        .describe(
+          "Avatar URL, /public path, or path to a local image relative to src/content/ (optimized at build).",
+        ),
+      bio: z.string().max(200).optional(),
+      affiliation: z.string().max(100).optional(),
+      links: ProfileLinkConfigSchema,
+    }),
 })
 
 const projects = defineCollection({

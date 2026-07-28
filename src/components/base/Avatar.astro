@@ -20,13 +20,24 @@ const {
   ...imageProps
 } = Astro.props
 
-const squareDimension = imageProps.width || imageProps.height
+/** Fallback edge for images Astro can't measure; avatars render far smaller. */
+const DEFAULT_AVATAR_SIZE = 512
+
+const isRemoteImage =
+  typeof imageProps.src === "string" && imageProps.src.startsWith("http")
+// A /public path is passed through unprocessed, so Astro cannot read its
+// dimensions off disk and refuses to render without them.
+const isPublicPath =
+  typeof imageProps.src === "string" && imageProps.src.startsWith("/")
+
+const squareDimension =
+  imageProps.width ||
+  imageProps.height ||
+  (isPublicPath ? DEFAULT_AVATAR_SIZE : undefined)
 const finalImageProps = {
   ...imageProps,
   ...(squareDimension && { width: squareDimension, height: squareDimension }),
 }
-const isRemoteImage =
-  typeof imageProps.src === "string" && imageProps.src.startsWith("http")
 const shouldInferSize =
   isRemoteImage &&
   !imageProps.width &&
