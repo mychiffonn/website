@@ -1,0 +1,1 @@
+Three papers associated with [MatrAIx](https://matraix.ai/) were accepted as poster at [Social Simulation with LLMs Workshop @ COLM 2026](https://sites.google.com/view/social-sims-with-llms/social-sim26)
