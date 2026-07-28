@@ -24,8 +24,6 @@ interface Props {
   tags?: string[]
   section?: string
   breadcrumbs?: BreadcrumbItem[]
-  /** Shows the footer constellation. Landing pages opt in; article pages do not. */
-  celestial?: boolean
 }
 
 const {
@@ -41,7 +39,6 @@ const {
   tags,
   section,
   breadcrumbs,
-  celestial = false,
 } = Astro.props
 ---
 
@@ -65,22 +62,29 @@ const {
     <MenuBar>
       <Header />
       {Astro.slots.has("subposts-navigation-header") && (
-        <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />
-      )}
+          <slot
+            name="subposts-navigation-header"
+            aria-label="Post-subposts navigation"
+          />
+        )}
       {Astro.slots.has("toc-header") && (
-        <slot name="toc-header" aria-label="Table of contents" />
-      )}
+          <slot name="toc-header" aria-label="Table of contents" />
+        )}
     </MenuBar>
     {(breadcrumbs || Astro.slots.has("breadcrumb")) && (
-      <div class="breadcrumb-region">
-        {breadcrumbs ? <Breadcrumbs items={breadcrumbs} /> : <slot name="breadcrumb" />}
-      </div>
-    )}
+        <div class="breadcrumb-region">
+          {breadcrumbs ? (
+            <Breadcrumbs items={breadcrumbs} />
+          ) : (
+            <slot name="breadcrumb" />
+          )}
+        </div>
+      )}
     <main class={className}>
       <slot />
     </main>
     <BackToTop />
-    <Footer celestial={celestial} />
+    <Footer />
 
     <script>
       let headerResizeObserver: ResizeObserver | undefined
