@@ -1,5 +1,5 @@
 import { tz, TZDate } from "@date-fns/tz"
-import { format, intlFormat, isValid, parseISO } from "date-fns"
+import { formatISO, intlFormat, isValid, parseISO } from "date-fns"
 
 import { SITE } from "@site-config"
 
@@ -63,19 +63,28 @@ export function createLocalDate(dateInput: string | number | Date): Date {
     return isValid(parsed) ? parsed : new TZDate(cleanDateString, timeZone)
   }
 
-  // Handle year-month strings (YYYY-MM) - create on first day of month in local timezone
-  if (/^\d{4}-\d{2}$/.test(cleanDateString)) {
-    const [year, month] = cleanDateString.split("-").map(Number)
-    return new TZDate(year, month - 1, 1, timeZone)
+  // Offsetless calendar strings must be built from components: TZDate's string
+  // constructor parses with plain Date semantics (system timezone) and only
+  // renders in the target zone, which shifts the instant on non-site machines.
+  const parts = cleanDateString.match(
+    /^(\d{4})-(\d{2})(?:-(\d{2}))?(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?(?:\.(\d{1,3}))?)?$/,
+  )
+
+  if (parts) {
+    const [, year, month, day, hour, minute, second, ms] = parts
+    return new TZDate(
+      Number(year),
+      Number(month) - 1,
+      day ? Number(day) : 1,
+      Number(hour ?? 0),
+      Number(minute ?? 0),
+      Number(second ?? 0),
+      Number(ms?.padEnd(3, "0") ?? 0),
+      timeZone,
+    )
   }
 
-  // Handle date-only strings (YYYY-MM-DD) - create at midnight in local timezone
-  if (/^\d{4}-\d{2}-\d{2}$/.test(cleanDateString)) {
-    const [year, month, day] = cleanDateString.split("-").map(Number)
-    return new TZDate(year, month - 1, day, timeZone)
-  }
-
-  // All other cases: use TZDate to interpret in site timezone
+  // Anything else (e.g. "Jan 5, 2026"): best-effort parse in the site timezone
   return new TZDate(cleanDateString, timeZone)
 }
 
@@ -95,9 +104,12 @@ export function formatDate(
 ): string {
   const dateObj = createLocalDate(date)
 
-  // Use site's default options if none provided, excluding timeZone from display options
-  const { timeZone: _timeZone, ...displayOptions } = SITE.locale.options
-  const formatOptions = options ?? displayOptions
+  // Keep the site timeZone in the display options; without it Intl renders in
+  // whatever zone the build machine happens to run in.
+  const formatOptions = {
+    timeZone: SITE.locale.options.timeZone || "UTC",
+    ...(options ?? SITE.locale.options),
+  }
 
   // Use intlFormat for date formatting. It's a clean wrapper around Intl.DateTimeFormat.
   return intlFormat(dateObj, formatOptions, { locale })
@@ -114,61 +126,132 @@ export function formatDateTimeISO(
   date: string | number | Date,
   timeZone: string = SITE.locale.options.timeZone || "UTC",
 ): string {
-  const dateObj = createLocalDate(date)
-  // For date-only inputs, use the local timezone instead of converting
-  if (typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date.trim())) {
-    return format(dateObj, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", {
-      in: tz(Intl.DateTimeFormat().resolvedOptions().timeZone),
-    })
+  return formatISO(createLocalDate(date), { in: tz(timeZone) })
+}
+
+/**
+ * One run of range text, tagged with the endpoint it belongs to.
+ */
+export interface DateRangeSegment {
+  /** Text to render */
+  text: string
+  /** ISO datetime for the endpoint this run describes; absent when both endpoints share the text (e.g. a common year) */
+  dateTime?: string
+  /** True for the dash between the two endpoints, which reads as silence to a screen reader */
+  isSeparator?: boolean
+}
+
+/** Month + year by default: ranges read as "Jan – Mar 2024", not "Jan 5 – Mar 2 2024". */
+function rangeFormatOptions(
+  options?: Intl.DateTimeFormatOptions,
+): Intl.DateTimeFormatOptions {
+  return {
+    ...SITE.locale.options,
+    day: undefined,
+    ...options,
   }
-  return format(dateObj, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", {
-    in: tz(timeZone),
-  })
 }
 
 /**
- * Date range result object with machine-readable and display formats.
- */
-export interface DateRangeResult {
-  /** Start date object for machine-readable attributes */
-  fromDate?: Date
-  /** Formatted display text for start date */
-  fromDateDisplay?: string
-  /** End date object for machine-readable attributes */
-  toDate?: Date
-  /** Formatted display text for end date */
-  toDateDisplay?: string
-}
-
-/**
- * Create a date range with both machine-readable and display formats.
- * Returns detailed date information for proper HTML time elements.
+ * Formats a date range as display segments paired with machine-readable datetimes.
  *
- * @param fromDate - Start date of the range
- * @param toDate - End date of the range (optional, defaults to "Present")
- * @param options - Formatting options for date display
- * @returns Date range object with display and machine formats, or null if no dates
+ * Delegates to `Intl.DateTimeFormat.formatRangeToParts`, which already knows to
+ * collapse a shared year ("Jan – Mar 2024"), spell both out across a boundary
+ * ("Nov 2023 – Mar 2024"), and print a single date when both endpoints fall in
+ * the same formatted period. Parts are merged by `source` so each endpoint can
+ * be wrapped in its own `<time>` element.
+ *
+ * @param fromDate - Start of the range
+ * @param toDate - End of the range (omit for an open-ended range)
+ * @param options - Display options, merged over the site defaults
+ * @param locale - BCP 47 language tag (defaults to site locale)
+ * @returns Ordered segments, or null when neither endpoint is given
  */
-export function createDateRange(
+export function formatDateRange(
   fromDate?: Date,
   toDate?: Date,
   options?: Intl.DateTimeFormatOptions,
-): DateRangeResult | null {
+  locale: string = SITE.locale.lang,
+): DateRangeSegment[] | null {
   if (!fromDate && !toDate) return null
 
-  const formatter = (d: Date) =>
-    formatDate(d, SITE.locale.lang, {
-      ...SITE.locale.options,
-      day: undefined,
-      ...options,
-    })
+  const formatter = new Intl.DateTimeFormat(locale, rangeFormatOptions(options))
 
-  const result = {
-    fromDate,
-    fromDateDisplay: fromDate ? formatter(fromDate) : undefined,
-    toDate,
-    toDateDisplay: toDate ? formatter(toDate) : undefined,
+  // A single endpoint has no range to format.
+  if (!fromDate || !toDate) {
+    const date = (fromDate ?? toDate) as Date
+    return [{ text: formatter.format(date), dateTime: formatDateTimeISO(date) }]
   }
 
-  return result
+  const parts = formatter.formatRangeToParts(fromDate, toDate)
+
+  // Endpoints inside the same formatted period collapse to one date, with every
+  // part marked "shared". Anchor that text to the start so it still gets a <time>.
+  if (parts.every(({ source }) => source === "shared")) {
+    return [
+      {
+        text: formatter.format(fromDate),
+        dateTime: formatDateTimeISO(fromDate),
+      },
+    ]
+  }
+
+  const isoBySource: Record<string, string | undefined> = {
+    startRange: formatDateTimeISO(fromDate),
+    endRange: formatDateTimeISO(toDate),
+    shared: undefined,
+  }
+
+  const segments = parts.reduce<DateRangeSegment[]>(
+    (merged, { value, source }) => {
+      const last = merged.at(-1)
+      if (last && last.dateTime === isoBySource[source]) {
+        last.text += value
+      } else {
+        merged.push({ text: value, dateTime: isoBySource[source] })
+      }
+      return merged
+    },
+    [],
+  )
+
+  // The shared run sitting between the endpoints is the dash; callers voice it.
+  const endIndex = segments.findIndex(
+    ({ dateTime }) => dateTime === isoBySource.endRange,
+  )
+  const separator = endIndex > 0 ? segments[endIndex - 1] : undefined
+  if (separator && !separator.dateTime) separator.isSeparator = true
+
+  return segments
+}
+
+/**
+ * The locale's own range separator (e.g. " – " in en-US), read back from a
+ * formatted sample range so open-ended ranges match closed ones.
+ *
+ * @param options - Display options, merged over the site defaults
+ * @param locale - BCP 47 language tag (defaults to site locale)
+ * @returns The literal text Intl places between the two endpoints
+ */
+export function getDateRangeSeparator(
+  options?: Intl.DateTimeFormatOptions,
+  locale: string = SITE.locale.lang,
+): string {
+  const parts = new Intl.DateTimeFormat(
+    locale,
+    rangeFormatOptions(options),
+  ).formatRangeToParts(
+    new Date(Date.UTC(2000, 0, 1)),
+    new Date(Date.UTC(2001, 6, 1)),
+  )
+
+  const separator = parts.find(
+    (part, index) =>
+      part.type === "literal" &&
+      part.source === "shared" &&
+      parts.slice(0, index).some((p) => p.source === "startRange") &&
+      parts.slice(index + 1).some((p) => p.source === "endRange"),
+  )
+
+  return separator?.value ?? " – "
 }

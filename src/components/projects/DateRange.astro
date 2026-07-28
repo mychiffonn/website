@@ -1,5 +1,9 @@
 ---
-import { createDateRange, formatDateTimeISO } from "@/lib/date-utils"
+/**
+ * Handle a date range presentation for both humans, machines, and screen readers.
+ * Each endpoint gets its own <time>, and - is read as "to" to screen reader users.
+ */
+import { formatDateRange, getDateRangeSeparator } from "@/lib/date-utils"
 import Icon from "@/components/base/Icon.astro"
 
 interface Props {
@@ -15,33 +19,32 @@ interface Props {
 
 const { fromDate, toDate, class: className, showIcon = false } = Astro.props
 
-const data = createDateRange(fromDate, toDate)
-if (!data) return null
+const segments = formatDateRange(fromDate, toDate)
+if (!segments) return null
 
-// Determine if we should show both dates (when displays differ)
-const showBoth =
-  data.fromDate && data.toDate && data.fromDateDisplay !== data.toDateDisplay
-// Determine what to show: only toDate, or fromDate with optional range/Present
-const showOnlyToDate = !data.fromDate && data.toDate
+// Only a start date means the range is still running.
+const isOngoing = Boolean(fromDate && !toDate)
 ---
 
 <span class={className}>
   {showIcon && <Icon name="calendar" size="0.75rem" />}
-
-  {showOnlyToDate ? (
-      <time datetime={formatDateTimeISO(data.toDate!)}>{data.toDateDisplay}</time>
-    ) : (
+  {segments.map(({ text, dateTime, isSeparator }) =>
+      dateTime ? (
+        <time datetime={dateTime}>{text}</time>
+      ) : isSeparator ? (
+        <>
+          <span aria-hidden="true">{text}</span>
+          <span class="sr-only"> to </span>
+        </>
+      ) : (
+        <span>{text}</span>
+      ),
+    )}
+  {isOngoing && (
       <>
-        {data.fromDate && (
-          <time datetime={formatDateTimeISO(data.fromDate)}>{data.fromDateDisplay}</time>
-        )}
-        {showBoth && (
-          <>
-            <span> - </span>
-            <time datetime={formatDateTimeISO(data.toDate!)}>{data.toDateDisplay}</time>
-          </>
-        )}
-        {!data.toDate && data.fromDate && <span> - Present</span>}
+        <span aria-hidden="true">{getDateRangeSeparator().trimStart()}</span>
+        <span class="sr-only"> to </span>
+        <span>Present</span>
       </>
     )}
 </span>
