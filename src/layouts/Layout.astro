@@ -6,7 +6,6 @@ import BackToTop from "@/components/base/BackToTop.astro"
 import Head from "@/components/layout/Head.astro"
 import Footer from "@/components/layout/Footer.astro"
 import Header from "@/components/layout/Header.astro"
-import CelestialBackdrop from "@/components/layout/CelestialBackdrop.astro"
 import MenuBar from "@/components/layout/MenuBar.astro"
 import Breadcrumbs, {
   type BreadcrumbItem,
@@ -25,6 +24,7 @@ interface Props {
   tags?: string[]
   section?: string
   breadcrumbs?: BreadcrumbItem[]
+  /** Shows the footer constellation. Landing pages opt in; article pages do not. */
   celestial?: boolean
 }
 
@@ -62,8 +62,7 @@ const {
     <slot name="head" />
   </Head>
   <body>
-    {celestial && <CelestialBackdrop />}
-    <MenuBar celestial={celestial}>
+    <MenuBar>
       <Header />
       {Astro.slots.has("subposts-navigation-header") && (
         <slot name="subposts-navigation-header" aria-label="Post-subposts navigation" />

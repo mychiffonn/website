@@ -207,10 +207,13 @@ const structuredData = {
       return window.__mediumZoomPromise
     }
 
+    /* Kept identical to the cursor rule in /styles/zoom.css. Card.astro sets
+       data-clickable whenever it renders its .card-overlay link, and that
+       overlay takes the click, so images beneath one can never be zoomed. */
+    const ZOOMABLE_IMAGES = "main img:not(a img):not([data-clickable] img)"
+
     async function initializeImageZoom() {
-      const images = document.querySelectorAll(
-        "main img:not(a img):not(.card img)",
-      )
+      const images = document.querySelectorAll(ZOOMABLE_IMAGES)
       if (!images.length) return
 
       try {

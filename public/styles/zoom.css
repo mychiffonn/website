@@ -7,9 +7,10 @@
   --zoom-overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
-/* Zoomable images cursor */
-main
-img:not(a img):not(.card img):not(.clickable-card img):not(.blog-card img) {
+/* Zoomable images cursor. Must stay identical to ZOOMABLE_IMAGES in
+   Head.astro: a zoom-in cursor on an image that has no zoom bound to it is a
+   promise the page cannot keep. */
+main img:not(a img):not([data-clickable] img) {
   cursor: zoom-in;
   transition: transform 0.3s ease;
   max-width: 100%;
@@ -20,12 +21,17 @@ img:not(a img):not(.card img):not(.clickable-card img):not(.blog-card img) {
   max-width: 100%;
 }
 
-/* Medium Zoom overlay styling */
+/* Medium Zoom overlay styling.
+   Both sit above every z-index the site itself uses (the highest is the
+   tooltip at 60), so the overlay always receives the click that dismisses a
+   zoom rather than the sticky header or a side panel underneath it. */
 .medium-zoom-overlay {
   z-index: 999;
   background: var(--zoom-overlay-bg) !important;
+  cursor: zoom-out;
 }
 
 .medium-zoom-image--opened {
   z-index: 1000;
+  cursor: zoom-out;
 }

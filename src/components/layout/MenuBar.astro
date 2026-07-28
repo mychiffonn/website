@@ -1,12 +1,12 @@
 ---
-interface Props {
-  celestial?: boolean
-}
-
-const { celestial = false } = Astro.props
+/*
+ * The bar keeps one appearance everywhere. It previously traded its bottom
+ * border for a decorative "starline" on some pages, which weakened the
+ * boundary a sticky bar needs against content scrolling underneath it.
+ */
 ---
 
-<div id="main-header" class="menu-bar" data-celestial={celestial || undefined}>
+<div id="main-header" class="menu-bar">
   <slot />
 </div>
 
@@ -35,59 +35,5 @@ const { celestial = false } = Astro.props
        area extends across the full viewport at its own height, above `main`. */
     pointer-events: none;
     transform: translateX(-50%);
-  }
-
-  .menu-bar[data-celestial]::before {
-    border-block-end-color: transparent;
-    background: color-mix(in oklab, var(--background) 68%, transparent);
-  }
-
-  /* Celestial pages trade the solid bottom rule for a faint "starline":
-     a fading meridian with a few points sitting on it. Pure CSS, no extra DOM. */
-  .menu-bar[data-celestial]::after {
-    content: "";
-    position: absolute;
-    inset-block-end: 0;
-    inset-inline-start: 50%;
-    z-index: -1;
-    inline-size: 100vw;
-    block-size: 0.5rem;
-    opacity: 0.75;
-    pointer-events: none;
-    transform: translateX(-50%);
-
-    /* Points are placed in absolute offsets from centre, not percentages, so
-       they stay put relative to the text column instead of spreading apart as
-       the viewport widens. The meridian holds full strength across the column
-       and fades out into the margins. */
-    background:
-      radial-gradient(
-        circle at calc(50% - 16rem) calc(100% - 1px),
-        var(--celestial-star) 0 1.5px,
-        transparent 2px
-      ),
-      radial-gradient(
-        circle at calc(50% - 6rem) calc(100% - 1px),
-        var(--accent) 0 2px,
-        transparent 2.5px
-      ),
-      radial-gradient(
-        circle at calc(50% + 9rem) calc(100% - 1px),
-        var(--celestial-star) 0 1.5px,
-        transparent 2px
-      ),
-      radial-gradient(
-        circle at calc(50% + 19rem) calc(100% - 1px),
-        var(--celestial-star) 0 1.5px,
-        transparent 2px
-      ),
-      linear-gradient(
-        to right,
-        transparent,
-        var(--celestial-line-strong) calc(50% - 30rem),
-        var(--celestial-line-strong) calc(50% + 30rem),
-        transparent
-      )
-      bottom / 100% 1px no-repeat;
   }
 </style>
