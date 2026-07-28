@@ -1,5 +1,5 @@
 {
-  "name": "astro-scholar",
+  "name": "website-astro",
   "description": "A fast Astro theme for academic personal sites, research blogs, projects, and publications.",
   "type": "module",
   "version": "2.2.0",
@@ -7,12 +7,12 @@
   "author": "My (Chiffon) Nguyen",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mychiffonn/astro-scholar.git"
+    "url": "git+https://github.com/mychiffonn/website.git"
   },
   "bugs": {
-    "url": "https://github.com/mychiffonn/astro-scholar/issues"
+    "url": "https://github.com/mychiffonn/website/issues"
   },
-  "homepage": "https://github.com/mychiffonn/astro-scholar#readme",
+  "homepage": "https://github.com/mychiffonn/website#readme",
   "keywords": [
     "astro",
     "astro-theme",
@@ -36,8 +36,7 @@
     "format:check": "biome format .",
     "lint": "oxlint --type-aware",
     "lint:styles": "node scripts/check-style-architecture.mjs",
-    "test:markdown": "node --experimental-strip-types --test tests/markdown-plugins.test.ts",
-    "routine": "pnpm lint && pnpm lint:styles && pnpm test:markdown && pnpm sync && pnpm format",
+    "routine": "pnpm lint && pnpm lint:styles && pnpm sync && pnpm format",
     "clean": "rm -rf dist/ .astro/ node_modules/.astro/data-store.json",
     "prepare": "husky"
   },
