@@ -7,6 +7,8 @@
  * selectors and dataset attribute names, supplied by the caller.
  */
 
+import { formatCount } from "@/lib/plural"
+
 export interface ChipFilterConfig {
   /** Selector for the filterable items (e.g. cards), each carrying `itemAttr` as a comma-separated list */
   itemSelector: string
@@ -53,6 +55,7 @@ export interface FacetedChipFilterConfig {
   activeIndicatorSelector?: string
   statusSelector?: string
   emptyStateSelector?: string
+  /** Singular noun for the items being counted in the live region ("project" → "3 projects") */
   resultNoun?: string
   getScope?: () => HTMLElement | Document
 }
@@ -125,8 +128,8 @@ export function initChipFilter(config: ChipFilterConfig): ChipFilterController {
       const status = document.querySelector<HTMLElement>(statusSelector)
       if (status) {
         status.textContent = active
-          ? `${visibleCount} filtered ${visibleCount === 1 ? "result" : "results"} shown.`
-          : `All ${visibleCount} ${visibleCount === 1 ? "result" : "results"} shown.`
+          ? `${formatCount(visibleCount, "filtered result")} shown.`
+          : `All ${formatCount(visibleCount, "result")} shown.`
       }
     }
 
@@ -204,7 +207,7 @@ export function initFacetedChipFilter(
     activeIndicatorSelector,
     statusSelector,
     emptyStateSelector,
-    resultNoun = "results",
+    resultNoun = "result",
     getScope = () => document,
   } = config
   const active = new Map(facets.map(({ key }) => [key, null as string | null]))
@@ -266,13 +269,11 @@ export function initFacetedChipFilter(
     }
 
     if (statusSelector) {
-      const noun =
-        visibleCount === 1 ? resultNoun.replace(/s$/, "") : resultNoun
       const status = document.querySelector<HTMLElement>(statusSelector)
       if (status) {
         status.textContent = hasActive()
-          ? `${visibleCount} filtered ${noun} shown.`
-          : `All ${visibleCount} ${noun} shown.`
+          ? `${formatCount(visibleCount, `filtered ${resultNoun}`)} shown.`
+          : `All ${formatCount(visibleCount, resultNoun)} shown.`
       }
     }
   }

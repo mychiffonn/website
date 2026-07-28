@@ -1,6 +1,7 @@
 ---
 import { FOOTER, PROFILE } from "@site-config"
 import techStack from "@/content/tech-stack.json"
+import { formatCount } from "@/lib/plural"
 import { getProjectSkillCounts, getProjects } from "@/lib/projects"
 import CommonLayout from "@/layouts/CommonLayout.astro"
 import Icon from "@/components/base/Icon.astro"
@@ -50,10 +51,10 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
                   <TaxonomyChip
                     label={label}
                     count={count}
-                    countNoun="projects"
+                    countNoun="project"
                     data-project-skill-filter={slug}
                     aria-pressed="false"
-                    aria-label={`Filter projects by skill ${label}; ${count} projects`}
+                    aria-label={`Filter projects by skill ${label}; ${formatCount(count, "project")}`}
                   />
                 ))}
                 <span class="chip-active-filter" data-active-filter hidden>
@@ -70,7 +71,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
                 <details class="project-skill-more" data-disclosure>
                   <summary>
                     <span data-skill-more-show>
-                      Show {uniqueSkillCounts.length} more skills
+                      Show {formatCount(uniqueSkillCounts.length, "more skill")}
                     </span>
                     <span data-skill-more-hide>Hide additional skills</span>
                     <span data-disclosure-chevron>
@@ -85,7 +86,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
                         countNoun="project"
                         data-project-skill-filter={slug}
                         aria-pressed="false"
-                        aria-label={`Filter projects by skill ${label}; ${count} project`}
+                        aria-label={`Filter projects by skill ${label}; ${formatCount(count, "project")}`}
                       />
                     ))}
                   </div>
@@ -149,7 +150,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
       activeIndicatorSelector: "[data-active-filter]",
       statusSelector: "[data-project-filter-status]",
       emptyStateSelector: "[data-project-filter-empty]",
-      resultNoun: "projects",
+      resultNoun: "project",
     })
   }
 

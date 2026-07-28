@@ -1,4 +1,5 @@
 import { SITE } from "@site-config"
+import { formatCount } from "@/lib/plural"
 
 import type { Post } from "./types"
 
@@ -66,7 +67,7 @@ export function sortByDateDesc<T extends { data: { createdAt: Date } }>(
 }
 
 export function formatSubpostCount(count: number): string {
-  return `${count} subpost${count === 1 ? "" : "s"}`
+  return formatCount(count, "subpost")
 }
 
 export function getPostIconName(
