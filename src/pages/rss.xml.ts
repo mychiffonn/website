@@ -1,10 +1,10 @@
 import { SITE } from "@site-config"
-import { getPosts } from "@/lib/content"
+import { PostManager } from "@/lib/blog"
 import rss from "@astrojs/rss"
 import type { APIContext } from "astro"
 
 export async function GET(context: APIContext) {
-  const posts = await getPosts()
+  const posts = await PostManager.getInstance().getMainPosts()
   return rss({
     title: SITE.title,
     description: SITE.description,
