@@ -8,18 +8,23 @@ interface Props {
   class?: string
 }
 
+/*
+ * Purely a position indicator: the navigable table of contents is the panel
+ * this rail expands into, so these marks are deliberately not links. Keeping
+ * them interactive would mean one nameless link per heading at 2px tall,
+ * which neither a pointer nor a screen reader can reasonably use.
+ */
 const { headings, class: className } = Astro.props
 ---
 
-<toc-float class:list={["toc-summary-container", className]}>
+<toc-float class:list={["toc-summary-container", className]} aria-hidden="true">
   {headings.map((heading) => {
-      const widthClass = getHeadingWidth(heading.depth).replace("w-", "")
+      const width = getHeadingWidth(heading.depth).replace("w-", "")
 
       return (
-        <a
-          href={`#${heading.slug}`}
-          data-width={widthClass}
+        <span
           data-heading-link={heading.slug}
+          style={`--width:${width}`}
         />
       )
     })}
@@ -32,42 +37,14 @@ const { headings, class: className } = Astro.props
     gap: var(--space-3xs);
   }
 
-  a {
+  span {
     block-size: 0.125rem;
     inline-size: calc(var(--width, 2) * 0.25rem);
     background: color-mix(in oklab, var(--muted-foreground) 50%, transparent);
     transition: background-color var(--motion-duration) var(--motion-ease);
   }
 
-  a[data-width="1"] {
-    --width: 1;
-  }
-
-  a[data-width="1.5"] {
-    --width: 1.5;
-  }
-
-  a[data-width="2"] {
-    --width: 2;
-  }
-
-  a[data-width="3"] {
-    --width: 3;
-  }
-
-  a[data-width="4"] {
-    --width: 4;
-  }
-
-  a[data-width="5"] {
-    --width: 5;
-  }
-
-  a[data-width="6"] {
-    --width: 6;
-  }
-
-  a[data-active] {
+  span[data-active] {
     background: var(--accent);
   }
 </style>

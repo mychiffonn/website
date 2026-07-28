@@ -17,7 +17,13 @@ const hasHeadings = headings && headings.length > 0
     <nav id="mobile-toc-container" class="mobile-toc" aria-label="Table of contents">
       <details data-disclosure>
         <summary>
-          <toc-progress role="img" aria-label="Reading progress indicator">
+          <toc-progress
+            role="progressbar"
+            aria-label="Reading progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle
                 class="toc-progress-track"
