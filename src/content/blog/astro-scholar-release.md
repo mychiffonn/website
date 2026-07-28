@@ -1,6 +1,6 @@
 ---
 title: Astro Scholar theme is ready
-description: A theme built for academic portfolios, lab website, and technical writing that are easy to use and maintain (Markdown & TeX), thoughtfully designed, and extensible.
+description: A theme built for academic portfolios, lab site, and technical writing that are easy to use and maintain, thoughtfully designed, and extensible.
 createdAt: 2026-07-24T12:00:00
 updatedAt: 2026-07-28T00:41:00.000-07:00
 image: ./assets/astro-scholar-release.png
