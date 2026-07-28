@@ -11,8 +11,6 @@ skills:
   - Web design
   - TypeScript
   - Astro
-tags:
-  - Academic Portfolio
 ---
 
 I created and maintain Scholar, an Astro-based academic website theme for researchers who want a personal site with publications, projects, blog posts, profile links, and academic content collections.

@@ -12,9 +12,6 @@ skills:
   - Python
   - PyTorch
   - Mechanistic interpretability
-tags:
-  - Multilingual AI
-  - LaBSE
 ---
 
 As part of the Tiny Aya Expedition with Cohere Labs, mentored by [Dr. Tom Hosking](https://tomho.sk/), I collaborated on a project asking whether circuits in multilingual LLMs are language-specific, script-specific, regional, or universal.

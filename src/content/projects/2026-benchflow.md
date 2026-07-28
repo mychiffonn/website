@@ -12,8 +12,6 @@ skills:
   - Python
   - LLM evaluation
   - AI agents
-tags:
-  - Research infrastructure
 ---
 
 I contribute to open-source AI research infrastructure projects, including BenchFlow and MatrAIx.

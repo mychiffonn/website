@@ -15,9 +15,6 @@ skills:
   - LLM evaluation
   - AI agents
   - Multilingual AI
-tags:
-  - Southeast Asian Languages
-  - SEACrowd
 ---
 
 As part of the SEACrowd 2026 Research Apprenticeship, I extended [Tau2-Bench](https://github.com/sierra-research/tau2-bench), a Tool-Agent-User benchmark for real-world domains, into SEATauBench for low-resource Southeast Asian languages and localized task contexts.

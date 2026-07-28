@@ -87,10 +87,6 @@ const projects = defineCollection({
         .default([])
         .transform((arr) => dedupPreserveCase(arr)),
       description: z.string().max(200).optional(),
-      tags: z
-        .array(z.string())
-        .default([])
-        .transform((arr) => dedupPreserveCase(arr)),
     })
     .refine(
       (data) => !data.fromDate || !data.toDate || data.toDate >= data.fromDate,
