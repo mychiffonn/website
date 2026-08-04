@@ -11,8 +11,7 @@ interface Props {
 }
 
 const { project } = Astro.props
-const { title, isHighlighted, code, doc, paper, url, release, skills } =
-  project.data
+const { title, selected, code, doc, paper, url, release, skills } = project.data
 
 const links = getProjectLinks(code, doc, paper, url, release)
 
@@ -24,12 +23,12 @@ const titleHref = hasDetailPage ? `/projects/${project.id}` : primaryLink?.href
 ---
 
 <article
-  class:list={["project-row", { "is-highlighted": isHighlighted }]}
+  class:list={["project-row", { "is-highlighted": selected }]}
   data-project-skills={skills.map((skill) => slugify(skill)).join(",")}
 >
   <div class="project-row-head">
     <h3 class="project-row-title">
-      {isHighlighted && <span class="sr-only">Featured project: </span>}
+      {selected && <span class="sr-only">Featured project: </span>}
       {titleHref ? (
           <Link href={titleHref} underline>
             {title}

@@ -3,7 +3,6 @@ title: Multilingual Representations with Sparse Autoencoders
 description: Investigated multilingual LLM representations with SAEs and feature steering across 67 languages.
 fromDate: 2026-03
 toDate: 2026-03
-selected: true
 code: https://github.com/mychiffonn/inside-tiny-aya
 url: https://huggingface.co/Farseen0/tiny-aya-saes
 types:

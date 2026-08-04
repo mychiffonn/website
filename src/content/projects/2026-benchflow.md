@@ -2,7 +2,7 @@
 title: BenchFlow (Open Source)
 description: Contributed to RL runtime environments and community-based AI benchmarks.
 fromDate: 2026-04
-isHighlighted: true
+selected: true
 code: https://github.com/benchflow-ai/benchflow
 url: https://benchflow.ai/
 types:

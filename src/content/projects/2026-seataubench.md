@@ -3,7 +3,7 @@ title: SEATauBench
 description: Extended Tau2-Bench for low-resource Southeast Asian languages and localized agentic evaluation.
 fromDate: 2026-02
 toDate: 2026-06
-isHighlighted: true
+selected: true
 code: https://github.com/sierra-research/tau2-bench
 paper: https://arxiv.org/abs/2606.28715
 url: https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented

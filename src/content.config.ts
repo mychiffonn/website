@@ -74,7 +74,6 @@ const projects = defineCollection({
   schema: z
     .object({
       title: z.string().max(75),
-      isHighlighted: z.boolean().default(false),
       selected: z.boolean().default(false),
       fromDate: yearMonthDateSchema.optional(),
       toDate: yearMonthDateSchema.optional(),

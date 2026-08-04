@@ -3,7 +3,6 @@ title: Animals-Aligned Agentic AI Benchmarking
 description: Evaluated whether implicit values in agentic LLMs are inclusive of animals, by extending CaML's The Animal Compassion
 fromDate: 2026-04
 toDate: 2026-07
-selected: true
 doc: https://docs.google.com/document/d/1LoJAJvjseK2JcR-zi1t63eVeXS3_nZcaie-kXhn6_fo/edit?usp=sharing
 types:
   - research

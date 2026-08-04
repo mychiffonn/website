@@ -19,6 +19,38 @@
   transition-timing-function: var(--motion-ease);
 }
 
+[data-slot="card"]::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      110deg,
+      transparent 20%,
+      color-mix(in oklab, var(--primary) 82%, transparent) 40%,
+      color-mix(in oklab, var(--accent) 88%, transparent) 50%,
+      color-mix(in oklab, var(--primary) 82%, transparent) 60%,
+      transparent 80%
+    )
+    100% 0 / 300% 100%;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  transition-property: opacity;
+  transition-duration: var(--motion-duration-fast);
+  transition-timing-function: var(--motion-ease);
+}
+
 [data-slot="card"][data-orientation="stacked"] {
   flex-direction: column;
 }
@@ -224,6 +256,11 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  [data-slot="card"]:hover::before {
+    opacity: 1;
+    animation: card-border-flow 2.4s linear infinite;
+  }
+
   [data-slot="card"]:hover {
     border-color: color-mix(in oklab, var(--border) 82%, transparent);
   }
@@ -241,9 +278,25 @@
   }
 }
 
+@keyframes card-border-flow {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -50% 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-slot="card"],
+  [data-slot="card"]::before,
   [data-slot="card-title"] {
     transition-duration: 0.01ms;
+  }
+
+  [data-slot="card"]:hover::before {
+    animation: none;
+    background-position: 50% 0;
   }
 }
