@@ -50,8 +50,7 @@ const relValue = relTokens.length > 0 ? relTokens.join(" ") : undefined
     color: inherit;
     transition:
       color var(--motion-duration-fast) var(--motion-ease),
-      text-decoration-color var(--motion-duration) var(--motion-ease),
-      background-size var(--motion-duration) var(--motion-ease);
+      text-decoration-color var(--motion-duration) var(--motion-ease);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -60,10 +59,14 @@ const relValue = relTokens.length > 0 ? relTokens.join(" ") : undefined
     }
   }
 
-  /* Opting in here (rather than on every [data-link]) keeps the wipe off the
-     button- and badge-shaped anchors that also render through this component. */
+  /* Opting in here keeps underlines off button- and badge-shaped links. A
+     native text decoration wraps cleanly and only needs a color transition. */
   [data-link][data-underline] {
     --underline: var(--muted-foreground);
-    --underline-wipe: currentColor;
+    text-decoration-skip-ink: auto;
+  }
+
+  [data-link][data-underline]:is(:hover, :focus-visible) {
+    text-decoration-color: currentColor;
   }
 </style>

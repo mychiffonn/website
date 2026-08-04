@@ -22,10 +22,10 @@ const {
   <section-heading>
     <h2 id={title.toLowerCase()}>{title}</h2>
     {moreLink && (
-      <Link href={moreLink} underline class="section-more">
-        {moreText}
-      </Link>
-    )}
+        <Link href={moreLink} underline class="section-more">
+          {moreText}
+        </Link>
+      )}
   </section-heading>
   <slot />
 </section>
@@ -35,7 +35,7 @@ const {
     display: flex;
     flex-direction: column;
     gap: var(--space-s);
-    margin-block-start: var(--space-xl);
+    margin-block-start: var(--space-l);
   }
 
   .section-block[data-spacing="none"] {
@@ -118,7 +118,7 @@ const {
 
   @media (width < 40rem) {
     .section-block {
-      margin-block-start: var(--space-l);
+      margin-block-start: var(--space-m);
     }
 
     section-heading {
