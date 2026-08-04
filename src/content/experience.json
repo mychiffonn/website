@@ -7,18 +7,18 @@
     "orgUrl": "https://www.lidasafety.org/",
     "startDate": "2026-07",
     "location": "Remote",
-    "description": "Mentored by Dr. Linh Le and Dr. David Williams-King."
+    "description": "CastBench, an AI governance benchmark. Mentored by Dr. Linh Le and Dr. David Williams-King."
   },
   {
     "id": "seacrowd-2026",
     "category": "research",
     "title": "AI Research Mentee",
-    "org": "SEACrowd, SEACrowd Apprentice Research Program 2026",
+    "org": "SEACrowd, Apprentice Research Program 2026",
     "orgUrl": "https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented",
     "startDate": "2026-02",
     "endDate": "2026-06",
     "location": "Remote",
-    "description": "Extended Tau2-Bench into SEATauBench across five Southeast Asian languages, localizing executable agent-user-tool tasks and analyzing multi-turn trajectory failures."
+    "description": "SEATauBench: Stress-testing Tau2-Bench, a conversational user-agent-tool benchmark, in progressive localization across five Southeast Asian languages."
   },
   {
     "id": "algoverse-2025",

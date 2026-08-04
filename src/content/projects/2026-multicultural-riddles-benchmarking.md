@@ -3,6 +3,8 @@ title: Multicultural Riddles Benchmarking
 description: Analysis of LLM factuality, hallucination, topic patterns, and cross-cultural reasoning failures on multicultural riddles.
 fromDate: 2026-04
 selected: true
+code: https://github.com/Cohere-Labs-Community/RiddlesBenchmarking
+doc: https://docs.google.com/document/d/1-14ku3mfooGmgpsiNnHzXeOmeXWKq-CA/edit
 types:
   - research
 skills:
