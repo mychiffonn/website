@@ -70,8 +70,8 @@ export function getProjectSkillCounts(projects: Project[], minimum = 2) {
 function sortProjects(projects: Project[]): Project[] {
   return projects.sort((a, b) => {
     // First, prioritize highlighted projects
-    if (a.data.isHighlighted && !b.data.isHighlighted) return -1
-    if (!a.data.isHighlighted && b.data.isHighlighted) return 1
+    if (a.data.selected && !b.data.selected) return -1
+    if (!a.data.selected && b.data.selected) return 1
 
     // Then sort by end date (most recent first); ongoing projects rank highest.
     const ongoingSentinel = new Date(8640000000000000)

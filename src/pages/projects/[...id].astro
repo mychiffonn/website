@@ -39,7 +39,7 @@ const [{ Content }, navigation] = await Promise.all([
 ])
 const {
   title,
-  isHighlighted,
+  selected,
   fromDate,
   toDate,
   code,
@@ -73,7 +73,7 @@ const rawMarkdown = project.body
   <header class="project-header">
     <div class="project-title-row">
       <h1>{title}</h1>
-      {isHighlighted && (
+      {selected && (
           <Badge variant="default" class="featured-badge">
             <Icon name="star" class="featured-badge-icon" />
             Featured

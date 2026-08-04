@@ -1,7 +1,7 @@
 ---
 title: Behavior of Chain-of-thought Monitorability
 fromDate: 2025-10-05
-isHighlighted: true
+selected: true
 description: Studying how monitor effectiveness changes as the capability gap between monitor and target models widens, with a case study on distinguishing sandbagging from genuine incapability.
 code: https://github.com/yoenoo/algoverse_nacm
 types:
