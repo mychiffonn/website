@@ -2,23 +2,33 @@
   {
     "id": "lida-safety-2026",
     "category": "research",
-    "title": "Research Intern (AI Safety)",
+    "title": "Research Intern (AI Governance Simulation)",
     "org": "Lida Safety Research Group",
     "orgUrl": "https://www.lidasafety.org/",
     "startDate": "2026-07",
     "location": "Remote",
-    "description": "CastBench, an AI governance benchmark. Mentored by Dr. Linh Le and Dr. David Williams-King."
+    "description": "Co-authoring GPS-Bench, an evidence-grounded benchmark and simulation framework for evaluating AI-governance policy forecasts against historical records. Mentored by Dr. Linh Le and Dr. David Williams-King."
+  },
+  {
+    "id": "cohere-labs-2026",
+    "category": "research",
+    "title": "Research Coordinator, Analysis",
+    "org": "Cohere Labs Open Science Community",
+    "orgUrl": "https://cohere.com/research",
+    "startDate": "2026-04",
+    "location": "Remote",
+    "description": "Coordinating analysis for a multicultural benchmarking initiative and collaborating with research team leads on open-science workflows."
   },
   {
     "id": "seacrowd-2026",
     "category": "research",
     "title": "AI Research Mentee",
-    "org": "SEACrowd, Apprentice Research Program 2026",
+    "org": "SEACrowd, 2026 Research Apprenticeship",
     "orgUrl": "https://seacrowd.org/apprentice-projects/2026/multilingual-agentic-underrepresented",
     "startDate": "2026-02",
     "endDate": "2026-06",
     "location": "Remote",
-    "description": "SEATauBench: Stress-testing Tau2-Bench, a conversational user-agent-tool benchmark, in progressive localization across five Southeast Asian languages."
+    "description": "Co-first authored SEATauBench, evaluating tool-using conversational agents across four progressive language-adaptation scenarios and five low-resource Southeast Asian languages."
   },
   {
     "id": "algoverse-2025",
@@ -27,9 +37,9 @@
     "org": "Algoverse AI Research, AI Research Program Fall 2025",
     "orgUrl": "https://algoverseairesearch.org/",
     "startDate": "2025-10",
-    "endDate": "2026-06",
+    "endDate": "2026-04",
     "location": "Remote",
-    "description": "Led weak-to-strong chain-of-thought monitoring research for sandbagging detection, across 30+ open-weight model pairs."
+    "description": "Led weak-to-strong chain-of-thought monitoring research for distinguishing deliberate sandbagging from genuine incapability across 30+ model pairs."
   },
   {
     "id": "landshut-2024",
@@ -40,7 +50,7 @@
     "startDate": "2024-06",
     "endDate": "2024-08",
     "location": "Landshut, Bavaria, Germany",
-    "description": "Researched 3D object detection for BMW using synthetic point cloud data, PointPillarNet, and semantic segmentation, supervised by Prof. Eduard Kromer and Prof. Sandra Eisenreich."
+    "description": "Researched 3D object detection for BMW using synthetic point-cloud data, PointPillarNet, and semantic segmentation, supervised by Prof. Eduard Kromer and Prof. Sandra Eisenreich."
   },
   {
     "id": "minerva-2025",

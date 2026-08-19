@@ -40,15 +40,20 @@ const equalContributionNote = [
   prose={false}
   celestial
 >
-  {ggScholarUrl && (
-      <p class="publication-intro">
-        See my full publication list on{" "}
-        <Link href={ggScholarUrl} external underline class="publication-scholar-link">
-          Google Scholar
-        </Link>
-        .
-      </p>
-    )}
+  <p class="publication-intro">
+    {formatCount(allPublicationsFlat.length, "publication")}
+    ·{" "}
+    {ggScholarUrl ? (
+        <>
+          Full list on{" "}
+          <Link href={ggScholarUrl} external underline class="publication-scholar-link">
+            Google Scholar.
+          </Link>
+        </>
+      ) : (
+        "Publications, preprints, and conference tutorials"
+      )}
+  </p>
 
   <!-- Controls: sort dropdown + tag filter bar -->
   <div class="pub-controls">
@@ -113,7 +118,7 @@ const equalContributionNote = [
             data-publication-filter-status
           />
         </div>
-    )}
+      )}
     {equalContributionNote && (
         <p class="equal-contribution-note" set:html={equalContributionNote} />
       )}
@@ -123,7 +128,9 @@ const equalContributionNote = [
   <div data-pub-view="relevance">
     {allPublicationsFlat.length > 0 ? (
         <CardGroup>
-          {allPublicationsFlat.map((pub: ProcessedPublication) => <PubCard pub={pub} />)}
+          {allPublicationsFlat.map((pub: ProcessedPublication) => (
+            <PubCard pub={pub} />
+          ))}
         </CardGroup>
       ) : (
         <div class="empty-state">

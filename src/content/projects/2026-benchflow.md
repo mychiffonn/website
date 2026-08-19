@@ -1,7 +1,7 @@
 ---
 title: BenchFlow (Open Source)
-description: Contributed to RL runtime environments and community-based AI benchmarks.
-fromDate: 2026-04
+description: Contributed interactive user simulations to an open-source runtime environment for multi-turn AI agent research.
+fromDate: 2026-06
 selected: true
 code: https://github.com/benchflow-ai/benchflow
 url: https://benchflow.ai/
@@ -14,6 +14,6 @@ skills:
   - AI agents
 ---
 
-I contribute to open-source AI research infrastructure projects, including BenchFlow and MatrAIx.
+I contributed three interactive user simulation examples to BenchFlow, an open-source runtime environment for AI agents.
 
-My MatrAIx work focuses on building harbor-based runtime environments, and the broader contribution area is tooling that makes AI benchmarking and agent experiments easier to run, inspect, and reproduce.
+The examples model multi-turn user-agent interaction in a shared Agent Client Protocol (ACP) sandbox, making agent behavior easier to exercise and evaluate under realistic interaction loops.
