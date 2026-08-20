@@ -2,8 +2,8 @@
 import type { MarkdownHeading } from "astro"
 
 import Icon from "@/components/base/Icon.astro"
-import ScrollArea from "@/components/blog/ScrollArea.astro"
-import TOCHeadingLink from "@/components/blog/TOCHeadingLink.astro"
+import ScrollArea from "@/components/toc/ScrollArea.astro"
+import TOCHeadingLink from "@/components/toc/TOCHeadingLink.astro"
 
 interface Props {
   headings: MarkdownHeading[]
@@ -164,7 +164,7 @@ const hasHeadings = headings && headings.length > 0
 
 <script>
   import { SITE } from "@site-config"
-  import { UnifiedTOCController } from "@/lib/blog/scroll"
+  import { UnifiedTOCController } from "@/lib/toc"
 
   let controller: UnifiedTOCController | null = null
 
@@ -187,7 +187,7 @@ const hasHeadings = headings && headings.length > 0
     controller = new UnifiedTOCController(
       "#mobile-toc-container",
       "#mobile-toc-container [data-heading-link]",
-      { isMobile: true, tocMaxDepth: SITE.blog.tocMaxDepth },
+      { isMobile: true, tocMaxDepth: SITE.tocMaxDepth },
     )
     controller.init()
   }

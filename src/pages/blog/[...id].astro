@@ -20,10 +20,10 @@ import ShareActions from "@/components/blog/ShareActions.astro"
 import SubpostsFloat from "@/components/blog/SubpostsFloat.astro"
 import SubpostsHeader from "@/components/blog/SubpostsHeader.astro"
 import SubpostsSidebar from "@/components/blog/SubpostsSidebar.astro"
-import TOCFloat from "@/components/blog/TOCFloat.astro"
-import TOCHeader from "@/components/blog/TOCHeader.astro"
-import TOCSidebar from "@/components/blog/TOCSidebar.astro"
 import SlideOut from "@/components/layout/SlideOut.astro"
+import TOCFloat from "@/components/toc/TOCFloat.astro"
+import TOCHeader from "@/components/toc/TOCHeader.astro"
+import TOCSidebar from "@/components/toc/TOCSidebar.astro"
 
 export async function getStaticPaths() {
   const posts = await PostManager.getInstance().getAllPostsAndSubposts()
@@ -45,7 +45,7 @@ const currentPostId = post.id
 const { Content, headings: rawHeadings } = await render(post)
 const context = await postManager.getPostContext(
   currentPostId,
-  SITE.blog.tocMaxDepth,
+  SITE.tocMaxDepth,
   rawHeadings,
 )
 

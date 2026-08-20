@@ -46,14 +46,15 @@ export const SiteConfigSchema = z.object({
       .default({}),
   }),
 
+  /** Table of contents max depth of markdown headings, between 1 and 6. Applies to any content type that renders a TOC (blog posts, projects, etc). */
+  tocMaxDepth: z.number().min(1).max(6).default(3),
+
   /** Blog-specific settings */
   blog: z.object({
     /** Number of featured posts on home page. Set to 0 to hide the section. */
     featuredPostCount: z.number().int().nonnegative().default(3),
     /** Number of posts per pagination page. Default is 8. */
     postsPerPage: z.number().positive().default(8),
-    /** TOC max depth of markdown headings, between 1 and 6 */
-    tocMaxDepth: z.number().min(1).max(6).default(3),
     /** Share action buttons on blog posts */
     shareActions: z
       .array(

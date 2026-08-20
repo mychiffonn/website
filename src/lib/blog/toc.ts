@@ -1,25 +1,13 @@
 import type { MarkdownHeading } from "astro"
 import { render } from "astro:content"
 
-import type { Post, PostManager, TOCHeadingItem, TOCSection } from "./types"
-
-function processRawHeadings(
-  headings: MarkdownHeading[],
-  tocMaxDepth: number,
-): TOCHeadingItem[] {
-  if (!headings?.length) return []
-  return headings
-    .filter((heading) => heading.depth <= tocMaxDepth)
-    .map((heading) => ({
-      ...heading,
-      href: `#${heading.slug}`,
-    }))
-}
+import { processRawHeadings } from "@/lib/toc"
+import type { Post, PostManager, TOCSection } from "./types"
 
 async function extractAndProcessHeadings(
   post: Post,
   tocMaxDepth: number,
-): Promise<TOCHeadingItem[]> {
+): Promise<ReturnType<typeof processRawHeadings>> {
   try {
     const { headings } = await render(post)
     return processRawHeadings(headings, tocMaxDepth)
@@ -102,17 +90,4 @@ export async function getTOCSections(
   }
 
   return sections
-}
-
-/** Get width class for TOCFloat headings */
-export function getHeadingWidth(depth: number): string {
-  const widths: Record<number, string> = {
-    1: "w-4",
-    2: "w-4",
-    3: "w-3",
-    4: "w-2",
-    5: "w-1.5",
-    6: "w-1",
-  }
-  return widths[depth] || "w-2"
 }

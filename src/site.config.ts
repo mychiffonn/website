@@ -26,11 +26,13 @@ export const SITE: SiteConfig = {
     },
   },
 
+  // Table of contents depth, shared by any page that renders a TOC (blog posts, projects, etc)
+  tocMaxDepth: 3,
+
   // Blog settings
   blog: {
     featuredPostCount: 3,
     postsPerPage: 8,
-    tocMaxDepth: 3,
     shareActions: ["x"],
   },
 

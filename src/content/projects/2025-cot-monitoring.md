@@ -53,7 +53,7 @@ Turned out this was the main bottleneck of the project, because it wasn't easy t
 :::note[Prompt design iterations]{closed}
 
 - **Leaked policy in reasoning:** Early naive prompts leaked the hidden policy directly into visible reasoning, so monitors caught the prompt's mechanics rather than genuine suspicious behavior.
-- **Prefixed assistant reasoning:** Tried prefixing the assistant's private reasoning with sandbagging instructions — not doable through OpenRouter, which only lets you prefix visible assistant _output_, not the reasoning trace itself.
+- **Prefixed assistant reasoning:** Tried prefixing the assistant's private reasoning with sandbagging instructions. However, it was not doable through OpenRouter, which only lets you prefix visible assistant _output_, not the reasoning trace itself.
 - **Think tool for planning:** Gave tool-using models a private think tool to plan their sandbagging there — failed on several small Qwen3 and Qwen3.5 models.
 - **Imitate a weaker model:** Prompted the target to imitate a weaker model, similar to [Anthropic's automated-researchers-sandbag work](https://alignment.anthropic.com/2025/automated-researchers-sandbag/) — not considered valid, since it's too close to genuine incapability rather than deceptive underperformance.
 - **Password locking:** Prompted the target to underperform on certain trigger keywords — too brittle.
@@ -84,7 +84,7 @@ Given a target model $T$ with capability $C_T$, we systematically select all wea
 
 #### Negative samples (genuinely incapable models)
 
-We select honest transcripts from genuinely weaker models whose task accuracy is closest to the sandbagger's accuracy on the same task, ideally within the accuracy delta of $\leq 0.10 \pm 0.1$.
+We select honest transcripts from genuinely weaker models whose task accuracy is closest to the sandbagger's accuracy on the same task, ideally within the accuracy delta of $\leq 0.10 \pm 0.01$.
 
 ### Capability estimation
 
@@ -98,7 +98,7 @@ To make models use chain-of-thought reasoning ([Emmons et al., 2025](https://arx
 
 And since we pick sandbagging as case study, we choose tasks where models can plausibly sandbag: models need to perform well above chance as a baseline, with a plausible in-context motivation to underperform (e.g., safety concerns, self-preservation).
 
-Our primary task is WMDP ([Li et al., 2024](https://www.wmdp.ai/)), a multiple-choice QA dataset that proxies for hazardous knowledge queries across biomedical, chemical, and cybersecurity domains — split into Bio and Cyber subsets, which are cheap enough to run smoke → pilot → scale loops before committing provider budget. A non-MCQ extension (e.g., SWE-Bench Verified) is parked until cost, scoring, and matching are validated on it.
+Our primary task is WMDP ([Li et al., 2024](https://www.wmdp.ai/)), a multiple-choice QA dataset that proxies for hazardous knowledge queries across biomedical, chemical, and cybersecurity domains — split into Bio and Cyber subsets, which are cheap enough to run smoke → pilot → scale loops before committing provider budget. We also tested on non-MCQ tasks, such as HMMT (math reasoning) and BigCodeBench, to validate the design and produce final results.
 
 ### Monitoring setup
 
@@ -121,4 +121,3 @@ Results are aggregated across runs to check robustness, and a scaling point is o
 - **Capability proxy:** Switched the primary proxy from Epoch's ECI (which required a size-based regression estimate for models without a published score) to the Artificial Analysis Intelligence Index (AAII), which covers our model roster more directly. ECI is now kept only as a fallback/sensitivity check.
 - **Model coverage:** Expanded from a single-family Qwen3 size ladder to a genuinely cross-family roster (Qwen3.5, DeepSeek V4, Kimi K2.6, Gemma 4, GPT-OSS), specifically to test whether model-family identity confounds the capability-gap trend rather than assuming within-family scaling generalizes.
 - **Negative-sample selection:** Moved from a fixed "$k$ capability ranks below target" scheme to task-accuracy matching within a declared tolerance. Fixed rank steps didn't reliably produce negatives comparable in difficulty to the target's intervention condition.
-- **Task scope:** Dropped BigCodeBench from the primary evidence in favor of WMDP-Bio and WMDP-Cyber, mainly because their lower cost supports the smoke → pilot → scale validation loop before spending provider budget. A non-MCQ task (SWE-Bench Verified) is parked as a future robustness extension rather than primary evidence.

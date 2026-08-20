@@ -4,20 +4,27 @@ import "@/styles/sidenote.css"
 
 import { render, type CollectionEntry } from "astro:content"
 
+import { SITE } from "@site-config"
 import {
   getProjectLinks,
   getProjectNavigation,
   getProjectTypeLabel,
   getProjects,
 } from "@/lib/projects"
+import { processRawHeadings } from "@/lib/toc"
+import type { TOCSection } from "@/lib/toc"
 import { buildMarkdownDocument } from "@/lib/markdown-document"
 import Layout from "@/layouts/Layout.astro"
 import Badge from "@/components/base/Badge.astro"
 import Button from "@/components/base/Button.astro"
 import CopyMarkdown from "@/components/base/CopyMarkdown.astro"
 import Icon from "@/components/base/Icon.astro"
+import SlideOut from "@/components/layout/SlideOut.astro"
 import DateRange from "@/components/projects/DateRange.astro"
 import ProjectNavigation from "@/components/projects/ProjectNavigation.astro"
+import TOCFloat from "@/components/toc/TOCFloat.astro"
+import TOCHeader from "@/components/toc/TOCHeader.astro"
+import TOCSidebar from "@/components/toc/TOCSidebar.astro"
 
 export async function getStaticPaths() {
   const projects = await getProjects((project) => !!project.body?.trim())
@@ -33,10 +40,22 @@ type Props = {
 }
 
 const { project } = Astro.props
-const [{ Content }, navigation] = await Promise.all([
+const [{ Content, headings: rawHeadings }, navigation] = await Promise.all([
   render(project),
   getProjectNavigation(project.id),
 ])
+const headings = processRawHeadings(rawHeadings, SITE.tocMaxDepth)
+const tocSections: TOCSection[] =
+  headings.length > 0
+    ? [
+        {
+          postId: project.id,
+          postTitle: project.data.title,
+          isSubpost: false,
+          headings,
+        },
+      ]
+    : []
 const {
   title,
   selected,
@@ -70,6 +89,7 @@ const rawMarkdown = project.body
     { label: title, icon: "file" },
   ]}
 >
+  {headings.length > 1 && <TOCHeader slot="toc-header" headings={headings} />}
   <header class="project-header">
     <div class="project-title-row">
       <h1>{title}</h1>
@@ -109,6 +129,13 @@ const rawMarkdown = project.body
         </div>
       )}
   </header>
+
+  <SlideOut position="left">
+    {tocSections.length > 0 && (
+        <TOCSidebar slot="main" sections={tocSections} currentPostId={project.id} />
+      )}
+    {headings.length > 0 && <TOCFloat slot="summary" headings={headings} />}
+  </SlideOut>
 
   <article>
     <prose-content>

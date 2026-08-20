@@ -1,7 +1,7 @@
 ---
 import type { MarkdownHeading } from "astro"
 
-import { getHeadingWidth } from "@/lib/blog/toc"
+import { getHeadingWidth } from "@/lib/toc"
 
 interface Props {
   headings: MarkdownHeading[]
@@ -50,7 +50,7 @@ const { headings, class: className } = Astro.props
 </style>
 
 <script>
-  import { UnifiedTOCController } from "@/lib/blog/scroll"
+  import { UnifiedTOCController } from "@/lib/toc"
 
   let controller: UnifiedTOCController | null = null
 

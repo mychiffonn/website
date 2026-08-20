@@ -1,5 +1,8 @@
-import type { MarkdownHeading } from "astro"
 import type { CollectionEntry, InferEntrySchema } from "astro:content"
+
+import type { TOCHeadingItem, TOCSection } from "@/lib/toc/types"
+
+export type { TOCHeadingItem, TOCSection } from "@/lib/toc/types"
 
 export type Post = CollectionEntry<"blog">
 
@@ -62,27 +65,6 @@ export interface PostContext {
   hasSubposts: boolean
   postNavItems: PostNavItem[]
   activePostNavItem: PostNavItem | null
-}
-
-export interface TOCSection {
-  postId: string
-  postTitle: string
-  isSubpost: boolean
-  headings: TOCHeadingItem[]
-}
-
-/**
- * TOC heading item for components.
- * MarkdownHeading has fields depth, slug, text already.
- */
-export interface TOCHeadingItem extends MarkdownHeading {
-  href: string
-}
-
-export interface HeadingRegion {
-  id: string
-  start: number
-  end: number
 }
 
 export interface TOCManager {

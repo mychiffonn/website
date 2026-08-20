@@ -1,7 +1,7 @@
 ---
-import type { TOCHeadingItem } from "@/lib/blog/types"
+import type { TOCHeadingItem } from "@/lib/toc"
 import Icon from "@/components/base/Icon.astro"
-import TOCHeadingLink from "@/components/blog/TOCHeadingLink.astro"
+import TOCHeadingLink from "@/components/toc/TOCHeadingLink.astro"
 
 interface Props {
   id: string
@@ -47,7 +47,13 @@ const { id, title, isActive, headings } = Astro.props
 
   summary {
     display: flex;
-    align-items: center;
+    /* flex-start rather than center: the title can wrap to multiple lines
+       (post/project titles aren't length-limited), and centering the chevron
+       against the full wrapped height made it land in a different spot
+       depending on whether the section was open or closed. Anchoring both
+       states to the first line keeps the chevron's position identical
+       either way. */
+    align-items: flex-start;
     gap: var(--space-2xs);
     padding: 0.375rem var(--space-3xs);
     border-radius: var(--radius-md);
@@ -74,6 +80,12 @@ const { id, title, isActive, headings } = Astro.props
   summary > span {
     min-inline-size: 0;
     flex: 1;
+  }
+
+  [data-disclosure-chevron] {
+    /* Nudge down to the vertical center of the first text line, matching
+       flex-start above. */
+    margin-block-start: 0.1875rem;
   }
 
   toc-section-list {
