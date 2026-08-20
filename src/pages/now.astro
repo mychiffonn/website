@@ -5,8 +5,6 @@ import Link from "@/components/base/Link.astro"
 import Section from "@/components/layout/Section.astro"
 import UpdatesTimeline from "@/components/timeline/UpdatesTimeline.astro"
 
-import { Content as NowContent } from "@/content/now.md"
-
 import "@/styles/callout.css"
 
 const nowDescription =
@@ -20,9 +18,6 @@ const renderedUpdates = await getLatestUpdates(10)
   modifiedTime={new Date()}
   breadcrumbs={[{ label: "Now", icon: "timeline" }]}
 >
-  <section id="now-content">
-    <NowContent />
-  </section>
   {renderedUpdates.length > 0 && (
       <Section title="Timeline">
         <UpdatesTimeline renderedUpdates={renderedUpdates} />
