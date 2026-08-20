@@ -10,4 +10,4 @@
 
 - My friends asked me to collect tech recommendation in a page: [here](/uses).
 
-- Donate to charities if you can afford it! Some options are [World Food Programme](https://www.wfp.org/), [Doctors Without Borders](https://www.doctorswithoutborders.org/get-involved/ways-to-give), and [Giving What We Can](https://www.givingwhatwecan.org/)
+- Donate to charities if you can afford it! Some options are [World Food Programme](https://www.wfp.org/), [Doctors Without Borders](https://www.doctorswithoutborders.org/get-involved/ways-to-give), and [Giving What We Can](https://www.givingwhatwecan.org/).

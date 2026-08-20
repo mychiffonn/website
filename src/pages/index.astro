@@ -59,23 +59,12 @@ const recentPostsMetadata = await Promise.all(
 <Layout title="Home">
   <Profile profile={PROFILE} />
 
-  {careerHighlights.length > 0 && (
-      <Section
-        title="Career highlights"
-        moreLink={cvHref}
-        moreText="see CV →"
-      >
-        <ExperienceTimeline
-          entries={careerHighlights}
-          limit={careerHighlightCount}
-          itemClass="home-experience-content"
-        />
-      </Section>
-    )}
-
   {renderedUpdates.length > 0 && (
       <Section title="Latest updates" moreLink="/now">
-        <UpdatesInline renderedUpdates={renderedUpdates} itemClass="home-update-content" />
+        <UpdatesInline
+          renderedUpdates={renderedUpdates}
+          itemClass="home-update-content"
+        />
       </Section>
     )}
 
@@ -88,6 +77,17 @@ const recentPostsMetadata = await Promise.all(
         </CardGroup>
       </Section>
     )}
+
+  {careerHighlights.length > 0 && (
+      <Section title="Career highlights" moreLink={cvHref} moreText="see CV →">
+        <ExperienceTimeline
+          entries={careerHighlights}
+          limit={careerHighlightCount}
+          itemClass="home-experience-content"
+        />
+      </Section>
+    )}
+
   {recentPostsMetadata.length > 0 && (
       <Section title="Latest posts">
         <ul class="latest-posts-list">
