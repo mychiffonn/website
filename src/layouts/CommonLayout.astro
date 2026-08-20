@@ -5,7 +5,7 @@ import FormattedDate from "@/components/base/FormattedDate.astro"
 import type { BreadcrumbItem } from "@/components/layout/Breadcrumbs.astro"
 
 interface Props {
-  title: string
+  title?: string
   description?: string
   modifiedTime?: Date
   prose?: boolean
@@ -21,22 +21,29 @@ const {
   prose = true,
   markdown,
   breadcrumbs,
+  frontmatter,
   ...layoutProps
 } = Astro.props
+
+const pageTitle = title ?? frontmatter?.title ?? ""
+const pageDescription = description ?? frontmatter?.description
+const pageModifiedTime = modifiedTime ?? frontmatter?.modifiedTime
+const resolvedBreadcrumbs = breadcrumbs ?? frontmatter?.breadcrumbs
 ---
 
 <Layout
-  title={title}
-  description={description}
-  breadcrumbs={breadcrumbs}
+  title={pageTitle}
+  description={pageDescription}
+  breadcrumbs={resolvedBreadcrumbs}
   {...layoutProps}
 >
   <section class="page-heading">
-    <h1>{title}</h1>
-    {description && <p class="page-description">{description}</p>}
-    {modifiedTime && <FormattedDate date={modifiedTime} class="page-modified" />}
+    <h1>{pageTitle}</h1>
+    {pageDescription && <p class="page-description">{pageDescription}</p>}
+    {pageModifiedTime && (
+      <FormattedDate date={pageModifiedTime} class="page-modified" />
+    )}
   </section>
-
   {prose && markdown && (
       <CopyMarkdown markdown={markdown} class="common-copy-markdown" />
     )}

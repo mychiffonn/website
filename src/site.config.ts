@@ -95,12 +95,12 @@ export const NAV_LINKS: LinkConfig[] = [
     label: "Publications",
   },
   {
-    href: "/blog",
-    label: "Blog",
+    href: "/teaching",
+    label: "Teaching",
   },
   {
-    href: "/uses",
-    label: "Tech",
+    href: "/blog",
+    label: "Blog",
   },
   {
     href: "/now",
