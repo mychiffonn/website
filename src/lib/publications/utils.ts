@@ -419,7 +419,7 @@ function truncateAuthors(
   // Early return if no truncation needed
   if (totalAuthors <= maxFirst || totalAuthors <= maxFirst + maxLast) {
     return {
-      displayFirstAuthors: authors.join(", ") + (totalAuthors > 0 ? "," : ""),
+      displayFirstAuthors: authors.join(", "),
       hasMore: false,
       hiddenCount: 0,
       hiddenAuthors: "",

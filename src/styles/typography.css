@@ -40,6 +40,7 @@ body {
 }
 
 a {
+  cursor: pointer;
   text-decoration: underline;
   text-decoration-color: var(--underline, transparent);
   text-decoration-thickness: max(1px, 0.0625em);
@@ -124,5 +125,45 @@ prose-content {
 
   :is(p, li) {
     color: var(--prose-foreground);
+  }
+}
+
+/* Text links share one readable default, accent hover/focus treatment, and
+   explicit active/visited states. Button-, badge-, and chip-shaped links keep
+   their component-specific decoration and colors. */
+prose-content a,
+a[data-link][data-underline] {
+  --underline: var(--muted-foreground);
+  --underline-wipe: currentColor;
+  color: var(--foreground);
+  text-decoration-line: underline;
+}
+
+prose-content a:visited,
+a[data-link][data-underline]:visited {
+  color: var(--foreground);
+}
+
+prose-content a:is(:hover, :focus-visible),
+a[data-link][data-underline]:is(:hover, :focus-visible) {
+  color: var(--accent);
+  text-decoration-line: none;
+  text-decoration-color: currentColor;
+}
+
+prose-content a:active,
+a[data-link][data-underline]:active {
+  color: var(--foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  prose-content a,
+  a[data-link][data-underline] {
+    text-decoration-line: underline;
+  }
+
+  prose-content a:is(:hover, :focus-visible),
+  a[data-link][data-underline]:is(:hover, :focus-visible) {
+    text-decoration-line: underline;
   }
 }

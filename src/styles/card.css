@@ -81,9 +81,8 @@
     var(--celestial-surface) 58%,
     color-mix(in oklab, var(--accent) 5%, transparent)
   );
-  box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--primary) 10%, transparent),
-    0 1rem 3rem -1.5rem color-mix(in oklab, var(--primary) 24%, transparent);
+  box-shadow: 0 1rem 3rem -1.5rem
+    color-mix(in oklab, var(--primary) 24%, transparent);
 }
 
 .card-overlay {
@@ -256,21 +255,16 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  [data-slot="card"]:hover::before {
+  [data-slot="card"][data-clickable]:hover::before {
     opacity: 1;
     animation: card-border-flow 2.4s linear infinite;
   }
 
-  [data-slot="card"]:hover {
-    border-color: color-mix(in oklab, var(--border) 82%, transparent);
-  }
-
   [data-slot="card"][data-clickable]:hover {
-    border-color: color-mix(in oklab, var(--primary) 34%, transparent);
+    border-color: transparent;
     background-color: color-mix(in oklab, var(--muted) 52%, transparent);
-    box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--primary) 6%, transparent),
-      0 0.75rem 2rem -1.25rem color-mix(in oklab, var(--ring) 24%, transparent);
+    box-shadow: 0 0.75rem 2rem -1.25rem
+      color-mix(in oklab, var(--ring) 24%, transparent);
   }
 
   [data-slot="card"][data-clickable]:hover [data-slot="card-title"] {
@@ -295,7 +289,7 @@
     transition-duration: 0.01ms;
   }
 
-  [data-slot="card"]:hover::before {
+  [data-slot="card"][data-clickable]:hover::before {
     animation: none;
     background-position: 50% 0;
   }

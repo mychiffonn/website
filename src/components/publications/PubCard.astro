@@ -48,7 +48,7 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
     <CardHeader>
       {pub.award && <span class="publication-award">🏆 {pub.award}</span>}
       {pub.mainUrl ? (
-          <Link href={pub.mainUrl} external class="card-title-link">
+          <Link href={pub.mainUrl} external underline class="card-title-link">
             <CardTitle>{pub.title}</CardTitle>
           </Link>
         ) : (
