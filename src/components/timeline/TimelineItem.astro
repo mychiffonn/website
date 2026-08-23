@@ -9,8 +9,8 @@ const hasDate = Astro.slots.has("date")
 
 <li class:list={["timeline-item", className]}>
   <div class="timeline-marker" aria-hidden="true">
-    <div class="timeline-dot"></div>
     <div class="timeline-line"></div>
+    <div class="timeline-dot"></div>
   </div>
   <div class="timeline-content">
     {hasDate && (
@@ -38,8 +38,6 @@ const hasDate = Astro.slots.has("date")
   }
 
   .timeline-dot {
-    position: relative;
-    z-index: 1;
     inline-size: 0.5rem;
     block-size: 0.5rem;
     margin-block-start: 0.35rem;
@@ -50,9 +48,10 @@ const hasDate = Astro.slots.has("date")
 
   .timeline-line {
     position: absolute;
-    inset-block: 1rem 0;
+    inset-block: 0.5rem 0;
     inset-inline-start: 50%;
     border-inline-start: 2px dashed var(--muted);
+    transform: translateX(-50%);
   }
 
   .timeline-item:last-child .timeline-line {
