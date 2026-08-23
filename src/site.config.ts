@@ -114,7 +114,7 @@ export const NAVIGATION: LinkConfig[] = NAV_LINKS.map(({ href, label }) => ({
 }))
 
 export const PUB_CONFIG: PublicationConfig = {
-  maxFirstAuthors: 8,
+  maxFirstAuthors: 6,
   maxLastAuthors: 2,
   highlightAuthor: {
     firstName: "My Chiffon",
