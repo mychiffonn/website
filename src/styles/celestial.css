@@ -16,10 +16,7 @@
     color-mix(in oklab, var(--primary) 46%, transparent)
   );
   --celestial-surface: color-mix(in oklab, var(--background) 82%, transparent);
-  --celestial-star: light-dark(
-    color-mix(in oklab, var(--accent) 58%, var(--foreground)),
-    color-mix(in oklab, var(--primary) 72%, var(--foreground))
-  );
+  --celestial-star: color-mix(in oklab, var(--accent) 65%, var(--foreground));
 
   --celestial-opacity: 0.62;
   --celestial-column-alpha: 0.12;
