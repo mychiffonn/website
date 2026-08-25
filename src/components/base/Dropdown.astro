@@ -49,7 +49,6 @@ const {
       if (!this.trigger || !this.content) return
       this.trigger.addEventListener("click", this.handleTriggerClick)
       this.content.addEventListener("click", this.handleContentClick)
-      document.addEventListener("click", this.handleOutsideClick)
       this.container.addEventListener("dropdown-close", () => this.close())
       this.container.addEventListener("dropdown-open", () => this.open())
       if (container.dataset.state === "open") this.open()
@@ -65,10 +64,6 @@ const {
     private handleContentClick = (event: Event) => {
       if ((event.target as Element).closest("[data-dropdown-item]"))
         this.close()
-    }
-
-    private handleOutsideClick = (event: Event) => {
-      if (!this.container.contains(event.target as Node)) this.close()
     }
 
     private open() {
@@ -111,6 +106,17 @@ const {
         container.dataset.dropdownInitialized = "true"
       })
   }
+
+  document.addEventListener("click", (event) => {
+    const target = event.target as Node
+    for (const container of document.querySelectorAll<HTMLElement>(
+      '[data-dropdown-root][data-state="open"]',
+    )) {
+      if (!container.contains(target)) {
+        container.dispatchEvent(new CustomEvent("dropdown-close"))
+      }
+    }
+  })
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initDropdowns)

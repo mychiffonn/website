@@ -60,61 +60,33 @@ const allItems = [
 </style>
 
 <script>
-  class SubpostsFloatController {
-    private static instance: SubpostsFloatController | null = null
+  function updateActiveIndicators() {
+    const currentPath = window.location.pathname
+    const indicators = document.querySelectorAll<HTMLElement>("[data-post-id]")
 
-    static getInstance(): SubpostsFloatController {
-      return (this.instance ??= new SubpostsFloatController())
-    }
-
-    static resetInstance(): void {
-      this.instance = null
-    }
-
-    init() {
-      // Update indicators based on current URL
-      this.updateActiveIndicators()
-
-      // Listen for navigation changes
-      document.addEventListener("astro:page-load", () => {
-        this.updateActiveIndicators()
-      })
-    }
-
-    private updateActiveIndicators() {
-      const currentPath = window.location.pathname
-      const indicators =
-        document.querySelectorAll<HTMLElement>("[data-post-id]")
-
-      let longestMatchId = ""
-      indicators.forEach((indicator) => {
-        const postId = indicator.dataset.postId
-        if (postId && currentPath.endsWith(postId)) {
-          if (postId.length > longestMatchId.length) {
-            longestMatchId = postId
-          }
+    let longestMatchId = ""
+    indicators.forEach((indicator) => {
+      const postId = indicator.dataset.postId
+      if (postId && currentPath.endsWith(postId)) {
+        if (postId.length > longestMatchId.length) {
+          longestMatchId = postId
         }
-      })
+      }
+    })
 
-      indicators.forEach((indicator) => {
-        const postId = indicator.dataset.postId
-        const isActive = postId === longestMatchId
+    indicators.forEach((indicator) => {
+      const postId = indicator.dataset.postId
 
-        if (isActive) {
-          indicator.dataset.active = "true"
-        } else {
-          delete indicator.dataset.active
-        }
-      })
-    }
+      if (postId === longestMatchId) {
+        indicator.dataset.active = "true"
+      } else {
+        delete indicator.dataset.active
+      }
+    })
   }
 
-  // Initialize controller
-  const controller = SubpostsFloatController.getInstance()
+  updateActiveIndicators()
 
-  document.addEventListener("astro:page-load", () => controller.init())
-  document.addEventListener("astro:after-swap", () => {
-    SubpostsFloatController.resetInstance()
-    SubpostsFloatController.getInstance().init()
-  })
+  document.addEventListener("astro:page-load", updateActiveIndicators)
+  document.addEventListener("astro:after-swap", updateActiveIndicators)
 </script>
