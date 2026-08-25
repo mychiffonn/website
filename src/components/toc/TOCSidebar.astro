@@ -15,9 +15,8 @@ const hasSections = sections.length > 0
 ---
 
 {hasSections && (
-    <aside
+    <nav
       id="toc-sidebar-container"
-      role="complementary"
       aria-labelledby="toc-heading"
       class:list={["toc-sidebar", className]}
     >
@@ -27,7 +26,7 @@ const hasSections = sections.length > 0
         </h2>
       </header>
       <ScrollArea data-scroll-area>
-        <ol role="navigation" aria-labelledby="toc-heading">
+        <ol>
           {sections.map((section: TOCSection, index: number) => {
             const isFirstSubpost = section.isSubpost && !sections[index - 1]?.isSubpost
 
@@ -53,7 +52,7 @@ const hasSections = sections.length > 0
           })}
         </ol>
       </ScrollArea>
-    </aside>
+    </nav>
   )}
 
 <style>
@@ -66,8 +65,6 @@ const hasSections = sections.length > 0
   }
 
   .toc-sidebar header {
-    position: sticky;
-    top: 0;
     margin-block-end: var(--space-2xs);
     padding-block-end: var(--space-3xs);
     border-block-end: 1px solid var(--border);
