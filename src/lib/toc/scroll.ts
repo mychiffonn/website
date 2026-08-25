@@ -31,6 +31,8 @@ export class UnifiedTOCController {
   private targetProgress: number = 0
   private currentProgress: number = 0
 
+  private abortController: AbortController | null = null
+
   constructor(
     private containerSelector: string,
     private linkSelector: string,
@@ -67,14 +69,17 @@ export class UnifiedTOCController {
       return
     }
 
-    this.regions = this.headings.map((heading, index) => {
-      const nextHeading = this.headings[index + 1]
-      return {
-        id: heading.id,
-        start: heading.offsetTop,
-        end: nextHeading ? nextHeading.offsetTop : document.body.scrollHeight,
-      }
-    })
+    const { scrollY } = window
+    const tops = this.headings.map((heading) =>
+      Math.round(heading.getBoundingClientRect().top + scrollY),
+    )
+    const documentEnd = document.documentElement.scrollHeight
+
+    this.regions = this.headings.map((heading, index) => ({
+      id: heading.id,
+      start: tops[index],
+      end: tops[index + 1] ?? documentEnd,
+    }))
 
     if (this.options.isMobile) {
       this.markdownHeadings = this.headings.map((heading) => ({
@@ -118,15 +123,19 @@ export class UnifiedTOCController {
     }
   }
 
-  private updateMobileProgressIndicator(): void {
+  private computeScrollProgress(): number {
+    const scrollable =
+      document.documentElement.scrollHeight - window.innerHeight
+
+    if (scrollable <= 0) return 0
+
+    return Math.min(1, Math.max(0, window.scrollY / scrollable))
+  }
+
+  private syncProgressTarget(): void {
     if (!this.progressCircle) return
 
-    const { scrollY, innerHeight } = window
-    const { scrollHeight } = document.documentElement
-    this.targetProgress = Math.max(
-      0,
-      Math.min(1, scrollY / (scrollHeight - innerHeight)),
-    )
+    this.targetProgress = this.computeScrollProgress()
 
     if (!this.animationFrame) {
       this.animateProgress()
@@ -181,9 +190,6 @@ export class UnifiedTOCController {
     const offset = circumference * (1 - this.currentProgress)
     this.progressCircle.style.strokeDashoffset = offset.toString()
 
-    /* The ring carries a progressbar role, so the value has to travel with the
-       stroke or assistive tech reads a label that never changes. Rounded and
-       written only on change to keep this off the per-frame mutation path. */
     const host = this.progressCircle.closest("[role='progressbar']")
     if (!host) return
     const percent = Math.round(this.currentProgress * 100).toString()
@@ -192,25 +198,9 @@ export class UnifiedTOCController {
     }
   }
 
-  // Public method to handle large jumps (called on heading clicks, page transitions)
-  handleLargeJump(): void {
-    if (!this.options.isMobile || !this.progressCircle) return
-
-    const { scrollY, innerHeight } = window
-    const { scrollHeight } = document.documentElement
-    this.targetProgress = Math.max(
-      0,
-      Math.min(1, scrollY / (scrollHeight - innerHeight)),
-    )
-
-    if (!this.animationFrame) {
-      this.animateProgress()
-    }
-  }
-
   private handleScroll = (): void => {
     if (this.options.isMobile) {
-      this.updateMobileProgressIndicator()
+      this.syncProgressTarget()
     }
 
     const newActiveIds = this.getVisibleHeadingIds()
@@ -258,6 +248,8 @@ export class UnifiedTOCController {
   init(): void {
     this.cleanup()
 
+    const { signal } = (this.abortController = new AbortController())
+
     const container = document.querySelector(this.containerSelector)
 
     this.container = container as HTMLElement
@@ -285,51 +277,63 @@ export class UnifiedTOCController {
         })
 
         // Initialize with current scroll position
-        const { scrollY, innerHeight } = window
-        const { scrollHeight } = document.documentElement
-        this.currentProgress = this.targetProgress = Math.max(
-          0,
-          Math.min(1, scrollY / (scrollHeight - innerHeight)),
-        )
+        this.currentProgress = this.targetProgress =
+          this.computeScrollProgress()
         this.updateProgressCircle()
       }
 
-      this.detailsElement?.addEventListener("toggle", () => {
-        const activeId = this.activeIds?.[0]
-        if (this.detailsElement?.open && activeId) {
-          requestAnimationFrame(() => this.scrollToActiveLink(activeId))
-        }
-      })
+      this.detailsElement?.addEventListener(
+        "toggle",
+        () => {
+          const activeId = this.activeIds?.[0]
+          if (this.detailsElement?.open && activeId) {
+            requestAnimationFrame(() => this.scrollToActiveLink(activeId))
+          }
+        },
+        { signal },
+      )
 
       document
         .querySelector(`${this.containerSelector} #mobile-toc`)
         ?.querySelectorAll<HTMLElement>(".toc-item")
         .forEach((item) => {
-          item.addEventListener("click", () => {
-            if (this.detailsElement) this.detailsElement.open = false
-            // Handle smooth animation on heading clicks
-            setTimeout(
-              () => this.handleLargeJump(),
-              UnifiedTOCController.NAV_SETTLE_DELAY_MS,
-            )
-          })
+          item.addEventListener(
+            "click",
+            () => {
+              if (this.detailsElement) this.detailsElement.open = false
+              // Handle smooth animation on heading clicks
+              setTimeout(
+                () => this.syncProgressTarget(),
+                UnifiedTOCController.NAV_SETTLE_DELAY_MS,
+              )
+            },
+            { signal },
+          )
         })
 
       // Handle Astro page transitions
-      document.addEventListener("astro:after-swap", () => {
-        setTimeout(
-          () => this.handleLargeJump(),
-          UnifiedTOCController.NAV_SETTLE_DELAY_MS,
-        )
-      })
+      document.addEventListener(
+        "astro:after-swap",
+        () => {
+          setTimeout(
+            () => this.syncProgressTarget(),
+            UnifiedTOCController.NAV_SETTLE_DELAY_MS,
+          )
+        },
+        { signal },
+      )
 
       // Handle browser back/forward navigation
-      window.addEventListener("popstate", () => {
-        setTimeout(
-          () => this.handleLargeJump(),
-          UnifiedTOCController.NAV_SETTLE_DELAY_MS,
-        )
-      })
+      window.addEventListener(
+        "popstate",
+        () => {
+          setTimeout(
+            () => this.syncProgressTarget(),
+            UnifiedTOCController.NAV_SETTLE_DELAY_MS,
+          )
+        },
+        { signal },
+      )
     }
 
     this.buildHeadingRegions()
@@ -342,15 +346,21 @@ export class UnifiedTOCController {
       return
     }
 
-    window.addEventListener("scroll", this.handleScroll, { passive: true })
-    window.addEventListener("resize", this.handleResize, { passive: true })
+    window.addEventListener("scroll", this.handleScroll, {
+      passive: true,
+      signal,
+    })
+    window.addEventListener("resize", this.handleResize, {
+      passive: true,
+      signal,
+    })
 
     this.handleScroll()
   }
 
   cleanup(): void {
-    window.removeEventListener("scroll", this.handleScroll)
-    window.removeEventListener("resize", this.handleResize)
+    this.abortController?.abort()
+    this.abortController = null
 
     // Clean up animation
     if (this.animationFrame) {
