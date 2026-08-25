@@ -48,9 +48,11 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
     <CardHeader>
       {pub.award && <span class="publication-award">🏆 {pub.award}</span>}
       {pub.mainUrl ? (
-          <Link href={pub.mainUrl} external underline class="card-title-link">
-            <CardTitle>{pub.title}</CardTitle>
-          </Link>
+          <CardTitle>
+            <Link href={pub.mainUrl} external underline>
+              {pub.title}
+            </Link>
+          </CardTitle>
         ) : (
           <CardTitle>{pub.title}</CardTitle>
         )}
@@ -152,14 +154,6 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
 </Card>
 
 <style>
-  /* Card height comes from the stacked blocks, not the prose: trim the block
-     gaps and the vertical padding, and leave every line-height alone so the
-     wrapped author list keeps its 1.5 leading. Inline padding stays at
-     --space-s so the card doesn't tighten sideways too.
-
-     Astro's scope attribute lands on the Card root too, so this compiles to
-     .publication-card[data-astro-cid-…] and outranks the base [data-slot=card]
-     rule on specificity — no :global or stylesheet-order luck needed. */
   .publication-card {
     --card-padding: var(--space-xs) var(--space-s);
     --card-gap: var(--space-2xs);
@@ -173,9 +167,6 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
     gap: var(--card-gap);
   }
 
-  /* Authors and the venue • year line are one citation block; pulling them
-     closer separates them from the actions below more clearly than the
-     uniform gap did. */
   .publication-body [data-slot="card-content"] {
     gap: var(--space-3xs);
   }
@@ -227,6 +218,26 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
     color: var(--primary);
     font-size: var(--step--1);
     font-weight: var(--font-weight-bold);
+  }
+
+  .publication-card [data-slot="card-title"] a {
+    --underline-wipe: none;
+    background-image: none;
+    color: var(--foreground);
+    text-decoration-color: transparent;
+    text-decoration-thickness: max(1.5px, 0.055em);
+    text-underline-position: auto;
+    text-underline-offset: 0.14em;
+  }
+
+  .publication-card[data-pub-selected="true"] [data-slot="card-title"] a {
+    color: var(--primary);
+  }
+
+  .publication-card [data-slot="card-title"] a:is(:hover, :focus-visible) {
+    color: var(--accent);
+    text-decoration-line: underline;
+    text-decoration-color: currentColor;
   }
 
   .bibliography-authors,
@@ -298,8 +309,6 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
     font-size: var(--step--2);
   }
 
-  /* The only :global that has to stay: .author-highlight is injected through
-     set:html at runtime, so it never receives a scope attribute. */
   .bibliography-authors :global(.author-highlight) {
     color: var(--primary);
     font-weight: 700;
