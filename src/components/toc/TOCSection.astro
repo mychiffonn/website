@@ -15,7 +15,7 @@ const { id, title, isActive, headings } = Astro.props
 
 <details class="toc-section" data-disclosure open={isActive}>
   <summary data-heading-link={isActive ? "top" : `${id}-top`}>
-    <span>
+    <span class="toc-section-title">
       {title}
     </span>
     {headings.length > 0 && (
@@ -71,14 +71,15 @@ const { id, title, isActive, headings } = Astro.props
     outline-offset: 2px;
   }
 
-  summary > span {
+  .toc-section-title {
     min-inline-size: 0;
     flex: 1;
+    /* Greedy wrapping to overwrite `text-wrap: pretty` */
+    text-wrap-style: auto;
   }
 
   [data-disclosure-chevron] {
-    /* Nudge down to the vertical center of the first text line, matching
-       flex-start above. */
+    flex: none;
     margin-block-start: 0.1875rem;
   }
 
