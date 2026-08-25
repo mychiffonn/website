@@ -1,8 +1,3 @@
-/* The backdrop was tuned against the dark palette, where --primary (a bright
-   green, L 0.78) reads clearly on an L 0.20 background. On the light palette
-   that same green sits ~0.18 lightness away from an L 0.96 background and all
-   but disappears, so light mode pulls its ink from --accent and --foreground
-   instead, and leans on the whole backdrop being less transparent. */
 :root {
   --celestial-accent-soft: light-dark(
     color-mix(in oklab, var(--accent) 24%, transparent),
@@ -26,10 +21,6 @@
     color-mix(in oklab, var(--primary) 72%, var(--foreground))
   );
 
-  /* Overall strength of the backdrop, and how much of the star field survives
-     the mask across the text column. Light mode needs more of both to register
-     at all; the column alpha stays well under the margin value so text keeps a
-     quiet field behind it rather than a busy one. */
   --celestial-opacity: 0.62;
   --celestial-column-alpha: 0.12;
 }
@@ -41,8 +32,6 @@
   }
 }
 
-/* After the media query so an explicit choice always wins over the system one,
-   matching how color.css resolves its themes. */
 [data-theme="light"] {
   --celestial-opacity: 0.8;
   --celestial-column-alpha: 0.16;

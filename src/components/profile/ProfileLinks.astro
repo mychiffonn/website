@@ -15,8 +15,6 @@ interface Props {
 
 const { links, class: className = "", keys = true, as = "button" } = Astro.props
 
-/* rel="me" asserts "this profile is also me", which only holds for identity
-   profiles — not for documents like a CV or a feed. */
 const NON_IDENTITY_KEYS = new Set(["cv", "resume", "rss", "email", "calendar"])
 
 const processedLinks = getProcessedProfileLinks(links, keys)
@@ -56,21 +54,15 @@ const processedLinks = getProcessedProfileLinks(links, keys)
     list-style: none;
   }
 
-  /* Header variant: ghost squares matching the other header controls, so the
-     tap target tracks --control-size and grows on coarse pointers. */
   .profile-links-icon {
     flex-wrap: nowrap;
     gap: 0;
   }
 
-  /* Secondary to the nav and home links, but hover/active/focus stay the
-     shared ghost treatment from Button. */
   .profile-link-icon {
     color: var(--muted-foreground);
   }
 
-  /* The hover fill is the element's own background so it always sits flush
-     against the border, whatever the border width or radius becomes. */
   .profile-link {
     color: var(--muted-foreground);
     transition:

@@ -17,11 +17,6 @@ const {
 } = Astro.props
 const isExternal = external ?? /^https?:\/\//.test(href)
 
-/* A caller-supplied rel has to be merged rather than replaced, since the
-   external hardening applies either way.
-   `rel="me"` claims the target as the author's own profile, so marking it
-   nofollow would contradict the claim and undercut the identity link. The
-   window/referrer hardening still applies. */
 const isIdentityLink = rel?.split(/\s+/).includes("me") ?? false
 const relTokens = [
   ...(isExternal
@@ -61,8 +56,6 @@ const relValue = relTokens.length > 0 ? relTokens.join(" ") : undefined
     }
   }
 
-  /* Opting in here keeps underlines off button- and badge-shaped links. A
-     native text decoration wraps cleanly and only needs a color transition. */
   [data-link][data-underline] {
     --underline: var(--muted-foreground);
     --underline-wipe: currentColor;

@@ -65,8 +65,6 @@ const hasHeaderLinks = headerLinks.length > 0
     justify-content: space-between;
     gap: var(--space-s);
 
-    /* The controls already carry their own --control-size height, so the bar
-       only needs enough padding to keep them off the sticky bar's edge. */
     min-height: var(--control-size);
     padding-block: var(--space-3xs);
   }
@@ -94,16 +92,11 @@ const hasHeaderLinks = headerLinks.length > 0
     transition: color var(--motion-duration-fast) var(--motion-ease);
   }
 
-  /* The square centers a 1.5rem glyph, which would otherwise sit inset from
-     the content edge that the title's text used to meet. Pull it back by that
-     internal gap so the icon optically aligns with the prose below. */
   .site-home {
     flex-shrink: 0;
     margin-inline-start: calc((var(--control-size) - 1.5rem) / -2);
   }
 
-  /* Theme switching moves into the menu dropdown on small screens, so the
-     standalone toggle would be a duplicate control there. */
   .desktop-theme {
     display: none;
 

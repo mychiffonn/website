@@ -8,12 +8,6 @@ interface Props {
   class?: string
 }
 
-/*
- * Purely a position indicator: the navigable table of contents is the panel
- * this rail expands into, so these marks are deliberately not links. Keeping
- * them interactive would mean one nameless link per heading at 2px tall,
- * which neither a pointer nor a screen reader can reasonably use.
- */
 const { headings, class: className } = Astro.props
 ---
 

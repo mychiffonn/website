@@ -55,8 +55,6 @@ import Icon from "@/components/base/Icon.astro"
       })
   }
 
-  /* Delegated from the document so any number of theme option sets (the
-     desktop dropdown, the mobile menu) share one handler and stay in sync. */
   document.addEventListener("click", (event) => {
     const btn = (event.target as Element).closest<HTMLButtonElement>(
       "[data-theme-value]",

@@ -48,11 +48,6 @@ a {
   text-underline-position: under;
   text-underline-offset: -0.06em;
 
-  /* Hover emphasis is drawn from the inline start instead of fading in, so it
-     reads as one continuous stroke. The gradient has no fallback on purpose:
-     links that never set --underline-wipe make background-image invalid at
-     computed-value time, which resolves to none. That keeps the wipe off
-     button-, badge- and chip-shaped anchors without enumerating them here. */
   background-image: linear-gradient(
     var(--underline-wipe),
     var(--underline-wipe)
@@ -128,9 +123,6 @@ prose-content {
   }
 }
 
-/* Text links share one readable default, accent hover/focus treatment, and
-   explicit active/visited states. Button-, badge-, and chip-shaped links keep
-   their component-specific decoration and colors. */
 prose-content a,
 a[data-link][data-underline] {
   --underline: var(--muted-foreground);

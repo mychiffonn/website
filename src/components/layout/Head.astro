@@ -194,10 +194,6 @@ const structuredData = {
       if (window.mediumZoom) return Promise.resolve()
       if (window.__mediumZoomPromise) return window.__mediumZoomPromise
 
-      /* A rejected promise left in place would be awaited by every later
-         attempt, so one offline moment would disable zoom for the rest of the
-         session even after the network recovers. Clear it, and drop the dead
-         script tag, so the next navigation can retry. */
       window.__mediumZoomPromise = new Promise((resolve, reject) => {
         const script = document.createElement("script")
         script.src =
@@ -221,9 +217,6 @@ const structuredData = {
       return window.__mediumZoomPromise
     }
 
-    /* Kept identical to the cursor rule in /styles/zoom.css. Card.astro sets
-       data-clickable whenever it renders its .card-overlay link, and that
-       overlay takes the click, so images beneath one can never be zoomed. */
     const ZOOMABLE_IMAGES = "main img:not(a img):not([data-clickable] img)"
 
     async function initializeImageZoom() {

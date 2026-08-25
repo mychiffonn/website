@@ -32,9 +32,6 @@ const { position, class: className } = Astro.props
     }
   }
 
-  /* focus-within alongside hover: the panel holds the only table of contents
-     at this width, so gating it on hover alone left it unreachable by
-     keyboard while its links stayed in the tab order. */
   .slide-out:hover,
   .slide-out:focus-within {
     inline-size: 20rem;

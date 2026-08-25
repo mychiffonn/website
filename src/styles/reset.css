@@ -228,9 +228,6 @@ input:where([type="button"], [type="reset"], [type="submit"]),
   border: 0;
 }
 
-/* Reduce *motion*, not feedback: disable animations, smooth scrolling, and
-   movement (transform/size) transitions, but keep short color/opacity fades
-   so hover states still ease instead of snapping. */
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

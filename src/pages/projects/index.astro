@@ -270,15 +270,11 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
     font-size: var(--step--1);
   }
 
-  /* Rows carry their own block padding; the gap only separates them further
-     without drawing rules, so the list stays a single quiet column. */
   .project-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-2xs);
 
-    /* Holds the featured star outside the text edge. Kept at every width so
-       the column's left edge stays put whichever rows are filtered in. */
     padding-inline-start: 1rem;
   }
 

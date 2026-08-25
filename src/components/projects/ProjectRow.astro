@@ -85,9 +85,6 @@ const titleHref = hasDetailPage ? `/projects/${project.id}` : primaryLink?.href
     line-height: calc(var(--leading-offset) + 1em);
   }
 
-  /* Featured rows get a star in the gutter rather than a badge, echoing the
-     one on section headings. Positioned absolutely so the marker never shifts
-     the title and every row keeps the same left edge to scan down. */
   .project-row.is-highlighted .project-row-title::before {
     content: "";
     position: absolute;
