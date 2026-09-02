@@ -43,9 +43,9 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
-    "@astrojs/markdown-satteri": "^0.3.8",
+    "@astrojs/markdown-satteri": "^0.4.0",
     "@astrojs/rss": "^4.0.19",
-    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/sitemap": "^3.7.4",
     "@citation-js/core": "^0.7.21",
     "@citation-js/plugin-bibtex": "^0.7.21",
     "@date-fns/tz": "^1.5.0",
@@ -54,7 +54,7 @@
     "@iconify-json/academicons": "^1.2.4",
     "@iconify-json/mingcute": "^1.2.7",
     "@iconify/utils": "^3.1.3",
-    "astro": "^7.2.8",
+    "astro": "^7.2.10",
     "date-fns": "^4.4.0",
     "github-slugger": "^2.0.0",
     "hast-util-select": "^6.0.4",
@@ -62,14 +62,14 @@
     "hastscript": "^9.0.1",
     "husky": "^9.1.7",
     "satori": "^0.26.0",
-    "satteri": "^0.9.4",
+    "satteri": "^0.10.5",
     "satteri-expressive-code": "^0.1.17",
     "temml": "^0.13.3",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.2",
-    "@types/hast": "^3.0.4",
+    "@types/hast": "^3.0.5",
     "@types/mdast": "^4.0.4",
     "mdast-util-to-hast": "^13.2.0",
     "oxlint": "^1.72.0",
@@ -81,6 +81,9 @@
     "onlyBuiltDependencies": [
       "esbuild",
       "sharp"
-    ]
+    ],
+    "overrides": {
+      "@types/hast": "^3.0.5"
+    }
   }
 }

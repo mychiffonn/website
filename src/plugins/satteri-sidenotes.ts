@@ -351,7 +351,8 @@ export function satteriSidenotes(
                   type: "element",
                   tagName: "label",
                   properties: {
-                    htmlFor: snId,
+                    // @types/hast types `for` as a space-separated list
+                    htmlFor: [snId],
                     id: refId,
                     className: ["sidenote-toggle", "sidenote-number"],
                   },
