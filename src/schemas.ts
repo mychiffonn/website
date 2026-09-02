@@ -82,6 +82,8 @@ export const SiteConfigSchema = z.object({
     updateCount: z.number().int().nonnegative().default(3),
     /** Number of selected publications to show on the home page. Set to 0 to hide. */
     publicationCount: z.number().int().nonnegative().default(3),
+    /** Number of selected projects to show on the home page. Set to 0 to hide. */
+    projectCount: z.number().int().nonnegative().default(3),
   }),
 
   // Theme settings

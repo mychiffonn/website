@@ -40,6 +40,7 @@ export const SITE: SiteConfig = {
     careerHighlightCount: 4,
     updateCount: 3,
     publicationCount: 3,
+    projectCount: 5,
   },
 
   // Theme settings

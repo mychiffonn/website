@@ -2,7 +2,6 @@
 title: MyScholar, Astro Theme for Academics
 description: Created and maintain a personal (or group) academic Astro theme for research portfolios, publications, projects, and blogs.
 fromDate: 2025-06
-selected: true
 code: https://github.com/mychiffonn/myscholar
 doc: https://astro.build/themes/details/astro-star-scholar/
 url: https://astro-scholar.pages.dev/

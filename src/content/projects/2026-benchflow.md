@@ -2,7 +2,6 @@
 title: BenchFlow (Open Source)
 description: Contributed interactive user simulations to an open-source runtime environment for multi-turn AI agent research.
 fromDate: 2026-06
-selected: true
 code: https://github.com/benchflow-ai/benchflow
 url: https://benchflow.ai/
 types:
