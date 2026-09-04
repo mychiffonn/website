@@ -33,17 +33,29 @@
 }
 
 @inproceedings{nguyen2026seataubench,
-  title={SEATauBench: Adapting Tool-Agent-User Evaluation Into Low-Resource Southeast Asian Languages},
+  title={SEATauBench: Progressively Adapting Tool-Agent-User Evaluation Into Low-Resource Southeast Asian Languages},
   author={My Chiffon Nguyen and Aulia Adila and Saksorn Ruangtanusak and Kittiphat Leesombatwathana and Vissuta Gunawan Lim and Patomporn Payoungkhamdee and Samuel Cahyawijaya},
   selected={true},
   equalFirst={5},
   venue={EMNLP Findings},
   year={2026},
   month=jun,
-  abstract={We introduce SEATauBench, the first agentic-focused evaluation framework for sovereign AI development in Southeast Asia, a region of strategic importance with over 700 million people. Despite growing regional evaluation efforts, existing multilingual agents show limited capability when operating in SEA languages, particularly in mixed-language scenarios. Through evaluation across multiple adaptation approaches, we find that while English agentic capabilities transfer to target language responses, performance degrades significantly when context is provided in SEA languages. We propose a translation-based mitigation strategy that preserves entity consistency while enabling agents to leverage English comprehension. SEATauBench establishes a rigorous benchmark for sovereign AI agent assessment, providing diagnostic tools to address capability gaps and support agentic AI development in diverse linguistic communities in the region.},
+  abstract={While AI development and evaluation for Southeast Asia (SEA) has grown rapidly,
+  agent capabilities in regional languages are still poorly understood despite its importance to sovereign AI.
+  To fill this gap, we introduce SEATauBench, the first agent-focused evaluation framework for SEA sovereign AI. It
+  adapts $\tau^2$-Bench (Barres et al., 2025) to five languages—Mandarin, Vietnamese, Thai, Indonesian, and Filipino—
+  and evaluates agents cross three progressively localized settings that vary
+  the language of user-agent interaction, tool specifications, and task domains.
+  Across three models, we find that English agent capabilities
+  transfer reasonably well when only the conver- sation language changes, but quality and ro-
+  bustness degrade sharply as more task contexts are localized, with the largest losses in full domain adaptation.
+  We also highlight the limits of English-only agent assessment for predicting agent capabilities in SEA languages.
+  More broadly, SEATauBench provides a diagnostic benchmark and reusable adaptation pipeline for
+  building reliable multilingual agents for linguistically diverse regions. Data and code can be
+  accessed at https://github.com/SEACrowd/SEATauBench.},
   keywords={Evaluation/Benchmarking,Agent,Multilinguality},
   url={https://arxiv.org/abs/2606.28715},
-  pdf={https://github.com/SEACrowd/SEATauBench/blob/main/docs/SEATauBench_v1.pdf}
+  pdf={https://openreview.net/pdf?id=if9hq3OO1s}
 }
 
 @misc{cahyawijaya2026anthropogenic,
