@@ -1,8 +1,18 @@
 [
   {
+    "id": "spar-fall-26",
+    "category": "research",
+    "title": "Research Mentee (AI Policy Simulation)",
+    "org": "SPAR",
+    "orgUrl": "https://sparai.org/",
+    "startDate": "2026-09",
+    "location": "Remote",
+    "description": "Continuing work with Lida Safety"
+  },
+  {
     "id": "lida-safety-2026",
     "category": "research",
-    "title": "Research Intern (AI Governance Simulation)",
+    "title": "Research Intern (AI Policy Simulation)",
     "org": "Lida Safety Research Group",
     "orgUrl": "https://www.lidasafety.org/",
     "startDate": "2026-07",
