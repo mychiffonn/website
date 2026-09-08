@@ -35,12 +35,24 @@ const sourceLinks = [
         )}
     </p>
 
-    {PROFILE.location && (
-        <p class="footer-location">
-          <Icon name="mingcute:location-line" />
-          <span>{PROFILE.location}</span>
-        </p>
-      )}
+    <p
+      class="footer-location"
+      data-locale={SITE.locale.lang}
+      data-time-zone={SITE.locale.options.timeZone || "UTC"}
+    >
+      {PROFILE.location && (
+          <>
+            <Icon name="mingcute:location-line" />
+            <span>{PROFILE.location}</span>
+            <span class="footer-separator" aria-hidden="true">·</span>
+          </>
+        )}
+      <span class="footer-time">
+        <Icon name="time" />
+        <time id="current-time"></time>
+        <span id="current-time-zone"></span>
+      </span>
+    </p>
 
     {sourceLinks.length > 0 && (
         <p class="footer-small">
@@ -71,6 +83,40 @@ const sourceLinks = [
 <script>
   const yearElement = document.getElementById("current-year")
   if (yearElement) yearElement.textContent = new Date().getFullYear().toString()
+
+  const timeContainer = document.querySelector<HTMLElement>("[data-time-zone]")
+  const timeElement = document.getElementById(
+    "current-time",
+  ) as HTMLTimeElement | null
+  const timeZoneElement = document.getElementById("current-time-zone")
+
+  if (timeContainer && timeElement && timeZoneElement) {
+    const locale = timeContainer.dataset.locale || "en-US"
+    const timeZone = timeContainer.dataset.timeZone || "UTC"
+    const timeFormatter = new Intl.DateTimeFormat(locale, {
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone,
+    })
+    const timeZoneFormatter = new Intl.DateTimeFormat(locale, {
+      timeZone,
+      timeZoneName: "short",
+    })
+
+    const updateTime = () => {
+      const now = new Date()
+      timeElement.textContent = timeFormatter.format(now)
+      timeElement.dateTime = now.toISOString()
+      timeZoneElement.textContent = ` ${
+        timeZoneFormatter
+          .formatToParts(now)
+          .find(({ type }) => type === "timeZoneName")?.value ?? timeZone
+      }`
+    }
+
+    updateTime()
+    window.setInterval(updateTime, 60_000)
+  }
 </script>
 
 <style>
@@ -96,6 +142,12 @@ const sourceLinks = [
 
   .footer-location {
     display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+  }
+
+  .footer-time {
+    display: inline-flex;
     align-items: center;
     gap: var(--space-3xs);
   }

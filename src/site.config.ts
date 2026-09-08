@@ -22,7 +22,7 @@ export const SITE: SiteConfig = {
       day: "numeric",
       month: "short",
       year: "numeric",
-      timeZone: "America/Los_Angeles", // or your preferred timezone
+      timeZone: "Asia/Ho_Chi_Minh",
     },
   },
 
