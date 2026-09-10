@@ -2,6 +2,7 @@
 title: SEACrowd Website (Design & Growth)
 description: Designed the SEACrowd website and managed social content for a Southeast Asian AI research community.
 fromDate: 2025-08-16
+toDate: 2026-05-31
 url: https://seacrowd.org
 code: https://github.com/SEACrowd/seacrowd.github.io
 types:

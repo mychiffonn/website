@@ -1,5 +1,5 @@
 ---
-title: Behavior of Chain-of-thought Monitorability (On Pause)
+title: Behavior of Chain-of-thought Monitorability
 fromDate: 2025-10-05
 toDate: 2026-04-15
 selected: true

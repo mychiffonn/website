@@ -29,7 +29,7 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
 
 <CommonLayout
   title="Projects"
-  description="A collection of projects I've worked on, ranging from academic research to personal explorations. If you think it would be useful or interesting to collaborate on a project, please contact me to discuss."
+  description="A collection of projects I've worked on outside academic research (for that see Publications). If you think it would be useful or interesting to collaborate on a project, please contact me to discuss."
   prose={false}
   breadcrumbs={[{ label: "Projects", icon: "folder-open" }]}
   celestial
@@ -37,70 +37,70 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
   <div class="projects-page">
     <div class="projects-list-wrapper">
       {skillCounts.length > 0 && (
-          <div
-            class="project-filters"
-            role="group"
-            aria-labelledby="project-skill-filter-label"
-          >
-            <span class="project-filter-label" id="project-skill-filter-label">
-              Skill
-            </span>
-            <div class="project-skill-controls">
-              <div class="chip-filter-bar">
-                {recurringSkillCounts.map(({ slug, label, count }) => (
-                  <TaxonomyChip
-                    label={label}
-                    count={count}
-                    countNoun="project"
-                    data-project-skill-filter={slug}
-                    aria-pressed="false"
-                    aria-label={`Filter projects by skill ${label}; ${formatCount(count, "project")}`}
-                  />
-                ))}
-                <span class="chip-active-filter" data-active-filter hidden>
-                  <TaxonomyChip
-                    label="Clear filter"
-                    prefix="×"
-                    tone="destructive"
-                    data-clear-project-filters
-                    aria-label="Clear project filter"
-                  />
-                </span>
-              </div>
-              {uniqueSkillCounts.length > 0 && (
-                <details class="project-skill-more" data-disclosure>
-                  <summary>
-                    <span data-skill-more-show>
-                      Show {formatCount(uniqueSkillCounts.length, "more skill")}
-                    </span>
-                    <span data-skill-more-hide>Hide additional skills</span>
-                    <span data-disclosure-chevron>
-                      <Icon name="chevron-down" />
-                    </span>
-                  </summary>
-                  <div class="chip-filter-bar project-skill-more-chips">
-                    {uniqueSkillCounts.map(({ slug, label, count }) => (
-                      <TaxonomyChip
-                        label={label}
-                        count={count}
-                        countNoun="project"
-                        data-project-skill-filter={slug}
-                        aria-pressed="false"
-                        aria-label={`Filter projects by skill ${label}; ${formatCount(count, "project")}`}
-                      />
-                    ))}
-                  </div>
-                </details>
-              )}
+        <div
+          class="project-filters"
+          role="group"
+          aria-labelledby="project-skill-filter-label"
+        >
+          <span class="project-filter-label" id="project-skill-filter-label">
+            Skill
+          </span>
+          <div class="project-skill-controls">
+            <div class="chip-filter-bar">
+              {recurringSkillCounts.map(({ slug, label, count }) => (
+                <TaxonomyChip
+                  label={label}
+                  count={count}
+                  countNoun="project"
+                  data-project-skill-filter={slug}
+                  aria-pressed="false"
+                  aria-label={`Filter projects by skill ${label}; ${formatCount(count, "project")}`}
+                />
+              ))}
+              <span class="chip-active-filter" data-active-filter hidden>
+                <TaxonomyChip
+                  label="Clear filter"
+                  prefix="×"
+                  tone="destructive"
+                  data-clear-project-filters
+                  aria-label="Clear project filter"
+                />
+              </span>
             </div>
-            <span
-              class="sr-only"
-              aria-live="polite"
-              aria-atomic="true"
-              data-project-filter-status
-            />
+            {uniqueSkillCounts.length > 0 && (
+              <details class="project-skill-more" data-disclosure>
+                <summary>
+                  <span data-skill-more-show>
+                    Show {formatCount(uniqueSkillCounts.length, "more skill")}
+                  </span>
+                  <span data-skill-more-hide>Hide additional skills</span>
+                  <span data-disclosure-chevron>
+                    <Icon name="chevron-down" />
+                  </span>
+                </summary>
+                <div class="chip-filter-bar project-skill-more-chips">
+                  {uniqueSkillCounts.map(({ slug, label, count }) => (
+                    <TaxonomyChip
+                      label={label}
+                      count={count}
+                      countNoun="project"
+                      data-project-skill-filter={slug}
+                      aria-pressed="false"
+                      aria-label={`Filter projects by skill ${label}; ${formatCount(count, "project")}`}
+                    />
+                  ))}
+                </div>
+              </details>
+            )}
           </div>
-        )}
+          <span
+            class="sr-only"
+            aria-live="polite"
+            aria-atomic="true"
+            data-project-filter-status
+          />
+        </div>
+      )}
 
       <div class="project-filter-empty" data-project-filter-empty hidden>
         <h2>No matching projects</h2>
@@ -108,7 +108,9 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
       </div>
 
       <div class="project-list">
-        {allProjects.map((project) => <ProjectRow {project} />)}
+        {allProjects.map((project) => (
+          <ProjectRow {project} />
+        ))}
       </div>
     </div>
 
@@ -116,10 +118,10 @@ const githubUsername = githubProfile?.replace(/\/$/, "").split("/").pop()
       <TechStack {...techStack} />
     </Section>
     {githubRepo && (
-        <Section title="On GitHub" class="github-showcase">
-          <GithubCard repo={githubRepo} contributor={githubUsername} />
-        </Section>
-      )}
+      <Section title="On GitHub" class="github-showcase">
+        <GithubCard repo={githubRepo} contributor={githubUsername} />
+      </Section>
+    )}
     {githubProfile && <GithubActivity githubUrl={githubProfile} />}
   </div>
 </CommonLayout>
