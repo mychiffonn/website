@@ -54,6 +54,15 @@ export function isSubpost(postId: string): boolean {
   return postId.includes("/")
 }
 
+/**
+ * Determines whether a post should be included in listings, tags, and lookups.
+ * Draft posts are visible during local development so authors can preview them,
+ * but hidden from production builds.
+ */
+export function isPostVisible(post: { data: { draft?: boolean } }): boolean {
+  return import.meta.env.DEV || !post.data.draft
+}
+
 export function getParentId(subpostId: string): string {
   return subpostId.split("/")[0]
 }

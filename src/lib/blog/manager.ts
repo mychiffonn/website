@@ -16,6 +16,7 @@ import type {
 import {
   calculateWordCountFromPost,
   getParentId,
+  isPostVisible,
   isSubpost,
   sortByDateDesc,
 } from "./utils"
@@ -37,13 +38,13 @@ export class PostManager implements PostManagerInterface {
   }
 
   async getAllPostsAndSubposts(): Promise<Post[]> {
-    return await getCollection("blog", (post) => !post.data.draft)
+    return await getCollection("blog", (post) => isPostVisible(post))
   }
 
   async getPostById(postId: string): Promise<Post | null> {
     try {
       const post = await getEntry("blog", postId)
-      return post && !post.data.draft ? post : null
+      return post && isPostVisible(post) ? post : null
     } catch (error) {
       console.warn(`Failed to retrieve post ${postId}:`, error)
       return null
@@ -53,7 +54,7 @@ export class PostManager implements PostManagerInterface {
   async getMainPosts(count?: number): Promise<Post[]> {
     const posts = await getCollection(
       "blog",
-      (post) => !post.data.draft && !isSubpost(post.id),
+      (post) => isPostVisible(post) && !isSubpost(post.id),
     )
 
     const sortedPosts = sortByDateDesc(posts)
@@ -63,7 +64,7 @@ export class PostManager implements PostManagerInterface {
   async getSubpostsByParent(parentId: string): Promise<Post[]> {
     const subposts = await getCollection("blog", (post) => {
       return (
-        !post.data.draft &&
+        isPostVisible(post) &&
         isSubpost(post.id) &&
         getParentId(post.id) === parentId
       )
@@ -321,7 +322,7 @@ export class PostManager implements PostManagerInterface {
   async getPostsByAuthor(authorId: string): Promise<PostMeta[]> {
     try {
       const posts = await getCollection("blog", (post) => {
-        if (post.data.draft || isSubpost(post.id)) return false
+        if (!isPostVisible(post) || isSubpost(post.id)) return false
         return (
           post.data.authors?.some((authorRef) => authorRef.id === authorId) ??
           false
@@ -352,14 +353,14 @@ export class PostManager implements PostManagerInterface {
         getCollection(
           "blog",
           (post) =>
-            !post.data.draft &&
+            isPostVisible(post) &&
             !isSubpost(post.id) &&
             post.data.tags?.includes(tag),
         ),
         getCollection(
           "blog",
           (post) =>
-            !post.data.draft &&
+            isPostVisible(post) &&
             isSubpost(post.id) &&
             post.data.tags?.includes(tag),
         ),

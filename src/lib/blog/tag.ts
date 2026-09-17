@@ -1,7 +1,7 @@
 import { getCollection } from "astro:content"
 
 import type { Post } from "./types"
-import { getParentId, isSubpost } from "./utils"
+import { getParentId, isPostVisible, isSubpost } from "./utils"
 
 export type TagCount = {
   tag: string
@@ -17,7 +17,7 @@ export async function getAllTags(
 ): Promise<string[]> {
   const [mainPosts, allSubposts] = await Promise.all([
     getMainPosts(),
-    getCollection("blog", (post) => isSubpost(post.id) && !post.data.draft),
+    getCollection("blog", (post) => isSubpost(post.id) && isPostVisible(post)),
   ])
 
   const uniqueTags = new Set<string>()
@@ -50,7 +50,7 @@ export async function getSortedTags(
 ): Promise<TagCount[]> {
   const [mainPosts, allSubposts] = await Promise.all([
     getMainPosts(),
-    getCollection("blog", (post) => isSubpost(post.id) && !post.data.draft),
+    getCollection("blog", (post) => isSubpost(post.id) && isPostVisible(post)),
   ])
 
   const tagCounts = new Map<string, Set<string>>()
