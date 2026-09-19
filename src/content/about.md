@@ -12,4 +12,4 @@ I also work at [Equistamp](https://www.equistamp.com/) (contract, AI safety) and
 Previously I worked with [Dr. Samuel Cahyawijaya](https://scholar.google.com/citations?user=w5w_WZEAAAAJ&hl=en) (Cohere Labs) through [SEACrowd Apprenticeship](https://seacrowd.org/apprenticeship),
 and with [Eyon Jang](https://www.eyonjang.me/) on [CoT monitoring inverse scaling behavior](/projects/2025-cot-monitoring) (now independently).
 
-I am **seeking research Master's in CS, AI, or NLP for Fall 2027**. Open to research collaborations.
+I am open to research collaboration and best reached by email.
