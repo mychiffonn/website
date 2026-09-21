@@ -1,6 +1,6 @@
 I research **current and future AI that are safe and empowering for more people**. Towards this end, I'm currently interested in the following problems:
 
-- making AI go well, tackling governance simulation ([GPS-Bench](https://arxiv.org/abs/2609.03553)), loss of control risks, human disempowerment, and misinformation and disinformation
+- making AI go well: tackling governance ([GPS-Bench](https://arxiv.org/abs/2609.03553)), loss of control risks, human disempowerment, and misinformation and disinformation
 - multilingual and multicultural AI ([SEATauBench](https://arxiv.org/abs/2606.28715), CulturalRiddles)
 - designing cooperative AI for other AI agents, and for humans
 
