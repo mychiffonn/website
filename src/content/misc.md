@@ -6,7 +6,7 @@
 
 - I speak a bit of 🇨🇳 Mandarin Chinese (HSK4/B1) and 🇫🇷 French (A2).
 
-- I like [reading](https://app.thestorygraph.com/profile/mychiffonn), cooking, matcha & oolong tea, cycling, teaching, travel (cultural activities & historical museums), event organizing, philosophy, and politics.
+- I like [reading](https://app.thestorygraph.com/profile/mychiffonn), cooking, tea, cycling, teaching, travel, event organizing, philosophy, and politics.
 
 - My favorite book series are Dune, Project Hail Mary, and [契子](https://www.jjwxc.net/onebook.php?novelid=2149791).
 
