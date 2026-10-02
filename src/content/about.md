@@ -9,7 +9,7 @@ My technical work focuses on data, simulation, and [evaluation](https://aimslab.
 I'm a [SPAR](https://sparai.org/) Fellow (Fall '26), mentored by Dr. [Linh Le](https://aigi.ox.ac.uk/people/linh-le/) and [David Williams-King](https://www.linkedin.com/in/david-williams-king/) ([Lida Safety](https://www.lidasafety.org/about)).
 I also work as a contractor for [Equistamp](https://www.equistamp.com/) on AI control projects.
 
-Previously I worked with [Dr. Julia Kreutzer](https://scholar.google.com/citations?user=j4cOSzAAAAAJ&hl=en) (Cohere Labs) on CulturalRiddles, [Dr. Samuel Cahyawijaya](https://scholar.google.com/citations?user=w5w_WZEAAAAJ&hl=en) (Cohere Labs) through [SEACrowd Apprenticeship](https://seacrowd.org/apprenticeship),
+Previously I worked with [Dr. Samuel Cahyawijaya](https://scholar.google.com/citations?user=w5w_WZEAAAAJ&hl=en) (Cohere Labs) through [SEACrowd Apprenticeship](https://seacrowd.org/apprenticeship),
 and [Eyon Jang](https://www.eyonjang.me/) (then MATS now Scale AI) on [CoT monitoring inverse scaling behavior](/projects/2025-cot-monitoring).
 
 I am open to research collaboration and best reached by email.
