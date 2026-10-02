@@ -2,12 +2,12 @@
   {
     "id": "spar-fall-26",
     "category": "research",
-    "title": "Research Mentee (AI Policy Simulation)",
+    "title": "Research Mentee (AI Incident Simulation)",
     "org": "SPAR",
     "orgUrl": "https://sparai.org/",
     "startDate": "2026-09",
     "location": "Remote",
-    "description": "Continuing work with Lida Safety"
+    "description": "Constructing personas relevant for AI policies and incidents (technical AI governance)."
   },
   {
     "id": "lida-safety-2026",
@@ -22,12 +22,13 @@
   {
     "id": "cohere-labs-2026",
     "category": "research",
-    "title": "Research Coordinator, Analysis",
-    "org": "Cohere Labs Open Science Community",
+    "title": "CulturalRiddles Project Co-Lead",
+    "org": "Cohere Labs Community",
     "orgUrl": "https://cohere.com/research",
     "startDate": "2026-04",
+    "endDate": "2026-10",
     "location": "Remote",
-    "description": "Coordinating analysis for a multicultural benchmarking initiative and collaborating with research team leads on open-science workflows."
+    "description": "Co-led CulturalRiddles project (co-first author), focusing on analysis and writing."
   },
   {
     "id": "seacrowd-2026",
