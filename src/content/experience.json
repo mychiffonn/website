@@ -1,21 +1,32 @@
 [
   {
+    "id": "lida-safety-2026",
+    "category": "research",
+    "title": "Associate Researcher (AI Policy Simulation)",
+    "org": "Lida Safety Research Group",
+    "orgUrl": "https://www.lidasafety.org/",
+    "startDate": "2026-10",
+    "location": "Remote",
+    "description": "Simulation on AI policies, AI incidents, and public sentiment."
+  },
+  {
     "id": "spar-fall-26",
     "category": "research",
-    "title": "Research Mentee (AI Incident Simulation)",
+    "title": "Research Mentee (AI Policy Simulation)",
     "org": "SPAR",
     "orgUrl": "https://sparai.org/",
     "startDate": "2026-09",
     "location": "Remote",
-    "description": "Constructing personas relevant for AI policies and incidents (technical AI governance)."
+    "description": "Simulation on AI policies, AI incidents, and public sentiment."
   },
   {
-    "id": "lida-safety-2026",
+    "id": "lida-safety-intern-2026",
     "category": "research",
     "title": "Research Intern (AI Policy Simulation)",
     "org": "Lida Safety Research Group",
     "orgUrl": "https://www.lidasafety.org/",
     "startDate": "2026-07",
+    "endDate": "2026-10",
     "location": "Remote",
     "description": "Co-authoring GPS-Bench, an benchmark and framework for simulating AI governance policy against historical records. Mentored by Dr. Linh Le and Dr. David Williams-King."
   },

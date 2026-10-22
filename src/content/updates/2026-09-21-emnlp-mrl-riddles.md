@@ -1,1 +1,1 @@
-MultiCulturalRiddle accepted to [MRL Workshop @ EMNLP 2026](https://sigtyp.github.io/ws2026-mrl.html) as an Extended Abstract. Full paper soon.
+CulturalRiddles accepted to [MRL Workshop @ EMNLP 2026](https://sigtyp.github.io/ws2026-mrl.html) as an Extended Abstract. Full paper soon.
