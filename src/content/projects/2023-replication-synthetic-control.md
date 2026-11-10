@@ -1,6 +1,6 @@
 ---
 title: "Causal Inference of Political Intervention"
-description: Replicated and extended a synthetic control analysis of Philadelphia SNAP benefit redemption in R.
+description: Replicated and extended a synthetic control analysis of Philadelphia SNAP benefit redemption.
 toDate: 2023-12
 code: https://github.com/mychiffonn/synthetic-control-rep
 doc: https://github.com/mychiffonn/synthetic-control-rep/blob/main/CS130%20Final%20Assignment.pdf
