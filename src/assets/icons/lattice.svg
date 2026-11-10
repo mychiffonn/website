@@ -1,0 +1,40 @@
+<svg width="256" height="256" viewBox="100 100 824 824" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lattice-weft" x1="224" y1="512" x2="800" y2="512" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4E5C1D"/>
+      <stop offset="1" stop-color="#6A7A2B"/>
+    </linearGradient>
+    <linearGradient id="lattice-warp" x1="512" y1="224" x2="512" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#AEB763"/>
+      <stop offset="1" stop-color="#909E42"/>
+    </linearGradient>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="185.4" fill="#F7F2E8"/>
+  <rect x="101.75" y="101.75" width="820.5" height="820.5" rx="183.65" stroke="#23211E" stroke-opacity="0.1" stroke-width="3.5"/>
+  <g transform="translate(512 512) scale(0.876596) translate(-512 -512)">
+    <g transform="rotate(45 512 512)">
+      <g stroke="url(#lattice-weft)" stroke-width="68" stroke-linecap="round">
+        <path d="M250 336H774"/>
+        <path d="M250 512H774"/>
+        <path d="M250 688H774"/>
+      </g>
+      <g stroke="url(#lattice-warp)" stroke-width="68">
+        <path d="M336 250V478"/>
+        <path d="M336 546V774"/>
+        <path d="M512 250V302"/>
+        <path d="M512 370V654"/>
+        <path d="M512 722V774"/>
+        <path d="M688 250V478"/>
+        <path d="M688 546V774"/>
+      </g>
+      <g fill="url(#lattice-warp)">
+        <circle cx="336" cy="250" r="34"/>
+        <circle cx="336" cy="774" r="34"/>
+        <circle cx="512" cy="250" r="34"/>
+        <circle cx="512" cy="774" r="34"/>
+        <circle cx="688" cy="250" r="34"/>
+        <circle cx="688" cy="774" r="34"/>
+      </g>
+    </g>
+  </g>
+</svg>
