@@ -250,6 +250,11 @@ const hiddenAuthorsId = `publication-${slugify(pub.title)}-${pub.year ?? "unknow
     font-weight: var(--font-weight-bold);
   }
 
+  .publication-actions :global(:is([data-button], [data-copy-btn])) {
+    gap: var(--space-3xs);
+    padding-inline: var(--space-2xs);
+  }
+
   .abstract-summary {
     cursor: pointer;
   }
