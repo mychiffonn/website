@@ -114,7 +114,7 @@ const setCalloutDetails = (
   ctx: MdastVisitorContext,
 ) => {
   ctx.prependChild(node, { type: "html", value: summary })
-  ctx.setProperty(node, "data", {
+  ctx.setField(node, "data", {
     hName: "details",
     hProperties: {
       dataCallout: variant,
@@ -161,7 +161,7 @@ export const calloutDirective = defineMdastPlugin({
     const value = marker.value.slice(match[0].length)
 
     if (value || first.children.length > 1) {
-      ctx.setProperty(marker, "value", value)
+      ctx.setField(marker, "value", value)
     } else {
       ctx.removeNode(first)
     }

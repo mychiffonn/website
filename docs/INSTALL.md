@@ -7,7 +7,7 @@ framework setup steps here.
 
 ## Requirements
 
-- Node.js `>=22.12.0`
+- Node.js `>=22.23.4`
 - pnpm `10.x`
 - Git
 

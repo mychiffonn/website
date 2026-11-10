@@ -30,7 +30,7 @@ export function normalizeHeadings() {
 
       const nextDepth = levelMap.get(originalDepth)
       if (nextDepth && nextDepth !== originalDepth) {
-        ctx.setProperty(node, "depth", nextDepth)
+        ctx.setField(node, "depth", nextDepth)
       }
     },
   })

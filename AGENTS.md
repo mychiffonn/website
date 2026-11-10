@@ -8,7 +8,7 @@ sample personal site.
 
 - Read `package.json`, `astro.config.ts`, and `docs/INSTALL.md` before changing
   dependencies, scripts, adapters, or deployment behavior.
-- Use Node.js `>=22.12.0` and pnpm because the repository has a
+- Use Node.js `>=22` and pnpm because the repository has a
   `pnpm-lock.yaml`.
 - For a new site, follow Astro's
   [starter-template instructions](https://docs.astro.build/en/install-and-setup/#use-a-theme-or-starter-template)
@@ -89,7 +89,6 @@ pnpm create astro@latest --template mychiffonn/astro-scholar
 pnpm format:check
 pnpm lint
 pnpm lint:styles
-pnpm test:markdown
 pnpm astro check
 pnpm build
 ```
